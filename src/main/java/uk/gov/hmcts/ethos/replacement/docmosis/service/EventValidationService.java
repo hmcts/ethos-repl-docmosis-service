@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,8 +65,11 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("eventValidationService")
 public class EventValidationService {
+
+    private final CaseCloseService caseCloseService;
 
     private static final List<String> INVALID_STATES_FOR_CLOSED_CURRENT_POSITION = List.of(
             SUBMITTED_STATE, ACCEPTED_STATE, REJECTED_STATE);
@@ -432,6 +436,7 @@ public class EventValidationService {
         validateJudgementsHasJurisdiction(caseData, partOfMultiple, errors);
         validateHearingStatusForCaseCloseEvent(caseData, errors);
         validateHearingJudgeAllocationForCaseCloseEvent(caseData, errors);
+        caseCloseService.validateBfActionsForCaseCloseEvent(caseData, errors);
         return errors;
     }
 

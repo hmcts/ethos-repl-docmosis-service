@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -15,6 +17,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -54,9 +57,15 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseService.CLOSING_CASE_WITH_BF_OPEN_ERROR;
 
 @ExtendWith(SpringExtension.class)
 class EventValidationServiceTest {
+
+    @Mock
+    private CaseCloseService caseCloseService;
+    @InjectMocks
+    private EventValidationService eventValidationService;
 
     private static final LocalDate PAST_RECEIPT_DATE = LocalDate.now().minusDays(1);
     private static final LocalDate CURRENT_RECEIPT_DATE = LocalDate.now();
@@ -70,8 +79,6 @@ class EventValidationServiceTest {
     private static final LocalDate PAST_RESPONSE_RECEIVED_DATE = LocalDate.now().minusDays(1);
     private static final LocalDate CURRENT_RESPONSE_RECEIVED_DATE = LocalDate.now();
     private static final LocalDate FUTURE_RESPONSE_RECEIVED_DATE = LocalDate.now().plusDays(1);
-
-    private EventValidationService eventValidationService;
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
@@ -96,8 +103,6 @@ class EventValidationServiceTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        eventValidationService = new EventValidationService();
-
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
@@ -519,6 +524,18 @@ class EventValidationServiceTest {
                 isRejected, partOfMultiple, errors);
 
         assertEquals(0, errors.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateCaseBeforeCloseEvent_BFActionNotClear_WithError(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        caseDetails17.getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
+        caseDetails17.getCaseData().getBfActions().get(0).getValue().setCleared(null);
+        eventValidationService.validateCaseBeforeCloseEvent(caseDetails17.getCaseData(),
+                isRejected, partOfMultiple, errors);
+        assertEquals(1, errors.size());
+        assertThat(errors).asList().contains(CLOSING_CASE_WITH_BF_OPEN_ERROR);
     }
 
     @Test
