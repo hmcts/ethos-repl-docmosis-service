@@ -248,6 +248,27 @@ public class HearingsByHearingTypeReport {
         reportData.addReportSummaryList(reportSummaryList);
     }
 
+    private void setLocalReportSummary2(List<HearingsByHearingTypeSubmitEvent> submitEvents, HearingsByHearingTypeReportData reportData) {
+        List<HearingsByHearingTypeReportSummary> reportSummaryList = new ArrayList<>();
+        for (HearingsByHearingTypeSubmitEvent submitEvent : submitEvents) {
+            var caseData = submitEvent.getCaseData();
+            if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
+                for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                    if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                        for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                            if (isValidHearing(dateListedTypeItem.getValue())) {
+                                var reportSummary = getSummaryRow(dateListedTypeItem.getValue().getListedDate(), reportSummaryList);
+                                setReportFields(hearingTypeItem.getValue().getHearingType(), reportSummary.getFields());
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        reportData.addReportSummaryList(reportSummaryList);
+    }
+
     private void setLocalReportSummaryHdr2(List<HearingsByHearingTypeSubmitEvent> submitEvents, HearingsByHearingTypeReportData reportData) {
         List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList = new ArrayList<>();
         initReportSummary2HdrList(reportSummary2HdrList);
