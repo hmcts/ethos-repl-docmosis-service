@@ -39,6 +39,7 @@
         <notes><![CDATA[
    file name: minimist:1.2.5
    ]]></notes>
-        <packageUrl regex="true">^pkg:npm/minimist@1.2.5</packageUrl>
+        <packageUrl regex="true">^pkg:npm/minimist@.*$</packageUrl>
+        <vulnerabilityName>1067259</vulnerabilityName>
     </suppress>
 </suppressions>
