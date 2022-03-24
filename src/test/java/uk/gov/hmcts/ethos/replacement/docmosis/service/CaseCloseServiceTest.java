@@ -9,7 +9,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,28 +46,25 @@ class CaseCloseServiceTest {
 
     @Test
     void shouldValidateBfActionsForCaseCloseEvent_AllCleared_Pass() {
-        List<String> errors = new ArrayList<>();
         caseData.setBfActions(BFHelperTest.generateBFActionTypeItems());
         caseData.getBfActions().get(0).getValue().setCleared("2022-02-22");
-        caseCloseService.validateBfActionsForCaseCloseEvent(caseData, errors);
+        List<String> errors = caseCloseService.validateBfActionsForCaseCloseEvent(caseData);
         assertEquals(0, errors.size());
     }
 
     @Test
     void shouldValidateBfActionsForCaseCloseEvent_NotCleared_Error() {
-        List<String> errors = new ArrayList<>();
         caseData.setBfActions(BFHelperTest.generateBFActionTypeItems());
         caseData.getBfActions().get(0).getValue().setCleared(null);
-        caseCloseService.validateBfActionsForCaseCloseEvent(caseData, errors);
+        List<String> errors = caseCloseService.validateBfActionsForCaseCloseEvent(caseData);
         assertEquals(1, errors.size());
         assertEquals(CLOSING_CASE_WITH_BF_OPEN_ERROR, errors.get(0));
     }
 
     @Test
     void shouldValidateBfActionsForCaseCloseEvent_NoBF_Pass() {
-        List<String> errors = new ArrayList<>();
         caseData.setBfActions(null);
-        caseCloseService.validateBfActionsForCaseCloseEvent(caseData, errors);
+        List<String> errors = caseCloseService.validateBfActionsForCaseCloseEvent(caseData);
         assertEquals(0, errors.size());
     }
 

@@ -27,19 +27,17 @@ public class CaseCloseService {
         return errors;
     }
 
-    public void validateBfActionsForCaseCloseEvent(CaseData caseData, List<String> errors) {
-
+    public List<String> validateBfActionsForCaseCloseEvent(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
         if (CollectionUtils.isEmpty(caseData.getBfActions())) {
-            return;
+            return errors;
         }
-
         for (var currentBFActionTypeItem : caseData.getBfActions()) {
             if (currentBFActionTypeItem.getValue().getCleared() == null) {
                 errors.add(CLOSING_CASE_WITH_BF_OPEN_ERROR);
-                return;
+                return errors;
             }
         }
-
+        return errors;
     }
-
 }

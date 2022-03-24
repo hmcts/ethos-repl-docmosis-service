@@ -436,7 +436,7 @@ public class EventValidationService {
         validateJudgementsHasJurisdiction(caseData, partOfMultiple, errors);
         validateHearingStatusForCaseCloseEvent(caseData, errors);
         validateHearingJudgeAllocationForCaseCloseEvent(caseData, errors);
-        caseCloseService.validateBfActionsForCaseCloseEvent(caseData, errors);
+        errors.addAll(caseCloseService.validateBfActionsForCaseCloseEvent(caseData));
         return errors;
     }
 
