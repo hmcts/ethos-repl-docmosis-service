@@ -17,7 +17,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,6 +30,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
@@ -500,10 +500,17 @@ class EventValidationServiceTest {
     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
     void shouldValidateCaseBeforeCloseEventWithErrors(boolean isRejected, boolean partOfMultiple) {
         List<String> errors = new ArrayList<>();
+
+        List<String> msgBfActionsForCaseCloseEvent = new ArrayList<>();
+        msgBfActionsForCaseCloseEvent.add(CLOSING_CASE_WITH_BF_OPEN_ERROR);
+        when(caseCloseService.validateBfActionsForCaseCloseEvent(caseDetails18.getCaseData()))
+                .thenReturn(msgBfActionsForCaseCloseEvent);
+
         eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),
                 isRejected, partOfMultiple, errors);
 
-        assertEquals(3, errors.size());
+        assertEquals(4, errors.size());
+        assertThat(errors).asList().contains(CLOSING_CASE_WITH_BF_OPEN_ERROR);
         if (partOfMultiple) {
             assertThat(errors).asList().contains(caseDetails18.getCaseData().getEthosCaseReference()
                     + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
@@ -524,18 +531,6 @@ class EventValidationServiceTest {
                 isRejected, partOfMultiple, errors);
 
         assertEquals(0, errors.size());
-    }
-
-    @ParameterizedTest
-    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
-    void shouldValidateCaseBeforeCloseEvent_BFActionNotClear_WithError(boolean isRejected, boolean partOfMultiple) {
-        List<String> errors = new ArrayList<>();
-        caseDetails17.getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
-        caseDetails17.getCaseData().getBfActions().get(0).getValue().setCleared(null);
-        eventValidationService.validateCaseBeforeCloseEvent(caseDetails17.getCaseData(),
-                isRejected, partOfMultiple, errors);
-        assertEquals(1, errors.size());
-        assertThat(errors).asList().contains(CLOSING_CASE_WITH_BF_OPEN_ERROR);
     }
 
     @Test
