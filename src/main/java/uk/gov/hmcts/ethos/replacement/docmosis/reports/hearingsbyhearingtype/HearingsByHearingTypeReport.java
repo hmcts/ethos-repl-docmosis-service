@@ -1,11 +1,15 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.lang.Math.abs;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -151,7 +155,7 @@ public class HearingsByHearingTypeReport {
         setLocalReportSummary(submitEvents, reportData);
         setLocalReportSummaryHdr2(submitEvents, reportData);
         setLocalReportSummary2(submitEvents, reportData);
-
+        setLocalReportSummaryDetail(submitEvents, reportData);
     }
 
     private void setLocalReportSummaryHdr(List<HearingsByHearingTypeSubmitEvent> submitEvents, HearingsByHearingTypeReportData reportData) {
@@ -215,9 +219,24 @@ public class HearingsByHearingTypeReport {
            return reportSummary.get();
         } else {
             var newReportSummary = new HearingsByHearingTypeReportSummary();
-            newReportSummary.setDate(date);
+            newReportSummary.setDate(date.replace("T", " "));
             reportSummaryList.add(newReportSummary);
             return newReportSummary;
+        }
+    }
+
+    private HearingsByHearingTypeReportSummary2 getSummaryRow2(String dateListed, String subSplit, List<HearingsByHearingTypeReportSummary2> reportSummaryList2) {
+        var date = LocalDateTime.parse(
+                dateListed, NEW_DATE_PATTERN).toLocalDate().toString();
+        var reportSummary2 = reportSummaryList2.stream().filter(a -> date.equals(a.getDate()) && subSplit.equals(a.getSubSplit())).findFirst();
+        if (reportSummary2.isPresent()) {
+            return reportSummary2.get();
+        } else {
+            var newReportSummary2 = new HearingsByHearingTypeReportSummary2();
+            newReportSummary2.setDate(date.replace("T", " "));
+            newReportSummary2.setSubSplit(subSplit);
+            reportSummaryList2.add(newReportSummary2);
+            return newReportSummary2;
         }
     }
 
@@ -249,7 +268,7 @@ public class HearingsByHearingTypeReport {
     }
 
     private void setLocalReportSummary2(List<HearingsByHearingTypeSubmitEvent> submitEvents, HearingsByHearingTypeReportData reportData) {
-        List<HearingsByHearingTypeReportSummary> reportSummaryList = new ArrayList<>();
+        List<HearingsByHearingTypeReportSummary2> reportSummaryList2 = new ArrayList<>();
         for (HearingsByHearingTypeSubmitEvent submitEvent : submitEvents) {
             var caseData = submitEvent.getCaseData();
             if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
@@ -257,8 +276,17 @@ public class HearingsByHearingTypeReport {
                     if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                         for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
                             if (isValidHearing(dateListedTypeItem.getValue())) {
-                                var reportSummary = getSummaryRow(dateListedTypeItem.getValue().getListedDate(), reportSummaryList);
-                                setReportFields(hearingTypeItem.getValue().getHearingType(), reportSummary.getFields());
+                                if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())) {
+                                    for (String format : hearingTypeItem.getValue().getHearingFormat()) {
+                                        String subSplit = getsubSplitHearingFormat(format);
+                                        var reportSummary2 = getSummaryRow2(dateListedTypeItem.getValue().getListedDate(), subSplit, reportSummaryList2);
+                                        setReportFields(hearingTypeItem.getValue().getHearingType(), reportSummary2.getFields());
+                                    }
+                                } else {
+                                    String subSplit = getSubSplit(hearingTypeItem);
+                                    var reportSummary2 = getSummaryRow2(dateListedTypeItem.getValue().getListedDate(),subSplit, reportSummaryList2);
+                                    setReportFields(hearingTypeItem.getValue().getHearingType(), reportSummary2.getFields());
+                                }
                             }
                         }
 
@@ -266,7 +294,76 @@ public class HearingsByHearingTypeReport {
                 }
             }
         }
-        reportData.addReportSummaryList(reportSummaryList);
+        reportData.addReportSummary2List(reportSummaryList2);
+    }
+
+    private void setLocalReportSummaryDetail(List<HearingsByHearingTypeSubmitEvent> submitEvents, HearingsByHearingTypeReportData reportData) {
+        List<HearingsByHearingTypeReportDetail> reportSummaryDetailList = new ArrayList<>();
+        for (HearingsByHearingTypeSubmitEvent submitEvent : submitEvents) {
+            var caseData = submitEvent.getCaseData();
+            if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
+                for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                    if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                        for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                            if (isValidHearing(dateListedTypeItem.getValue())) {
+                              var detail = new HearingsByHearingTypeReportDetail();
+                              detail.setDate(dateListedTypeItem.getValue().getListedDate().replace("T", " "));
+                              detail.setHearingType(hearingTypeItem.getValue().getHearingType());
+                              detail.setHearingNo(hearingTypeItem.getValue().getHearingNumber());
+                              var mulRef = StringUtils.defaultString(caseData.getMultipleReference(), "0 -  Not Allocated");
+                              var subMul = StringUtils.defaultString(caseData.getSubMultipleName(), "0 -  Not Allocated");
+                              detail.setMultiSub(mulRef + ", " + subMul);
+                              detail.setCaseReference(caseData.getEthosCaseReference());
+                              detail.setLead(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
+                              detail.setTel(CollectionUtils.isNotEmpty(
+                                        hearingTypeItem.getValue().getHearingFormat())
+                                        && hearingTypeItem.getValue().getHearingFormat()
+                                        .contains("Telephone") ? "Y" : "");
+                              detail.setJm("JM".equals(
+                                        hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
+                              detail.setHearingClerk(Strings.isNullOrEmpty(
+                                      dateListedTypeItem.getValue().getHearingClerk()) ? ""
+                                        : dateListedTypeItem.getValue().getHearingClerk());
+                              detail.setDuration(getHearingDuration(dateListedTypeItem));
+                              reportSummaryDetailList.add(detail);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        reportData.addReportDetail(reportSummaryDetailList);
+    }
+
+    private String getHearingDuration(DateListedTypeItem dateListedTypeItem) {
+        LocalDateTime startTime;
+        LocalDateTime finishTime;
+        LocalDateTime resumeTime;
+        LocalDateTime breakTime;
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingStart())) {
+            startTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingStart());
+        } else {
+            return "0";
+        }
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingFinish())) {
+            finishTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish());
+        } else {
+            return "0";
+        }
+        long hearingDuration = ChronoUnit.MINUTES.between(startTime, finishTime);
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingResume())) {
+            resumeTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume());
+        } else {
+            return String.valueOf(hearingDuration);
+        }
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingBreak())) {
+            breakTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak());
+        } else {
+            return String.valueOf(hearingDuration);
+        }
+        long diff = hearingDuration - ChronoUnit.MINUTES.between(breakTime, resumeTime);
+        return String.valueOf(abs(diff));
     }
 
     private void setLocalReportSummaryHdr2(List<HearingsByHearingTypeSubmitEvent> submitEvents, HearingsByHearingTypeReportData reportData) {
@@ -300,6 +397,8 @@ public class HearingsByHearingTypeReport {
 
     private void setReportSummary2HdrFields(String subSplit, HearingTypeItem hearingTypeItem, List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList) {
         var reportSummary2Hdr = getSummaryHdr2Row(subSplit, reportSummary2HdrList);
-        setReportFields(hearingTypeItem.getValue().getHearingType(), reportSummary2Hdr.getFields());
+        if (reportSummary2Hdr != null) {
+            setReportFields(hearingTypeItem.getValue().getHearingType(), reportSummary2Hdr.getFields());
+        }
     }
 }

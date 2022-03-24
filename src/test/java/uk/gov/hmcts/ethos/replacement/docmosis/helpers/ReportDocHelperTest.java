@@ -22,6 +22,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Rep
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportDetail;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportSummaryHdr;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.ReportFields;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportSummary;
@@ -581,6 +585,24 @@ public class ReportDocHelperTest {
         return reportData;
     }
 
+    private HearingsByHearingTypeReportData getHearingsByHearingTypeReportData() {
+        var reportSummaryHdr = new HearingsByHearingTypeReportSummaryHdr();
+        ReportFields fields = new ReportFields();
+        fields.setTotal("6");
+        fields.setHearingCount("1");
+        fields.setRemedyCount("1");
+        fields.setReconsiderCount("1");
+        fields.setCostsCount("1");
+        fields.setCmCount("1");
+        fields.setHearingPrelimCount("1");
+        reportSummaryHdr.setFields(fields);
+        reportSummaryHdr.setOffice("Manchester");
+        var reportData = new HearingsByHearingTypeReportData(reportSummaryHdr);
+        var reportSummary1 = new HearingsByHearingTypeReportSummary();
+
+       return reportData;
+    }
+
     private HearingsToJudgmentsReportData getHearingsToJudgmentsReportData() {
         var reportSummary = new HearingsToJudgmentsReportSummary("Newcastle");
         reportSummary.setTotalCases("5");
@@ -712,6 +734,18 @@ public class ReportDocHelperTest {
         reportDetail1.setCaseNumber("1111212/2022");
         reportData.addReportDetail(Collections.singletonList(reportDetail1));
         return reportData;
+    }
+
+    @Test
+    public void buildHearingsByHearingTypeReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("hearingsToHearingTypeExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("replace-with-current-date", today);
+        var reportData = getHearingsToJudgmentsReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00785", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
     }
 
     @Test
