@@ -27,7 +27,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudge
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestrictedReporting;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
@@ -70,7 +70,6 @@ public class CaseActionsForCaseWorkerController {
     private static final String INVALID_TOKEN = "Invalid Token {}";
     private static final String EVENT_FIELDS_VALIDATION = "Event fields validation: ";
     private final CaseTransferService caseTransferService;
-    private final CaseCloseService caseCloseService;
     private final CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
@@ -1166,7 +1165,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData =  ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = caseCloseService.validateReinstateClosedCaseMidEvent(caseData);
+        List<String> errors = CaseCloseValidator.validateReinstateClosedCaseMidEvent(caseData);
 
         return getCallbackRespEntityErrors(errors, caseData);
     }

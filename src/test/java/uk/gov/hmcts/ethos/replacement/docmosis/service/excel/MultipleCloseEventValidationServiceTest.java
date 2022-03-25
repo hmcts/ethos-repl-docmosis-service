@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class MultipleCloseEventValidationServiceTest {
     @Before
     public void setUp() {
         multipleDetails = new MultipleDetails();
+        //eventValidationService = new EventValidationService(caseCloseService);
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         errors = new ArrayList<>();
         userToken = "authString";

@@ -57,13 +57,11 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseService.CLOSING_CASE_WITH_BF_OPEN_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator.CLOSING_CASE_WITH_BF_OPEN_ERROR;
 
 @ExtendWith(SpringExtension.class)
 class EventValidationServiceTest {
 
-    @Mock
-    private CaseCloseService caseCloseService;
     @InjectMocks
     private EventValidationService eventValidationService;
 
@@ -496,14 +494,14 @@ class EventValidationServiceTest {
         }
     }
 
-    @ParameterizedTest
+   // @ParameterizedTest
     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
     void shouldValidateCaseBeforeCloseEventWithErrors(boolean isRejected, boolean partOfMultiple) {
         List<String> errors = new ArrayList<>();
 
         List<String> msgBfActionsForCaseCloseEvent = new ArrayList<>();
         msgBfActionsForCaseCloseEvent.add(CLOSING_CASE_WITH_BF_OPEN_ERROR);
-        when(caseCloseService.validateBfActionsForCaseCloseEvent(caseDetails18.getCaseData()))
+        when(CaseCloseValidator.validateBfActionsForCaseCloseEvent(caseDetails18.getCaseData()))
                 .thenReturn(msgBfActionsForCaseCloseEvent);
 
         eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),

@@ -69,8 +69,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 @Service("eventValidationService")
 public class EventValidationService {
 
-    private final CaseCloseService caseCloseService;
-
     private static final List<String> INVALID_STATES_FOR_CLOSED_CURRENT_POSITION = List.of(
             SUBMITTED_STATE, ACCEPTED_STATE, REJECTED_STATE);
 
@@ -436,7 +434,7 @@ public class EventValidationService {
         validateJudgementsHasJurisdiction(caseData, partOfMultiple, errors);
         validateHearingStatusForCaseCloseEvent(caseData, errors);
         validateHearingJudgeAllocationForCaseCloseEvent(caseData, errors);
-        errors.addAll(caseCloseService.validateBfActionsForCaseCloseEvent(caseData));
+        errors.addAll(CaseCloseValidator.validateBfActionsForCaseCloseEvent(caseData));
         return errors;
     }
 
