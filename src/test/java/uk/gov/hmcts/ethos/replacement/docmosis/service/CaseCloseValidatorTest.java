@@ -17,7 +17,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITIO
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator.CLOSING_CASE_WITH_BF_OPEN_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator.REINSTATE_CANNOT_CASE_CLOSED_ERROR_MESSAGE;
 
-class CaseCloseServiceTest {
+class CaseCloseValidatorTest {
 
     private CaseData caseData;
 
@@ -72,5 +72,4 @@ class CaseCloseServiceTest {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, CaseDetails.class);
     }
-
 }

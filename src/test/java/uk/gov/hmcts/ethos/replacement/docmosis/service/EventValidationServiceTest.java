@@ -17,6 +17,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -494,15 +495,13 @@ class EventValidationServiceTest {
         }
     }
 
-   // @ParameterizedTest
+    @ParameterizedTest
     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
     void shouldValidateCaseBeforeCloseEventWithErrors(boolean isRejected, boolean partOfMultiple) {
         List<String> errors = new ArrayList<>();
 
-        List<String> msgBfActionsForCaseCloseEvent = new ArrayList<>();
-        msgBfActionsForCaseCloseEvent.add(CLOSING_CASE_WITH_BF_OPEN_ERROR);
-        when(CaseCloseValidator.validateBfActionsForCaseCloseEvent(caseDetails18.getCaseData()))
-                .thenReturn(msgBfActionsForCaseCloseEvent);
+        caseDetails18.getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
+        caseDetails18.getCaseData().getBfActions().get(0).getValue().setCleared(null);
 
         eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),
                 isRejected, partOfMultiple, errors);
