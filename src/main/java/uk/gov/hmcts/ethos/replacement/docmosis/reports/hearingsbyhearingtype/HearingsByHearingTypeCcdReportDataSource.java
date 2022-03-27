@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 
@@ -16,7 +17,7 @@ public class HearingsByHearingTypeCcdReportDataSource implements HearingsByHeari
 
     @Override
     public List<HearingsByHearingTypeSubmitEvent> getData(String caseTypeId,
-                                                String listingDateFrom, String listingDateTo) {
+                                                          String listingDateFrom, String listingDateTo) {
         try {
             var query = HearingsByHearingTypeElasticSearchQuery.create(listingDateFrom, listingDateTo);
             return ccdClient.hearingsByHearingTypeSearch(authToken, caseTypeId, query);

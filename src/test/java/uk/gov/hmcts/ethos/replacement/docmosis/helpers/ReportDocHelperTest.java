@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import javax.inject.Singleton;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -22,10 +23,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Rep
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportDetail;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportData;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportSummary;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportSummaryHdr;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.ReportFields;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportSummary;
@@ -598,9 +596,32 @@ public class ReportDocHelperTest {
         reportSummaryHdr.setFields(fields);
         reportSummaryHdr.setOffice("Manchester");
         var reportData = new HearingsByHearingTypeReportData(reportSummaryHdr);
-        var reportSummary1 = new HearingsByHearingTypeReportSummary();
-
-       return reportData;
+        var reportSummary = new HearingsByHearingTypeReportSummary();
+        reportSummary.setFields(fields);
+        reportSummary.setDate("12/02/2022");
+        reportData.addReportSummaryList(Collections.singletonList(reportSummary));
+        var reportSummary2Hdr = new HearingsByHearingTypeReportSummary2Hdr();
+        reportSummary2Hdr.setFields(fields);
+        reportSummary2Hdr.setSubSplit("Stage 1");
+        reportData.addReportSummary2HdrList(Collections.singletonList(reportSummary2Hdr));
+        var reportSummary2 = new HearingsByHearingTypeReportSummary2();
+        reportSummary2.setFields(fields);
+        reportSummary2.setSubSplit("Stage 1");
+        reportSummary2.setDate("12/02/2022");
+        reportData.addReportSummary2List(Collections.singletonList(reportSummary2));
+        var reportDetail = new HearingsByHearingTypeReportDetail();
+        reportDetail.setTel("Y");
+        reportDetail.setDuration("20");
+        reportDetail.setCaseReference("1111");
+        reportDetail.setJm("Y");
+        reportDetail.setHearingNo("1");
+        reportDetail.setHearingClerk("Clerk A");
+        reportDetail.setDate("12/02/2022");
+        reportDetail.setHearingType("Hearing");
+        reportDetail.setLead("Y");
+        reportDetail.setMultiSub("multiSub");
+        reportData.addReportDetail(Collections.singletonList(reportDetail));
+        return reportData;
     }
 
     private HearingsToJudgmentsReportData getHearingsToJudgmentsReportData() {
@@ -742,7 +763,7 @@ public class ReportDocHelperTest {
                 .getResource("hearingsToHearingTypeExpected.json")).toURI())));
         var today = UtilHelper.formatCurrentDate(LocalDate.now());
         expectedJson = expectedJson.replace("replace-with-current-date", today);
-        var reportData = getHearingsToJudgmentsReportData();
+        var reportData = getHearingsByHearingTypeReportData();
         var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
                 "EM-TRB-SCO-ENG-00785", userDetails).toString();
         assertEquals(expectedJson, actualJson);
