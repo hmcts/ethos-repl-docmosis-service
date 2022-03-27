@@ -750,9 +750,9 @@ public class ReportDocHelper {
                 nullCheck(reportData.getReportSummaryHdr().getFields().getRemedyCount())).append(NEW_LINE);
         sb.append("\"reconsider_SummaryHdr\":\"").append(
                 nullCheck(reportData.getReportSummaryHdr().getFields().getReconsiderCount())).append(NEW_LINE);
-        addJsonCollection("reportSummary1", reportData.getReportDetails().iterator(), sb);
-        addJsonCollection("reportSummary2Hdr", reportData.getReportDetails().iterator(), sb);
-        addJsonCollection("reportSummary2", reportData.getReportDetails().iterator(), sb);
+        addJsonCollection("reportSummary1", reportData.getReportSummaryList().iterator(), sb);
+        addJsonCollection("reportSummary2Hdr", reportData.getReportSummary2HdrList().iterator(), sb);
+        addJsonCollection("reportSummary2", reportData.getReportSummary2List().iterator(), sb);
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }
