@@ -19,7 +19,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYP
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 
-public class HearingsByHearingTypeReportTest {
+ class HearingsByHearingTypeReportTest {
 
     HearingsByHearingTypeReportDataSource reportDataSource;
     HearingsByHearingTypeReport hearingsByHearingTypeReport;
