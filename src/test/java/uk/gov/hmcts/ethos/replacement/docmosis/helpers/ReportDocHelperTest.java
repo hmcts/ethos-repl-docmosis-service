@@ -10,6 +10,7 @@ import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 
@@ -51,10 +52,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
@@ -596,6 +593,7 @@ public class ReportDocHelperTest {
         reportSummaryHdr.setFields(fields);
         reportSummaryHdr.setOffice("Manchester");
         var reportData = new HearingsByHearingTypeReportData(reportSummaryHdr);
+        reportData.setReportType(HEARINGS_BY_HEARING_TYPE_REPORT);
         var reportSummary = new HearingsByHearingTypeReportSummary();
         reportSummary.setFields(fields);
         reportSummary.setDate("12/02/2022");
@@ -760,78 +758,13 @@ public class ReportDocHelperTest {
     @Test
     public void buildHearingsByHearingTypeReport() throws URISyntaxException, IOException {
         var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource("hearingsToHearingTypeExpected.json")).toURI())));
+                .getResource("hearingsByHearingTypeExpected.json")).toURI())));
         var today = UtilHelper.formatCurrentDate(LocalDate.now());
         expectedJson = expectedJson.replace("replace-with-current-date", today);
         var reportData = getHearingsByHearingTypeReportData();
         var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
                 "EM-TRB-SCO-ENG-00785", userDetails).toString();
         assertEquals(expectedJson, actualJson);
-    }
-
-    @Test
-    public void buildHearingsByHearingType() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00785.docx\",\n"
-                + "\"outputName\":\"document.docx\",\n"
-                + "\"data\":{\n"
-                + "\"Listed_date_from\":\"1 December 2021\",\n"
-                + "\"Listed_date_to\":\"3 December 2021\",\n"
-                + "\"Report_Office\":\"\",\n"
-                + "\"cm_summary1\":\"2\",\n"
-                + "\"costs_summary1\":\"2\",\n"
-                + "\"hearing_summary1\":\"2\",\n"
-                + "\"hearingPrelim_summary1\":\"2\",\n"
-                + "\"reconsider_summary1\":\"2\",\n"
-                + "\"remedy_summary1\":\"2\",\n"
-                + "\"total_summary1\":\"12\",\n"
-                + "\"Report_List\":[\n"
-                + "{\"date_summary1_list\":\"20 October 2021\",\n"
-                + "\"cm_summary1_list\":\"2\",\n"
-                + "\"costs_summary1_list\":\"2\",\n"
-                + "\"hearing_summary1_list\":\"2\",\n"
-                + "\"hearingPrelim_summary1_list\":\"2\",\n"
-                + "\"reconsider_summary1_list\":\"2\",\n"
-                + "\"remedy_summary1_list\":\"2\",\n"
-                + "\"total_summary1_list\":\"12\"}],\n"
-                + "\"reportSummaryHdr2\":[\n"
-                + "{\"subSplit_summary2\":\"JM\",\n"
-                + "\"cm_summary2\":\"1\",\n"
-                + "\"costs_summary2\":\"1\",\n"
-                + "\"hearing_summary2\":\"1\",\n"
-                + "\"hearingPrelim_summary2\":\"1\",\n"
-                + "\"reconsider_summary2\":\"1\",\n"
-                + "\"remedy_summary2\":\"1\",\n"
-                + "\"total_summary2\":\"6\"}],\n"
-                + "\"reportSummary2\":[\n"
-                + "{\"date_summary2_list\":\"20 October 2021\",\n"
-                + "\"subSplit_summary2_list\":\"JM\",\n"
-                + "\"cm_summary2_list\":\"2\",\n"
-                + "\"costs_summary2_list\":\"2\",\n"
-                + "\"hearing_summary2_list\":\"2\",\n"
-                + "\"hearingPrelim_summary2_list\":\"2\",\n"
-                + "\"reconsider_summary2_list\":\"2\",\n"
-                + "\"remedy_summary2_list\":\"2\",\n"
-                + "\"total_summary2_list\":\"12\"}],\n"
-                + "\"reportDetails\":[\n"
-                + "{\"date_detail\":\"2020-10-20T10:00:00.000\",\n"
-                + "\"multiple_sub_detail\":\"multSub\",\n"
-                + "\"case_no_detail\":\"1112\",\n"
-                + "\"lead_detail\":\"212323\",\n"
-                + "\"hear_no_detail\":\"1\",\n"
-                + "\"type_detail\":\"Hearing\",\n"
-                + "\"tel_detail\":\"Y\",\n"
-                + "\"jm_detail\":\"Y\",\n"
-                + "\"dur_detail\":\"430\",\n"
-                + "\"clerk_detail\":\"clerk1\"}],\n"
-                + "\"Report_Clerk\":\"Mike Jordan\",\n"
-                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
-                + "}\n"
-                + "}\n";
-
-        assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails6.getCaseData(), "",
-                "EM-TRB-SCO-ENG-00785", userDetails).toString());
     }
 
     @Test

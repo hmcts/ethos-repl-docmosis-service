@@ -4,9 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
@@ -15,8 +12,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
 import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeSubmitEvent;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 
 public class HearingsByHearingTypeCaseDataBuilder {
 
@@ -25,6 +20,7 @@ public class HearingsByHearingTypeCaseDataBuilder {
         HearingsByHearingTypeSubmitEvent submitEvent = new HearingsByHearingTypeSubmitEvent();
         HearingsByHearingTypeCaseData caseData = new HearingsByHearingTypeCaseData();
         caseData.setHearingCollection(null);
+        submitEvent.setCaseData(caseData);
         return submitEvent;
     }
 
@@ -112,33 +108,33 @@ public class HearingsByHearingTypeCaseDataBuilder {
     public List<HearingsByHearingTypeSubmitEvent> createSubmitEvents(String hearingStatus, String mulRef, String mulName) {
 
         List<HearingsByHearingTypeSubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000",
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2022-01-01T00:00:00.000",
                 hearingStatus);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "1", "lead1", mulRef,mulName));
-        dateListedTypeItem = createHearingDateListed("2021-07-01T00:00:00.000",
-                HEARING_STATUS_HEARD);
+        dateListedTypeItem = createHearingDateListed("2022-01-03T00:00:00.000",
+                hearingStatus);
         hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY, "Hybrid",
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "2", "lead2", mulRef,mulName));
-        dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000",
-                HEARING_STATUS_HEARD);
+        dateListedTypeItem = createHearingDateListed("2022-01-07T00:00:00.000",
+                hearingStatus);
         hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Stage 1",
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "3", "lead3", mulRef,mulName));
-        dateListedTypeItem = createHearingDateListed("2020-06-01T00:00:00.000",
-                HEARING_STATUS_HEARD);
+        dateListedTypeItem = createHearingDateListed("2022-01-04T00:00:00.000",
+                hearingStatus);
         hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, "Video",
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "4", "lead4", mulRef,mulName));
-        dateListedTypeItem = createHearingDateListed("2020-11-01T00:00:00.000",
-                HEARING_STATUS_HEARD);
+        dateListedTypeItem = createHearingDateListed("2022-01-10T00:00:00.000",
+                hearingStatus);
         hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING_CM, "Full Panel",
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "5", "lead5", mulRef,mulName));
-        dateListedTypeItem = createHearingDateListed("2021-10-01T00:00:00.000",
-                HEARING_STATUS_HEARD);
+        dateListedTypeItem = createHearingDateListed("2022-01-12T00:00:00.000",
+                hearingStatus);
         hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_RECONSIDERATION, "Yes",
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "6", "lead6", mulRef,mulName));
@@ -151,7 +147,7 @@ public class HearingsByHearingTypeCaseDataBuilder {
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "Video",
                 dateListedTypeItem));
         // Hearing inside of search range
-        dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000", HEARING_STATUS_HEARD);
+        dateListedTypeItem = createHearingDateListed("2022-01-14T00:00:00.000", HEARING_STATUS_HEARD);
         var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Video", dateListedTypeItem);
         hearings.add(hearingTypeItem);
         var submitEvent = createSubmitEvent(hearings, "123456", "No", "", "");
@@ -160,7 +156,7 @@ public class HearingsByHearingTypeCaseDataBuilder {
 
     public HearingsByHearingTypeSubmitEvent createSubmitEventNullTime(String propertyToBeNull) {
         List<HearingTypeItem> hearings = new ArrayList<>();
-        var dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000", HEARING_STATUS_HEARD);
+        var dateListedTypeItem = createHearingDateListed("2022-01-17T00:00:00.000", HEARING_STATUS_HEARD);
         if (propertyToBeNull.equals("Start")) {
             dateListedTypeItem.getValue().setHearingTimingStart(null);
         } else if(propertyToBeNull.equals("Finish")) {

@@ -11,7 +11,20 @@ public class HearingsByHearingTypeReportSummary2Hdr {
 
     HearingsByHearingTypeReportSummary2Hdr(String subSplit) {
         this.subSplit = subSplit;
+        fields = new ReportFields();
+        initReportFields(fields);
     }
+
     private ReportFields fields;
     private String subSplit;
+
+    private void initReportFields(ReportFields reportFields) {
+        reportFields.setHearingCount("0");
+        reportFields.setCmCount("0");
+        reportFields.setCostsCount("0");
+        reportFields.setTotal("0");
+        reportFields.setHearingPrelimCount("0");
+        reportFields.setReconsiderCount("0");
+        reportFields.setRemedyCount("0");
+    }
 }

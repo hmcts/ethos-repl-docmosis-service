@@ -8,7 +8,6 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.items.ReportListingsTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
@@ -114,7 +113,7 @@ public class ReportDocHelper {
                     sb.append(ListingHelper.getListingDate(listingData));
                     sb.append(getHearingsByHearingTypeReport(listingData));
                 } catch (JsonProcessingException e) {
-                   throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
                 }
                 break;
             case CASES_AWAITING_JUDGMENT_REPORT:
@@ -737,7 +736,7 @@ public class ReportDocHelper {
         var reportData = (HearingsByHearingTypeReportData) listingData;
         var sb = new StringBuilder();
         sb.append(REPORT_OFFICE).append(reportData.getReportSummaryHdr().getOffice()).append(NEW_LINE);
-        sb.append("cm_SummaryHdr").append(
+        sb.append("\"cm_SummaryHdr\":\"").append(
                 nullCheck(reportData.getReportSummaryHdr().getFields().getCmCount())).append(NEW_LINE);
         sb.append("\"hearing_SummaryHdr\":\"").append(
                 nullCheck(reportData.getReportSummaryHdr().getFields().getHearingCount())).append(NEW_LINE);
@@ -757,6 +756,5 @@ public class ReportDocHelper {
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }
-
 
 }

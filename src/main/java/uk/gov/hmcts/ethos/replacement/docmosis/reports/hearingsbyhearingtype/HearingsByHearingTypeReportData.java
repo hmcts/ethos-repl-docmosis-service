@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class HearingsByHearingTypeReportData extends ListingData {
@@ -27,15 +27,19 @@ public class HearingsByHearingTypeReportData extends ListingData {
     public HearingsByHearingTypeReportSummaryHdr getReportSummaryHdr() {
         return reportSummaryHdr;
     }
+
     public List<HearingsByHearingTypeReportSummary> getReportSummaryList() {
         return reportSummaryList;
     }
+
     public List<HearingsByHearingTypeReportSummary2Hdr> getReportSummary2HdrList() {
         return reportSummary2HdrList;
     }
+
     public List<HearingsByHearingTypeReportSummary2> getReportSummary2List() {
         return reportSummary2List;
     }
+
     public List<HearingsByHearingTypeReportDetail> getReportDetails() {
         return reportDetails;
     }
@@ -51,7 +55,6 @@ public class HearingsByHearingTypeReportData extends ListingData {
     public void addReportSummary2List(List<HearingsByHearingTypeReportSummary2> reportSummary2List) {
         this.reportSummary2List.addAll(reportSummary2List);
     }
-
 
     public void addReportDetail(List<HearingsByHearingTypeReportDetail> reportDetails) {
         this.reportDetails.addAll(reportDetails);
