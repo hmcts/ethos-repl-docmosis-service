@@ -85,12 +85,10 @@ public class HearingsByHearingTypeReport {
             if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
                 var startDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateFrom));
                 var endDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateTo));
-                return (listedDate.isEqual(startDate) || listedDate.isAfter(startDate))
-                        && (listedDate.isEqual(endDate) || listedDate.isBefore(endDate));
+                return !listedDate.isBefore(startDate) && !listedDate.isAfter(endDate);
             } else {
                 return false;
             }
-
         }
     }
 
@@ -471,6 +469,8 @@ public class HearingsByHearingTypeReport {
                     setReportSummary2HdrFields(subSplit, hearingTypeItem, reportSummary2HdrList);
                 }
             }
+        }
+    }
           
 
     private void setReportSummary2HdrFields(
@@ -483,3 +483,4 @@ public class HearingsByHearingTypeReport {
         }
     }
 }
+
