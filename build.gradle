@@ -255,9 +255,11 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.1'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: logbackVersion
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.179'
+    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.181'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
@@ -323,6 +325,7 @@ dependencies {
     contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.7.RELEASE'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.10.RELEASE'
+    contractTestImplementation group: 'com.fasterxml.jackson.core',  name: 'jackson-databind', version: '2.13.2.1'
     contractTestImplementation sourceSets.main.runtimeClasspath
     contractTestImplementation sourceSets.test.runtimeClasspath
 }
