@@ -325,6 +325,7 @@ dependencies {
     contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.7.RELEASE'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.10.RELEASE'
+    contractTestImplementation group: 'com.fasterxml.jackson.core',  name: 'jackson-databind', version: '2.13.2.1'
     contractTestImplementation sourceSets.main.runtimeClasspath
     contractTestImplementation sourceSets.test.runtimeClasspath
 }
