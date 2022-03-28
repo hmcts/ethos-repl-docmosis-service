@@ -10,16 +10,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeSubmitEvent;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysCcdReportDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 public class HearingsByHearingTypeCcdReportDataSourceTest {
 
     @Test
     public void shouldReturnSearchResults() throws IOException {
         var authToken = "token";
-        var caseTypeId = "caseTypeId";
+        var caseTypeId = "caseTypeId_Listings";
         var fromDate = "1-1-2022";
         var toDate = "10-1-2022";
         var ccdClient = mock(CcdClient.class);
@@ -29,7 +28,7 @@ public class HearingsByHearingTypeCcdReportDataSourceTest {
 
         var ccdReportDataSource = new HearingsByHearingTypeCcdReportDataSource(authToken, ccdClient);
 
-        var results = ccdReportDataSource.getData(caseTypeId,fromDate, toDate);
+        var results = ccdReportDataSource.getData(new ReportParams(caseTypeId,fromDate, toDate));
         assertEquals(1, results.size());
         assertEquals(submitEvent, results.get(0));
     }
@@ -37,14 +36,14 @@ public class HearingsByHearingTypeCcdReportDataSourceTest {
     @Test(expected = ReportException.class)
     public void shouldThrowReportExceptionWhenSearchFails() throws IOException {
         var authToken = "token";
-        var caseTypeId = "caseTypeId";
+        var caseTypeId = "caseTypeId_Listings";
         var fromDate = "1-1-2022";
         var toDate = "10-1-2022";
         var ccdClient = mock(CcdClient.class);
         when(ccdClient.hearingsByHearingTypeSearch(anyString(), anyString(), anyString())).thenThrow(new IOException());
 
         var ccdReportDataSource = new HearingsByHearingTypeCcdReportDataSource(authToken, ccdClient);
-        ccdReportDataSource.getData(caseTypeId, fromDate, toDate);
+        ccdReportDataSource.getData(new ReportParams(caseTypeId, fromDate, toDate));
         fail("Should throw exception instead");
     }
 

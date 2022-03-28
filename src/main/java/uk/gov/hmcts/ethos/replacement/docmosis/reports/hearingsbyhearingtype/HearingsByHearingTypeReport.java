@@ -77,19 +77,21 @@ public class HearingsByHearingTypeReport {
     }
 
     private boolean isValidHearing(DateListedType dateListedType) {
-        LocalDate listedDate;
-        var startDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateFrom));
-        var endDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateTo));
         if (isNullOrEmpty(dateListedType.getListedDate())) {
             return false;
         } else {
+            LocalDate listedDate;
             listedDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateListedType.getListedDate()));
+            if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
+                var startDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateFrom));
+                var endDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateTo));
+                return (listedDate.isEqual(startDate) || listedDate.isAfter(startDate))
+                        && (listedDate.isEqual(endDate) || listedDate.isBefore(endDate));
+            } else {
+                return false;
+            }
+
         }
-        if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
-            return (listedDate.isEqual(startDate) || listedDate.isAfter(startDate))
-                    && (listedDate.isEqual(endDate) || listedDate.isBefore(endDate));
-        }
-        return false;
     }
 
     private void initReportSummary2HdrList(List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList) {
@@ -146,10 +148,7 @@ public class HearingsByHearingTypeReport {
     }
 
     private List<HearingsByHearingTypeSubmitEvent> getCases(ReportParams params) {
-        return reportDataSource.getData(
-                UtilHelper.getListingCaseTypeId(params.getCaseTypeId()),
-                params.getDateFrom(),
-                params.getDateTo());
+        return reportDataSource.getData(params);
     }
 
     private void executeReport(

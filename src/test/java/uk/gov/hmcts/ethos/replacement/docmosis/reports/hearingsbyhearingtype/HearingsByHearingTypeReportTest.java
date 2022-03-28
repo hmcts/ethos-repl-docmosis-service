@@ -30,7 +30,7 @@ class HearingsByHearingTypeReportTest {
         submitEvents.clear();
         caseDataBuilder = new HearingsByHearingTypeCaseDataBuilder();
         reportDataSource = mock(HearingsByHearingTypeReportDataSource.class);
-        when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        when(reportDataSource.getData(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO))).thenReturn(submitEvents);
         hearingsByHearingTypeReport = new HearingsByHearingTypeReport(reportDataSource);
     }
 
