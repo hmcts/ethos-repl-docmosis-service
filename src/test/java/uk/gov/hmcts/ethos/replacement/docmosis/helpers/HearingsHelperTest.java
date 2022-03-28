@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -173,6 +174,23 @@ public class HearingsHelperTest {
                 .get(0).getValue().setHearingTimingFinish("2021-12-19T10:10:00");
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
                 .get(0).getValue().setHearingTimingStart("2021-12-19T10:00:00");
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
+        List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
+        assertEquals(0, errors.size());
+    }
+
+
+    @Test
+    public void validateHearingDatesConsideringDSTTest() {
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingBreak(LocalDateTime.now().minusMinutes(25).toString());
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingResume(LocalDateTime.now().minusMinutes(25).toString());
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingFinish(LocalDateTime.now().minusMinutes(20).toString());
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingStart(LocalDateTime.now().minusMinutes(30).toString());
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
