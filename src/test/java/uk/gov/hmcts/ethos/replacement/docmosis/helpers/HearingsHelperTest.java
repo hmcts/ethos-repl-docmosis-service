@@ -2,9 +2,9 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 
 import java.nio.file.Files;
@@ -183,14 +183,15 @@ public class HearingsHelperTest {
 
     @Test
     public void validateHearingDatesConsideringDSTTest() {
+        ZoneId zoneId = ZoneId.of("Europe/London");
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingBreak(LocalDateTime.now().minusMinutes(25).toString());
+                .get(0).getValue().setHearingTimingBreak(LocalDateTime.now().atZone(zoneId).toLocalDateTime().minusMinutes(25).toString());
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingResume(LocalDateTime.now().minusMinutes(25).toString());
+                .get(0).getValue().setHearingTimingResume(LocalDateTime.now().atZone(zoneId).toLocalDateTime().minusMinutes(25).toString());
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingFinish(LocalDateTime.now().minusMinutes(20).toString());
+                .get(0).getValue().setHearingTimingFinish(LocalDateTime.now().atZone(zoneId).toLocalDateTime().minusMinutes(20).toString());
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingStart(LocalDateTime.now().minusMinutes(30).toString());
+                .get(0).getValue().setHearingTimingStart(LocalDateTime.now().atZone(zoneId).toLocalDateTime().minusMinutes(30).toString());
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
