@@ -10,9 +10,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 
@@ -134,7 +134,9 @@ public class HearingsHelper {
     }
 
     private static boolean isDateInFuture(String date) {
-        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).isAfter(LocalDateTime.now());
+        ZoneId zoneId = ZoneId.of("Europe/London");
+        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).atZone(zoneId)
+                .isAfter(LocalDateTime.now().atZone(zoneId));
     }
 
     private static void checkStartFinishTimes(List<String> errors, DateListedType dateListedType,
