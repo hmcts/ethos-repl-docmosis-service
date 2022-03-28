@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype;
 
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

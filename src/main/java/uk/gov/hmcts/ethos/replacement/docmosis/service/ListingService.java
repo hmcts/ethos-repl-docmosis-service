@@ -369,9 +369,9 @@ public class ListingService {
     private NoPositionChangeReportData getNoPositionChangeReport(ListingDetails listingDetails, String authToken) {
         log.info("No Change In Current Position for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
-        var hearingsToJudgmentsReport = new NoPositionChangeReport(reportDataSource,
+        var noPositionChangeReport = new NoPositionChangeReport(reportDataSource,
                 listingDetails.getCaseData().getReportDate());
-        var reportData = hearingsToJudgmentsReport.runReport(
+        var reportData = noPositionChangeReport.runReport(
                 listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());

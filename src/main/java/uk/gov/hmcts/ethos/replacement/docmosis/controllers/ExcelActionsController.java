@@ -1,8 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -71,12 +73,15 @@ public class ExcelActionsController {
     private final FixMultipleCaseApiService fixMultipleCaseApiService;
 
     @PostMapping(value = "/createMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Creates a multiple case. Retrieves cases by ethos case reference. Creates an Excel")
+    @Operation(summary = "Creates a multiple case. Retrieves cases by ethos case reference. Creates an Excel")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> createMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -97,12 +102,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/amendMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Update the state of the multiple")
+    @Operation(summary = "Update the state of the multiple")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> amendMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -123,12 +131,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/fixMultipleCaseApi", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Fix case event for multiples")
+    @Operation(summary = "Fix case event for multiples")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> fixMultipleCaseApi(
             @RequestBody MultipleRequest multipleRequest,
@@ -148,12 +159,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/amendMultipleAPI", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Update the state of the multiple")
+    @Operation(summary = "Update the state of the multiple")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> amendMultipleAPI(
             @RequestBody MultipleRequest multipleRequest,
@@ -173,12 +187,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/importMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Check errors uploading an excel to the multiple")
+    @Operation(summary = "Check errors uploading an excel to the multiple")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> importMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -199,12 +216,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/preAcceptMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Accept a bulk of cases.")
+    @Operation(summary = "Accept a bulk of cases.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> preAcceptMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -225,12 +245,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/batchUpdate", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "updates cases in a bulk case. Update cases by given fields.")
+    @Operation(summary = "updates cases in a bulk case. Update cases by given fields.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> batchUpdate(
             @RequestBody MultipleRequest multipleRequest,
@@ -251,12 +274,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/dynamicListFlags", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populate flags in dynamic lists with all flags values are in the excel.")
+    @Operation(summary = "populate flags in dynamic lists with all flags values are in the excel.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> dynamicListFlags(
             @RequestBody MultipleRequest multipleRequest,
@@ -277,12 +303,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/multipleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates if multiple and sub multiples are correct.")
+    @Operation(summary = "validates if multiple and sub multiples are correct.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> multipleMidEventValidation(
             @RequestBody MultipleRequest multipleRequest,
@@ -303,12 +332,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/subMultipleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates if sub multiple is correct.")
+    @Operation(summary = "validates if sub multiple is correct.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> subMultipleMidEventValidation(
             @RequestBody MultipleRequest multipleRequest,
@@ -330,12 +362,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/updateSubMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "manage create/amend/delete actions for sub multiples.")
+    @Operation(summary = "manage create/amend/delete actions for sub multiples.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> updateSubMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -356,12 +391,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/multipleCreationMidEventValidation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates if single cases are right on the multiple creation.")
+    @Operation(summary = "validates if single cases are right on the multiple creation.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> multipleCreationMidEventValidation(
             @RequestBody MultipleRequest multipleRequest,
@@ -384,12 +422,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/multipleAmendCaseIdsMidEventValidation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates if single cases are right on the multiple amend case ids.")
+    @Operation(summary = "validates if single cases are right on the multiple amend case ids.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> multipleAmendCaseIdsMidEventValidation(
             @RequestBody MultipleRequest multipleRequest,
@@ -412,12 +453,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/multipleSingleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates whether case exists in the multiple.")
+    @Operation(summary = "validates whether case exists in the multiple.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> multipleSingleMidEventValidation(
             @RequestBody MultipleRequest multipleRequest,
@@ -439,12 +483,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/multipleMidBatch1Validation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates the receipts date introduced by the user.")
+    @Operation(summary = "validates the receipts date introduced by the user.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> multipleMidBatch1Validation(
             @RequestBody MultipleRequest multipleRequest,
@@ -463,12 +510,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/listingsDateRangeMidEventValidation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates the date range the user selects for report/listing.")
+    @Operation(summary = "validates the date range the user selects for report/listing.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<ListingCallbackResponse> listingsDateRangeMidEventValidation(
             @RequestBody ListingRequest listingRequest,
@@ -491,12 +541,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/closeMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Closes a multiple and sends updates to all singles to be closed.")
+    @Operation(summary = "Closes a multiple and sends updates to all singles to be closed.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> closeMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -524,12 +577,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/updatePayloadMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Updates the payload to fix issues on it.")
+    @Operation(summary = "Updates the payload to fix issues on it.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> updatePayloadMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -551,12 +607,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/resetMultipleState", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Resets the multiple state to Open.")
+    @Operation(summary = "Resets the multiple state to Open.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> resetMultipleState(
             @RequestBody MultipleRequest multipleRequest,
@@ -580,12 +639,14 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/dynamicListOfficesMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populates all offices except the current one in dynamic lists.")
+    @Operation(summary = "populates all offices except the current one in dynamic lists.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> dynamicListOfficesMultiple(
             @RequestBody MultipleRequest multipleRequest,
@@ -608,12 +669,15 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/multipleTransfer", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Transfers a multiple and all single cases to a different office.")
+    @Operation(summary = "Transfers a multiple and all single cases to a different office.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = MultipleCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MultipleCallbackResponse.class))
+                }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> multipleTransfer(
             @RequestBody MultipleRequest multipleRequest,

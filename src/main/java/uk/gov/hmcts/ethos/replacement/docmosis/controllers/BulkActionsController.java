@@ -1,8 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -52,14 +54,15 @@ public class BulkActionsController {
     private final VerifyTokenService verifyTokenService;
 
     @PostMapping(value = "/createBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "creates a bulk case. Retrieves cases by ethos case reference.")
+    @Operation(summary = "creates a bulk case. Retrieves cases by ethos case reference.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-
     @Deprecated public ResponseEntity<BulkCallbackResponse> createBulk(
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
@@ -83,12 +86,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/createBulkES", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "creates a bulk case. Retrieves cases by ethos case reference.")
+    @Operation(summary = "creates a bulk case. Retrieves cases by ethos case reference.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> createBulkES(
             @RequestBody BulkRequest bulkRequest,
@@ -118,12 +123,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/afterSubmittedBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "display the bulk info.")
+    @Operation(summary = "display the bulk info.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> afterSubmittedBulk(
             @RequestBody BulkRequest bulkRequest,
@@ -150,12 +157,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/updateBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "updates cases in a bulk case. Update cases in searchCollection by given fields.")
+    @Operation(summary = "updates cases in a bulk case. Update cases in searchCollection by given fields.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> updateBulk(
             @RequestBody BulkRequest bulkRequest,
@@ -179,12 +188,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/updateBulkCase", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "update a bulk case. Update the multiple collection.")
+    @Operation(summary = "update a bulk case. Update the multiple collection.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> updateBulkCase(
             @RequestBody BulkRequest bulkRequest,
@@ -206,12 +217,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/generateBulkLetter", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a bulk of letters.")
+    @Operation(summary = "generate a bulk of letters.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> generateBulkLetter(
             @RequestBody BulkRequest bulkRequest,
@@ -235,12 +248,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/generateBulkLetterConfirmation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a bulk letter confirmation.")
+    @Operation(summary = "generate a bulk letter confirmation.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> generateBulkLetterConfirmation(
             @RequestBody BulkRequest bulkRequest,
@@ -260,13 +275,15 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/midSearchBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "searches cases in a bulk case. Look for cases in multipleCollection by fields. "
+    @Operation(summary = "searches cases in a bulk case. Look for cases in multipleCollection by fields. "
             + "Mid event callback.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> midSearchBulk(
             @RequestBody BulkRequest bulkRequest,
@@ -288,12 +305,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/searchBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "searches cases in a bulk case. Look for cases in multipleCollection by fields.")
+    @Operation(summary = "searches cases in a bulk case. Look for cases in multipleCollection by fields.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> searchBulk(
             @RequestBody BulkRequest bulkRequest,
@@ -314,12 +333,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/midCreateSubMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "create a sub multiple looking for cases in multipleCollection. Mid event callback.")
+    @Operation(summary = "create a sub multiple looking for cases in multipleCollection. Mid event callback.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> midCreateSubMultiple(
             @RequestBody BulkRequest bulkRequest,
@@ -341,12 +362,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/createSubMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "create a sub multiple looking for cases in multipleCollection.")
+    @Operation(summary = "create a sub multiple looking for cases in multipleCollection.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> createSubMultiple(
             @RequestBody BulkRequest bulkRequest,
@@ -368,12 +391,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/subMultipleDynamicList", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populate a dynamic list with all sub multiple names.")
+    @Operation(summary = "populate a dynamic list with all sub multiple names.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> subMultipleDynamicList(
             @RequestBody BulkRequest bulkRequest,
@@ -395,12 +420,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/filterDefaultedAllDynamicList", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populate a dynamic list with all sub multiple names and Select All as default.")
+    @Operation(summary = "populate a dynamic list with all sub multiple names and Select All as default.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> filterDefaultedAllDynamicList(
             @RequestBody BulkRequest bulkRequest,
@@ -422,12 +449,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/filterDefaultedNoneDynamicList", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populate a dynamic list with all sub multiple names and jurCodes and None as default.")
+    @Operation(summary = "populate a dynamic list with all sub multiple names and jurCodes and None as default.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> filterDefaultedNoneDynamicList(
             @RequestBody BulkRequest bulkRequest,
@@ -449,12 +478,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/midUpdateSubMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populates Sub multiple name and search collection for edit.")
+    @Operation(summary = "populates Sub multiple name and search collection for edit.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> midUpdateSubMultiple(
             @RequestBody BulkRequest bulkRequest,
@@ -475,12 +506,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/updateSubMultiple1", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "update the name and the list of cases of a sub multiple.")
+    @Operation(summary = "update the name and the list of cases of a sub multiple.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> updateSubMultiple1(
             @RequestBody BulkRequest bulkRequest,
@@ -501,12 +534,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/deleteSubMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "delete a Sub multiple from a dynamic list.")
+    @Operation(summary = "delete a Sub multiple from a dynamic list.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> deleteSubMultiple(
             @RequestBody BulkRequest bulkRequest,
@@ -527,12 +562,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/generateBulkSchedule", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a multiple schedule.")
+    @Operation(summary = "generate a multiple schedule.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> generateBulkSchedule(
             @RequestBody BulkRequest bulkRequest,
@@ -563,12 +600,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/generateBulkScheduleConfirmation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a multiple schedule confirmation.")
+    @Operation(summary = "generate a multiple schedule confirmation.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> generateBulkScheduleConfirmation(
             @RequestBody BulkRequest bulkRequest,
@@ -588,12 +627,14 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/preAcceptBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "accept a bulk of cases.")
+    @Operation(summary = "accept a bulk of cases.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> preAcceptBulk(
             @RequestBody BulkRequest bulkRequest,
