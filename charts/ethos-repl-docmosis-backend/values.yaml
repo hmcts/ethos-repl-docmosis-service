@@ -6,15 +6,21 @@ java:
     ethos:
       resourceGroup: ethos-repl-docmosis-backend
       secrets:
-        - AppInsightsInstrumentationKey
-        - tornado-access-key
-        - ethos-repl-service-s2s-secret
-        - repl-docmosis-backend-POSTGRES-PASS
-        - repl-docmosis-backend-POSTGRES-PASS-V11
+        - name: AppInsightsInstrumentationKey
+          alias: APP_INSIGHTS_KEY
+        - name: tornado-access-key
+          alias: TORNADO_ACCESS_KEY
+        - name: ethos-repl-service-s2s-secret
+          alias: ETHOS_REPL_SERVICE_S2S_SECRET
+        - name: repl-docmosis-backend-POSTGRES-PASS
+          alias: ETHOS_REPL_DB_PASSWORD
+        - name: repl-docmosis-backend-POSTGRES-PASS-V11
+          alias: ETHOS_REPL_DB_V11_PASSWORD
     ethos-shared:
       resourceGroup: ethos
       secrets:
-        - create-updates-queue-send-connection-string
+        - name: create-updates-queue-send-connection-string
+          alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
   aadIdentityName: ethos
   environment:
     SERVER_PORT: 8081

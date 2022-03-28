@@ -11,11 +11,14 @@ java:
     ethos:
       resourceGroup: ethos-repl-docmosis-backend
       secrets:
-        - tornado-access-key
-        - ethos-repl-service-s2s-secret
+        - name: tornado-access-key
+          alias: TORNADO_ACCESS_KEY
+        - name: ethos-repl-service-s2s-secret
+          alias: ETHOS_REPL_SERVICE_S2S_SECRET
     ethos-shared:
       resourceGroup: ethos
       secrets:
-        - create-updates-queue-send-connection-string
+        - name: create-updates-queue-send-connection-string
+          alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
   postgresql:
     enabled: true

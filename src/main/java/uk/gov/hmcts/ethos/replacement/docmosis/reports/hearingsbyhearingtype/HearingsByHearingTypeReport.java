@@ -437,6 +437,7 @@ public class HearingsByHearingTypeReport {
         return String.valueOf(abs(diff));
     }
 
+
     private void setLocalReportSummaryHdr2(
             List<HearingsByHearingTypeSubmitEvent> submitEvents,
             HearingsByHearingTypeReportData reportData) {
@@ -471,8 +472,7 @@ public class HearingsByHearingTypeReport {
                     setReportSummary2HdrFields(subSplit, hearingTypeItem, reportSummary2HdrList);
                 }
             }
-        }
-    }
+          
 
     private void setReportSummary2HdrFields(
             String subSplit, HearingTypeItem hearingTypeItem,
