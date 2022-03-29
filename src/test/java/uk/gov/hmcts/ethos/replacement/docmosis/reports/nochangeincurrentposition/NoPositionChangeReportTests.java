@@ -23,8 +23,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_BULK_CASE
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
 
 class NoPositionChangeReportTests {
 
@@ -60,7 +62,7 @@ class NoPositionChangeReportTests {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(createValidSingleSubmitEventWithin3Months());
+        submitEvents.add(createValidSingleSubmitEventWithin3Months(ACCEPTED_STATE));
 
         var reportData = noPositionChangeReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
@@ -74,7 +76,7 @@ class NoPositionChangeReportTests {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(createValidMultipleSubmitEventWithin3Months());
+        submitEvents.add(createValidMultipleSubmitEventWithin3Months(CLOSED_STATE));
 
         var reportData = noPositionChangeReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
@@ -213,10 +215,10 @@ class NoPositionChangeReportTests {
         // When I request report data
         // Then the right cases should be in the report data
 
-        submitEvents.add(createValidMultipleSubmitEventBefore3Months());
-        submitEvents.add(createValidMultipleSubmitEventWithin3Months());
-        submitEvents.add(createValidSingleSubmitEventBefore3Months());
-        submitEvents.add(createValidSingleSubmitEventWithin3Months());
+        submitEvents.add(createValidMultipleSubmitEventBefore3Months(ACCEPTED_STATE));
+        submitEvents.add(createValidMultipleSubmitEventWithin3Months(CLOSED_STATE));
+        submitEvents.add(createValidSingleSubmitEventBefore3Months(SUBMITTED_STATE));
+        submitEvents.add(createValidSingleSubmitEventWithin3Months(ACCEPTED_STATE));
 
         var reportData = noPositionChangeReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
@@ -227,7 +229,30 @@ class NoPositionChangeReportTests {
         assertEquals(1, reportData.getReportDetailsMultiple().size());
     }
 
-    private NoPositionChangeSubmitEvent createValidSingleSubmitEventWithin3Months() {
+    @Test
+    void shouldNotIncludeClosedOrTransferredStates() {
+        submitEvents.add(createValidSingleSubmitEventBefore3Months(TRANSFERRED_STATE));
+        submitEvents.add(createValidMultipleSubmitEventBefore3Months(CLOSED_STATE));
+        var reportData = noPositionChangeReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertEquals("0", reportData.getReportSummary().getTotalCases());
+    }
+
+    @Test
+    void checkAllStates() {
+        submitEvents.add(createValidSingleSubmitEventBefore3Months(ACCEPTED_STATE));
+        submitEvents.add(createValidSingleSubmitEventBefore3Months(CLOSED_STATE));
+        submitEvents.add(createValidSingleSubmitEventBefore3Months(REJECTED_STATE));
+        submitEvents.add(createValidSingleSubmitEventBefore3Months(SUBMITTED_STATE));
+        submitEvents.add(createValidSingleSubmitEventBefore3Months(TRANSFERRED_STATE));
+        var reportData = noPositionChangeReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertEquals("3", reportData.getReportSummary().getTotalCases());
+        assertEquals("3", reportData.getReportSummary().getTotalSingleCases());
+        assertEquals(3, reportData.getReportDetailsSingle().size());
+    }
+
+    private NoPositionChangeSubmitEvent createValidSingleSubmitEventWithin3Months(String state) {
         caseDataBuilder = new NoPositionChangeCaseDataBuilder();
         return caseDataBuilder.withCaseType(SINGLE_CASE_TYPE)
                 .withDateToPosition(DATE_WITHIN_3MONTHS)
@@ -236,10 +261,10 @@ class NoPositionChangeReportTests {
                 .withRespondent("resp3")
                 .withReceiptDate(BASE_DATE.format(OLD_DATE_TIME_PATTERN2))
                 .withEthosCaseReference("2500123/2021")
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+                .buildAsSubmitEvent(state);
     }
 
-    private NoPositionChangeSubmitEvent createValidSingleSubmitEventBefore3Months() {
+    private NoPositionChangeSubmitEvent createValidSingleSubmitEventBefore3Months(String state) {
         caseDataBuilder = new NoPositionChangeCaseDataBuilder();
         return caseDataBuilder.withCaseType(SINGLE_CASE_TYPE)
                 .withDateToPosition(DATE_BEFORE_3MONTHS)
@@ -247,10 +272,10 @@ class NoPositionChangeReportTests {
                 .withFirstRespondent("resp2")
                 .withReceiptDate(BASE_DATE.format(OLD_DATE_TIME_PATTERN2))
                 .withEthosCaseReference("2500123/2021")
-                .buildAsSubmitEvent(SUBMITTED_STATE);
+                .buildAsSubmitEvent(state);
     }
 
-    private NoPositionChangeSubmitEvent createValidMultipleSubmitEventWithin3Months() {
+    private NoPositionChangeSubmitEvent createValidMultipleSubmitEventWithin3Months(String state) {
         caseDataBuilder = new NoPositionChangeCaseDataBuilder();
         return caseDataBuilder.withCaseType(MULTIPLE_CASE_TYPE)
                 .withDateToPosition(DATE_WITHIN_3MONTHS)
@@ -259,10 +284,10 @@ class NoPositionChangeReportTests {
                 .withMultipleReference("Multi1")
                 .withReceiptDate(BASE_DATE.format(OLD_DATE_TIME_PATTERN2))
                 .withEthosCaseReference("2500123/2021")
-                .buildAsSubmitEvent(CLOSED_STATE);
+                .buildAsSubmitEvent(state);
     }
 
-    private NoPositionChangeSubmitEvent createValidMultipleSubmitEventBefore3Months() {
+    private NoPositionChangeSubmitEvent createValidMultipleSubmitEventBefore3Months(String state) {
         caseDataBuilder = new NoPositionChangeCaseDataBuilder();
         return caseDataBuilder.withCaseType(MULTIPLE_CASE_TYPE)
                 .withDateToPosition(DATE_BEFORE_3MONTHS)
@@ -272,7 +297,7 @@ class NoPositionChangeReportTests {
                 .withMultipleReference("Multi2")
                 .withReceiptDate(BASE_DATE.format(OLD_DATE_TIME_PATTERN2))
                 .withEthosCaseReference("2500123/2021")
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+                .buildAsSubmitEvent(state);
     }
 
     private void assertCommonValues(NoPositionChangeReportData reportData) {
