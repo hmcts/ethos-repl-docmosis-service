@@ -43,7 +43,6 @@ import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgm
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
@@ -59,9 +58,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.Respond
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -106,6 +107,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CA
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
@@ -608,14 +610,14 @@ public class ListingServiceTest {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
                 "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=" +
-                "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
-                "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), " +
-                "ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
+                "[ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
                 "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
+                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), " +
+                "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
+                "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
+                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
@@ -667,15 +669,15 @@ public class ListingServiceTest {
     public void processListingHearingsRequestRangeAndAllVenues() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range, listingDate=null, " +
-                "listingDateFrom=2019-12-09, listingDateTo=2019-12-12, listingVenue=All, listingCollection=[ListingTypeItem(id=123, " +
-                "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, j" +
+                "listingDateFrom=2019-12-09, listingDateTo=2019-12-12, listingVenue=All, listingCollection=[ListingTypeItem(id=124, " +
+                "value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, j" +
                 "urisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), " +
-                "ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, " +
+                "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, " +
                 "causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, " +
-                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, " +
+                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, " +
                 "claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , " +
                 "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , " +
                 "hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=124, " +
@@ -698,6 +700,70 @@ public class ListingServiceTest {
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
+        assertEquals(result, listingDataResult.toString());
+    }
+
+    @Test(expected = Exception.class)
+    public void processListingHearings_listedDateNullOrEmpty() throws IOException {
+        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(1).getValue().setListedDate(null);
+        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(1).getValue().setListedDate("");
+        listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+                anyString(), anyString())).thenReturn(submitEvents);
+        listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
+    }
+
+    @Test(expected = Exception.class)
+    public void processListingHearings_causeListDateNull() throws IOException {
+        listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+                anyString(), anyString())).thenReturn(submitEvents);
+        var listingData = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
+        var listingCollection = listingData.getListingCollection();
+        listingCollection.get(0).getValue().setCauseListDate(null);
+        listingCollection.sort(Comparator.comparing(o -> LocalDate.parse(o.getValue().getCauseListDate(),
+                CAUSE_LIST_DATE_TIME_PATTERN)));
+    }
+
+    @Test
+    public void processListingHearings_SameDayAndTimeDifferentMonth() throws IOException {
+        var result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, " +
+                "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, " +
+                "reportDate=null, hearingDateType=Range, listingDate=null, listingDateFrom=2021-01-01, " +
+                "listingDateTo=2021-12-01, listingVenue=All, listingCollection=[ListingTypeItem(id=124, " +
+                "value=ListingType(causeListDate=01 January 2021, causeListTime=12:00, causeListVenue=AberdeenVenue," +
+                " elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, " +
+                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , " +
+                "hearingClerk=Clerk, hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , " +
+                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
+                "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= ," +
+                " hearingFormat= , hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=123, " +
+                "value=ListingType(causeListDate=01 December 2021, causeListTime=12:00, causeListVenue=AberdeenVenue," +
+                " elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing," +
+                " positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , " +
+                "hearingClerk=Clerk, hearingDay=1 of 3, claimantName= , claimantTown= , claimantRepresentative= , " +
+                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
+                "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= , " +
+                "hearingFormat= , hearingReadingDeliberationMembersChambers= ))], listingVenueOfficeGlas=null, " +
+                "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, " +
+                "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
+                "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
+                "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
+                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+
+        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setListedDate("2021-12-01T12:00:00.000");
+        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(1).getValue().setListedDate("2021-01-01T12:00:00.000");
+        listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
+        listingDetailsRange.getCaseData().setListingDateFrom("2021-01-01");
+        listingDetailsRange.getCaseData().setListingDateTo("2021-12-01");
+
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+                anyString(), anyString())).thenReturn(submitEvents);
+        var listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
 
@@ -826,6 +892,7 @@ public class ListingServiceTest {
         assertEquals(result, listingData.toString());
     }
 
+    @Test
     public void generateBFReportData() throws IOException {
         String docName = "Brought Forward Report - Test";
         listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
@@ -850,7 +917,7 @@ public class ListingServiceTest {
         doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
                 anyString(), anyString(), anyString(), anyString());
         doReturn(bfActionReportData).when(mockedBfActionReport).runReport(any(ListingDetails.class),
-                Mockito.<SubmitEvent>anyList());
+                Mockito.anyList());
 
         var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
                 "authToken");
@@ -1377,7 +1444,7 @@ public class ListingServiceTest {
             anyString(), anyString(), anyString(), anyString());
 
         doReturn(memberDaysReportData).when(memberDaysReport).runReport(any(ListingDetails.class),
-            Mockito.<SubmitEvent>anyList());
+            Mockito.anyList());
 
         var listingDataResult = (MemberDaysReportData) listingService.generateReportData(listingDetailsRange,
             "authToken");
