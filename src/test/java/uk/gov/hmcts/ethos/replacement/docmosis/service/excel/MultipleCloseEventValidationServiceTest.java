@@ -50,7 +50,6 @@ public class MultipleCloseEventValidationServiceTest {
     @Before
     public void setUp() {
         multipleDetails = new MultipleDetails();
-        //eventValidationService = new EventValidationService(caseCloseService);
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         errors = new ArrayList<>();
         userToken = "authString";
