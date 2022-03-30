@@ -74,6 +74,8 @@ public class HearingsByHearingTypeReport {
         reportFields.setHearingPrelimCount("0");
         reportFields.setReconsiderCount("0");
         reportFields.setRemedyCount("0");
+        reportFields.setSubSplit("");
+        reportFields.setDate("");
     }
 
     private boolean isValidHearing(DateListedType dateListedType) {
@@ -224,14 +226,14 @@ public class HearingsByHearingTypeReport {
             String dateListed, List<HearingsByHearingTypeReportSummary> reportSummaryList) {
         var date = LocalDateTime.parse(
                 dateListed, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
-        var reportSummary = reportSummaryList.stream().filter(a -> date.equals(a.getDate())).findFirst();
+        var reportSummary = reportSummaryList.stream().filter(a -> date.equals(a.getFields().getDate())).findFirst();
         if (reportSummary.isPresent()) {
             return reportSummary.get();
         } else {
             var newReportSummary = new HearingsByHearingTypeReportSummary();
-            newReportSummary.setDate(date.replace("T", " "));
             var fields = new ReportFields();
             initReportFields(fields);
+            fields.setDate(date.replace("T", " "));
             newReportSummary.setFields(fields);
             reportSummaryList.add(newReportSummary);
             return newReportSummary;
@@ -244,17 +246,17 @@ public class HearingsByHearingTypeReport {
         var date = LocalDateTime.parse(
                 dateListed, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
         var reportSummary2 =
-                reportSummaryList2.stream().filter(a -> date.equals(a.getDate())
-                        && subSplit.equals(a.getSubSplit())).findFirst();
+                reportSummaryList2.stream().filter(a -> date.equals(a.getFields().getDate())
+                        && subSplit.equals(a.getFields().getSubSplit())).findFirst();
         if (reportSummary2.isPresent()) {
             return reportSummary2.get();
         } else {
             var newReportSummary2 = new HearingsByHearingTypeReportSummary2();
-            newReportSummary2.setDate(date.replace("T", " "));
             var fields = new ReportFields();
             initReportFields(fields);
             newReportSummary2.setFields(fields);
-            newReportSummary2.setSubSplit(subSplit);
+            newReportSummary2.getFields().setDate(date.replace("T", " "));
+            newReportSummary2.getFields().setSubSplit(subSplit);
             reportSummaryList2.add(newReportSummary2);
             return newReportSummary2;
         }
@@ -264,7 +266,8 @@ public class HearingsByHearingTypeReport {
             String subSplit, List<HearingsByHearingTypeReportSummary2Hdr> reportSummaryHdr2List) {
 
         var reportSummaryHdr2 = reportSummaryHdr2List
-                .stream().filter(a -> subSplit.equals(a.getSubSplit())).findFirst();
+                .stream().filter(a -> a.getFields() != null
+                        && subSplit.equals(a.getFields().getSubSplit())).findFirst();
         return reportSummaryHdr2.orElse(null);
     }
 
@@ -282,6 +285,7 @@ public class HearingsByHearingTypeReport {
                 }
             }
         }
+
         reportData.addReportSummaryList(reportSummaryList);
     }
 
@@ -382,7 +386,7 @@ public class HearingsByHearingTypeReport {
             DateListedTypeItem dateListedTypeItem,
             HearingsByHearingTypeCaseData caseData) {
         var detail = new HearingsByHearingTypeReportDetail();
-        detail.setDate(LocalDateTime.parse(
+        detail.setDetailDate(LocalDateTime.parse(
                 dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate().toString());
         detail.setHearingType(hearingTypeItem.getValue().getHearingType());
         detail.setHearingNo(hearingTypeItem.getValue().getHearingNumber());
@@ -390,12 +394,12 @@ public class HearingsByHearingTypeReport {
         var subMul = StringUtils.defaultString(caseData.getSubMultipleName(), "0 -  Not Allocated");
         detail.setMultiSub(mulRef + ", " + subMul);
         detail.setCaseReference(caseData.getEthosCaseReference());
-        detail.setLead(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
+        detail.setLead(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "N" : "Y");
         detail.setTel(CollectionUtils.isNotEmpty(
                 hearingTypeItem.getValue().getHearingFormat())
                 && hearingTypeItem.getValue().getHearingFormat()
                 .contains("Telephone") ? "Y" : "");
-        detail.setJm("JM".equals(
+        detail.setJm("Yes".equals(
                 hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
         detail.setHearingClerk(Strings.isNullOrEmpty(
                 dateListedTypeItem.getValue().getHearingClerk()) ? ""
@@ -449,7 +453,12 @@ public class HearingsByHearingTypeReport {
                 }
             }
         }
+        removeRowsWithNoData(reportSummary2HdrList);
         reportData.addReportSummary2HdrList(reportSummary2HdrList);
+    }
+
+    private void removeRowsWithNoData(List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList) {
+        reportSummary2HdrList.removeIf(row -> row.getFields().getTotal().equals("0"));
     }
 
     private void setHdr2Fields(

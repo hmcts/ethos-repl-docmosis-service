@@ -13,16 +13,16 @@
 "remedy_SummaryHdr":"1",
 "reconsider_SummaryHdr":"1",
 "reportSummary1":[
-{"date":"12/02/2022","fields":{"cmCount":"1","costsCount":"1","remedyCount":"1","reconsiderCount":"1","hearingPrelimCount":"1","hearingCount":"1","total":"6"}}
+{"fields":{"cmCount":"1","costsCount":"1","remedyCount":"1","reconsiderCount":"1","hearingPrelimCount":"1","hearingCount":"1","total":"6","date":"12/02/2022","subSplit":"Stage 1"}}
 ],
 "reportSummary2Hdr":[
-{"fields":{"cmCount":"1","costsCount":"1","remedyCount":"1","reconsiderCount":"1","hearingPrelimCount":"1","hearingCount":"1","total":"6"},"subSplit":"Stage 1"}
+{"fields":{"cmCount":"1","costsCount":"1","remedyCount":"1","reconsiderCount":"1","hearingPrelimCount":"1","hearingCount":"1","total":"6","date":"12/02/2022","subSplit":"Stage 1"}}
 ],
 "reportSummary2":[
-{"fields":{"cmCount":"1","costsCount":"1","remedyCount":"1","reconsiderCount":"1","hearingPrelimCount":"1","hearingCount":"1","total":"6"},"subSplit":"Stage 1","date":"12/02/2022"}
+{"fields":{"cmCount":"1","costsCount":"1","remedyCount":"1","reconsiderCount":"1","hearingPrelimCount":"1","hearingCount":"1","total":"6","date":"12/02/2022","subSplit":"Stage 1"}}
 ],
 "reportDetails":[
-{"date":"12/02/2022","multiSub":"multiSub","caseReference":"1111","lead":"Y","hearingType":"Hearing","hearingNo":"1","tel":"Y","jm":"Y","duration":"20","hearingClerk":"Clerk A"}
+{"detailDate":"12/02/2022","multiSub":"multiSub","caseReference":"1111","lead":"Y","hearingType":"Hearing","hearingNo":"1","tel":"Y","jm":"Y","duration":"20","hearingClerk":"Clerk A"}
 ],
 "Report_Clerk":"Mike Jordan",
 "Today_date":"replace-with-current-date"
