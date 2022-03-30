@@ -8,6 +8,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
 
 @Slf4j
@@ -33,7 +34,7 @@ public class CaseCloseValidator {
             return errors;
         }
         for (var currentBFActionTypeItem : caseData.getBfActions()) {
-            if (currentBFActionTypeItem.getValue().getCleared() == null) {
+            if (isNullOrEmpty(currentBFActionTypeItem.getValue().getCleared())) {
                 errors.add(CLOSING_CASE_WITH_BF_OPEN_ERROR);
                 return errors;
             }
