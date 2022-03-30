@@ -11,7 +11,7 @@ import java.util.List;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
 
 @Slf4j
-@Service("caseCloseService")
+@Service("caseCloseValidator")
 public class CaseCloseValidator {
 
     static final String REINSTATE_CANNOT_CASE_CLOSED_ERROR_MESSAGE = "This case cannot be reinstated with a "
