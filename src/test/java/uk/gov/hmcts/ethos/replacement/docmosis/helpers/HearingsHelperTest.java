@@ -1,9 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import static java.time.ZoneOffset.UTC;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 
 import java.nio.file.Files;
@@ -177,6 +178,14 @@ public class HearingsHelperTest {
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void validateIsDateInFutureConsideringDST() {
+        LocalDateTime dateTime = LocalDateTime.now().minusMinutes(25);
+        LocalDateTime now = LocalDateTime.now(UTC);
+        boolean val = HearingsHelper.isDateInFuture(dateTime.toString(), now);
+        assertFalse(val);
     }
 
     @Test
