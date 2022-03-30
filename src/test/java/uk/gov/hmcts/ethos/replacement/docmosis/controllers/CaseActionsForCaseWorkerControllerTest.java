@@ -21,7 +21,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
@@ -117,7 +117,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private WebApplicationContext applicationContext;
 
     @MockBean
-    private CaseCloseService caseCloseService;
+    private CaseCloseValidator caseCloseValidator;
 
     @MockBean
     private CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
@@ -793,7 +793,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void reinstateClosedCaseMidEventValidation() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
-        when(caseCloseService.validateReinstateClosedCaseMidEvent(isA(CaseData.class))).thenReturn(anyList());
+        when(caseCloseValidator.validateReinstateClosedCaseMidEvent(isA(CaseData.class))).thenReturn(anyList());
         mvc.perform(post(REINSTATE_CLOSED_CASE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -807,7 +807,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void reinstateClosedCaseMidEventValidationErrors() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
-        when(caseCloseService.validateReinstateClosedCaseMidEvent(isA(CaseData.class)))
+        when(caseCloseValidator.validateReinstateClosedCaseMidEvent(isA(CaseData.class)))
                 .thenReturn(List.of("test error"));
         mvc.perform(post(REINSTATE_CLOSED_CASE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
@@ -1151,7 +1151,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                         .header("Authorization", AUTH_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-        verify(caseCloseService, never()).validateReinstateClosedCaseMidEvent(any(CaseData.class));
+        verify(caseCloseValidator, never()).validateReinstateClosedCaseMidEvent(any(CaseData.class));
     }
 
     @Test
@@ -1680,7 +1680,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                         .header("Authorization", AUTH_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
-        verify(caseCloseService, never()).validateReinstateClosedCaseMidEvent(caseData);
+        verify(caseCloseValidator, never()).validateReinstateClosedCaseMidEvent(caseData);
     }
 
 }
