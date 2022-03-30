@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,15 +10,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,8 +23,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
@@ -56,6 +55,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator.CLOSING_CASE_WITH_BF_OPEN_ERROR;
 
 @ExtendWith(SpringExtension.class)
 class EventValidationServiceTest {
@@ -497,10 +497,13 @@ class EventValidationServiceTest {
     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
     void shouldValidateCaseBeforeCloseEventWithErrors(boolean isRejected, boolean partOfMultiple) {
         List<String> errors = new ArrayList<>();
+        caseDetails18.getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
+        caseDetails18.getCaseData().getBfActions().get(0).getValue().setCleared(null);
         eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),
                 isRejected, partOfMultiple, errors);
 
-        assertEquals(3, errors.size());
+        assertEquals(4, errors.size());
+        assertThat(errors).asList().contains(CLOSING_CASE_WITH_BF_OPEN_ERROR);
         if (partOfMultiple) {
             assertThat(errors).asList().contains(caseDetails18.getCaseData().getEthosCaseReference()
                     + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
@@ -571,8 +574,6 @@ class EventValidationServiceTest {
         assertEquals(1, errors.size());
         assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
     }
-
-
 
     @Test
     void shouldValidateReportDateRangeValidDates() {
