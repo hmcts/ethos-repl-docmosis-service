@@ -399,7 +399,7 @@ public class HearingsByHearingTypeReport {
                 hearingTypeItem.getValue().getHearingFormat())
                 && hearingTypeItem.getValue().getHearingFormat()
                 .contains("Telephone") ? "Y" : "");
-        detail.setJm("Yes".equals(
+        detail.setJm(YES.equals(
                 hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
         detail.setHearingClerk(Strings.isNullOrEmpty(
                 dateListedTypeItem.getValue().getHearingClerk()) ? ""
