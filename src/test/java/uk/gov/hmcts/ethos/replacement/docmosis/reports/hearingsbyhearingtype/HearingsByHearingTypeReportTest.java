@@ -105,7 +105,7 @@ class HearingsByHearingTypeReportTest {
         assertEquals("0", reportSummary.getFields().getHearingPrelimCount());
         assertEquals("0", reportSummary.getFields().getReconsiderCount());
         assertEquals("0", reportSummary.getFields().getRemedyCount());
-        assertEquals("2022-01-01", reportSummary.getDate());
+        assertEquals("2022-01-01", reportSummary.getFields().getDate());
     }
 
     @Test
@@ -122,7 +122,7 @@ class HearingsByHearingTypeReportTest {
         assertEquals("0", reportSummary2Hdr.getFields().getHearingPrelimCount());
         assertEquals("0", reportSummary2Hdr.getFields().getReconsiderCount());
         assertEquals("0", reportSummary2Hdr.getFields().getRemedyCount());
-        assertEquals("Full Panel", reportSummary2Hdr.getSubSplit());
+        assertEquals("Full Panel", reportSummary2Hdr.getFields().getSubSplit());
     }
 
     @Test
@@ -139,8 +139,8 @@ class HearingsByHearingTypeReportTest {
         assertEquals("0", reportSummary2.getFields().getHearingPrelimCount());
         assertEquals("0", reportSummary2.getFields().getReconsiderCount());
         assertEquals("0", reportSummary2.getFields().getRemedyCount());
-        assertEquals("JM", reportSummary2.getSubSplit());
-        assertEquals("2022-01-01", reportSummary2.getDate());
+        assertEquals("JM", reportSummary2.getFields().getSubSplit());
+        assertEquals("2022-01-01", reportSummary2.getFields().getDate());
 
     }
 
@@ -158,7 +158,7 @@ class HearingsByHearingTypeReportTest {
         assertEquals("Hearing", reportDetail.getHearingType());
         assertEquals("", reportDetail.getTel());
         assertEquals("clerk1", reportDetail.getHearingClerk());
-        assertEquals("2022-01-01", reportDetail.getDate());
+        assertEquals("2022-01-01", reportDetail.getDetailDate());
     }
 
     @Test

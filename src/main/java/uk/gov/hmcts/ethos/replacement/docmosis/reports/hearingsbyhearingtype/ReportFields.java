@@ -15,4 +15,7 @@ public class ReportFields {
     private String hearingPrelimCount;
     private String hearingCount;
     private String total;
+    private String date;
+    private String subSplit;
+
 }
