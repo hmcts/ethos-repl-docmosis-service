@@ -103,8 +103,6 @@ public class ListingService {
     private final CasesCompletedReport casesCompletedReport;
     private final TimeToFirstHearingReport timeToFirstHearingReport;
     private final ServingClaimsReport servingClaimsReport;
-    private String listingDateFrom;
-    private String listingDateTo;
     private final CaseSourceLocalReport caseSourceLocalReport;
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
@@ -275,10 +273,8 @@ public class ListingService {
     private EccReportData getEccReport(ListingDetails listingDetails, String authToken) {
         log.info("Ecc Report for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new EccReportCcdDataSource(authToken, ccdClient);
-        setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
-        var params = new ReportParams(listingDetails.getCaseTypeId(),
-                listingDateFrom, listingDateTo);
+        var params = setListingDateRangeForSearch(listingDetails);
         var eccReport = new EccReport(reportDataSource);
         var reportData = eccReport.generateReport(params);
         setReportData(reportData, listingData);
@@ -297,10 +293,8 @@ public class ListingService {
     private RespondentsReportData getRespondentsReport(ListingDetails listingDetails, String authToken) {
         log.info("Respondents Report for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
-        setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
-        var params = new ReportParams(listingDetails.getCaseTypeId(),
-                listingDateFrom, listingDateTo);
+        var params = setListingDateRangeForSearch(listingDetails);
         var respondentsReport = new RespondentsReport(reportDataSource);
         var reportData = respondentsReport.generateReport(params);
         setReportData(reportData, listingData);
@@ -325,11 +319,10 @@ public class ListingService {
                                                        String authToken) {
         log.info("Session Days Report for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new SessionDaysCcdReportDataSource(authToken, ccdClient);
-        setListingDateRangeForSearch(listingDetails);
+        var params = setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
         var sessionDaysReport = new SessionDaysReport(reportDataSource, jpaJudgeService);
-        var reportData = sessionDaysReport.generateReport(
-                listingDetails.getCaseTypeId(), listingDateFrom, listingDateTo);
+        var reportData = sessionDaysReport.generateReport(params);
         setReportData(reportData, listingData);
         return reportData;
     }
@@ -341,8 +334,7 @@ public class ListingService {
         setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
         var hearingsByHearingTypeReport = new HearingsByHearingTypeReport(reportDataSource);
-        var params = new ReportParams(listingDetails.getCaseTypeId(),
-                listingDateFrom, listingDateTo);
+        var params = setListingDateRangeForSearch(listingDetails);
         var reportData = hearingsByHearingTypeReport
                 .generateReport(params);
         setReportData(reportData, listingData);
@@ -352,9 +344,9 @@ public class ListingService {
     private HearingsToJudgmentsReportData getHearingsToJudgmentsReport(ListingDetails listingDetails,
                                                                        String authToken) {
         log.info("Hearings To Judgments for {}", listingDetails.getCaseTypeId());
-        setListingDateRangeForSearch(listingDetails);
+        var params = setListingDateRangeForSearch(listingDetails);
         var reportDataSource = new HearingsToJudgmentsCcdReportDataSource(authToken, ccdClient);
-        var hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, listingDateFrom, listingDateTo);
+        var hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, params);
         var reportData = hearingsToJudgmentsReport.runReport(
                 listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
@@ -413,9 +405,11 @@ public class ListingService {
         listingData.setLocalReportsDetail(null);
     }
 
-    private void setListingDateRangeForSearch(ListingDetails listingDetails) {
+    private ReportParams setListingDateRangeForSearch(ListingDetails listingDetails) {
         var listingData = listingDetails.getCaseData();
         boolean isRangeHearingDateType = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        String listingDateFrom;
+        String listingDateTo;
         if (!isRangeHearingDateType) {
             listingDateFrom = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2)
                     .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
@@ -427,6 +421,7 @@ public class ListingService {
             listingDateTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2)
                     .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
         }
+        return new ReportParams(listingDetails.getCaseTypeId(), listingDateFrom, listingDateTo);
     }
 
     private List<SubmitEvent> getDateRangeReportSearch(ListingDetails listingDetails, String authToken)

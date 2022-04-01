@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 
 import java.time.LocalDate;
@@ -46,12 +47,12 @@ public class SessionDaysReport {
         this.jpaJudgeService = jpaJudgeService;
     }
 
-    public SessionDaysReportData generateReport(String caseTypeId, String dateFrom, String dateTo) {
+    public SessionDaysReportData generateReport(ReportParams params) {
 
-        var submitEvents = getCases(caseTypeId, dateFrom, dateTo);
-        var reportData = initReport(caseTypeId);
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
+        var submitEvents = getCases(params.getCaseTypeId(), params.getDateFrom(), params.getDateTo());
+        var reportData = initReport(params.getCaseTypeId());
+        this.dateFrom = params.getDateFrom();
+        this.dateTo = params.getDateTo();
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             executeReport(submitEvents, reportData);
         }
