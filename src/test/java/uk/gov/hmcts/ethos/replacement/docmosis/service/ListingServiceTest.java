@@ -40,17 +40,24 @@ import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
+import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportCaseData;
+import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
+import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeCaseData;
+import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportData;
@@ -79,8 +86,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -1406,6 +1411,50 @@ public class ListingServiceTest {
         var listingDataResult = (SessionDaysReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(SESSION_DAYS_REPORT, listingDataResult.getReportType());
+        assertEquals("Ranged", listingDataResult.getHearingDateType());
+        assertEquals("2021-07-13", listingDataResult.getListingDate());
+        assertEquals("2021-07-12", listingDataResult.getListingDateFrom());
+        assertEquals("2021-07-14", listingDataResult.getListingDateTo());
+    }
+
+    @Test
+    public void generateEccReportData() throws IOException {
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseId("caseId");
+        listingDetails.getCaseData().setReportType(ECC_REPORT);
+        listingDetails.getCaseData().setDocumentName("name");
+        listingDetails.getCaseData().setHearingDateType("Ranged");
+        listingDetails.getCaseData().setListingDate("2021-07-13");
+        listingDetails.getCaseData().setListingDateFrom("2021-07-12");
+        listingDetails.getCaseData().setListingDateTo("2021-07-14");
+        var submitEvent = new EccReportSubmitEvent();
+        submitEvent.setCaseData(new EccReportCaseData());
+        when(ccdClient.eccReportSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
+        var listingDataResult = (EccReportData) listingService.generateReportData(listingDetails, "authToken");
+        assertEquals("name", listingDataResult.getDocumentName());
+        assertEquals(ECC_REPORT, listingDataResult.getReportType());
+        assertEquals("Ranged", listingDataResult.getHearingDateType());
+        assertEquals("2021-07-13", listingDataResult.getListingDate());
+        assertEquals("2021-07-12", listingDataResult.getListingDateFrom());
+        assertEquals("2021-07-14", listingDataResult.getListingDateTo());
+    }
+
+    @Test
+    public void generateHearingsByHearingTypeReportData() throws IOException {
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseId("caseId");
+        listingDetails.getCaseData().setReportType(HEARINGS_BY_HEARING_TYPE_REPORT);
+        listingDetails.getCaseData().setDocumentName("name");
+        listingDetails.getCaseData().setHearingDateType("Ranged");
+        listingDetails.getCaseData().setListingDate("2021-07-13");
+        listingDetails.getCaseData().setListingDateFrom("2021-07-12");
+        listingDetails.getCaseData().setListingDateTo("2021-07-14");
+        var submitEvent = new HearingsByHearingTypeSubmitEvent();
+        submitEvent.setCaseData(new HearingsByHearingTypeCaseData());
+        when(ccdClient.hearingsByHearingTypeSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
+        var listingDataResult = (HearingsByHearingTypeReportData) listingService.generateReportData(listingDetails, "authToken");
+        assertEquals("name", listingDataResult.getDocumentName());
+        assertEquals(HEARINGS_BY_HEARING_TYPE_REPORT, listingDataResult.getReportType());
         assertEquals("Ranged", listingDataResult.getHearingDateType());
         assertEquals("2021-07-13", listingDataResult.getListingDate());
         assertEquals("2021-07-12", listingDataResult.getListingDateFrom());
