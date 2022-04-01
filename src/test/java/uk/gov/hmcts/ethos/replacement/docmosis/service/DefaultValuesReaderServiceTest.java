@@ -407,7 +407,8 @@ public class DefaultValuesReaderServiceTest {
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, ecmCaseType=Single, "
-                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null," +
+                " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
                 + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
@@ -474,7 +475,8 @@ public class DefaultValuesReaderServiceTest {
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, ecmCaseType=Single, "
-                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null," +
+                " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
                 + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, "
