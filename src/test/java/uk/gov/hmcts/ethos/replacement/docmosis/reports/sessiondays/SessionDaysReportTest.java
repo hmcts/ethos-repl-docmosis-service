@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.JudgeRepository;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         submitEvents.add(caseDataBuilder
                     .buildAsSubmitEvent());
 
-        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
+        var reportData = sessionDaysReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
         assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
@@ -98,7 +99,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         caseDataBuilder.withHearingData(hearingStatus);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
+        var reportData = sessionDaysReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
         assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
@@ -119,7 +120,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
+        var reportData = sessionDaysReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("1", reportData.getReportSummary().getFtSessionDaysTotal());
         assertEquals("1", reportData.getReportSummary().getPtSessionDaysTotal());
@@ -145,7 +146,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
      void assertReportDetailsValues(String judge, String judgeType, int index) {
         caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
-        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
+        var reportData = sessionDaysReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         var reportDetail = reportData.getReportDetails().get(index);
         assertEquals("111", reportDetail.getCaseReference());

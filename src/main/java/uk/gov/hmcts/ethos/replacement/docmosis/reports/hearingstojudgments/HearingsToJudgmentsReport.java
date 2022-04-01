@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -58,10 +59,10 @@ public class HearingsToJudgmentsReport {
     private final String listingDateTo;
 
     public HearingsToJudgmentsReport(HearingsToJudgmentsReportDataSource hearingsToJudgmentsReportDataSource,
-                                     String listingDateFrom, String listingDateTo) {
+                                     ReportParams params) {
         this.hearingsToJudgmentsReportDataSource = hearingsToJudgmentsReportDataSource;
-        this.listingDateFrom = listingDateFrom;
-        this.listingDateTo = listingDateTo;
+        this.listingDateFrom = params.getDateFrom();
+        this.listingDateTo = params.getDateTo();
     }
 
     public HearingsToJudgmentsReportData runReport(String caseTypeId) {

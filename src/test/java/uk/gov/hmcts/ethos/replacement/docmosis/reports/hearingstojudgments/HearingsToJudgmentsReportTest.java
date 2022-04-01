@@ -41,6 +41,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 class HearingsToJudgmentsReportTest {
 
@@ -66,10 +67,11 @@ class HearingsToJudgmentsReportTest {
     @BeforeEach
     public void setup() {
         submitEvents.clear();
+        var params = new ReportParams(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         hearingsToJudgmentsReportDataSource = mock(HearingsToJudgmentsReportDataSource.class);
         when(hearingsToJudgmentsReportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
 
-        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(hearingsToJudgmentsReportDataSource, DATE_FROM, DATE_TO);
+        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(hearingsToJudgmentsReportDataSource,params);
     }
 
     @Test
