@@ -130,7 +130,7 @@ class ClaimsByHearingVenueReportTest {
         claimant.setClaimantAddressUK(claimantAddressUK);
 
         var claimantWorkAddress = new Address();
-        claimantAddressUK.setPostCode("DH3 8HL");
+        claimantAddressUK.setPostCode(null);
         var claimantWorkAddressType = new ClaimantWorkAddressType();
         claimantWorkAddressType.setClaimantWorkAddress(claimantWorkAddress);
 
@@ -147,7 +147,7 @@ class ClaimsByHearingVenueReportTest {
             UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), START_DATE, END_DATE))
             .thenReturn(submitEvents);
 
-        var expectedClaimantAddressUKPostcode = "DH3 8HL";
+        var expectedClaimantAddressUKPostcode = "Null";
         var expectedClaimantWorkPostcode = "Null";
         var expectedRespondentPostcode = "Null";
         var expectedRespondentET3Postcode = "Null";
