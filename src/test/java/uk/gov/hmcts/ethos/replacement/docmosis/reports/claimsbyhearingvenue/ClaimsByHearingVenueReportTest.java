@@ -7,13 +7,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_LISTING_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
@@ -78,20 +78,67 @@ class ClaimsByHearingVenueReportTest {
     }
 
     @Test
-    void shouldShowNullStringValueForMissingPostCodeInReportDetailEntry() {
-        // Given a case has postcode not set or is null
+    void shouldShowNullStringValueForPostcodeWhenClaimantWorkAddressNotSet() {
+        // Given a case has Claimant Work Address not set or is null
         // When report data is requested
-        // Then only all cases with valid date should be in the report data detail entries
+        // Then on all cases with valid date "Null" should be used for postcode in the report data detail entries
         var claimantAddressUK = new Address();
         claimantAddressUK.setPostCode("DH3 8HL");
         var claimant = new ClaimantType();
         claimant.setClaimantAddressUK(claimantAddressUK);
 
         var submitEventOne = caseDataBuilder
+                .withEthosCaseReference("18000012/2022")
+                .withReceiptDate("2021-12-14")
+                .withClaimantType(claimant)
+                .withClaimantWorkAddressType(null)
+                .withRespondentCollection(null)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEventOne);
+
+        when(claimsByHearingVenueReportDataSource.getData(
+                UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), START_DATE, END_DATE))
+                .thenReturn(submitEvents);
+
+        var expectedClaimantAddressUKPostcode = "DH3 8HL";
+        var expectedClaimantWorkPostcode = "Null";
+        var expectedRespondentPostcode = "Null";
+        var expectedRespondentET3Postcode = "Null";
+
+        var reportData = claimsByHearingVenueReport
+                .generateReport(LEEDS_LISTING_CASE_TYPE_ID, null);
+
+        var actualClaimantAddressUKPostcode = reportData.getReportDetails().get(0).getClaimantPostcode();
+        var actualClaimantWorkPostcode = reportData.getReportDetails().get(0).getClaimantWorkPostcode();
+        var actualRespondentPostcode = reportData.getReportDetails().get(0).getRespondentPostcode();
+        var actualRespondentET3Postcode = reportData.getReportDetails().get(0).getRespondentET3Postcode();
+
+        assertEquals(expectedClaimantAddressUKPostcode, actualClaimantAddressUKPostcode);
+        assertEquals(expectedClaimantWorkPostcode, actualClaimantWorkPostcode);
+        assertEquals(expectedRespondentPostcode, actualRespondentPostcode);
+        assertEquals(expectedRespondentET3Postcode, actualRespondentET3Postcode);
+    }
+
+    @Test
+    void shouldShowNullStringValueForMissingPostCodeInReportDetailEntry() {
+        // Given a case has a Claimant Work Address provided and postcode in it not set or is null
+        // When report data is requested
+        // Then on all cases with valid date "Null" should be used for postcode in the report data detail entries
+        var claimantAddressUK = new Address();
+        claimantAddressUK.setPostCode("DH3 8HL");
+        var claimant = new ClaimantType();
+        claimant.setClaimantAddressUK(claimantAddressUK);
+
+        var claimantWorkAddress = new Address();
+        claimantAddressUK.setPostCode("DH3 8HL");
+        var claimantWorkAddressType = new ClaimantWorkAddressType();
+        claimantWorkAddressType.setClaimantWorkAddress(claimantWorkAddress);
+
+        var submitEventOne = caseDataBuilder
             .withEthosCaseReference("18000012/2022")
             .withReceiptDate("2021-12-14")
             .withClaimantType(claimant)
-            .withClaimantWorkAddressType(null)
+            .withClaimantWorkAddressType(claimantWorkAddressType)
             .withRespondentCollection(null)
             .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventOne);
@@ -127,7 +174,6 @@ class ClaimsByHearingVenueReportTest {
          // and "Respondent ET3 Postcode" values in the report data detail entry. "Null" should be used if
          // no postcode found
 
-         //List<RespondentSumTypeItem> respondentCollection = new ArrayList<>();
          var respondentSumTypeItem = new RespondentSumTypeItem();
          var respondentSumType = new RespondentSumType();
          var firstRespondentAddress = new Address();
