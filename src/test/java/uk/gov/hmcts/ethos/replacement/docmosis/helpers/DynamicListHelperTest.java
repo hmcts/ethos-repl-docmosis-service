@@ -166,15 +166,14 @@ public class DynamicListHelperTest {
 
     @Test
     public void dynamicMultipleLetters() {
-        List<DynamicValueType> listItems = new ArrayList<>();
         multipleDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
         for (SubmitEvent submitEvent : submitEvents) {
             if (submitEvent != null) {
                 MultipleUtil.addHearingToCaseData(submitEvent.getCaseData());
-                DynamicLetters.dynamicMultipleLetters(submitEvent, multipleDetails.getCaseData(), multipleDetails.getCaseTypeId(), listItems);
+                DynamicLetters.dynamicMultipleLetters(submitEvent, multipleDetails.getCaseData(), multipleDetails.getCaseTypeId());
             }
         }
-        assertEquals(2, listItems.size());
+        assertEquals(1, multipleDetails.getCaseData().getCorrespondenceType().getDynamicHearingNumber().getListItems().size());
         assertNull(multipleDetails.getCaseData().getCorrespondenceScotType());
     }
 
