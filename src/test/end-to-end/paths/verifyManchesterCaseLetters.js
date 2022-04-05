@@ -12,6 +12,5 @@ Scenario('Verify Manchester case Letters', async ({I}) => {
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await letters(I, eventNames.LETTERS);
 
-}).tag('@e2e')
-    .tag('@manchester')
+}).tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

@@ -131,6 +131,11 @@ task codeceptFunctional(type: Exec, dependsOn :'yarnInstall') {
     commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e', '--steps', '--reporter', 'mocha-multi'
 }
 
+task nigtlyFunctional(dependsOn: ':codeceptFunctional') {
+    group = 'Delivery pipeline'
+    description = 'Execute Functional Tests in Nightly Pipeline'
+}
+
 task crossbrowser(dependsOn: ':codeceptFunctionalSauce') {
     group = 'Delivery pipeline'
     description = 'Execute cross browser tests on saucelabs'
@@ -139,6 +144,10 @@ task crossbrowser(dependsOn: ':codeceptFunctionalSauce') {
 task codeceptFunctionalSauce(type: Exec, dependsOn: ':yarnInstall') {
     workingDir '.'
     commandLine './node_modules/codeceptjs/bin/codecept.js', 'run-multiple', '--all', '--config', './src/test/end-to-end/saucelabs.conf.js', '--grep', '@crossbrowser', '--verbose', '--debug', '--steps', '--reporter', 'mocha-multi'
+}
+
+task codeceptFunctional(type: Exec, dependsOn :'yarnInstall') {
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@nightly', '--steps', '--reporter', 'mocha-multi'
 }
 
 project.ext {
