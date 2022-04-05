@@ -24,7 +24,6 @@ class ClaimsByHearingVenueReportTest {
     ClaimsByHearingVenueReport claimsByHearingVenueReport;
     ClaimsByHearingVenueCaseDataBuilder caseDataBuilder = new ClaimsByHearingVenueCaseDataBuilder();
     List<ClaimsByHearingVenueSubmitEvent> submitEvents = new ArrayList<>();
-    List<RespondentSumTypeItem> respondentCollection = new ArrayList<>();
     ReportParams params;
     static final String START_DATE = "2021-12-02";
     static final String END_DATE = "2021-12-28";
@@ -68,6 +67,7 @@ class ClaimsByHearingVenueReportTest {
             .withRespondentCollection(null)
             .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventTwo);
+
         when(claimsByHearingVenueReportDataSource.getData(
             UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), START_DATE, END_DATE))
             .thenReturn(submitEvents);
@@ -81,7 +81,7 @@ class ClaimsByHearingVenueReportTest {
     void shouldShowNullStringValueForPostcodeWhenClaimantWorkAddressNotSet() {
         // Given a case has Claimant Work Address not set or is null
         // When report data is requested
-        // Then on all cases with valid date "Null" should be used for postcode in the report data detail entries
+        // Then on all cases with valid date, "Null" should be used for postcode in the report data detail entries
         var claimantAddressUK = new Address();
         claimantAddressUK.setPostCode("DH3 8HL");
         var claimant = new ClaimantType();
@@ -121,9 +121,9 @@ class ClaimsByHearingVenueReportTest {
 
     @Test
     void shouldShowNullStringValueForMissingPostCodeInReportDetailEntry() {
-        // Given a case has a Claimant Work Address provided and postcode in it not set or is null
+        // Given a case has a Claimant Work Address provided and postcode in it is not set or is null
         // When report data is requested
-        // Then on all cases with valid date "Null" should be used for postcode in the report data detail entries
+        // Then on all cases with valid date, "Null" should be used for postcode in the report data detail entries
         var claimantAddressUK = new Address();
         claimantAddressUK.setPostCode("DH3 8HL");
         var claimant = new ClaimantType();
@@ -172,8 +172,8 @@ class ClaimsByHearingVenueReportTest {
          // When report data is requested
          // Then only the postcode of the first respondent detail should be used to set "Respondent Postcode"
          // and "Respondent ET3 Postcode" values in the report data detail entry. "Null" should be used if
-         // no postcode found
-
+         // no postcodes found
+         List<RespondentSumTypeItem> respondentCollection = new ArrayList<>();
          var respondentSumTypeItem = new RespondentSumTypeItem();
          var respondentSumType = new RespondentSumType();
          var firstRespondentAddress = new Address();
