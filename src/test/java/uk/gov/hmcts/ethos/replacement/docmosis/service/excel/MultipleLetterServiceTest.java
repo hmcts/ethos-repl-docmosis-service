@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import org.apache.xpath.operations.Mult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
@@ -204,6 +206,8 @@ public class MultipleLetterServiceTest {
 
     @Test
     public void dynamicMultipleLetters() {
+        MultipleUtil.addHearingToCaseData(submitEvents.get(0).getCaseData());
+        var hearingFromCase = DynamicListHelper.createDynamicHearingList(submitEvents.get(0).getCaseData()).get(0);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
@@ -216,6 +220,10 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource());
+        assertEquals(1, multipleDetails.getCaseData().getCorrespondenceType().getDynamicHearingNumber()
+                .getListItems().size());
+        assertEquals(hearingFromCase, multipleDetails.getCaseData().getCorrespondenceType().getDynamicHearingNumber()
+                .getListItems().get(0));
     }
 
 }
