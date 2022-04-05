@@ -65,7 +65,7 @@ public class HearingsByHearingTypeCaseDataBuilder {
                 hearingType.setHearingSitAlone("Yes");
                 break;
             case "JM":
-                hearingType.setJudicialMediation("JM");
+                hearingType.setJudicialMediation(YES);
                 break;
             case "Tel Con":
                 hearingType.setHearingFormat(List.of ("Telephone"));

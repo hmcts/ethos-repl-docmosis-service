@@ -108,27 +108,34 @@ public class HearingsByHearingTypeReport {
 
     }
 
-    private String getSubSplit(HearingTypeItem hearingTypeItem) {
+    private String getSubSplitSitAlone(HearingTypeItem hearingTypeItem) {
         if ("Full".equals(hearingTypeItem.getValue().getHearingSitAlone())) {
             return "Full Panel";
-        }
-        if (YES.equals(hearingTypeItem.getValue().getHearingSitAlone())) {
+        } else if (YES.equals(hearingTypeItem.getValue().getHearingSitAlone())) {
             return "EJ Sit Alone";
+        } else {
+            return "";
         }
+    }
+
+    private String getSubSplitJM(HearingTypeItem hearingTypeItem) {
         if ("JM".equals(hearingTypeItem.getValue().getJudicialMediation())) {
             return "JM";
+        } else {
+            return "";
         }
+    }
 
+    private String getSubSplitStages(HearingTypeItem hearingTypeItem) {
         if (STAGE_1.equals(hearingTypeItem.getValue().getHearingStage())) {
             return STAGE_1;
-        }
-        if (STAGE_2.equals(hearingTypeItem.getValue().getHearingStage())) {
+        } else if (STAGE_2.equals(hearingTypeItem.getValue().getHearingStage())) {
             return STAGE_2;
-        }
-        if (STAGE_3.equals(hearingTypeItem.getValue().getHearingStage())) {
+        } else if (STAGE_3.equals(hearingTypeItem.getValue().getHearingStage())) {
             return STAGE_3;
+        } else {
+            return "";
         }
-        return "";
     }
 
     private String getSubSplitHearingFormat(String format) {
@@ -338,15 +345,37 @@ public class HearingsByHearingTypeReport {
                             hearingTypeItem.getValue().getHearingType(),
                             reportSummary2.getFields());
                 }
-            } else {
-                String subSplit = getSubSplit(hearingTypeItem);
+            }
+            String subSplitJM = getSubSplitJM(hearingTypeItem);
+            if (!Strings.isNullOrEmpty(subSplitJM)) {
                 var reportSummary2 = getSummaryRow2(
-                        dateListedTypeItem.getValue().getListedDate(), subSplit,
+                        dateListedTypeItem.getValue().getListedDate(), subSplitJM,
                         reportSummaryList2);
                 setReportFields(
                         hearingTypeItem.getValue().getHearingType(),
                         reportSummary2.getFields());
             }
+
+            String subSplitStages = getSubSplitStages(hearingTypeItem);
+            if (!Strings.isNullOrEmpty(subSplitStages)) {
+                var reportSummary2 = getSummaryRow2(
+                        dateListedTypeItem.getValue().getListedDate(), subSplitStages,
+                        reportSummaryList2);
+                setReportFields(
+                        hearingTypeItem.getValue().getHearingType(),
+                        reportSummary2.getFields());
+            }
+
+            String subSplitSitAlone = getSubSplitSitAlone(hearingTypeItem);
+            if (!Strings.isNullOrEmpty(subSplitSitAlone)) {
+                var reportSummary2 = getSummaryRow2(
+                        dateListedTypeItem.getValue().getListedDate(), subSplitSitAlone,
+                        reportSummaryList2);
+                setReportFields(
+                        hearingTypeItem.getValue().getHearingType(),
+                        reportSummary2.getFields());
+            }
+
         }
     }
 
@@ -472,11 +501,28 @@ public class HearingsByHearingTypeReport {
                         String subSplit = getSubSplitHearingFormat(format);
                         setReportSummary2HdrFields(subSplit, hearingTypeItem, reportSummary2HdrList);
                     }
-                } else {
-                    String subSplit = getSubSplit(hearingTypeItem);
-                    setReportSummary2HdrFields(subSplit, hearingTypeItem, reportSummary2HdrList);
                 }
+                setSubSplit2Hdr(hearingTypeItem, reportSummary2HdrList);
             }
+        }
+    }
+
+    private void setSubSplit2Hdr(HearingTypeItem hearingTypeItem,
+                                 List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList) {
+
+        String subSplitJM = getSubSplitJM(hearingTypeItem);
+        if (!Strings.isNullOrEmpty(subSplitJM)) {
+            setReportSummary2HdrFields(subSplitJM, hearingTypeItem, reportSummary2HdrList);
+        }
+
+        String subSplitSitAlone = getSubSplitSitAlone(hearingTypeItem);
+        if (!Strings.isNullOrEmpty(subSplitSitAlone)) {
+            setReportSummary2HdrFields(subSplitSitAlone, hearingTypeItem, reportSummary2HdrList);
+        }
+
+        String subSplitStages = getSubSplitStages(hearingTypeItem);
+        if (!Strings.isNullOrEmpty(subSplitStages)) {
+            setReportSummary2HdrFields(subSplitStages, hearingTypeItem, reportSummary2HdrList);
         }
     }
 
