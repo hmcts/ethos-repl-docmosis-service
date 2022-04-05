@@ -13,5 +13,5 @@ Scenario('Verify Manchester case Restricted Reporting', async ({I}) => {
     await restrictedReporting(I, eventNames.RESTRICTED_REPORTING);
 
 }).tag('@e2e')
-    .tag('@manchester')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

@@ -14,5 +14,4 @@ Scenario('Verify Respondent Representative', async ({I}) => {
 
 }).tag('@e2e')
     .tag('@nightly')
-    .tag('@ecm-522')
     .retry(testConfig.TestRetryScenarios);

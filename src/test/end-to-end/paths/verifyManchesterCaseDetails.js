@@ -4,7 +4,7 @@ const {eventNames, states} = require('../pages/common/constants.js');
 const {acceptCaseEvent, caseDetails} = require("../helpers/caseHelper");
 let caseNumber;
 
-Feature('Create a Single Case and move to Case Details state');
+Feature('Manchester Single Case and move to Case Details state');
 
 Scenario('Verify Case Details ', async ({I}) => {
 
@@ -13,5 +13,5 @@ Scenario('Verify Case Details ', async ({I}) => {
     await caseDetails(I, caseNumber, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Dropback Shelf', 'Standard track');
 
 }).tag('@e2e')
-    .tag('@manchester')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

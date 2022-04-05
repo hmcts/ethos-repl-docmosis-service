@@ -14,5 +14,4 @@ Scenario('Verify Fix Case API', async ({I}) => {
 
 }).tag('@e2e')
     .tag('@nightly')
-    .tag('@ecm-520')
     .retry(testConfig.TestRetryScenarios);

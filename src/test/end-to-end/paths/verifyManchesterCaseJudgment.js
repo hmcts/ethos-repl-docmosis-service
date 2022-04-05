@@ -14,5 +14,5 @@ Scenario('Verify Manchester Case Judgment', async ({I}) => {
     await judgment(I, eventNames.JUDGMENT);
 
 }).tag('@e2e')
-    .tag('@manchester')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

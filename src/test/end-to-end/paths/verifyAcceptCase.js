@@ -12,6 +12,6 @@ Scenario('Verify Accept Case', async ({I}) => {
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
 
 }).tag('@e2e')
-    .tag('@leeds')
+    .tag('@nightly')
     .tag('@crossbrowser')
     .retry(testConfig.TestRetryScenarios);

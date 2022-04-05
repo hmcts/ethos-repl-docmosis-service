@@ -13,5 +13,5 @@ Scenario('Verify Jurisdiction', async ({I}) => {
     await jurisdiction(I, eventNames.JURISDICTION);
 
 }).tag('@e2e')
-    .tag('@manchester')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

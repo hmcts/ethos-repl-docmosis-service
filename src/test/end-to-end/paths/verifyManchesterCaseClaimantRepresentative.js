@@ -4,7 +4,7 @@ const {eventNames} = require('../pages/common/constants.js');
 const {acceptCaseEvent, claimantRepresentative} = require("../helpers/caseHelper");
 let caseNumber;
 
-Feature('Create A Single Case & Execute Claimant Representative...');
+Feature('Create A Manchester Single Case & Execute Claimant Representative...');
 
 Scenario('Verify Claimant Representative', async ({I}) => {
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Manchester');
@@ -12,5 +12,5 @@ Scenario('Verify Claimant Representative', async ({I}) => {
     await claimantRepresentative(I, eventNames.CLAIMANT_REPRESENTATIVE);
 
 }).tag('@e2e')
-    .tag('@manchester')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

@@ -14,5 +14,5 @@ Scenario('Verify Leeds Case Transfer', async ({I}) => {
     await caseTransfer(I, eventNames.CASE_TRANSFER);
 
 }).tag('@e2e')
-    .tag('@leeds')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

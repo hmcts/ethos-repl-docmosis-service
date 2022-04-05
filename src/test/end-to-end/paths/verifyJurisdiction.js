@@ -14,5 +14,4 @@ Scenario('Verify Jurisdiction', async ({I}) => {
 
 }).tag('@e2e')
     .tag('@nightly')
-    .tag('@ecm-490')
     .retry(testConfig.TestRetryScenarios);
