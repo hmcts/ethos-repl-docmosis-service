@@ -13,6 +13,5 @@ Scenario('Verify Manchester Case Close', async ({I}) => {
     await jurisdiction(I, eventNames.JURISDICTION);
     await closeCase(I, eventNames.CLOSE_CASE, 'A Clerk', 'Casework Dropback Shelf');
 
-}).tag('@e2e')
-    .tag('@manchester')
+}).tag('@nightly')
     .retry(testConfig.TestRetryScenarios);
