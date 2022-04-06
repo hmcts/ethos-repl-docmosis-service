@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@Service("excelCreationServiceForReport")
+@Service("claimsByHearingVenueExcelReportCreationService")
 public class ClaimsByHearingVenueExcelReportCreationService {
     private static final String EXCEL_REPORT_WORKBOOK_NAME = "Claims By Hearing Venue Report";
     private static final String CASE_NUMBER_HEADER = "Case Number";
