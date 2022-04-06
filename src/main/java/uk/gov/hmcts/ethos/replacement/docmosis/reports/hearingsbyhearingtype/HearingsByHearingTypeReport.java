@@ -314,18 +314,22 @@ public class HearingsByHearingTypeReport {
             var caseData = submitEvent.getCaseData();
             if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
                 for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                    if (hearingTypeItem.getValue() != null
-                            && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                        for (DateListedTypeItem dateListedTypeItem :
-                                hearingTypeItem.getValue().getHearingDateCollection()) {
-                            setSummary2Fields(hearingTypeItem, dateListedTypeItem, reportSummaryList2);
-                        }
-
-                    }
+                    setSummary2FieldsForAllDates(hearingTypeItem, reportSummaryList2);
                 }
             }
         }
         reportData.addReportSummary2List(reportSummaryList2);
+    }
+
+    private void setSummary2FieldsForAllDates(HearingTypeItem hearingTypeItem,
+                    List<HearingsByHearingTypeReportSummary2> reportSummaryList2) {
+        if (hearingTypeItem.getValue() != null
+                && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+            for (DateListedTypeItem dateListedTypeItem :
+                    hearingTypeItem.getValue().getHearingDateCollection()) {
+                setSummary2Fields(hearingTypeItem, dateListedTypeItem, reportSummaryList2);
+            }
+        }
     }
 
     private void setSummary2Fields(HearingTypeItem hearingTypeItem,
@@ -395,7 +399,8 @@ public class HearingsByHearingTypeReport {
             HearingTypeItem hearingTypeItem,
             HearingsByHearingTypeCaseData caseData,
             List<HearingsByHearingTypeReportDetail> reportSummaryDetailList) {
-        if (hearingTypeItem.getValue() != null && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+        if (hearingTypeItem.getValue() != null
+                && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
             for (DateListedTypeItem dateListedTypeItem :
                     hearingTypeItem.getValue().getHearingDateCollection()) {
                 if (isValidHearing(dateListedTypeItem.getValue())) {
