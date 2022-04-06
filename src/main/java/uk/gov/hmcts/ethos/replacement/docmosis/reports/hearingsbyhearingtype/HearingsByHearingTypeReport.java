@@ -118,12 +118,8 @@ public class HearingsByHearingTypeReport {
         }
     }
 
-    private String getSubSplitJM(HearingTypeItem hearingTypeItem) {
-        if ("JM".equals(hearingTypeItem.getValue().getJudicialMediation())) {
-            return "JM";
-        } else {
-            return "";
-        }
+    private boolean isSubSplitJM(HearingTypeItem hearingTypeItem) {
+        return "JM".equals(hearingTypeItem.getValue().getJudicialMediation());
     }
 
     private String getSubSplitStages(HearingTypeItem hearingTypeItem) {
@@ -318,7 +314,8 @@ public class HearingsByHearingTypeReport {
             var caseData = submitEvent.getCaseData();
             if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
                 for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                    if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                    if (hearingTypeItem.getValue() != null
+                            && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                         for (DateListedTypeItem dateListedTypeItem :
                                 hearingTypeItem.getValue().getHearingDateCollection()) {
                             setSummary2Fields(hearingTypeItem, dateListedTypeItem, reportSummaryList2);
@@ -335,7 +332,8 @@ public class HearingsByHearingTypeReport {
                                     DateListedTypeItem dateListedTypeItem,
                                     List<HearingsByHearingTypeReportSummary2> reportSummaryList2) {
         if (isValidHearing(dateListedTypeItem.getValue())) {
-            if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())) {
+            if (hearingTypeItem.getValue() != null
+                    && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())) {
                 for (String format : hearingTypeItem.getValue().getHearingFormat()) {
                     String subSplit = getSubSplitHearingFormat(format);
                     var reportSummary2 = getSummaryRow2(
@@ -346,10 +344,9 @@ public class HearingsByHearingTypeReport {
                             reportSummary2.getFields());
                 }
             }
-            String subSplitJM = getSubSplitJM(hearingTypeItem);
-            if (!Strings.isNullOrEmpty(subSplitJM)) {
+            if (isSubSplitJM(hearingTypeItem)) {
                 var reportSummary2 = getSummaryRow2(
-                        dateListedTypeItem.getValue().getListedDate(), subSplitJM,
+                        dateListedTypeItem.getValue().getListedDate(), "JM",
                         reportSummaryList2);
                 setReportFields(
                         hearingTypeItem.getValue().getHearingType(),
@@ -398,7 +395,7 @@ public class HearingsByHearingTypeReport {
             HearingTypeItem hearingTypeItem,
             HearingsByHearingTypeCaseData caseData,
             List<HearingsByHearingTypeReportDetail> reportSummaryDetailList) {
-        if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+        if (hearingTypeItem.getValue() != null && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
             for (DateListedTypeItem dateListedTypeItem :
                     hearingTypeItem.getValue().getHearingDateCollection()) {
                 if (isValidHearing(dateListedTypeItem.getValue())) {
@@ -476,7 +473,8 @@ public class HearingsByHearingTypeReport {
             var caseData = submitEvent.getCaseData();
             if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
                 for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                    if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                    if (hearingTypeItem.getValue() != null
+                            && CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                         setHdr2Fields(hearingTypeItem, reportSummary2HdrList);
                     }
                 }
@@ -510,9 +508,8 @@ public class HearingsByHearingTypeReport {
     private void setSubSplit2Hdr(HearingTypeItem hearingTypeItem,
                                  List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList) {
 
-        String subSplitJM = getSubSplitJM(hearingTypeItem);
-        if (!Strings.isNullOrEmpty(subSplitJM)) {
-            setReportSummary2HdrFields(subSplitJM, hearingTypeItem, reportSummary2HdrList);
+        if (isSubSplitJM(hearingTypeItem)) {
+            setReportSummary2HdrFields("JM", hearingTypeItem, reportSummary2HdrList);
         }
 
         String subSplitSitAlone = getSubSplitSitAlone(hearingTypeItem);
