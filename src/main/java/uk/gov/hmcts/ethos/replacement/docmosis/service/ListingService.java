@@ -110,6 +110,7 @@ public class ListingService {
     private final TimeToFirstHearingReport timeToFirstHearingReport;
     private final ServingClaimsReport servingClaimsReport;
     private final CaseSourceLocalReport caseSourceLocalReport;
+    private final UserService userService;
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
@@ -285,8 +286,14 @@ public class ListingService {
         var claimsByHearingVenueReport = new ClaimsByHearingVenueReport(reportDataSource, params);
         var listingData = listingDetails.getCaseData();
         var hearingDateType = listingData.getHearingDateType();
-        return claimsByHearingVenueReport.generateReport(listingDetails.getCaseData().getListingDate(),
-            hearingDateType);
+        return claimsByHearingVenueReport.generateReport(hearingDateType, getUserFullName(authToken));
+    }
+
+    private String getUserFullName(String userToken) {
+        var userDetails = userService.getUserDetails(userToken);
+        var firstName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
+        var lastName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
+        return firstName + " " + lastName;
     }
 
     private EccReportData getEccReport(ListingDetails listingDetails, String authToken) {

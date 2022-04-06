@@ -42,7 +42,7 @@ public class ExcelDocManagementService {
 
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
-    private final ExcelCreationServiceForReport excelCreationServiceForReport;
+    private final ClaimsByHearingVenueExcelReportCreationService claimsByHearingVenueExcelReportCreationService;
     private final UserService userService;
     private final ScheduleCreationService scheduleCreationService;
     private static final String CLAIMS_BY_HEARING_VENUE_FILE_NAME = "_Hearings_By_Venue_Report.xlsx";
@@ -155,16 +155,9 @@ public class ExcelDocManagementService {
 
     public DocumentInfo generateAndUploadExcelReportDocument(String userToken,  ClaimsByHearingVenueReportData
         reportData, String caseTypeId) {
-        byte[] excelBytes = excelCreationServiceForReport.getReportExcelFile(reportData, getUserFullName(userToken));
+        byte[] excelBytes = claimsByHearingVenueExcelReportCreationService.getReportExcelFile(reportData);
         var outPutFileName = caseTypeId + CLAIMS_BY_HEARING_VENUE_FILE_NAME;
         return uploadExcelReportDocument(userToken, outPutFileName, excelBytes);
-    }
-
-    private String getUserFullName(String userToken) {
-        var userDetails = userService.getUserDetails(userToken);
-        var firstName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
-        var lastName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
-        return firstName + " " + lastName;
     }
 
     private DocumentInfo uploadExcelReportDocument(String userToken, String documentName, byte[] excelBytes) {

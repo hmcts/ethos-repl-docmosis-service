@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import com.google.common.base.Strings;
-import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,20 +15,18 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReportDetail;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @Service("excelCreationServiceForReport")
-public class ExcelCreationServiceForReport {
+public class ClaimsByHearingVenueExcelReportCreationService {
     private static final String EXCEL_REPORT_WORKBOOK_NAME = "Claims By Hearing Venue Report";
     private static final String CASE_NUMBER_HEADER = "Case Number";
     private static final String DATE_OF_RECEIPT_HEADER = "Date of receipt";
@@ -41,16 +38,17 @@ public class ExcelCreationServiceForReport {
         CASE_NUMBER_HEADER, DATE_OF_RECEIPT_HEADER, CLAIMANT_POSTCODE_HEADER,
         CLAIMANT_WORK_POSTCODE_HEADER, RESPONDENT_POSTCODE_HEADER, RESPONDENT_ET3_POSTCODE_HEADER));
 
-    public byte[] getReportExcelFile(ClaimsByHearingVenueReportData reportData, String userName) {
+    public byte[] getReportExcelFile(ClaimsByHearingVenueReportData reportData) {
         if (reportData == null) {
             return new byte[0];
         }
+
         var reportDetails = reportData.getReportDetails();
         var workbook = new XSSFWorkbook();
         var sheet = workbook.createSheet(EXCEL_REPORT_WORKBOOK_NAME);
         adjustColumnSize(sheet);
         initializeReportHeaders(reportData, workbook, sheet);
-        initializeReportData(workbook, sheet, reportDetails, userName);
+        initializeReportData(workbook, sheet, reportDetails, reportData.getReportPrintedOnDescription());
         return writeExcelFileToByteArray(workbook);
     }
 
@@ -75,7 +73,7 @@ public class ExcelCreationServiceForReport {
         XSSFRow rowReportPeriod = sheet.createRow(1);
         rowReportPeriod.setHeight((short)(rowReportPeriod.getHeight() * 6));
         var styleForSubTitleCell = getReportSubTitleCellStyle(workbook);
-        createCell(rowReportPeriod, 0, getReportPeriodAndOfficeName(reportData), styleForSubTitleCell);
+        createCell(rowReportPeriod, 0, reportData.getReportPeriodDescription(), styleForSubTitleCell);
 
         XSSFRow rowHead = sheet.createRow(2);
         rowHead.setHeight((short)(rowHead.getHeight() * 4));
@@ -85,14 +83,6 @@ public class ExcelCreationServiceForReport {
             createCell(rowHead, j, HEADERS.get(j), styleForColHeaderCell);
         }
         createCell(rowHead, HEADERS.size(), "", styleForColHeaderCell);
-    }
-
-    private String getReportPeriodAndOfficeName(ClaimsByHearingVenueReportData reportData) {
-        var reportPeriod = !StringUtil.isNullOrEmpty(reportData.getReportPeriodDescription())
-            ? reportData.getReportPeriodDescription() : "";
-        var officeName = !StringUtil.isNullOrEmpty(reportData.getOffice())
-            ? reportData.getOffice() : "";
-        return "   Period: " + reportPeriod + "       Office: " + officeName;
     }
 
     private CellStyle getReportTitleCellStyle(XSSFWorkbook workbook) {
@@ -134,7 +124,8 @@ public class ExcelCreationServiceForReport {
     }
 
     private void initializeReportData(XSSFWorkbook workbook, XSSFSheet sheet,
-                                      List<ClaimsByHearingVenueReportDetail> reportDetails, String userName) {
+                                      List<ClaimsByHearingVenueReportDetail> reportDetails,
+                                      String reportPrintedOnDescription) {
         if (reportDetails.isEmpty()) {
             return;
         }
@@ -147,7 +138,7 @@ public class ExcelCreationServiceForReport {
             rowIndex++;
         }
 
-        addReportAdminDetails(workbook, sheet, rowIndex, userName);
+        addReportAdminDetails(workbook, sheet, rowIndex, reportPrintedOnDescription);
     }
 
     private void addColumnFilterCellRange(XSSFSheet sheet, int reportDetailsCount) {
@@ -156,7 +147,8 @@ public class ExcelCreationServiceForReport {
         sheet.setAutoFilter(new CellRangeAddress(firstRow, lastRow, 0, 5));
     }
 
-    private void addReportAdminDetails(XSSFWorkbook workbook, XSSFSheet sheet, int rowIndex, String userName) {
+    private void addReportAdminDetails(XSSFWorkbook workbook, XSSFSheet sheet, int rowIndex,
+                                       String reportPrintedOnDescription) {
         CellRangeAddress reportTitleCellRange = new CellRangeAddress(rowIndex, rowIndex, 0, 6);
         sheet.addMergedRegion(reportTitleCellRange);
         XSSFRow rowReportTitle = sheet.createRow(rowIndex);
@@ -170,8 +162,7 @@ public class ExcelCreationServiceForReport {
         styleForHeaderCell.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
         styleForHeaderCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         styleForHeaderCell.setFont(getFont(workbook));
-        var adminDetails = "Reported on: " + UtilHelper.formatCurrentDate(LocalDate.now()) + "   By: " + userName;
-        createCell(rowReportTitle, 0, adminDetails, styleForHeaderCell);
+        createCell(rowReportTitle, 0, reportPrintedOnDescription, styleForHeaderCell);
     }
 
     private void constructCaseExcelRow(XSSFWorkbook workbook, XSSFSheet sheet, int rowIndex,

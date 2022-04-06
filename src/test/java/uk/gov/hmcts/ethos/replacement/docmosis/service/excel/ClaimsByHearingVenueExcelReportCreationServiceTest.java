@@ -6,15 +6,14 @@ import org.junit.Test;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReportDetail;
 
-public class ExcelCreationServiceForReportTest {
+public class ClaimsByHearingVenueExcelReportCreationServiceTest {
 
-    ExcelCreationServiceForReport excelCreationServiceForReport;
+    ClaimsByHearingVenueExcelReportCreationService claimsByHearingVenueExcelReportCreationService;
     private ClaimsByHearingVenueReportData reportData;
-    private static final String username = "Test User Name";
 
     @Before
     public void setUp() {
-        excelCreationServiceForReport = new ExcelCreationServiceForReport();
+        claimsByHearingVenueExcelReportCreationService = new ClaimsByHearingVenueExcelReportCreationService();
         reportData = new ClaimsByHearingVenueReportData();
         var detailEntry = new ClaimsByHearingVenueReportDetail();
         detailEntry.setCaseReference("245000/2021");
@@ -24,11 +23,12 @@ public class ExcelCreationServiceForReportTest {
 
     @Test
     public void shouldReturnReportExcelFileByteArray() {
-        assertNotNull(excelCreationServiceForReport.getReportExcelFile(reportData, username));
+        assertNotNull(claimsByHearingVenueExcelReportCreationService.getReportExcelFile(reportData));
     }
 
     @Test
     public void shouldReturnReportExcelFileEmptyByteArray() {
-        assertNotNull(excelCreationServiceForReport.getReportExcelFile(new ClaimsByHearingVenueReportData(), username));
+        assertNotNull(claimsByHearingVenueExcelReportCreationService.getReportExcelFile(
+                new ClaimsByHearingVenueReportData()));
     }
 }
