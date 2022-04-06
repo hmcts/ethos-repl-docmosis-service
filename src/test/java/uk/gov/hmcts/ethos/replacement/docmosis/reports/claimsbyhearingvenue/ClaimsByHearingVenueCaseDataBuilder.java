@@ -35,8 +35,7 @@ public class ClaimsByHearingVenueCaseDataBuilder {
     public ClaimsByHearingVenueCaseDataBuilder withRespondentCollection(
         List<RespondentSumTypeItem> respondentCollection) {
         if(respondentCollection != null) {
-            caseData.setRespondentCollection(new ArrayList<>());
-            respondentCollection.forEach(respondent -> caseData.getRespondentCollection().add(respondent));
+            caseData.setRespondentCollection(respondentCollection);
         }
         return this;
     }
