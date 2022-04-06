@@ -3,7 +3,7 @@ const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames, states} = require('../pages/common/constants.js');
 let caseNumber;
 
-Feature('Execute Manchester Singles Case and move to Accepted & Rejected state');
+Feature('Execute Manchester Singles Case and put the case into Accepted & Rejected state');
 
 Scenario('Verify Manchester Accept Case', async ({I}) => {
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Manchester');
