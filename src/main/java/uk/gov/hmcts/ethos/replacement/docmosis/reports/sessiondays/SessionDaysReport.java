@@ -101,12 +101,24 @@ public class SessionDaysReport {
         setReportData(submitEvents, sessionDaysReportData);
     }
 
+    private boolean sessionExists(String judgeName, String date, List<List<String>> sessionsList) {
+        List<String> judgeDate = List.of(judgeName, date);
+        if (sessionsList.contains(judgeDate)) {
+            return true;
+        } else {
+            sessionsList.add(judgeDate);
+            return false;
+        }
+    }
+
     private void setReportData(List<SessionDaysSubmitEvent> submitEvents, SessionDaysReportData reportData) {
         List<SessionDaysReportSummary2> sessionDaysReportSummary2List = new ArrayList<>();
         List<SessionDaysReportDetail> sessionDaysReportDetailList = new ArrayList<>();
+        List<List<String>> sessionsList = new ArrayList<>();
         for (SessionDaysSubmitEvent submitEvent : submitEvents) {
             var caseData = submitEvent.getCaseData();
-            setCaseReportSummaries(caseData, reportData.getReportSummary(), sessionDaysReportSummary2List);
+            setCaseReportSummaries(caseData, reportData.getReportSummary(),
+                    sessionDaysReportSummary2List, sessionsList);
             setReportDetail(caseData, sessionDaysReportDetailList);
         }
         sessionDaysReportSummary2List.sort(Comparator.comparing(SessionDaysReportSummary2::getDate));
@@ -147,7 +159,8 @@ public class SessionDaysReport {
 
     private void setCaseReportSummaries(SessionDaysCaseData caseData,
                                         SessionDaysReportSummary reportSummary,
-                                        List<SessionDaysReportSummary2> sessionDaysReportSummary2List) {
+                                        List<SessionDaysReportSummary2> sessionDaysReportSummary2List,
+                                        List<List<String>> sessionsList) {
         int ft;
         int pt;
         int ot;
@@ -165,42 +178,44 @@ public class SessionDaysReport {
                         JudgeEmploymentStatus judgeStatus = getJudgeStatus(judgeName);
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
                                 dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
-                        if (judgeStatus != null) {
-                            switch (judgeStatus) {
-                                case SALARIED:
-                                    ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
-                                    reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
-                                    ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
-                                    reportSummary2.setFtSessionDays(String.valueOf(ft2));
-                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
-                                    break;
-                                case FEE_PAID:
-                                    pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
-                                    reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
-                                    pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
-                                    reportSummary2.setPtSessionDays(String.valueOf(pt2));
-                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
-                                    break;
-                                case UNKNOWN:
-                                    ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
-                                    reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
-                                    ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
-                                    reportSummary2.setOtherSessionDays(String.valueOf(ot2));
-                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
-                                    break;
-                                default:
-                                    break;
+                        if (!sessionExists(judgeName, dateListedTypeItem.getValue().getListedDate(), sessionsList)) {
+                            if (judgeStatus != null) {
+                                switch (judgeStatus) {
+                                    case SALARIED:
+                                        ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
+                                        reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
+                                        ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
+                                        reportSummary2.setFtSessionDays(String.valueOf(ft2));
+                                        total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                                        reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
+                                        break;
+                                    case FEE_PAID:
+                                        pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
+                                        reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
+                                        pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
+                                        reportSummary2.setPtSessionDays(String.valueOf(pt2));
+                                        total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                                        reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
+                                        break;
+                                    case UNKNOWN:
+                                        ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
+                                        reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
+                                        ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
+                                        reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                                        total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                                        reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            } else {
+                                ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
+                                reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
+                                ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
+                                reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                                total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                                reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
                             }
-                        } else {
-                            ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
-                            reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
-                            ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
-                            reportSummary2.setOtherSessionDays(String.valueOf(ot2));
-                            total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                            reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
                         }
                     }
                 }
