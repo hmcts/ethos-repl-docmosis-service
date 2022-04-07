@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.elasticsearch.common.Strings;
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
@@ -101,20 +101,20 @@ public class ClaimsByHearingVenueReport {
 
     private String getClaimantPostcode(ClaimantType claimantType) {
         return (claimantType != null && claimantType.getClaimantAddressUK() != null
-            && !Strings.isNullOrEmpty(claimantType.getClaimantAddressUK().getPostCode()))
+            && StringUtils.isNotBlank(claimantType.getClaimantAddressUK().getPostCode()))
             ? claimantType.getClaimantAddressUK().getPostCode() : NULL_STRING_VALUE;
     }
 
     private String getClaimantWorkPostcode(ClaimantWorkAddressType claimantWorkAddressType) {
         return (claimantWorkAddressType != null && claimantWorkAddressType.getClaimantWorkAddress() != null
-            && !Strings.isNullOrEmpty(claimantWorkAddressType.getClaimantWorkAddress().getPostCode()))
+            && StringUtils.isNotBlank(claimantWorkAddressType.getClaimantWorkAddress().getPostCode()))
             ? claimantWorkAddressType.getClaimantWorkAddress().getPostCode() : NULL_STRING_VALUE;
     }
 
     private String getRespondentPostcode(List<RespondentSumTypeItem> respondentItems) {
         return (CollectionUtils.isNotEmpty(respondentItems)
             && respondentItems.get(0).getValue().getRespondentAddress() != null
-            && !Strings.isNullOrEmpty(respondentItems.get(0).getValue()
+            && StringUtils.isNotBlank(respondentItems.get(0).getValue()
             .getRespondentAddress().getPostCode()))
             ? respondentItems.get(0).getValue().getRespondentAddress().getPostCode() : NULL_STRING_VALUE;
     }
@@ -123,7 +123,7 @@ public class ClaimsByHearingVenueReport {
 
         return (CollectionUtils.isNotEmpty(respondentItems)
             && respondentItems.get(0).getValue().getResponseRespondentAddress() != null
-            && !Strings.isNullOrEmpty(respondentItems.get(0).getValue()
+            && StringUtils.isNotBlank(respondentItems.get(0).getValue()
             .getResponseRespondentAddress().getPostCode()))
             ? respondentItems.get(0).getValue().getResponseRespondentAddress().getPostCode() : NULL_STRING_VALUE;
     }

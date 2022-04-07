@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -21,11 +21,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.Clai
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@Service("claimsByHearingVenueExcelReportCreationService")
+@Service
 public class ClaimsByHearingVenueExcelReportCreationService {
     private static final String EXCEL_REPORT_WORKBOOK_NAME = "Claims By Hearing Venue Report";
     private static final String CASE_NUMBER_HEADER = "Case Number";
@@ -34,7 +33,7 @@ public class ClaimsByHearingVenueExcelReportCreationService {
     private static final String CLAIMANT_WORK_POSTCODE_HEADER = "Claimant Work Postcode";
     private static final String RESPONDENT_POSTCODE_HEADER = "Respondent Postcode";
     private static final String RESPONDENT_ET3_POSTCODE_HEADER = "Respondent ET3 Postcode";
-    private static final List<String> HEADERS = new ArrayList<>(Arrays.asList(
+    private static final List<String> HEADERS = new ArrayList<>(List.of(
         CASE_NUMBER_HEADER, DATE_OF_RECEIPT_HEADER, CLAIMANT_POSTCODE_HEADER,
         CLAIMANT_WORK_POSTCODE_HEADER, RESPONDENT_POSTCODE_HEADER, RESPONDENT_ET3_POSTCODE_HEADER));
 
@@ -213,7 +212,6 @@ public class ClaimsByHearingVenueExcelReportCreationService {
             workbook.write(bos);
             workbook.close();
         } catch (IOException e) {
-            log.error("Error generating the excel report");
             throw new ReportException("Error generating the excel report", e);
         }
 
@@ -224,7 +222,7 @@ public class ClaimsByHearingVenueExcelReportCreationService {
         Cell cell = row.createCell(cellIndex);
         cell.setCellStyle(style);
 
-        if (!Strings.isNullOrEmpty(value) && !value.isBlank()) {
+        if (StringUtils.isNotBlank(value)) {
             cell.setCellValue(value);
         }
     }
