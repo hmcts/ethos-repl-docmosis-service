@@ -104,6 +104,7 @@ public class SessionDaysReport {
     }
 
     private boolean sessionExists(String judgeName, String date, List<List<String>> sessionsList) {
+        log.info("Function sessionExists: JudgeName:" + judgeName + ", date: " + date);
         if (!Strings.isNullOrEmpty(judgeName) && !Strings.isNullOrEmpty(date)) {
             List<String> judgeDate = List.of(judgeName, date);
             if (sessionsList.contains(judgeDate)) {
@@ -177,8 +178,10 @@ public class SessionDaysReport {
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
                                 dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
                         if (!sessionExists(judgeName, dateListedTypeItem.getValue().getListedDate(), sessionsList)) {
-                            writeLog(sessionsList);
+                            writeLog(sessionsList, false);
                             setReportSummariesFields(judgeStatus, reportSummary, reportSummary2);
+                        } else {
+                            writeLog(sessionsList, true);
                         }
                     }
                 }
@@ -186,11 +189,12 @@ public class SessionDaysReport {
         }
     }
 
-    private void writeLog(List<List<String>> sessionsList) {
+    private void writeLog(List<List<String>> sessionsList, boolean sessionExists) {
         int i = 1;
         for (List<String> s : sessionsList) {
             for (String h : s) {
                 log.info("Iteration:" + i + h);
+                log.info("Session Exists:" + sessionExists);
                 i = i + 1;
             }
         }
