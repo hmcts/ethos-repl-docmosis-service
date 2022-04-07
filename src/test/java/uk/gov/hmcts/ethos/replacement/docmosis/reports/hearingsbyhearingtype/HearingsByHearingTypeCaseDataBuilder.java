@@ -112,7 +112,7 @@ public class HearingsByHearingTypeCaseDataBuilder {
                 hearingStatus);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings, "1", "lead1", mulRef,mulName));
+        submitEvents.add(createSubmitEvent(hearings, "1", "Yes", mulRef,mulName));
         dateListedTypeItem = createHearingDateListed("2022-01-03T00:00:00.000",
                 hearingStatus);
         hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY, "Hybrid",
