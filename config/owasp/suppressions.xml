@@ -37,13 +37,6 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: spring-beans-5.3.16.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-beans@5.3.16</packageUrl>
-        <cve>CVE-2022-22965</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
    file name: yarn.lock?minimist
    ]]></notes>
         <packageUrl regex="true">^pkg:npm/minimist@1.2.5</packageUrl>
