@@ -36,6 +36,8 @@ public class HearingsByHearingTypeReport {
     private static final String STAGE_1 = "Stage 1";
     private static final String STAGE_2 = "Stage 2";
     private static final String STAGE_3 = "Stage 3";
+    private static final String SIT_ALONE = "Sit Alone";
+    private static final String FULL_PANEL = "Full Panel";
 
     private static final String COSTS_HEARING_TYPE_SCOTLAND = "Expenses/Wasted Costs Hearing";
     private String dateFrom;
@@ -95,8 +97,8 @@ public class HearingsByHearingTypeReport {
     }
 
     private void initReportSummary2HdrList(List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList) {
-        reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr("Full Panel"));
-        reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr("EJ Sit Alone"));
+        reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr(FULL_PANEL));
+        reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr(SIT_ALONE));
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr("JM"));
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr("Tel Con"));
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr(VIDEO));
@@ -109,17 +111,18 @@ public class HearingsByHearingTypeReport {
     }
 
     private String getSubSplitSitAlone(HearingTypeItem hearingTypeItem) {
-        if ("Full".equals(hearingTypeItem.getValue().getHearingSitAlone())) {
-            return "Full Panel";
-        } else if (YES.equals(hearingTypeItem.getValue().getHearingSitAlone())) {
-            return "EJ Sit Alone";
-        } else {
-            return "";
+        if (!Strings.isNullOrEmpty(hearingTypeItem.getValue().getHearingSitAlone()))  {
+            if (List.of(FULL_PANEL, "Full").contains(hearingTypeItem.getValue().getHearingSitAlone())) {
+                return FULL_PANEL;
+            } else if (List.of(SIT_ALONE, YES).contains(hearingTypeItem.getValue().getHearingSitAlone())) {
+                return SIT_ALONE;
+            }
         }
+        return "";
     }
 
     private boolean isSubSplitJM(HearingTypeItem hearingTypeItem) {
-        return "JM".equals(hearingTypeItem.getValue().getJudicialMediation());
+        return YES.equals(hearingTypeItem.getValue().getJudicialMediation());
     }
 
     private String getSubSplitStages(HearingTypeItem hearingTypeItem) {
