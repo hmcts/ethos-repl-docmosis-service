@@ -104,9 +104,10 @@ public class SessionDaysReport {
     }
 
     private boolean sessionExists(String judgeName, String date, List<List<String>> sessionsList) {
-        log.info("Function sessionExists: JudgeName:" + judgeName + ", date: " + date);
-        if (!Strings.isNullOrEmpty(judgeName) && !Strings.isNullOrEmpty(date)) {
-            List<String> judgeDate = List.of(judgeName, date);
+        String dateFormatted = LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
+        log.info("Function sessionExists: JudgeName:" + judgeName + ", date: " + dateFormatted);
+        if (!Strings.isNullOrEmpty(judgeName) && !Strings.isNullOrEmpty(dateFormatted)) {
+            List<String> judgeDate = List.of(judgeName, dateFormatted);
             if (sessionsList.contains(judgeDate)) {
                 return true;
             } else {
