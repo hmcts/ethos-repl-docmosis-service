@@ -428,7 +428,7 @@ public class HearingsByHearingTypeReport {
         var subMul = StringUtils.defaultString(caseData.getSubMultipleName(), "0 -  Not Allocated");
         detail.setMultiSub(mulRef + ", " + subMul);
         detail.setCaseReference(caseData.getEthosCaseReference());
-        detail.setLead(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "N" : "Y");
+        detail.setLead(YES.equals(caseData.getLeadClaimant()) ? "Y" : "N");
         detail.setTel(CollectionUtils.isNotEmpty(
                 hearingTypeItem.getValue().getHearingFormat())
                 && hearingTypeItem.getValue().getHearingFormat()
