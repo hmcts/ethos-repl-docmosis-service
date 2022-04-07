@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
 import com.microsoft.azure.servicebus.primitives.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -30,6 +31,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEAR
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReport.OLD_DATE_TIME_PATTERN3;
 
+@Slf4j
 public class SessionDaysReport {
 
     private final SessionDaysReportDataSource reportDataSource;
@@ -102,6 +104,7 @@ public class SessionDaysReport {
     }
 
     private boolean sessionExists(String judgeName, String date, List<List<String>> sessionsList) {
+        log.info("Function sessionExists: JudgeName:" + judgeName + ", date: " + date);
         if (!Strings.isNullOrEmpty(judgeName) && !Strings.isNullOrEmpty(date)) {
             List<String> judgeDate = List.of(judgeName, date);
             if (sessionsList.contains(judgeDate)) {
@@ -175,10 +178,24 @@ public class SessionDaysReport {
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
                                 dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
                         if (!sessionExists(judgeName, dateListedTypeItem.getValue().getListedDate(), sessionsList)) {
+                            writeLog(sessionsList, false);
                             setReportSummariesFields(judgeStatus, reportSummary, reportSummary2);
+                        } else {
+                            writeLog(sessionsList, true);
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void writeLog(List<List<String>> sessionsList, boolean sessionExists) {
+        int i = 1;
+        for (List<String> s : sessionsList) {
+            for (String h : s) {
+                log.info("Iteration:" + i + h);
+                log.info("Session Exists:" + sessionExists);
+                i = i + 1;
             }
         }
     }
@@ -188,10 +205,10 @@ public class SessionDaysReport {
         int ft;
         int pt;
         int ot;
-        int ft2 = 0;
-        int pt2 = 0;
-        int ot2 = 0;
-        int total2 = 0;
+        int ft2;
+        int pt2;
+        int ot2;
+        int total2;
         if (judgeStatus != null) {
             switch (judgeStatus) {
                 case SALARIED:
