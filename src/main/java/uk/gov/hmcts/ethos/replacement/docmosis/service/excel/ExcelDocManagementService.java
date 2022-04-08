@@ -148,7 +148,14 @@ public class ExcelDocManagementService {
                         documentManagementService.generateDownloadableURL(documentSelfPath)))
                 .url(documentManagementService.generateDownloadableURL(documentSelfPath))
                 .build();
-
     }
 
+    public DocumentInfo uploadExcelReportDocument(String userToken, String documentName, byte[] excelBytes) {
+        URI documentUri = documentManagementService.uploadDocument(userToken, excelBytes,
+            documentName, APPLICATION_EXCEL_VALUE, "Listings_Type");
+
+        log.info("Excel Report - URI documentSelfPath uploaded and created: " + documentUri.toString());
+
+        return getScheduleDocument(documentUri, documentName);
+    }
 }
