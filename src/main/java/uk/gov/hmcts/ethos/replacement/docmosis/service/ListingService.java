@@ -50,7 +50,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysCc
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ClaimsByHearingVenueExcelReportDocumentInfoService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 
 import java.io.IOException;
@@ -103,16 +103,16 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDE
 public class ListingService {
 
     private final TornadoService tornadoService;
-    private final ExcelDocManagementService excelDocManagementService;
     private final CcdClient ccdClient;
     private final JpaJudgeService jpaJudgeService;
     private final CasesCompletedReport casesCompletedReport;
     private final TimeToFirstHearingReport timeToFirstHearingReport;
     private final ServingClaimsReport servingClaimsReport;
     private final CaseSourceLocalReport caseSourceLocalReport;
-    private final UserService userService;
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
+    private final ClaimsByHearingVenueExcelReportDocumentInfoService excelReportDocumentInfoService;
+    private final UserService userService;
 
     public ListingData listingCaseCreation(ListingDetails listingDetails) {
 
@@ -283,10 +283,11 @@ public class ListingService {
         log.info("Claims By Hearing Venue Report for {}", listingDetails.getCaseTypeId());
         var params = setListingDateRangeForSearch(listingDetails);
         var reportDataSource = new ClaimsByHearingVenueCcdReportDataSource(authToken, ccdClient);
-        var claimsByHearingVenueReport = new ClaimsByHearingVenueReport(reportDataSource, params);
         var listingData = listingDetails.getCaseData();
         var hearingDateType = listingData.getHearingDateType();
-        return claimsByHearingVenueReport.generateReport(hearingDateType, getUserFullName(authToken));
+        var claimsByHearingVenueReport = new ClaimsByHearingVenueReport(reportDataSource, params);
+        return claimsByHearingVenueReport.generateReport(hearingDateType,
+                getUserFullName(authToken));
     }
 
     private String getUserFullName(String userToken) {
@@ -553,8 +554,8 @@ public class ListingService {
     public DocumentInfo processHearingDocument(ListingData listingData, String caseTypeId, String authToken) {
         try {
             if (CLAIMS_BY_HEARING_VENUE_REPORT.equals(listingData.getReportType())) {
-                return excelDocManagementService.generateAndUploadExcelReportDocument(authToken,
-                    (ClaimsByHearingVenueReportData)listingData, caseTypeId);
+                return excelReportDocumentInfoService.generateExcelReportDocumentInfo(
+                        (ClaimsByHearingVenueReportData)listingData, caseTypeId, authToken);
             }
 
             return tornadoService.listingGeneration(authToken, listingData, caseTypeId);

@@ -13,7 +13,6 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
@@ -42,10 +41,8 @@ public class ExcelDocManagementService {
 
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
-    private final ClaimsByHearingVenueExcelReportCreationService claimsByHearingVenueExcelReportCreationService;
     private final UserService userService;
     private final ScheduleCreationService scheduleCreationService;
-    private static final String CLAIMS_BY_HEARING_VENUE_FILE_NAME = "_Hearings_By_Venue_Report.xlsx";
 
     public void uploadExcelDocument(String userToken, MultipleDetails multipleDetails, byte[] excelBytes) {
         var multipleData = multipleDetails.getCaseData();
@@ -153,14 +150,7 @@ public class ExcelDocManagementService {
                 .build();
     }
 
-    public DocumentInfo generateAndUploadExcelReportDocument(String userToken,  ClaimsByHearingVenueReportData
-        reportData, String caseTypeId) {
-        byte[] excelBytes = claimsByHearingVenueExcelReportCreationService.getReportExcelFile(reportData);
-        var outPutFileName = caseTypeId + CLAIMS_BY_HEARING_VENUE_FILE_NAME;
-        return uploadExcelReportDocument(userToken, outPutFileName, excelBytes);
-    }
-
-    private DocumentInfo uploadExcelReportDocument(String userToken, String documentName, byte[] excelBytes) {
+    public DocumentInfo uploadExcelReportDocument(String userToken, String documentName, byte[] excelBytes) {
         URI documentUri = documentManagementService.uploadDocument(userToken, excelBytes,
             documentName, APPLICATION_EXCEL_VALUE, "Listings_Type");
 

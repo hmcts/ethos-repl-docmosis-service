@@ -22,7 +22,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 class ClaimsByHearingVenueReportTest {
     ClaimsByHearingVenueReportDataSource claimsByHearingVenueReportDataSource;
-    ClaimsByHearingVenueReport claimsByHearingVenueReport;
+    private ClaimsByHearingVenueReport claimsByHearingVenueReport;
     ClaimsByHearingVenueCaseDataBuilder caseDataBuilder = new ClaimsByHearingVenueCaseDataBuilder();
     List<ClaimsByHearingVenueSubmitEvent> submitEvents = new ArrayList<>();
     ReportParams params;
@@ -31,6 +31,7 @@ class ClaimsByHearingVenueReportTest {
     static final String SINGLE_START_DATE = "2021-12-08T01:00:00.000";
     static final String SINGLE_END_DATE = "2021-12-08T23:59:59.000";
     static final String TEST_USERNAME = "ECM Tester";
+    static final String TEST_USER_TOKEN = "DummyUserToken";
     static final String OFFICE_NAME = "Leeds";
 
     @BeforeEach
@@ -38,6 +39,7 @@ class ClaimsByHearingVenueReportTest {
         submitEvents.clear();
         caseDataBuilder = new ClaimsByHearingVenueCaseDataBuilder();
         claimsByHearingVenueReportDataSource = mock(ClaimsByHearingVenueReportDataSource.class);
+        claimsByHearingVenueReport = new ClaimsByHearingVenueReport(claimsByHearingVenueReportDataSource, params);
     }
 
     @Test
@@ -68,7 +70,6 @@ class ClaimsByHearingVenueReportTest {
             .withRespondentCollection(null)
             .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventTwo);
-        var claimsByHearingVenueReport = getDateRangeClaimsByHearingVenueReport();
 
         when(claimsByHearingVenueReportDataSource.getData(
             UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
@@ -76,8 +77,11 @@ class ClaimsByHearingVenueReportTest {
 
         var expectedReportTitle = getReportTitle(RANGE_HEARING_DATE_TYPE);
         var expectedNumberOfSubmitEventEntries = submitEvents.size();
+
+        var params = new ReportParams(LEEDS_LISTING_CASE_TYPE_ID, RANGE_START_DATE, RANGE_END_DATE);
+        claimsByHearingVenueReport = new ClaimsByHearingVenueReport(claimsByHearingVenueReportDataSource, params);
         var reportData = claimsByHearingVenueReport
-            .generateReport(RANGE_HEARING_DATE_TYPE, TEST_USERNAME);
+            .generateReport(RANGE_HEARING_DATE_TYPE, TEST_USER_TOKEN);
         var actualReportTitle = reportData.getReportPeriodDescription();
 
         assertEquals(expectedReportTitle, actualReportTitle);
@@ -103,8 +107,6 @@ class ClaimsByHearingVenueReportTest {
                 .withRespondentCollection(null)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventOne);
-        params = new ReportParams(LEEDS_LISTING_CASE_TYPE_ID, SINGLE_START_DATE, SINGLE_END_DATE);
-        claimsByHearingVenueReport = new ClaimsByHearingVenueReport(claimsByHearingVenueReportDataSource, params);
 
         when(claimsByHearingVenueReportDataSource.getData(
              UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), SINGLE_START_DATE, SINGLE_END_DATE))
@@ -112,8 +114,10 @@ class ClaimsByHearingVenueReportTest {
 
         var expectedReportTitle = getReportTitle(SINGLE_HEARING_DATE_TYPE);
         var expectedNumberOfSubmitEventEntries = 1;
+        params = new ReportParams(LEEDS_LISTING_CASE_TYPE_ID, SINGLE_START_DATE, SINGLE_END_DATE);
+        claimsByHearingVenueReport = new ClaimsByHearingVenueReport(claimsByHearingVenueReportDataSource, params);
         var reportData = claimsByHearingVenueReport
-                .generateReport(SINGLE_HEARING_DATE_TYPE, TEST_USERNAME);
+                .generateReport(SINGLE_HEARING_DATE_TYPE, TEST_USER_TOKEN);
         var actualReportTitle = reportData.getReportPeriodDescription();
 
         assertEquals(expectedReportTitle, actualReportTitle);
@@ -272,89 +276,89 @@ class ClaimsByHearingVenueReportTest {
 
     @Test
     void shouldShowReportDetailEntriesSortedByEthosCaseReference() {
-        var claimantAddressUK = new Address();
-        claimantAddressUK.setPostCode("DH3 8HL");
-        var claimant = new ClaimantType();
-        claimant.setClaimantAddressUK(claimantAddressUK);
+       var claimantAddressUK = new Address();
+       claimantAddressUK.setPostCode("DH3 8HL");
+       var claimant = new ClaimantType();
+       claimant.setClaimantAddressUK(claimantAddressUK);
 
-        var submitEventOne = caseDataBuilder
-            .withEthosCaseReference("18000012/2022")
-            .withReceiptDate("2021-12-14")
-            .withClaimantType(claimant)
-            .withClaimantWorkAddressType(null)
-            .withRespondentCollection(null)
-            .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEventOne);
+       var submitEventOne = caseDataBuilder
+           .withEthosCaseReference("18000012/2022")
+           .withReceiptDate("2021-12-14")
+           .withClaimantType(claimant)
+           .withClaimantWorkAddressType(null)
+           .withRespondentCollection(null)
+           .buildAsSubmitEvent(ACCEPTED_STATE);
+       submitEvents.add(submitEventOne);
 
-        var submitEventTwo = caseDataBuilder
-            .withEthosCaseReference("1800154/2021")
-            .withReceiptDate("2021-12-08")
-            .withClaimantType(claimant)
-            .withClaimantWorkAddressType(null)
-            .withRespondentCollection(null)
-            .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEventTwo);
+       var submitEventTwo = caseDataBuilder
+           .withEthosCaseReference("1800154/2021")
+           .withReceiptDate("2021-12-08")
+           .withClaimantType(claimant)
+           .withClaimantWorkAddressType(null)
+           .withRespondentCollection(null)
+           .buildAsSubmitEvent(ACCEPTED_STATE);
+       submitEvents.add(submitEventTwo);
 
-        var submitEventThree = caseDataBuilder
-            .withEthosCaseReference("18000003/2022")
-            .withReceiptDate("2021-12-08")
-            .withClaimantType(claimant)
-            .withClaimantWorkAddressType(null)
-            .withRespondentCollection(null)
-            .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEventThree);
-        when(claimsByHearingVenueReportDataSource.getData(
-            UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
-            .thenReturn(submitEvents);
+       var submitEventThree = caseDataBuilder
+           .withEthosCaseReference("18000003/2022")
+           .withReceiptDate("2021-12-08")
+           .withClaimantType(claimant)
+           .withClaimantWorkAddressType(null)
+           .withRespondentCollection(null)
+           .buildAsSubmitEvent(ACCEPTED_STATE);
+       submitEvents.add(submitEventThree);
+       when(claimsByHearingVenueReportDataSource.getData(
+           UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
+           .thenReturn(submitEvents);
 
-        var expectedNumberOfSubmitEventEntries = submitEvents.size();
-        var expectedFirstCaseReference = submitEvents.get(1).getCaseData().getEthosCaseReference();
-        var expectedSecondCaseReference = submitEvents.get(2).getCaseData().getEthosCaseReference();
-        var expectedThirdFirstCaseReference = submitEvents.get(0).getCaseData().getEthosCaseReference();
-        var claimsByHearingVenueReport = getDateRangeClaimsByHearingVenueReport();
-        var reportData = claimsByHearingVenueReport
-            .generateReport(RANGE_HEARING_DATE_TYPE, TEST_USERNAME);
+       var expectedNumberOfSubmitEventEntries = submitEvents.size();
+       var expectedFirstCaseReference = submitEvents.get(1).getCaseData().getEthosCaseReference();
+       var expectedSecondCaseReference = submitEvents.get(2).getCaseData().getEthosCaseReference();
+       var expectedThirdFirstCaseReference = submitEvents.get(0).getCaseData().getEthosCaseReference();
+       var claimsByHearingVenueReport = getDateRangeClaimsByHearingVenueReport();
+       var reportData = claimsByHearingVenueReport
+           .generateReport(RANGE_HEARING_DATE_TYPE, TEST_USERNAME);
 
-        assertEquals(expectedNumberOfSubmitEventEntries, reportData.getReportDetails().size());
-        assertEquals(expectedFirstCaseReference, reportData.getReportDetails().get(0).getCaseReference());
-        assertEquals(expectedSecondCaseReference, reportData.getReportDetails().get(1).getCaseReference());
-        assertEquals(expectedThirdFirstCaseReference, reportData.getReportDetails().get(2).getCaseReference());
+       assertEquals(expectedNumberOfSubmitEventEntries, reportData.getReportDetails().size());
+       assertEquals(expectedFirstCaseReference, reportData.getReportDetails().get(0).getCaseReference());
+       assertEquals(expectedSecondCaseReference, reportData.getReportDetails().get(1).getCaseReference());
+       assertEquals(expectedThirdFirstCaseReference, reportData.getReportDetails().get(2).getCaseReference());
     }
 
-    @Test
-    void shouldShowCorrectReportPrintedOnDescription() {
-        // Given cases have date of Receipt value within the inclusive date range searched for
-        // When report data is requested
-        // Then excel report should print correct value for "ReportPrintedOnDescription" field
+       @Test
+       void shouldShowCorrectReportPrintedOnDescription() {
+           // Given cases have date of Receipt value within the inclusive date range searched for
+           // When report data is requested
+           // Then excel report should print correct value for "ReportPrintedOnDescription" field
 
-        var claimantAddressUK = new Address();
-        claimantAddressUK.setPostCode("DH3 8HL");
-        var claimant = new ClaimantType();
-        claimant.setClaimantAddressUK(claimantAddressUK);
+           var claimantAddressUK = new Address();
+           claimantAddressUK.setPostCode("DH3 8HL");
+           var claimant = new ClaimantType();
+           claimant.setClaimantAddressUK(claimantAddressUK);
 
-        var submitEventOne = caseDataBuilder
-                .withEthosCaseReference("18000012/2022")
-                .withReceiptDate("2021-12-08")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(null)
-                .withRespondentCollection(null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEventOne);
-        params = new ReportParams(LEEDS_LISTING_CASE_TYPE_ID, SINGLE_START_DATE, SINGLE_END_DATE);
-        claimsByHearingVenueReport = new ClaimsByHearingVenueReport(claimsByHearingVenueReportDataSource, params);
+           var submitEventOne = caseDataBuilder
+                   .withEthosCaseReference("18000012/2022")
+                   .withReceiptDate("2021-12-08")
+                   .withClaimantType(claimant)
+                   .withClaimantWorkAddressType(null)
+                   .withRespondentCollection(null)
+                   .buildAsSubmitEvent(ACCEPTED_STATE);
+           submitEvents.add(submitEventOne);
+           params = new ReportParams(LEEDS_LISTING_CASE_TYPE_ID, SINGLE_START_DATE, SINGLE_END_DATE);
+           claimsByHearingVenueReport = new ClaimsByHearingVenueReport(claimsByHearingVenueReportDataSource, params);
 
-        when(claimsByHearingVenueReportDataSource.getData(
-                UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), SINGLE_START_DATE, SINGLE_END_DATE))
-                .thenReturn(submitEvents);
+           when(claimsByHearingVenueReportDataSource.getData(
+                   UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), SINGLE_START_DATE, SINGLE_END_DATE))
+                   .thenReturn(submitEvents);
 
-        var expectedReportPrintedOnDescription = getTestReportPrintedDescription();
-        var expectedNumberOfSubmitEventEntries = 1;
-        var reportData = claimsByHearingVenueReport
-                .generateReport(SINGLE_HEARING_DATE_TYPE, TEST_USERNAME);
-        var actualReportTitle = reportData.getReportPrintedOnDescription();
+           var expectedReportPrintedOnDescription = getTestReportPrintedDescription();
+           var expectedNumberOfSubmitEventEntries = 1;
+           var reportData = claimsByHearingVenueReport
+                   .generateReport(SINGLE_HEARING_DATE_TYPE, TEST_USERNAME);
+           var actualReportTitle = reportData.getReportPrintedOnDescription();
 
-        assertEquals(expectedReportPrintedOnDescription, actualReportTitle);
-    }
+           assertEquals(expectedReportPrintedOnDescription, actualReportTitle);
+       }
 
     private ClaimsByHearingVenueReport getDateRangeClaimsByHearingVenueReport() {
         params = new ReportParams(LEEDS_LISTING_CASE_TYPE_ID, RANGE_START_DATE, RANGE_END_DATE);
