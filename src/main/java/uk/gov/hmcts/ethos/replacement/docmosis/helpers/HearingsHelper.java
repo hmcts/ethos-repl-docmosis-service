@@ -10,9 +10,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 
@@ -119,22 +119,25 @@ public class HearingsHelper {
     }
 
     private static void checkIfDateInFuture(List<String> errors, DateListedType dateListedType) {
-        if (isDateInFuture(dateListedType.getHearingTimingStart())) {
+        if (isDateInFuture(dateListedType.getHearingTimingStart(), LocalDateTime.now())) {
             errors.add(HEARING_START_FUTURE);
         }
-        if (isDateInFuture(dateListedType.getHearingTimingResume())) {
+        if (isDateInFuture(dateListedType.getHearingTimingResume(), LocalDateTime.now())) {
             errors.add(HEARING_RESUME_FUTURE);
         }
-        if (isDateInFuture(dateListedType.getHearingTimingBreak())) {
+        if (isDateInFuture(dateListedType.getHearingTimingBreak(), LocalDateTime.now())) {
             errors.add(HEARING_BREAK_FUTURE);
         }
-        if (isDateInFuture(dateListedType.getHearingTimingFinish())) {
+        if (isDateInFuture(dateListedType.getHearingTimingFinish(), LocalDateTime.now())) {
             errors.add(HEARING_FINISH_FUTURE);
         }
     }
 
-    private static boolean isDateInFuture(String date) {
-        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).isAfter(LocalDateTime.now());
+    public static boolean isDateInFuture(String date, LocalDateTime now) {
+        //Azure times are always in UTC and users enter Europe/London Times,
+        // so respective zonedDateTimes should be compared.
+        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).atZone(ZoneId.of("Europe/London"))
+                .isAfter(now.atZone(ZoneId.of("UTC")));
     }
 
     private static void checkStartFinishTimes(List<String> errors, DateListedType dateListedType,

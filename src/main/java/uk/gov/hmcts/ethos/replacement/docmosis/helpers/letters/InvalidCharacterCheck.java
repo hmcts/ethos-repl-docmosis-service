@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
@@ -24,10 +25,10 @@ public class InvalidCharacterCheck {
         List<String> errors = new ArrayList<>();
         List<String> nameOfParties = findAllParties(caseData);
         for (String name : nameOfParties) {
-            if (name.contains("  ")) {
+            if (!Strings.isNullOrEmpty(name) && name.contains("  ")) {
                 errors.add(name + DOUBLE_SPACE_ERROR);
             }
-            if (name.contains("\n")) {
+            if (!Strings.isNullOrEmpty(name) && name.contains("\n")) {
                 errors.add(name + NEW_LINE_ERROR);
             }
         }

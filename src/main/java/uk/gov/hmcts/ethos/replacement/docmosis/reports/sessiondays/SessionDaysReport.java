@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 
 import java.time.LocalDate;
@@ -46,12 +47,12 @@ public class SessionDaysReport {
         this.jpaJudgeService = jpaJudgeService;
     }
 
-    public SessionDaysReportData generateReport(String caseTypeId, String dateFrom, String dateTo) {
+    public SessionDaysReportData generateReport(ReportParams params) {
 
-        var submitEvents = getCases(caseTypeId, dateFrom, dateTo);
-        var reportData = initReport(caseTypeId);
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
+        var submitEvents = getCases(params.getCaseTypeId(), params.getDateFrom(), params.getDateTo());
+        var reportData = initReport(params.getCaseTypeId());
+        this.dateFrom = params.getDateFrom();
+        this.dateTo = params.getDateTo();
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             executeReport(submitEvents, reportData);
         }
@@ -100,12 +101,28 @@ public class SessionDaysReport {
         setReportData(submitEvents, sessionDaysReportData);
     }
 
+    private boolean sessionExists(String judgeName, String date, List<List<String>> sessionsList) {
+        String dateFormatted = LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
+        if (!Strings.isNullOrEmpty(judgeName) && !Strings.isNullOrEmpty(dateFormatted)) {
+            List<String> judgeDate = List.of(judgeName, dateFormatted);
+            if (sessionsList.contains(judgeDate)) {
+                return true;
+            } else {
+                sessionsList.add(judgeDate);
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void setReportData(List<SessionDaysSubmitEvent> submitEvents, SessionDaysReportData reportData) {
         List<SessionDaysReportSummary2> sessionDaysReportSummary2List = new ArrayList<>();
         List<SessionDaysReportDetail> sessionDaysReportDetailList = new ArrayList<>();
+        List<List<String>> sessionsList = new ArrayList<>();
         for (SessionDaysSubmitEvent submitEvent : submitEvents) {
             var caseData = submitEvent.getCaseData();
-            setCaseReportSummaries(caseData, reportData.getReportSummary(), sessionDaysReportSummary2List);
+            setCaseReportSummaries(caseData, reportData.getReportSummary(),
+                    sessionDaysReportSummary2List, sessionsList);
             setReportDetail(caseData, sessionDaysReportDetailList);
         }
         sessionDaysReportSummary2List.sort(Comparator.comparing(SessionDaysReportSummary2::getDate));
@@ -146,14 +163,8 @@ public class SessionDaysReport {
 
     private void setCaseReportSummaries(SessionDaysCaseData caseData,
                                         SessionDaysReportSummary reportSummary,
-                                        List<SessionDaysReportSummary2> sessionDaysReportSummary2List) {
-        int ft;
-        int pt;
-        int ot;
-        int ft2 = 0;
-        int pt2 = 0;
-        int ot2 = 0;
-        int total2 = 0;
+                                        List<SessionDaysReportSummary2> sessionDaysReportSummary2List,
+                                        List<List<String>> sessionsList) {
         for (HearingTypeItem hearingTypeItem : getHearings(caseData)) {
             var dates = hearingTypeItem.getValue().getHearingDateCollection();
             dates = filterValidHearingDates(dates);
@@ -164,46 +175,60 @@ public class SessionDaysReport {
                         JudgeEmploymentStatus judgeStatus = getJudgeStatus(judgeName);
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
                                 dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
-                        if (judgeStatus != null) {
-                            switch (judgeStatus) {
-                                case SALARIED:
-                                    ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
-                                    reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
-                                    ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
-                                    reportSummary2.setFtSessionDays(String.valueOf(ft2));
-                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
-                                    break;
-                                case FEE_PAID:
-                                    pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
-                                    reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
-                                    pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
-                                    reportSummary2.setPtSessionDays(String.valueOf(pt2));
-                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
-                                    break;
-                                case UNKNOWN:
-                                    ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
-                                    reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
-                                    ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
-                                    reportSummary2.setOtherSessionDays(String.valueOf(ot2));
-                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
-                                    break;
-                                default:
-                                    break;
-                            }
-                        } else {
-                            ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
-                            reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
-                            ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
-                            reportSummary2.setOtherSessionDays(String.valueOf(ot2));
-                            total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
-                            reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
+                        if (!sessionExists(judgeName, dateListedTypeItem.getValue().getListedDate(), sessionsList)) {
+                            setReportSummariesFields(judgeStatus, reportSummary, reportSummary2);
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void setReportSummariesFields(JudgeEmploymentStatus judgeStatus, SessionDaysReportSummary reportSummary,
+                           SessionDaysReportSummary2 reportSummary2) {
+        int ft;
+        int pt;
+        int ot;
+        int ft2;
+        int pt2;
+        int ot2;
+        int total2;
+        if (judgeStatus != null) {
+            switch (judgeStatus) {
+                case SALARIED:
+                    ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
+                    reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
+                    ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
+                    reportSummary2.setFtSessionDays(String.valueOf(ft2));
+                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
+                    break;
+                case FEE_PAID:
+                    pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
+                    reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
+                    pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
+                    reportSummary2.setPtSessionDays(String.valueOf(pt2));
+                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
+                    break;
+                case UNKNOWN:
+                    ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
+                    reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
+                    ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
+                    reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
+            reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
+            ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
+            reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+            total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+            reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
         }
     }
 
@@ -243,26 +268,9 @@ public class SessionDaysReport {
                                 .toLocalDate().toString());
                         String judgeName = getJudgeName(hearingTypeItem.getValue().getJudge());
 
-                        reportDetail.setHearingJudge(
-                                Strings.isNullOrEmpty(judgeName)
-                                        ? "* Not Allocated" : judgeName);
+                        reportDetail.setHearingJudge(judgeName);
                         JudgeEmploymentStatus judgeStatus = getJudgeStatus(judgeName);
-
-                        if (judgeStatus != null) {
-                            switch (judgeStatus) {
-                                case SALARIED:
-                                    reportDetail.setJudgeType("FTC");
-                                    break;
-                                case FEE_PAID:
-                                    reportDetail.setJudgeType("PTC");
-                                    break;
-                                case UNKNOWN:
-                                    reportDetail.setJudgeType("UNKNOWN");
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
+                        setJudgeType(judgeStatus, reportDetail);
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());
                         reportDetail.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
                         reportDetail.setHearingType(hearingTypeItem.getValue().getHearingType());
@@ -280,11 +288,34 @@ public class SessionDaysReport {
         }
     }
 
-    private String getJudgeName(String name) {
-        if (!Strings.isNullOrEmpty(name) && name.contains("_")) {
-            return name.split("_")[1];
+    private void setJudgeType(JudgeEmploymentStatus judgeStatus, SessionDaysReportDetail reportDetail) {
+        if (judgeStatus != null) {
+            switch (judgeStatus) {
+                case SALARIED:
+                    reportDetail.setJudgeType("FTC");
+                    break;
+                case FEE_PAID:
+                    reportDetail.setJudgeType("PTC");
+                    break;
+                case UNKNOWN:
+                    reportDetail.setJudgeType("UNKNOWN");
+                    break;
+                default:
+                    break;
+            }
         }
-        return name;
+    }
+
+    private String getJudgeName(String name) {
+        if (!Strings.isNullOrEmpty(name)) {
+            if (name.contains("_")) {
+                return name.split("_")[1];
+            } else {
+                return name;
+            }
+        } else {
+            return "* Not Allocated";
+        }
     }
 
     private void setTelCon(HearingTypeItem hearingTypeItem, SessionDaysReportDetail reportDetail) {

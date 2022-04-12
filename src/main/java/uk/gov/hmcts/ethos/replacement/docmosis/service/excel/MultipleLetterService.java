@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
@@ -201,33 +200,14 @@ public class MultipleLetterService {
 
     public void dynamicMultipleLetters(String userToken, MultipleDetails multipleDetails,
                                        List<String> errors) {
-        log.info("Read excel for letter logic");
         var multipleData = multipleDetails.getCaseData();
-
         multipleDynamicListFlagsService.populateDynamicListFlagsLogic(userToken, multipleDetails, errors);
-        SortedMap<String, Object> multipleObjects =
-                excelReadingService.readExcel(
-                        userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleData),
-                        errors,
-                        multipleData,
-                        FilterExcelType.FLAGS);
-
-        if (!multipleObjects.keySet().isEmpty()) {
-            log.info("Cases in multiple: " + multipleObjects.keySet());
-            List<DynamicValueType> listItems = new ArrayList<>();
-            for (String key : multipleObjects.keySet()) {
-                var submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
-                        multipleDetails.getCaseTypeId(), key,
-                        multipleData.getMultipleSource());
-                if (submitEvent != null) {
-                    DynamicLetters.dynamicMultipleLetters(submitEvent, multipleData,
-                            multipleDetails.getCaseTypeId(), listItems);
-                }
-
-            }
-        } else {
-            errors.add(NO_CASES_SEARCHED);
+        var leadCase = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
+        var submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(), leadCase, multipleData.getMultipleSource());
+        if (submitEvent != null) {
+            DynamicLetters.dynamicMultipleLetters(submitEvent, multipleData,
+                    multipleDetails.getCaseTypeId());
         }
     }
 

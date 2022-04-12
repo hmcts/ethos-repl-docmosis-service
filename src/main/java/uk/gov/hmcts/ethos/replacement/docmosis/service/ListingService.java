@@ -26,10 +26,15 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Cas
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesourcelocalreport.CaseSourceLocalReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueCcdReportDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeCcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsCcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
@@ -45,12 +50,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysCc
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ClaimsByHearingVenueExcelReportDocumentInfoService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +68,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDG
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_BY_HEARING_VENUE_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_BY_HEARING_TYPE_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
@@ -83,6 +91,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
@@ -99,12 +108,11 @@ public class ListingService {
     private final CasesCompletedReport casesCompletedReport;
     private final TimeToFirstHearingReport timeToFirstHearingReport;
     private final ServingClaimsReport servingClaimsReport;
-    private String listingDateFrom;
-    private String listingDateTo;
     private final CaseSourceLocalReport caseSourceLocalReport;
-    private final HearingsByHearingTypeReport hearingsByHearingTypeReport;
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
+    private final ClaimsByHearingVenueExcelReportDocumentInfoService excelReportDocumentInfoService;
+    private final UserService userService;
 
     public ListingData listingCaseCreation(ListingDetails listingDetails) {
 
@@ -162,6 +170,8 @@ public class ListingService {
                         addListingTypeItems(submitEvent, listingTypeItems, listingDetails);
                     }
                 }
+                listingTypeItems.sort(Comparator.comparing(o -> LocalDate.parse(o.getValue().getCauseListDate(),
+                        CAUSE_LIST_DATE_TIME_PATTERN)));
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
             }
 
@@ -256,6 +266,10 @@ public class ListingService {
                     return getSessionDaysReport(listingDetails, authToken);
                 case ECC_REPORT:
                     return getEccReport(listingDetails, authToken);
+                case HEARINGS_BY_HEARING_TYPE_REPORT:
+                    return getHearingsByHearingTypeReport(listingDetails, authToken);
+                case CLAIMS_BY_HEARING_VENUE_REPORT:
+                    return getClaimsByHearingVenueReport(listingDetails, authToken);
                 default:
                     return getDateRangeReport(listingDetails, authToken);
             }
@@ -264,13 +278,30 @@ public class ListingService {
         }
     }
 
+    private ClaimsByHearingVenueReportData getClaimsByHearingVenueReport(ListingDetails listingDetails,
+                                                                         String authToken) {
+        log.info("Claims By Hearing Venue Report for {}", listingDetails.getCaseTypeId());
+        var params = setListingDateRangeForSearch(listingDetails);
+        var reportDataSource = new ClaimsByHearingVenueCcdReportDataSource(authToken, ccdClient);
+        var listingData = listingDetails.getCaseData();
+        var hearingDateType = listingData.getHearingDateType();
+        var claimsByHearingVenueReport = new ClaimsByHearingVenueReport(reportDataSource, params);
+        return claimsByHearingVenueReport.generateReport(hearingDateType,
+                getUserFullName(authToken));
+    }
+
+    private String getUserFullName(String userToken) {
+        var userDetails = userService.getUserDetails(userToken);
+        var firstName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
+        var lastName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
+        return firstName + " " + lastName;
+    }
+
     private EccReportData getEccReport(ListingDetails listingDetails, String authToken) {
         log.info("Ecc Report for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new EccReportCcdDataSource(authToken, ccdClient);
-        setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
-        var params = new ReportParams(listingDetails.getCaseTypeId(),
-                listingDateFrom, listingDateTo);
+        var params = setListingDateRangeForSearch(listingDetails);
         var eccReport = new EccReport(reportDataSource);
         var reportData = eccReport.generateReport(params);
         setReportData(reportData, listingData);
@@ -289,10 +320,8 @@ public class ListingService {
     private RespondentsReportData getRespondentsReport(ListingDetails listingDetails, String authToken) {
         log.info("Respondents Report for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
-        setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
-        var params = new ReportParams(listingDetails.getCaseTypeId(),
-                listingDateFrom, listingDateTo);
+        var params = setListingDateRangeForSearch(listingDetails);
         var respondentsReport = new RespondentsReport(reportDataSource);
         var reportData = respondentsReport.generateReport(params);
         setReportData(reportData, listingData);
@@ -317,26 +346,34 @@ public class ListingService {
                                                        String authToken) {
         log.info("Session Days Report for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new SessionDaysCcdReportDataSource(authToken, ccdClient);
-        setListingDateRangeForSearch(listingDetails);
+        var params = setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
         var sessionDaysReport = new SessionDaysReport(reportDataSource, jpaJudgeService);
-        var reportData = sessionDaysReport.generateReport(
-                listingDetails.getCaseTypeId(), listingDateFrom, listingDateTo);
-        reportData.setDocumentName(listingData.getDocumentName());
-        reportData.setReportType(listingData.getReportType());
-        reportData.setHearingDateType(listingData.getHearingDateType());
-        reportData.setListingDateFrom(listingData.getListingDateFrom());
-        reportData.setListingDateTo(listingData.getListingDateTo());
-        reportData.setListingDate(listingData.getListingDate());
+        var reportData = sessionDaysReport.generateReport(params);
+        setReportData(reportData, listingData);
+        return reportData;
+    }
+
+    private HearingsByHearingTypeReportData getHearingsByHearingTypeReport(ListingDetails listingDetails,
+                                                                           String authToken) {
+        log.info("Hearings By Hearing Type Report for {}", listingDetails.getCaseTypeId());
+        var reportDataSource = new HearingsByHearingTypeCcdReportDataSource(authToken, ccdClient);
+        setListingDateRangeForSearch(listingDetails);
+        var listingData = listingDetails.getCaseData();
+        var hearingsByHearingTypeReport = new HearingsByHearingTypeReport(reportDataSource);
+        var params = setListingDateRangeForSearch(listingDetails);
+        var reportData = hearingsByHearingTypeReport
+                .generateReport(params);
+        setReportData(reportData, listingData);
         return reportData;
     }
 
     private HearingsToJudgmentsReportData getHearingsToJudgmentsReport(ListingDetails listingDetails,
                                                                        String authToken) {
         log.info("Hearings To Judgments for {}", listingDetails.getCaseTypeId());
-        setListingDateRangeForSearch(listingDetails);
+        var params = setListingDateRangeForSearch(listingDetails);
         var reportDataSource = new HearingsToJudgmentsCcdReportDataSource(authToken, ccdClient);
-        var hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, listingDateFrom, listingDateTo);
+        var hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, params);
         var reportData = hearingsToJudgmentsReport.runReport(
                 listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
@@ -351,9 +388,9 @@ public class ListingService {
     private NoPositionChangeReportData getNoPositionChangeReport(ListingDetails listingDetails, String authToken) {
         log.info("No Change In Current Position for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
-        var hearingsToJudgmentsReport = new NoPositionChangeReport(reportDataSource,
+        var noPositionChangeReport = new NoPositionChangeReport(reportDataSource,
                 listingDetails.getCaseData().getReportDate());
-        var reportData = hearingsToJudgmentsReport.runReport(
+        var reportData = noPositionChangeReport.runReport(
                 listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());
@@ -379,10 +416,6 @@ public class ListingService {
                 return servingClaimsReport.generateReportData(listingDetails, submitEvents);
             case CASE_SOURCE_LOCAL_REPORT:
                 return caseSourceLocalReport.generateReportData(listingDetails, submitEvents);
-            case HEARINGS_BY_HEARING_TYPE_REPORT:
-                setListingDateRangeForSearch(listingDetails);
-                return hearingsByHearingTypeReport.processHearingsByHearingTypeRequest(
-                        listingDetails, submitEvents, listingDateFrom, listingDateTo);
             case MEMBER_DAYS_REPORT:
                 return new MemberDaysReport().runReport(listingDetails, submitEvents);
             default:
@@ -399,9 +432,11 @@ public class ListingService {
         listingData.setLocalReportsDetail(null);
     }
 
-    private void setListingDateRangeForSearch(ListingDetails listingDetails) {
+    private ReportParams setListingDateRangeForSearch(ListingDetails listingDetails) {
         var listingData = listingDetails.getCaseData();
         boolean isRangeHearingDateType = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        String listingDateFrom;
+        String listingDateTo;
         if (!isRangeHearingDateType) {
             listingDateFrom = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2)
                     .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
@@ -413,12 +448,14 @@ public class ListingService {
             listingDateTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2)
                     .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
         }
+        return new ReportParams(listingDetails.getCaseTypeId(), listingDateFrom, listingDateTo);
     }
 
     private List<SubmitEvent> getDateRangeReportSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
         var listingData = listingDetails.getCaseData();
         boolean isRangeHearingDateType = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+
         if (!isRangeHearingDateType) {
             var dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, UtilHelper.getListingCaseTypeId(
@@ -516,7 +553,13 @@ public class ListingService {
 
     public DocumentInfo processHearingDocument(ListingData listingData, String caseTypeId, String authToken) {
         try {
+            if (CLAIMS_BY_HEARING_VENUE_REPORT.equals(listingData.getReportType())) {
+                return excelReportDocumentInfoService.generateExcelReportDocumentInfo(
+                        (ClaimsByHearingVenueReportData)listingData, caseTypeId, authToken);
+            }
+
             return tornadoService.listingGeneration(authToken, listingData, caseTypeId);
+
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + caseTypeId, ex);
         }

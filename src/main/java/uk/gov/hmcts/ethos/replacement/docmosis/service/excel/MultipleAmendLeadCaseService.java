@@ -47,7 +47,6 @@ public class MultipleAmendLeadCaseService {
         }
 
         return new ArrayList<>(multipleObjects.values());
-
     }
 
     private boolean checkAmendLeadCaseExistsAndIsDifferent(SortedMap<String, Object> multipleObjects,

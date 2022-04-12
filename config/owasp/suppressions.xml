@@ -16,6 +16,27 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
+   file name: poi-5.0.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.apache.poi/poi@5.0.0</packageUrl>
+        <cve>CVE-2022-26336</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: poi-ooxml-lite-5.0.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.apache.poi/poi-ooxml-lite@5.0.0</packageUrl>
+        <cve>CVE-2022-26336</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: poi-ooxml-5.0.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.apache.poi/poi-ooxml@5.0.0</packageUrl>
+        <cve>CVE-2022-26336</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
    file name: randomstring:1.2.2
    ]]></notes>
         <packageUrl regex="true">^pkg:npm/moment@2.29.1</packageUrl>

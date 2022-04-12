@@ -18,6 +18,7 @@ Scenario('Verify Case Details ', async ({I}) => {
     await caseDetails(I, caseNumber, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
 
 }).tag('@e2e')
+    .tag('@nightly')
     .tag('@crossbrowser')
     .retry(testConfig.TestRetryScenarios);
 
