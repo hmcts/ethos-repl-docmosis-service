@@ -14,5 +14,4 @@ Scenario('Verify Restricted Reporting', async ({I}) => {
 
 }).tag('@e2e')
     .tag('@nightly')
-    .tag('@ecm-518')
     .retry(testConfig.TestRetryScenarios);

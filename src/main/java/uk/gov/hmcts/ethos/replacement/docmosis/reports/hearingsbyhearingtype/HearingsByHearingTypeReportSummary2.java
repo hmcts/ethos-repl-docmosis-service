@@ -9,6 +9,4 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class HearingsByHearingTypeReportSummary2 {
     private ReportFields fields;
-    private String subSplit;
-    private String date;
 }

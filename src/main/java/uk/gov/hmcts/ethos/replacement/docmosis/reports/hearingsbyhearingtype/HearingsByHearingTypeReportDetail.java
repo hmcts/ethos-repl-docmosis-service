@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class HearingsByHearingTypeReportDetail {
-    @JsonProperty("date")
-    private String date;
+    @JsonProperty("detailDate")
+    private String detailDate;
     @JsonProperty("multiSub")
     private String multiSub;
     @JsonProperty("caseReference")
