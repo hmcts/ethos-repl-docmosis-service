@@ -59,7 +59,7 @@ public class CaseManagementForCaseWorkerService {
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
     private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
     public static final String LISTED_DATE_ON_WEEKEND_MESSAGE = "A hearing date you have entered "
-            + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of hearing.";
+            + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing ";
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -238,20 +238,22 @@ public class CaseManagementForCaseWorkerService {
                 if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        addHearingsOnWeekendError(dateListedTypeItem, errors);
+                        addHearingsOnWeekendError(dateListedTypeItem, errors,
+                                hearingTypeItem.getValue().getHearingNumber());
                     }
                 }
             }
         }
     }
 
-    private void addHearingsOnWeekendError(DateListedTypeItem dateListedTypeItem, List<String> errors) {
+    private void addHearingsOnWeekendError(DateListedTypeItem dateListedTypeItem, List<String> errors,
+                                           String hearingNumber) {
         var date = LocalDateTime.parse(
                 dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         if (SUNDAY.equals(dayOfWeek)
                 || SATURDAY.equals(dayOfWeek)) {
-            errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE);
+            errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE + hearingNumber);
         }
     }
 
