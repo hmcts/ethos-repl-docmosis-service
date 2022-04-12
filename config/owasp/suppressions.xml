@@ -14,4 +14,11 @@
         <packageUrl regex="true">^pkg:npm/randomstring@.*$</packageUrl>
         <vulnerabilityName>Possible SQL injection in mysql.escape function</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: randomstring:1.2.2
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/moment@2.29.1</packageUrl>
+        <vulnerabilityName>1069972</vulnerabilityName>
+    </suppress>
 </suppressions>
