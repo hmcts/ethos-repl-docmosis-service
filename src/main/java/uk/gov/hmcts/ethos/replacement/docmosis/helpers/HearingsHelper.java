@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
@@ -10,9 +9,12 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 
@@ -30,6 +32,9 @@ public class HearingsHelper {
     public static final String HEARING_FINISH_FUTURE = "Finish time can't be in future";
     public static final String HEARING_BREAK_FUTURE = "Break time can't be in future";
     public static final String HEARING_RESUME_FUTURE = "Resume time can't be in future";
+    public static final String HEARING_BREAK_RESUME_INVALID = "Hearing %s contains a hearing with break and "
+            + "resume times of 00:00:00. If the hearing had a break then please update the times. If there was no "
+            + "break, please remove the hearing date and times from the break and resume fields before continuing.";
 
     public static String findHearingNumber(CaseData caseData, String hearingDate) {
         if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
@@ -112,10 +117,24 @@ public class HearingsHelper {
                     checkStartFinishTimes(errors, dateListedType,
                             hearingTypeItem.getValue().getHearingNumber());
                     checkIfDateInFuture(errors, dateListedType);
+                    checkBreakResumeTimes(errors, dateListedType,
+                            hearingTypeItem.getValue().getHearingNumber());
                 }
             }
         }
         return errors;
+    }
+
+    private static void checkBreakResumeTimes(List<String> errors, DateListedType dateListedType,
+                                              String hearingNumber) {
+        var breakTime = !isNullOrEmpty(dateListedType.getHearingTimingBreak())
+                ? LocalDateTime.parse(dateListedType.getHearingTimingBreak()).toLocalTime() : null;
+        var resumeTime = !isNullOrEmpty(dateListedType.getHearingTimingResume())
+                ? LocalDateTime.parse(dateListedType.getHearingTimingResume()).toLocalTime() : null;
+        var invalidTime = LocalTime.of(0, 0, 0, 0);
+        if (invalidTime.equals(breakTime) || invalidTime.equals(resumeTime)) {
+            errors.add(String.format(HEARING_BREAK_RESUME_INVALID, hearingNumber));
+        }
     }
 
     private static void checkIfDateInFuture(List<String> errors, DateListedType dateListedType) {
@@ -136,7 +155,7 @@ public class HearingsHelper {
     public static boolean isDateInFuture(String date, LocalDateTime now) {
         //Azure times are always in UTC and users enter Europe/London Times,
         // so respective zonedDateTimes should be compared.
-        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).atZone(ZoneId.of("Europe/London"))
+        return !isNullOrEmpty(date) && LocalDateTime.parse(date).atZone(ZoneId.of("Europe/London"))
                 .isAfter(now.atZone(ZoneId.of("UTC")));
     }
 
