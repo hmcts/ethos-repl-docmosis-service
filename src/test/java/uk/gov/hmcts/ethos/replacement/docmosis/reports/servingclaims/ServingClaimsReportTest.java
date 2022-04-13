@@ -10,8 +10,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,7 @@ public class ServingClaimsReportTest {
         bfActionType.setNotes("Test Notes One");
         bfActionTypeItem.setId("0011");
         bfActionTypeItem.setValue(bfActionType);
-        caseData.setBfActions(new ArrayList<>(Arrays.asList(bfActionTypeItem)));
+        caseData.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem)));
         caseData.setClaimServedDate("2020-08-10");
         submitEvent1.setCaseData(caseData);
 
@@ -79,7 +80,7 @@ public class ServingClaimsReportTest {
         bfActionType2.setNotes("Test Notes Two");
         bfActionTypeItem2.setId("0012");
         bfActionTypeItem2.setValue(bfActionType2);
-        caseData2.setBfActions(new ArrayList<>(Arrays.asList(bfActionTypeItem2)));
+        caseData2.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem2)));
         caseData2.setClaimServedDate("2020-08-18");
         submitEvent2.setCaseData(caseData2);
 
@@ -101,7 +102,7 @@ public class ServingClaimsReportTest {
         bfActionType3.setNotes("Test Notes Three");
         bfActionTypeItem3.setId("0013");
         bfActionTypeItem3.setValue(bfActionType3);
-        caseData3.setBfActions(new ArrayList<>(Arrays.asList(bfActionTypeItem3)));
+        caseData3.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem3)));
         caseData3.setClaimServedDate("2020-08-25");
         submitEvent3.setCaseData(caseData3);
 
@@ -123,7 +124,7 @@ public class ServingClaimsReportTest {
         bfActionType4.setNotes("Test Notes Four");
         bfActionTypeItem4.setId("0014");
         bfActionTypeItem4.setValue(bfActionType4);
-        caseData4.setBfActions(new ArrayList<>(Arrays.asList(bfActionTypeItem4)));
+        caseData4.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem4)));
         caseData4.setClaimServedDate("2020-08-15");
         submitEvent4.setCaseData(caseData4);
 
@@ -145,7 +146,7 @@ public class ServingClaimsReportTest {
         bfActionType5.setNotes("Test Notes Five");
         bfActionTypeItem5.setId("0014");
         bfActionTypeItem5.setValue(bfActionType5);
-        caseData5.setBfActions(new ArrayList<>(Arrays.asList(bfActionTypeItem5)));
+        caseData5.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem5)));
         caseData5.setClaimServedDate("2020-08-21");
         submitEvent5.setCaseData(caseData5);
 
@@ -186,8 +187,8 @@ public class ServingClaimsReportTest {
                 .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 4).count();
         var expectedDay6PlusCount = claimServedItems.stream()
                 .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) >= 5).count();
-        assertEquals(2, expectedDay1Count);
-        assertEquals(0, expectedDay2Count);
+        assertEquals(0, expectedDay1Count);
+        assertEquals(2, expectedDay2Count);
         assertEquals(1, expectedDay3Count);
         assertEquals(1, expectedDay4Count);
         assertEquals(0, expectedDay5Count);
@@ -202,8 +203,8 @@ public class ServingClaimsReportTest {
                 .getValue();
         var expectedDay1Count = adhocReportType.getClaimServedDay1Total();
         var expectedDay1Percent = adhocReportType.getClaimServedDay1Percent();
-        assertEquals("2", expectedDay1Count);
-        assertEquals("40", expectedDay1Percent);
+        assertEquals("0", expectedDay1Count);
+        assertEquals("0", expectedDay1Percent);
     }
 
     @Test
@@ -214,8 +215,8 @@ public class ServingClaimsReportTest {
                 .getValue();
         var expectedDay2Count = adhocReportType.getClaimServedDay2Total();
         var expectedDay2Percent = adhocReportType.getClaimServedDay2Percent();
-        assertEquals("0", expectedDay2Count);
-        assertEquals("0", expectedDay2Percent);
+        assertEquals("2", expectedDay2Count);
+        assertEquals("40", expectedDay2Percent);
     }
 
     @Test
@@ -256,7 +257,7 @@ public class ServingClaimsReportTest {
         var reportedNumberOfDays = firstClaimServedItem.getValue().getReportedNumberOfDays();
         var actualNumberOfDays = firstClaimServedItem.getValue().getActualNumberOfDays();
         assertEquals("5", reportedNumberOfDays);
-        assertEquals("128", actualNumberOfDays);
+        assertEquals("92", actualNumberOfDays);
     }
 
     @Test
@@ -267,7 +268,7 @@ public class ServingClaimsReportTest {
                 .get(0).getValue().getClaimServedItems();
         var secondClaimServedItem = claimServedItems.get(1);
         var numberOfDays = secondClaimServedItem.getValue().getActualNumberOfDays();
-        assertEquals("4", numberOfDays);
+        assertEquals("2", numberOfDays);
     }
 
     @Test
