@@ -42,4 +42,25 @@
         <packageUrl regex="true">^pkg:npm/moment@2.29.1</packageUrl>
         <vulnerabilityName>1069972</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: spring-retry-1.3.2.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
+        <cve>CVE-2013-4152</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: spring-retry-1.3.2.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
+        <cve>CVE-2013-7315</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: spring-retry-1.3.2.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
+        <cve>CVE-2014-0054</cve>
+    </suppress>
 </suppressions>
