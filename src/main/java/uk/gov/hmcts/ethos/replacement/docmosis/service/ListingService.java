@@ -293,7 +293,7 @@ public class ListingService {
     private String getUserFullName(String userToken) {
         var userDetails = userService.getUserDetails(userToken);
         var firstName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
-        var lastName = userDetails.getFirstName() != null ? userDetails.getFirstName() : "";
+        var lastName = userDetails.getLastName() != null ? userDetails.getLastName() : "";
         return firstName + " " + lastName;
     }
 
