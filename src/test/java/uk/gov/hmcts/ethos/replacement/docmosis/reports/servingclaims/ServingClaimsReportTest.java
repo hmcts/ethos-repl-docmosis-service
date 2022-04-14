@@ -187,10 +187,10 @@ public class ServingClaimsReportTest {
                 .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 4).count();
         var expectedDay6PlusCount = claimServedItems.stream()
                 .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) >= 5).count();
-        assertEquals(0, expectedDay1Count);
-        assertEquals(2, expectedDay2Count);
+        assertEquals(2, expectedDay1Count);
+        assertEquals(1, expectedDay2Count);
         assertEquals(1, expectedDay3Count);
-        assertEquals(1, expectedDay4Count);
+        assertEquals(0, expectedDay4Count);
         assertEquals(0, expectedDay5Count);
         assertEquals(1, expectedDay6PlusCount);
     }
@@ -203,8 +203,8 @@ public class ServingClaimsReportTest {
                 .getValue();
         var expectedDay1Count = adhocReportType.getClaimServedDay1Total();
         var expectedDay1Percent = adhocReportType.getClaimServedDay1Percent();
-        assertEquals("0", expectedDay1Count);
-        assertEquals("0", expectedDay1Percent);
+        assertEquals("2", expectedDay1Count);
+        assertEquals("40", expectedDay1Percent);
     }
 
     @Test
@@ -215,8 +215,8 @@ public class ServingClaimsReportTest {
                 .getValue();
         var expectedDay2Count = adhocReportType.getClaimServedDay2Total();
         var expectedDay2Percent = adhocReportType.getClaimServedDay2Percent();
-        assertEquals("2", expectedDay2Count);
-        assertEquals("40", expectedDay2Percent);
+        assertEquals("1", expectedDay2Count);
+        assertEquals("20", expectedDay2Percent);
     }
 
     @Test

@@ -75,7 +75,7 @@ public class ServingClaimsReport {
                 && !Strings.isNullOrEmpty(caseData.getClaimServedDate())) {
             LocalDate caseReceiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN2);
             LocalDate caseClaimServedDate = LocalDate.parse(caseData.getClaimServedDate(), OLD_DATE_TIME_PATTERN2);
-            var actualNumberOfDaysToServingClaim = getNumberOfDays(caseReceiptDate, caseClaimServedDate);
+            var actualNumberOfDaysToServingClaim = getNumberOfDays(caseReceiptDate, caseClaimServedDate) + 1;
             var reportedNumberOfDaysToServingClaim = getReportedNumberOfDays(caseReceiptDate, caseClaimServedDate);
 
             var claimServedType = new ClaimServedType();
@@ -97,7 +97,7 @@ public class ServingClaimsReport {
     private long getNumberOfDays(LocalDate caseReceiptDate, LocalDate claimServedDate) {
         return caseReceiptDate.datesUntil(claimServedDate)
                 .filter(d -> !WEEKEND_DAYS_LIST.contains(d.getDayOfWeek()))
-                .count() + 1;
+                .count();
     }
 
     private long getReportedNumberOfDays(LocalDate caseReceiptDate, LocalDate caseClaimServedDate) {
