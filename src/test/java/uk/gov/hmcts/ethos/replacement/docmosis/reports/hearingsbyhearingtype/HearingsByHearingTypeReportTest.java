@@ -166,7 +166,7 @@ class HearingsByHearingTypeReportTest {
         HearingsByHearingTypeReportDetail reportDetail = reportDetailList.get(0);
         assertEquals("111", reportDetail.getCaseReference());
         assertEquals("Y", reportDetail.getLead());
-        assertEquals("471", reportDetail.getDuration());
+        assertEquals("330", reportDetail.getDuration());
         assertEquals("multiRef, subMulti", reportDetail.getMultiSub());
         assertEquals("Hearing", reportDetail.getHearingType());
         assertEquals("", reportDetail.getTel());
@@ -195,7 +195,7 @@ class HearingsByHearingTypeReportTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"Start, 0", "Finish, 0", "Break, 480", "Resume, 480"})
+    @CsvSource({"Start, 0", "Finish, 0", "Break, 360", "Resume, 360"})
      void nullTimeOnHearing(String time, String result) {
         submitEvents.clear();
         submitEvents.add(caseDataBuilder.createSubmitEventNullTime(time));

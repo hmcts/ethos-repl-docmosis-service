@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,10 +43,10 @@ public class HearingsByHearingTypeCaseDataBuilder {
         dateListedType.setHearingStatus(status);
         dateListedType.setHearingClerk("clerk1");
         dateListedTypeItem.setValue(dateListedType);
-        dateListedType.setHearingTimingStart(LocalDateTime.now().minusMinutes(480).toString());
-        dateListedType.setHearingTimingFinish(LocalDateTime.now().toString());
-        dateListedType.setHearingTimingResume(LocalDateTime.now().minusMinutes(230).toString());
-        dateListedType.setHearingTimingBreak(LocalDateTime.now().minusMinutes(240).toString());
+        dateListedType.setHearingTimingStart("2022-01-20T11:00:00.000");
+        dateListedType.setHearingTimingFinish("2022-01-20T17:00:00.000");
+        dateListedType.setHearingTimingBreak("2022-01-20T13:00:00");
+        dateListedType.setHearingTimingResume("2022-01-20T13:30:00.000");
 
         return dateListedTypeItem;
     }
@@ -150,26 +149,29 @@ public class HearingsByHearingTypeCaseDataBuilder {
         dateListedTypeItem = createHearingDateListed("2022-01-14T00:00:00.000", HEARING_STATUS_HEARD);
         var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Video", dateListedTypeItem);
         hearings.add(hearingTypeItem);
-        var submitEvent = createSubmitEvent(hearings, "123456", "No", "", "");
-        return submitEvent;
+        return createSubmitEvent(hearings, "123456", "No", "", "");
     }
 
     public HearingsByHearingTypeSubmitEvent createSubmitEventNullTime(String propertyToBeNull) {
         List<HearingTypeItem> hearings = new ArrayList<>();
         var dateListedTypeItem = createHearingDateListed("2022-01-17T00:00:00.000", HEARING_STATUS_HEARD);
-        if (propertyToBeNull.equals("Start")) {
-            dateListedTypeItem.getValue().setHearingTimingStart(null);
-        } else if(propertyToBeNull.equals("Finish")) {
-            dateListedTypeItem.getValue().setHearingTimingFinish(null);
-        } else if(propertyToBeNull.equals("Break")) {
-            dateListedTypeItem.getValue().setHearingTimingBreak(null);
-        } else if(propertyToBeNull.equals("Resume")) {
-            dateListedTypeItem.getValue().setHearingTimingResume(null);
+        switch (propertyToBeNull) {
+            case "Start":
+                dateListedTypeItem.getValue().setHearingTimingStart(null);
+                break;
+            case "Finish":
+                dateListedTypeItem.getValue().setHearingTimingFinish(null);
+                break;
+            case "Break":
+                dateListedTypeItem.getValue().setHearingTimingBreak(null);
+                break;
+            case "Resume":
+                dateListedTypeItem.getValue().setHearingTimingResume(null);
+                break;
         }
         var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Tel Con", dateListedTypeItem);
         hearings.add(hearingTypeItem);
-        var submitEvent = createSubmitEvent(hearings, "123456", "No", "", "");
-        return submitEvent;
+        return createSubmitEvent(hearings, "123456", "No", "", "");
     }
 
     public List<HearingsByHearingTypeSubmitEvent> createSubmitEventsWithoutDates() {

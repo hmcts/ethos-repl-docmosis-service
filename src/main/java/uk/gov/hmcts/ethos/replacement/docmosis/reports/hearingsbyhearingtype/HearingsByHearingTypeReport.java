@@ -13,11 +13,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.lang.Math.abs;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_RECONSIDERATION;
@@ -26,6 +24,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDuration;
 
 public class HearingsByHearingTypeReport {
     private final HearingsByHearingTypeReportDataSource reportDataSource;
@@ -440,36 +439,6 @@ public class HearingsByHearingTypeReport {
                 : dateListedTypeItem.getValue().getHearingClerk());
         detail.setDuration(getHearingDuration(dateListedTypeItem));
         return detail;
-    }
-
-    private String getHearingDuration(DateListedTypeItem dateListedTypeItem) {
-        LocalDateTime startTime;
-        LocalDateTime finishTime;
-        LocalDateTime resumeTime;
-        LocalDateTime breakTime;
-        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingStart())) {
-            startTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingStart());
-        } else {
-            return "0";
-        }
-        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingFinish())) {
-            finishTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish());
-        } else {
-            return "0";
-        }
-        long hearingDuration = ChronoUnit.MINUTES.between(startTime, finishTime);
-        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingResume())) {
-            resumeTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume());
-        } else {
-            return String.valueOf(hearingDuration);
-        }
-        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingBreak())) {
-            breakTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak());
-        } else {
-            return String.valueOf(hearingDuration);
-        }
-        long diff = hearingDuration - ChronoUnit.MINUTES.between(breakTime, resumeTime);
-        return String.valueOf(abs(diff));
     }
 
     private void setLocalReportSummaryHdr2(
