@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDuration;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDurationInMinutes;
 
 @Slf4j
 public class MemberDaysReport {
@@ -115,7 +115,7 @@ public class MemberDaysReport {
                 reportDetail.setHearingNumber(hearing.getValue().getHearingNumber());
                 reportDetail.setHearingType(hearing.getValue().getHearingType());
                 reportDetail.setHearingClerk(hearingDate.getValue().getHearingClerk());
-                reportDetail.setHearingDuration(getHearingDuration(hearingDate));
+                reportDetail.setHearingDuration(getHearingDurationInMinutes(hearingDate));
                 reportDetail.setParentHearingId(hearing.getId());
                 interimReportDetails.add(reportDetail);
             }

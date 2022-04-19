@@ -24,7 +24,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDuration;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDurationInMinutes;
 
 public class HearingsByHearingTypeReport {
     private final HearingsByHearingTypeReportDataSource reportDataSource;
@@ -437,7 +437,7 @@ public class HearingsByHearingTypeReport {
         detail.setHearingClerk(Strings.isNullOrEmpty(
                 dateListedTypeItem.getValue().getHearingClerk()) ? ""
                 : dateListedTypeItem.getValue().getHearingClerk());
-        detail.setDuration(getHearingDuration(dateListedTypeItem));
+        detail.setDuration(getHearingDurationInMinutes(dateListedTypeItem));
         return detail;
     }
 

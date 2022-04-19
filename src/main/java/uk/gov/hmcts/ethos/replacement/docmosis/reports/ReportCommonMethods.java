@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports;
 
-import com.microsoft.azure.servicebus.primitives.StringUtil;
+import com.google.common.base.Strings;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -13,7 +13,7 @@ public class ReportCommonMethods {
     private ReportCommonMethods() {
     }
 
-    public static String getHearingDuration(DateListedTypeItem c) {
+    public static String getHearingDurationInMinutes(DateListedTypeItem c) {
         var dateListedType = c.getValue();
         long duration = 0;
         long breakDuration = 0;
@@ -21,8 +21,8 @@ public class ReportCommonMethods {
         var hearingTimingBreak = dateListedType.getHearingTimingBreak();
         var hearingTimingResume = dateListedType.getHearingTimingResume();
         //If there was a break and resumption during the hearing
-        if (!StringUtil.isNullOrEmpty(hearingTimingBreak)
-                && !StringUtil.isNullOrEmpty(hearingTimingResume)) {
+        if (!Strings.isNullOrEmpty(hearingTimingBreak)
+                && !Strings.isNullOrEmpty(hearingTimingResume)) {
             var hearingBreak = convertHearingTime(hearingTimingBreak);
             var hearingResume = convertHearingTime(hearingTimingResume);
             breakDuration = ChronoUnit.MINUTES.between(hearingBreak, hearingResume);
@@ -30,8 +30,8 @@ public class ReportCommonMethods {
 
         var hearingTimingStart = dateListedType.getHearingTimingStart();
         var hearingTimingFinish = dateListedType.getHearingTimingFinish();
-        if (!StringUtil.isNullOrEmpty(hearingTimingStart)
-                && !StringUtil.isNullOrEmpty(hearingTimingFinish)) {
+        if (!Strings.isNullOrEmpty(hearingTimingStart)
+                && !Strings.isNullOrEmpty(hearingTimingFinish)) {
             var hearingStartTime = convertHearingTime(hearingTimingStart);
             var hearingEndTime = convertHearingTime(hearingTimingFinish);
             long startToEndDiffInMinutes = ChronoUnit.MINUTES.between(hearingStartTime, hearingEndTime);

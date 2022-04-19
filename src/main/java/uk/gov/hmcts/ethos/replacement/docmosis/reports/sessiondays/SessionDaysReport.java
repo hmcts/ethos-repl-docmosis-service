@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static java.lang.Math.round;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDuration;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDurationInMinutes;
 
 public class SessionDaysReport {
 
@@ -275,7 +275,7 @@ public class SessionDaysReport {
                         reportDetail.setHearingSitAlone("Sit Alone".equals(
                                 hearingTypeItem.getValue().getHearingSitAlone()) ? "Y" : "");
                         setTelCon(hearingTypeItem, reportDetail);
-                        String duration = getHearingDuration(dateListedTypeItem);
+                        String duration = getHearingDurationInMinutes(dateListedTypeItem);
                         reportDetail.setHearingDuration(duration);
                         reportDetail.setSessionType(getSessionType(Long.parseLong(duration)));
                         reportDetail.setHearingClerk(dateListedTypeItem.getValue().getHearingClerk());
