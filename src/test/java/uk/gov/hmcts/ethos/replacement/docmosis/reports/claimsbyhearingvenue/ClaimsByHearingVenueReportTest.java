@@ -133,13 +133,13 @@ class ClaimsByHearingVenueReportTest {
         claimant.setClaimantAddressUK(claimantAddressUK);
 
         var submitEventOne = caseDataBuilder
-                .withEthosCaseReference("18000012/2022")
-                .withReceiptDate("2021-12-14")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(null)
-                .withRespondentCollection(null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEventOne);
+            .withEthosCaseReference("18000012/2022")
+            .withReceiptDate("2021-12-14")
+            .withClaimantType(claimant)
+            .withClaimantWorkAddressType(null)
+            .withRespondentCollection(null)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
+    submitEvents.add(submitEventOne);
         when(claimsByHearingVenueReportDataSource.getData(
                 UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
                 .thenReturn(submitEvents);
@@ -177,12 +177,12 @@ class ClaimsByHearingVenueReportTest {
         claimantWorkAddressType.setClaimantWorkAddress(claimantWorkAddress);
 
         var submitEventOne = caseDataBuilder
-                .withEthosCaseReference("18000012/2022")
-                .withReceiptDate("2021-12-14")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(claimantWorkAddressType)
-                .withRespondentCollection(null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+            .withEthosCaseReference("18000012/2022")
+            .withReceiptDate("2021-12-14")
+            .withClaimantType(claimant)
+            .withClaimantWorkAddressType(claimantWorkAddressType)
+            .withRespondentCollection(null)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventOne);
 
         when(claimsByHearingVenueReportDataSource.getData(
@@ -241,12 +241,12 @@ class ClaimsByHearingVenueReportTest {
         claimant.setClaimantAddressUK(claimantAddressUK);
 
         var submitEventOne = caseDataBuilder
-                .withEthosCaseReference("18000012/2022")
-                .withReceiptDate("2021-12-14")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(null)
-                .withRespondentCollection(respondentCollection)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+            .withEthosCaseReference("18000012/2022")
+            .withReceiptDate("2021-12-14")
+            .withClaimantType(claimant)
+            .withClaimantWorkAddressType(null)
+            .withRespondentCollection(respondentCollection)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventOne);
         when(claimsByHearingVenueReportDataSource.getData(
                 UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
@@ -273,30 +273,30 @@ class ClaimsByHearingVenueReportTest {
         claimant.setClaimantAddressUK(claimantAddressUK);
 
         var submitEventOne = caseDataBuilder
-                .withEthosCaseReference("18000012/2022")
-                .withReceiptDate("2021-12-14")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(null)
-                .withRespondentCollection(null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+            .withEthosCaseReference("18000012/2022")
+            .withReceiptDate("2021-12-14")
+            .withClaimantType(claimant)
+            .withClaimantWorkAddressType(null)
+            .withRespondentCollection(null)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventOne);
 
         var submitEventTwo = caseDataBuilder
-                .withEthosCaseReference("1800154/2021")
-                .withReceiptDate("2021-12-08")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(null)
-                .withRespondentCollection(null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+            .withEthosCaseReference("1800154/2021")
+            .withReceiptDate("2021-12-08")
+            .withClaimantType(claimant)
+            .withClaimantWorkAddressType(null)
+            .withRespondentCollection(null)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventTwo);
 
         var submitEventThree = caseDataBuilder
-                .withEthosCaseReference("18000003/2022")
-                .withReceiptDate("2021-12-08")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(null)
-                .withRespondentCollection(null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+            .withEthosCaseReference("18000003/2022")
+            .withReceiptDate("2021-12-08")
+            .withClaimantType(claimant)
+            .withClaimantWorkAddressType(null)
+            .withRespondentCollection(null)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventThree);
 
         when(claimsByHearingVenueReportDataSource.getData(
@@ -328,12 +328,12 @@ class ClaimsByHearingVenueReportTest {
         claimant.setClaimantAddressUK(claimantAddressUK);
 
         var submitEventOne = caseDataBuilder
-                .withEthosCaseReference("18000012/2022")
-                .withReceiptDate("2021-12-08")
-                .withClaimantType(claimant)
-                .withClaimantWorkAddressType(null)
-                .withRespondentCollection(null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+            .withEthosCaseReference("18000012/2022")
+            .withReceiptDate("2021-12-08")
+            .withClaimantType(claimant)
+            .withClaimantWorkAddressType(null)
+            .withRespondentCollection(null)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEventOne);
         var singleHearingDateTypeParams = new ReportParams(LEEDS_LISTING_CASE_TYPE_ID, SINGLE_START_DATE, SINGLE_END_DATE);
 
