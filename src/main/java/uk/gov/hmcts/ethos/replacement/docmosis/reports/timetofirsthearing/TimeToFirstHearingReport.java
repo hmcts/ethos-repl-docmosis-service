@@ -28,6 +28,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Service
 @Slf4j
@@ -350,7 +351,8 @@ public class TimeToFirstHearingReport {
         if (Constants.HEARING_TYPE_JUDICIAL_HEARING.equals(hearingType.getHearingType())
                 || HEARING_TYPE_PERLIMINARY_HEARING.equals(hearingType.getHearingType())) {
             for (var dateListedItemType : hearingType.getHearingDateCollection()) {
-                if (Constants.HEARING_STATUS_HEARD.equals(dateListedItemType.getValue().getHearingStatus())) {
+                if (Constants.HEARING_STATUS_HEARD.equals(dateListedItemType.getValue().getHearingStatus())
+                        && YES.equals(dateListedItemType.getValue().getHearingCaseDisposed())) {
                     var date = LocalDate.parse(dateListedItemType.getValue().getListedDate(),  OLD_DATE_TIME_PATTERN);
                     datesList.add(date);
                 }
