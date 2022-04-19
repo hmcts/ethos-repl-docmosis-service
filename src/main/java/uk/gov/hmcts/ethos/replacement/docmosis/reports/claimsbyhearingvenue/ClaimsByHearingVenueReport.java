@@ -1,9 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
@@ -18,26 +16,23 @@ import java.util.List;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_BY_HEARING_VENUE_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 
-@RequiredArgsConstructor
-@Service
 public class ClaimsByHearingVenueReport {
     private static final String NULL_STRING_VALUE = "Null";
     private ClaimsByHearingVenueReportDataSource reportDataSource;
-    private ReportParams searchParams;
 
-    public ClaimsByHearingVenueReport(ClaimsByHearingVenueReportDataSource dataSource, ReportParams params) {
+    public ClaimsByHearingVenueReport(ClaimsByHearingVenueReportDataSource dataSource) {
         reportDataSource = dataSource;
-        searchParams = params;
     }
 
-    public ClaimsByHearingVenueReportData generateReport(String hearingDateType, String userFullName) {
+    public ClaimsByHearingVenueReportData generateReport(ReportParams params, String hearingDateType,
+                                                         String userFullName) {
         var submitEvents = reportDataSource.getData(
-            UtilHelper.getListingCaseTypeId(searchParams.getCaseTypeId()),
-                searchParams.getDateFrom(), searchParams.getDateTo());
-        var claimsByHearingVenueReportData = initReport(searchParams.getCaseTypeId());
+            UtilHelper.getListingCaseTypeId(params.getCaseTypeId()),
+                params.getDateFrom(), params.getDateTo());
+        var claimsByHearingVenueReportData = initReport(params.getCaseTypeId());
 
-        setReportListingDate(claimsByHearingVenueReportData, searchParams.getDateFrom(),
-                searchParams.getDateTo(), hearingDateType);
+        setReportListingDate(claimsByHearingVenueReportData, params.getDateFrom(),
+                params.getDateTo(), hearingDateType);
 
         claimsByHearingVenueReportData.setReportPrintedOnDescription(getReportedOnDetail(userFullName));
 
