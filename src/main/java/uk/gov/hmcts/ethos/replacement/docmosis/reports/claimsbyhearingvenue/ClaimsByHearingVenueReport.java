@@ -8,7 +8,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -18,23 +17,18 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE
 
 public class ClaimsByHearingVenueReport {
     private static final String NULL_STRING_VALUE = "Null";
-    private ClaimsByHearingVenueReportDataSource reportDataSource;
 
-    public ClaimsByHearingVenueReport(ClaimsByHearingVenueReportDataSource dataSource) {
-        reportDataSource = dataSource;
-    }
+    public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportDataSource dataSource,
+            ClaimsByHearingVenueReportParams reportParams) {
+        var submitEvents = dataSource.getData(
+            UtilHelper.getListingCaseTypeId(reportParams.getCaseTypeId()),
+                reportParams.getDateFrom(), reportParams.getDateTo());
+        var claimsByHearingVenueReportData = initReport(reportParams.getCaseTypeId());
 
-    public ClaimsByHearingVenueReportData generateReport(ReportParams params, String hearingDateType,
-                                                         String userFullName) {
-        var submitEvents = reportDataSource.getData(
-            UtilHelper.getListingCaseTypeId(params.getCaseTypeId()),
-                params.getDateFrom(), params.getDateTo());
-        var claimsByHearingVenueReportData = initReport(params.getCaseTypeId());
-
-        setReportListingDate(claimsByHearingVenueReportData, params.getDateFrom(),
-                params.getDateTo(), hearingDateType);
-
-        claimsByHearingVenueReportData.setReportPrintedOnDescription(getReportedOnDetail(userFullName));
+        setReportListingDate(claimsByHearingVenueReportData, reportParams.getDateFrom(),
+                reportParams.getDateTo(), reportParams.getHearingType());
+        claimsByHearingVenueReportData.setReportPrintedOnDescription(
+                getReportedOnDetail(reportParams.getCurrentUserFullName()));
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             setReportData(submitEvents, claimsByHearingVenueReportData);
