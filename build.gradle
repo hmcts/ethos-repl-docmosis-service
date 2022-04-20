@@ -291,7 +291,7 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.19'
     implementation('org.elasticsearch:elasticsearch') {
         version {
-            strictly '7.17.0'
+            strictly '7.17.2'
         }
     }
     implementation 'org.postgresql:postgresql:42.3.4'
