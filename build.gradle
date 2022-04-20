@@ -268,7 +268,8 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.2'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: logbackVersion
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.185'
+    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.187'
+    implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '0.0.4'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
@@ -291,7 +292,7 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.19'
     implementation('org.elasticsearch:elasticsearch') {
         version {
-            strictly '7.17.0'
+            strictly '7.17.2'
         }
     }
     implementation 'org.postgresql:postgresql:42.3.3'
