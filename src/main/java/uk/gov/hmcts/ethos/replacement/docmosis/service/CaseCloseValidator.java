@@ -17,7 +17,7 @@ public class CaseCloseValidator {
 
     static final String REINSTATE_CANNOT_CASE_CLOSED_ERROR_MESSAGE = "This case cannot be reinstated with a "
             + "current position of Case closed. Please select a different current position.";
-    static final String CLOSING_CASE_WITH_BF_OPEN_ERROR = "This case contains one or more outstanding BFs. "
+    static final String CLOSING_CASE_WITH_BF_OPEN_ERROR = "%s contains one or more outstanding BFs. "
             + "To enable this case to be closed, please clear the outstanding BFs.";
 
     public List<String> validateReinstateClosedCaseMidEvent(CaseData caseData) {
@@ -35,7 +35,7 @@ public class CaseCloseValidator {
         }
         for (var currentBFActionTypeItem : caseData.getBfActions()) {
             if (isNullOrEmpty(currentBFActionTypeItem.getValue().getCleared())) {
-                errors.add(CLOSING_CASE_WITH_BF_OPEN_ERROR);
+                errors.add(String.format(CLOSING_CASE_WITH_BF_OPEN_ERROR, caseData.getEthosCaseReference()));
                 return errors;
             }
         }
