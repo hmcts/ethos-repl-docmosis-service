@@ -503,7 +503,8 @@ class EventValidationServiceTest {
                 isRejected, partOfMultiple, errors);
 
         assertEquals(4, errors.size());
-        assertThat(errors).asList().contains(CLOSING_CASE_WITH_BF_OPEN_ERROR);
+        assertThat(errors).asList().contains(String.format(CLOSING_CASE_WITH_BF_OPEN_ERROR,
+                caseDetails18.getCaseData().getEthosCaseReference()));
         if (partOfMultiple) {
             assertThat(errors).asList().contains(caseDetails18.getCaseData().getEthosCaseReference()
                     + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
