@@ -30,7 +30,7 @@ public class ClaimsByHearingVenueReport {
         var claimsByHearingVenueReportData = initReport(reportParams.getCaseTypeId());
 
         setReportListingDate(claimsByHearingVenueReportData, reportParams.getDateFrom(),
-                reportParams.getDateTo(), reportParams.getHearingType());
+                reportParams.getDateTo(), reportParams.getHearingDateType());
         claimsByHearingVenueReportData.setReportPrintedOnDescription(
                 getReportedOnDetail(reportParams.getUserFullName()));
 

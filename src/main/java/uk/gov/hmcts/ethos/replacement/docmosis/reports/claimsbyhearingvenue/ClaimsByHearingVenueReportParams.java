@@ -7,13 +7,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class ClaimsByHearingVenueReportParams extends ReportParams {
-    String hearingType;
+    String hearingDateType;
     String userFullName;
 
     public ClaimsByHearingVenueReportParams(String caseTypeId, String dateFrom, String dateTo,
                                             String hearingDateType,  String userFullName) {
         super(caseTypeId, dateFrom, dateTo);
-        this.hearingType = hearingDateType;
+        this.hearingDateType = hearingDateType;
         this.userFullName = userFullName;
     }
 }
