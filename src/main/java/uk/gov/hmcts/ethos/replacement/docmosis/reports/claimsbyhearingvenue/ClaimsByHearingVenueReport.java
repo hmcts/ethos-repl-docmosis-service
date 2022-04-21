@@ -17,9 +17,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE
 
 public class ClaimsByHearingVenueReport {
     private static final String NULL_STRING_VALUE = "Null";
+    private final ClaimsByHearingVenueReportDataSource dataSource;
 
-    public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportDataSource dataSource,
-            ClaimsByHearingVenueReportParams reportParams) {
+    public ClaimsByHearingVenueReport(ClaimsByHearingVenueReportDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportParams reportParams) {
         var submitEvents = dataSource.getData(
             UtilHelper.getListingCaseTypeId(reportParams.getCaseTypeId()),
                 reportParams.getDateFrom(), reportParams.getDateTo());
@@ -28,7 +32,7 @@ public class ClaimsByHearingVenueReport {
         setReportListingDate(claimsByHearingVenueReportData, reportParams.getDateFrom(),
                 reportParams.getDateTo(), reportParams.getHearingType());
         claimsByHearingVenueReportData.setReportPrintedOnDescription(
-                getReportedOnDetail(reportParams.getCurrentUserFullName()));
+                getReportedOnDetail(reportParams.getUserFullName()));
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             setReportData(submitEvents, claimsByHearingVenueReportData);
