@@ -1,14 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Getter;
+import lombok.Setter;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
-@Value
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class ClaimsByHearingVenueReportParams extends ReportParams {
-    String hearingDateType;
-    String userFullName;
+    private final String hearingDateType;
+    private final String userFullName;
 
     public ClaimsByHearingVenueReportParams(String caseTypeId, String dateFrom, String dateTo,
                                             String hearingDateType,  String userFullName) {
