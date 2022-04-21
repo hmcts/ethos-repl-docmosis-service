@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -39,6 +40,8 @@ import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
+import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueCaseData;
+import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeCaseData;
@@ -54,6 +57,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportDa
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue.ClaimsByHearingVenueReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
@@ -118,6 +122,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_BY_HEARING_VENUE_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
@@ -131,6 +136,8 @@ public class ListingServiceTest {
     private ListingService listingService;
     @Mock
     private TornadoService tornadoService;
+    @Mock
+    private UserService userService;
     @Mock
     private CcdClient ccdClient;
     @Spy
@@ -1473,6 +1480,36 @@ public class ListingServiceTest {
         assertEquals("2021-07-13", listingDataResult.getListingDate());
         assertEquals("2021-07-12", listingDataResult.getListingDateFrom());
         assertEquals("2021-07-14", listingDataResult.getListingDateTo());
+    }
+
+    @Test
+    public void generateClaimsByHearingVenueReport() throws IOException
+    {
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseId("caseId");
+        listingDetails.getCaseData().setReportType(CLAIMS_BY_HEARING_VENUE_REPORT);
+        listingDetails.getCaseData().setDocumentName(CLAIMS_BY_HEARING_VENUE_REPORT);
+        listingDetails.getCaseData().setHearingDateType(RANGE_HEARING_DATE_TYPE);
+        listingDetails.getCaseData().setListingDate("2021-12-15");
+        listingDetails.getCaseData().setListingDateFrom("2021-12-03");
+        listingDetails.getCaseData().setListingDateTo("2021-12-18");
+
+        var submitEvent = new ClaimsByHearingVenueSubmitEvent();
+        submitEvent.setCaseData(new ClaimsByHearingVenueCaseData());
+
+        when(ccdClient.claimsByHearingVenueSearch(anyString(), anyString(), anyString()))
+                .thenReturn(List.of(submitEvent));
+        var userDetails = new UserDetails();
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+
+        var listingDataResult = (ClaimsByHearingVenueReportData) listingService.generateReportData(listingDetails,
+                "authToken");
+        assertEquals(CLAIMS_BY_HEARING_VENUE_REPORT, listingDataResult.getDocumentName());
+        assertEquals(CLAIMS_BY_HEARING_VENUE_REPORT, listingDataResult.getReportType());
+        assertEquals(RANGE_HEARING_DATE_TYPE, listingDataResult.getHearingDateType());
+        assertNull(listingDataResult.getListingDate());
+        assertEquals("2021-12-03", listingDataResult.getListingDateFrom());
+        assertEquals("2021-12-18", listingDataResult.getListingDateTo());
     }
 
     @Test
