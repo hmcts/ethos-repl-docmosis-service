@@ -1,0 +1,205 @@
+{
+  "case_data": {
+    "tribunalCorrespondenceAddress": {
+      "AddressLine1": "Eagle Building,",
+      "AddressLine2": "215 Bothwell Street,",
+      "PostCode": "G2 7TS",
+      "PostTown": "Glasgow,"
+    },
+    "tribunalCorrespondenceTelephone" : "03577123270",
+    "tribunalCorrespondenceFax" : "07127126570",
+    "tribunalCorrespondenceDX" : "1234567",
+    "tribunalCorrespondenceEmail" : "GlasgowOfficeET@hmcts.gov.uk",
+    "ethosCaseReference" : "123456",
+    "claimantRepresentedQuestion" : "no",
+    "claimant_TypeOfClaimant" : "Individual",
+    "additionalCaseInfo": {
+      "additional_accepted1": "additional_accepted1",
+      "additional_accepted2": "additional_accepted2",
+      "additional_conciliation_track": "additional_conciliation_track",
+      "additional_emp_claim_made": "additional_emp_claim_made",
+      "additional_ind_expert": "additional_ind_expert",
+      "additional_live_appeal": "additional_live_appeal",
+      "additional_sensitive": "string"
+    },
+    "caseNotes": "Example of Case Note",
+    "caseType": "Single",
+    "claimantType": {
+      "claimant_addressUK": {
+        "AddressLine1": "34",
+        "AddressLine2": "Low Street",
+        "Country": "UK",
+        "County": "Lancashire",
+        "PostCode": "M3 6gw",
+        "PostTown": "Manchester"
+      },
+      "claimant_contact_preference": "Post",
+      "claimant_email_address": "anton@gmail.com",
+      "claimant_mobile_number": "07577136570",
+      "claimant_phone_number": "07577136570"
+    },
+    "claimantIndType": {
+      "claimant_date_of_birth": "1990-02-25",
+      "claimant_first_names": "Anton Juliet",
+      "claimant_gender": "Male",
+      "claimant_last_name": "Rodriguez",
+      "claimant_title1": "Mr"
+    },
+    "correspondenceScotType": {
+      "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00057",
+      "part_3_Scot_Documents": "34",
+      "hearingNumber": "1",
+      "dynamicHearingNumber": {
+        "value": {
+          "code": "1",
+          "label": "1 - Aberdeen - 01 Nov 2019"
+        },
+        "list_items": [
+          {
+            "code": "1",
+            "label": "1 - Aberdeen - 01 Nov 2019"
+          },
+          {
+            "code": "2",
+            "label": "2 - Glasgow - 01 Nov 2019"
+          },
+          {
+            "code": "3",
+            "label": "3 - Edinburgh - 01 Nov 2019"
+          },
+          {
+            "code": "4",
+            "label": "4 - Dundee - 01 Nov 2019"
+          }
+        ]
+      }    },
+    "clerkResponsible": "Juan Diego",
+    "feeGroupReference": "12212121",
+    "respondentCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "11 Small Street",
+            "AddressLine2": "22 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 42R",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Antonio Vazquez",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "Antonio@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "responseStruckOut": "No",
+          "responseContinue" : null
+        }
+      }
+    ],
+    "hearingCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "1",
+          "Hearing_venue": "Aberdeen",
+          "Hearing_Aberdeen": "Aberdeen",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "Hearing_status": "Listed",
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "2",
+          "Hearing_venue": "Glasgow",
+          "Hearing_Glasgow": "Glasgow",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "3",
+          "Hearing_venue": "Edinburgh",
+          "Hearing_Edinburgh": "Edinburgh",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "4",
+          "Hearing_venue": "Dundee",
+          "Hearing_Dundee": "Dundee",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "locationType": "Manchester",
+    "multipleReference": "No",
+    "multipleType": "No",
+    "positionType": "First",
+    "receiptDate": "2019-03-12",
+    "responseReceived": "none",
+    "userLocation": "Liverpool",
+    "hearingNumbers" : "1",
+    "hearingTypes" : "Preliminary Hearing",
+    "hearingPublicPrivate" : "Public",
+    "hearingVenue" : "Crown Court",
+    "hearingEstLengthNum" : "1",
+    "hearingEstLengthNumType" : "Days",
+    "hearingSitAlone" : "Sit Alone",
+    "Hearing_stage" : "Stage 1",
+    "listedDate" : "2019-11-25T12:11:00.000",
+    "Hearing_notes" : "Test hearing 1",
+    "managingOffice" : "Aberdeen"
+  },
+  "id": "123456789",
+  "jurisdiction": "English",
+  "state": "UK"
+}

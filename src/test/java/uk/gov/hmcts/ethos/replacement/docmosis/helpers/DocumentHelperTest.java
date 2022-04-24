@@ -43,10 +43,12 @@ public class DocumentHelperTest {
     private CaseDetails caseDetails13;
     private CaseDetails caseDetails14;
     private CaseDetails caseDetails15;
+    private CaseDetails caseDetails20;
     private CaseDetails caseDetailsEmpty;
     private CaseDetails caseDetailsScot1;
     private CaseDetails caseDetailsScot2;
     private CaseDetails caseDetailsScot3;
+    private CaseDetails caseDetailsScot4;
     private UserDetails userDetails;
 
     private InputStream venueAddressInputStream;
@@ -67,9 +69,11 @@ public class DocumentHelperTest {
         caseDetails13 = generateCaseDetails("caseDetailsTest13.json");
         caseDetails14 = generateCaseDetails("caseDetailsTest14.json");
         caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
+        caseDetails20 = generateCaseDetails("caseDetailsTest20.json");
         caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
         caseDetailsScot2 = generateCaseDetails("caseDetailsScotTest2.json");
         caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
+        caseDetailsScot4 = generateCaseDetails("caseDetailsScotTest4.json");
 
         caseDetailsEmpty = new CaseDetails();
         caseDetailsEmpty.setCaseData(new CaseData());
@@ -1361,6 +1365,157 @@ public class DocumentHelperTest {
                 caseDetails15.getCaseData().getCorrespondenceType(),
                 caseDetails15.getCaseData().getCorrespondenceScotType(),
                 null, null).toString());
+    }
+
+    @Test
+    public void buildDocumentContent20() {
+        String expected = "{\n"
+            + "\"accessKey\":\"\",\n"
+            + "\"templateName\":\"EM-TRB-EGW-ENG-00043.docx\",\n"
+            + "\"outputName\":\"document.docx\",\n"
+            + "\"data\":{\n"
+            + "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n"
+            + "\"claimant_rep_organisation\":\"RepresentativeOrganisation\",\n"
+            + "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n"
+            + "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n"
+            + "\"claimant_or_rep_addressLine3\":\"\",\n"
+            + "\"claimant_or_rep_town\":\"Manchester\",\n"
+            + "\"claimant_or_rep_county\":\"Lancashire\",\n"
+            + "\"claimant_or_rep_postCode\":\"M3 KJR\",\n"
+            + "\"claimant_reference\":\"1111111\",\n"
+            + "\"claimant_full_name\":\"Mr A J Rodriguez\",\n"
+            + "\"Claimant\":\"Mr A J Rodriguez\",\n"
+            + "\"claimant_addressLine1\":\"34\",\n"
+            + "\"claimant_addressLine2\":\"Low Street\",\n"
+            + "\"claimant_addressLine3\":\"\",\n"
+            + "\"claimant_town\":\"Manchester\",\n"
+            + "\"claimant_county\":\"Lancashire\",\n"
+            + "\"claimant_postCode\":\"M3 6gw\",\n"
+            + "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n"
+            + "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n"
+            + "\"respondent_or_rep_addressLine2\":\"22 House\",\n"
+            + "\"respondent_or_rep_addressLine3\":\"\",\n"
+            + "\"respondent_or_rep_town\":\"Manchester\",\n"
+            + "\"respondent_or_rep_county\":\"North West\",\n"
+            + "\"respondent_or_rep_postCode\":\"M12 42R\",\n"
+            + "\"respondent_full_name\":\"Antonio Vazquez\",\n"
+            + "\"respondent_addressLine1\":\"11 Small Street\",\n"
+            + "\"respondent_addressLine2\":\"22 House\",\n"
+            + "\"respondent_addressLine3\":\"\",\n"
+            + "\"respondent_town\":\"Manchester\",\n"
+            + "\"respondent_county\":\"North West\",\n"
+            + "\"respondent_postCode\":\"M12 42R\",\n"
+            + "\"Respondent\":\"1. Antonio Vazquez\",\n"
+            + "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n"
+            + "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n"
+            + "\"Hearing_date\":\"\",\n"
+            + "\"Hearing_date_time\":\"\",\n"
+            + "\"Hearing_time\":\"\",\n"
+            + "\"Hearing_venue\":\"Manchester Employment Tribunals, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n"
+            + "\"Hearing_duration\":\"3 days\",\n"
+            + "\"t1_2\":\"true\",\n"
+            + "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n"
+            + "\"Court_addressLine2\":\"Alexandra House,\",\n"
+            + "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n"
+            + "\"Court_town\":\"Manchester,\",\n"
+            + "\"Court_county\":\"\",\n"
+            + "\"Court_postCode\":\"M3 2JA\",\n"
+            + "\"Court_telephone\":\"03577131270\",\n"
+            + "\"Court_fax\":\"07577126570\",\n"
+            + "\"Court_DX\":\"123456\",\n"
+            + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+            + "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n"
+            + "\"i1_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n"
+            + "\"i1_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n"
+            + "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n"
+            + "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n"
+            + "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n"
+            + "\"Clerk\":\"Mike Jordan\",\n"
+            + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n"
+            + "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n"
+            + "\"Case_No\":\"123456\",\n"
+            + "}\n"
+            + "}\n";
+
+        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails20.getCaseData(), "",
+            userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
+            caseDetails20.getCaseData().getCorrespondenceType(),
+            caseDetails20.getCaseData().getCorrespondenceScotType(),
+            null, null).toString());
+    }
+
+    @Test
+    public void buildDocumentContentScot4() {
+        String expected = "{\n"
+            + "\"accessKey\":\"\",\n"
+            + "\"templateName\":\"EM-TRB-SCO-ENG-00057.docx\",\n"
+            + "\"outputName\":\"document.docx\",\n"
+            + "\"data\":{\n"
+            + "\"claimant_or_rep_full_name\":\"Mr A J Rodriguez\",\n"
+            + "\"claimant_full_name\":\"Mr A J Rodriguez\",\n"
+            + "\"Claimant\":\"Mr A J Rodriguez\",\n"
+            + "\"claimant_or_rep_addressLine1\":\"34\",\n"
+            + "\"claimant_or_rep_addressLine2\":\"Low Street\",\n"
+            + "\"claimant_or_rep_addressLine3\":\"\",\n"
+            + "\"claimant_or_rep_town\":\"Manchester\",\n"
+            + "\"claimant_or_rep_county\":\"Lancashire\",\n"
+            + "\"claimant_or_rep_postCode\":\"M3 6gw\",\n"
+            + "\"claimant_addressLine1\":\"34\",\n"
+            + "\"claimant_addressLine2\":\"Low Street\",\n"
+            + "\"claimant_addressLine3\":\"\",\n"
+            + "\"claimant_town\":\"Manchester\",\n"
+            + "\"claimant_county\":\"Lancashire\",\n"
+            + "\"claimant_postCode\":\"M3 6gw\",\n"
+            + "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n"
+            + "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n"
+            + "\"respondent_or_rep_addressLine2\":\"22 House\",\n"
+            + "\"respondent_or_rep_addressLine3\":\"\",\n"
+            + "\"respondent_or_rep_town\":\"Manchester\",\n"
+            + "\"respondent_or_rep_county\":\"North West\",\n"
+            + "\"respondent_or_rep_postCode\":\"M12 42R\",\n"
+            + "\"respondent_full_name\":\"Antonio Vazquez\",\n"
+            + "\"respondent_addressLine1\":\"11 Small Street\",\n"
+            + "\"respondent_addressLine2\":\"22 House\",\n"
+            + "\"respondent_addressLine3\":\"\",\n"
+            + "\"respondent_town\":\"Manchester\",\n"
+            + "\"respondent_county\":\"North West\",\n"
+            + "\"respondent_postCode\":\"M12 42R\",\n"
+            + "\"Respondent\":\"Antonio Vazquez\",\n"
+            + "\"resp_others\":\"\",\n"
+            + "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n"
+            + "\"Hearing_date\":\"1 November 2019\",\n"
+            + "\"Hearing_date_time\":\"1 November 2019 at 12:11\",\n"
+            + "\"Hearing_time\":\"12:11\",\n"
+            + "\"Hearing_venue\":\"Ground Floor, AB1, 48 Huntly Street, Aberdeen, AB10 1SH\",\n"
+            + "\"Hearing_duration\":\"1 day\",\n"
+            + "\"t_Scot_34\":\"true\",\n"
+            + "\"Court_addressLine1\":\"Eagle Building,\",\n"
+            + "\"Court_addressLine2\":\"215 Bothwell Street,\",\n"
+            + "\"Court_addressLine3\":\"\",\n"
+            + "\"Court_town\":\"Glasgow,\",\n"
+            + "\"Court_county\":\"\",\n"
+            + "\"Court_postCode\":\"G2 7TS\",\n"
+            + "\"Court_telephone\":\"03577123270\",\n"
+            + "\"Court_fax\":\"07127126570\",\n"
+            + "\"Court_DX\":\"1234567\",\n"
+            + "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n"
+            + "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n"
+            + "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n"
+            + "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n"
+            + "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n"
+            + "\"iScot34_schmcts1\":\"[userImage:schmcts.png]\",\n"
+            + "\"iScot34_schmcts2\":\"[userImage:schmcts.png]\",\n"
+            + "\"Clerk\":\"Mike Jordan\",\n"
+            + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n"
+            + "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n"
+            + "\"Case_No\":\"123456\",\n"
+            + "}\n"
+            + "}\n";
+        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot4.getCaseData(), "",
+            userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
+            caseDetailsScot4.getCaseData().getCorrespondenceType(),
+            caseDetailsScot4.getCaseData().getCorrespondenceScotType(),
+            null, null).toString());
     }
 
     @Test
