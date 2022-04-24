@@ -84,11 +84,4 @@
         <packageUrl regex="true">^pkg:maven/org\.asynchttpclient/async\-http\-client\-netty\-utils@.*$</packageUrl>
         <cve>CVE-2021-43138</cve>
     </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-retry-1.3.2.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
-        <cve>CVE-2022-22965</cve>
-    </suppress>
 </suppressions>
