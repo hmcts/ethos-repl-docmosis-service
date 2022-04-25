@@ -91,4 +91,11 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
         <cve>CVE-2022-22965</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: spring-retry-1.3.3.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
+        <cve>CVE-2022-22968</cve>
+    </suppress>
 </suppressions>
