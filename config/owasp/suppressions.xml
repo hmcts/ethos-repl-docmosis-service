@@ -103,9 +103,6 @@
   file name: spring-retry-1.3.2.jar
   ]]></notes>
         <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.2</packageUrl>
-    file name: spring-retry-1.3.2.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
         <cve>CVE-2016-1000027</cve>
     </suppress>
     <suppress>
@@ -122,6 +119,8 @@
         <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.2</packageUrl>
         <cve>CVE-2022-22968</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
     file name: spring-retry-1.3.3.jar
     ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
