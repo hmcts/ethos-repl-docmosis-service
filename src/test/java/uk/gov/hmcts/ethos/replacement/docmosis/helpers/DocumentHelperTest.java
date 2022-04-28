@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -1678,6 +1680,10 @@ public class DocumentHelperTest {
     @Test
     public void buildDocumentContentScot4() throws URISyntaxException, IOException {
         var expectedResult = getExpectedResult("expectedDocumentContentScot4.json");
+        expectedResult = expectedResult.replace("current-date", LocalDate.now().format(DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.LONG)).toString());
+        expectedResult = expectedResult.replace("plus28", LocalDate.now().plusDays(28).format(DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.LONG)).toString());
         var actualResult = DocumentHelper.buildDocumentContent(caseDetailsScot4.getCaseData(), "",
             userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
             caseDetailsScot4.getCaseData().getCorrespondenceType(),
