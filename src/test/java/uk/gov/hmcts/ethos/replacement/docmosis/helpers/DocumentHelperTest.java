@@ -1680,10 +1680,9 @@ public class DocumentHelperTest {
     @Test
     public void buildDocumentContentScot4() throws URISyntaxException, IOException {
         var expectedResult = getExpectedResult("expectedDocumentContentScot4.json");
-        expectedResult = expectedResult.replace("current-date", LocalDate.now().format(DateTimeFormatter
-                .ofLocalizedDate(FormatStyle.LONG)).toString());
-        expectedResult = expectedResult.replace("plus28", LocalDate.now().plusDays(28).format(DateTimeFormatter
-                .ofLocalizedDate(FormatStyle.LONG)).toString());
+        expectedResult = expectedResult.replace("current-date", UtilHelper.formatCurrentDate(LocalDate.now()));
+        expectedResult = expectedResult.replace("plus28",
+                UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28));
         var actualResult = DocumentHelper.buildDocumentContent(caseDetailsScot4.getCaseData(), "",
             userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
             caseDetailsScot4.getCaseData().getCorrespondenceType(),
