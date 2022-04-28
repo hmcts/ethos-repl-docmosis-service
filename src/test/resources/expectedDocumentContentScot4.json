@@ -58,8 +58,8 @@
 "iScot34_schmcts1":"[userImage:schmcts.png]",
 "iScot34_schmcts2":"[userImage:schmcts.png]",
 "Clerk":"Mike Jordan",
-"Today_date":"27 April 2022",
-"TodayPlus28Days":"25 May 2022",
+"Today_date":"current-date",
+"TodayPlus28Days":"plus28",
 "Case_No":"123456",
 }
 }
