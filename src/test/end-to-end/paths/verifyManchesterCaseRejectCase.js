@@ -15,4 +15,5 @@ Scenario('Verify Manchester Reject Case', async ({I}) => {
     await I.rejectTheCase();
 
 }).tag('@e2e')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);
