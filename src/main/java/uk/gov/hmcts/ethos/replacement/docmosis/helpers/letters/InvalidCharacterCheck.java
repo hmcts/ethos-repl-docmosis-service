@@ -14,22 +14,22 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class InvalidCharacterCheck {
 
     public static final String NEW_LINE_ERROR = " is split over 2 lines. Please correct this before "
-            + "generating a letter";
+            + "generating a type";
     public static final String DOUBLE_SPACE_ERROR = " contains a double space. Please correct this before"
-            + " generating a letter";
+            + " generating a type";
 
     private InvalidCharacterCheck() {
     }
 
-    public static List<String> checkNamesForInvalidCharacters(CaseData caseData) {
+    public static List<String> checkNamesForInvalidCharacters(CaseData caseData, String type) {
         List<String> errors = new ArrayList<>();
         List<String> nameOfParties = findAllParties(caseData);
         for (String name : nameOfParties) {
             if (!Strings.isNullOrEmpty(name) && name.contains("  ")) {
-                errors.add(name + DOUBLE_SPACE_ERROR);
+                errors.add(name + DOUBLE_SPACE_ERROR.replace("type", type));
             }
             if (!Strings.isNullOrEmpty(name) && name.contains("\n")) {
-                errors.add(name + NEW_LINE_ERROR);
+                errors.add(name + NEW_LINE_ERROR.replace("type", type));
             }
         }
         return errors;

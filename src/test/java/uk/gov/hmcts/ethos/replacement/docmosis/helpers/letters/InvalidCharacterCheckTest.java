@@ -45,7 +45,7 @@ public class InvalidCharacterCheckTest {
         representedTypeRItem.setValue(representedTypeR);
         casedata.setRepCollection(List.of(representedTypeRItem));
 
-        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata);
+        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata, "letter");
 
         assertEquals(4, errors.size());
         assertEquals("Double  Space" + DOUBLE_SPACE_ERROR, errors.get(0));

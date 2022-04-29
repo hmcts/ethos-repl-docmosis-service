@@ -136,10 +136,9 @@ public class ListingGenerationController {
         var listingData = listingRequest.getCaseDetails().getCaseData();
 
         if (ListingHelper.isListingRangeValid(listingData, errors)) {
-
             listingData = listingService.processListingHearingsRequest(
-                    listingRequest.getCaseDetails(), userToken);
-
+                    listingRequest.getCaseDetails(), userToken, errors);
+            if (CollectionUtils.isEmpty(errors)) {
             String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
                     ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
             var defaultValues = defaultValuesReaderService.getDefaultValues(
@@ -147,7 +146,7 @@ public class ListingGenerationController {
                     UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
             log.info("Post Default values loaded: " + defaultValues);
             listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
-
+            }
         }
 
         return getListingCallbackRespEntityErrors(errors, listingData);

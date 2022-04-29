@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -45,8 +46,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -91,9 +90,7 @@ public class ListingGenerationControllerTest {
     private JsonNode requestContent1;
     private JsonNode requestContentSingleCase;
     private JsonNode requestContentSingleCase1;
-    private JsonNode listingRequestJson;
     private ListingDetails listingDetails;
-    private ListingData listingData;
     private CaseData caseData;
     private DocumentInfo documentInfo;
     private DefaultValues defaultValues;
@@ -239,7 +236,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearings() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN), anyList()))
                 .thenReturn(listingDetails.getCaseData());
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class)))
                 .thenReturn(defaultValues);
@@ -575,7 +572,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearingsError500() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN), anyList()))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)

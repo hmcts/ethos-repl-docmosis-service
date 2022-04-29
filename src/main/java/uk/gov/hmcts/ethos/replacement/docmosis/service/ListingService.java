@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
@@ -159,10 +161,22 @@ public class ListingService {
         return listingData;
     }
 
-    public ListingData processListingHearingsRequest(ListingDetails listingDetails, String authToken) {
+    private boolean areCharsForClaimantsRespValid(List<SubmitEvent> submitEvents, List<String> errors) {
+        List<String> caseErrors;
+        boolean charsCheck = true;
+        for (SubmitEvent submitEvent : submitEvents) {
+            caseErrors = InvalidCharacterCheck.checkNamesForInvalidCharacters(submitEvent.getCaseData(), "cause list");
+            if (CollectionUtils.isNotEmpty(caseErrors)) {
+                errors.addAll(caseErrors);
+                charsCheck = false;
+            }
+        }
+        return charsCheck;
+    }
+    public ListingData processListingHearingsRequest(ListingDetails listingDetails, String authToken, List<String> errors) {
         try {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
-            if (submitEvents != null) {
+            if (submitEvents != null && areCharsForClaimantsRespValid(submitEvents, errors)) {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {

@@ -239,7 +239,7 @@ public class DocumentGenerationController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         DynamicLetters.dynamicLetters(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
-        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(caseData);
+        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(caseData, "letter");
         return getCallbackRespEntityErrors(errors, caseData);
     }
 }
