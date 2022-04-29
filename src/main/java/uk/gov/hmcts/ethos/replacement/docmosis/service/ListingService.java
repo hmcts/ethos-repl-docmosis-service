@@ -173,7 +173,9 @@ public class ListingService {
         }
         return charsCheck;
     }
-    public ListingData processListingHearingsRequest(ListingDetails listingDetails, String authToken, List<String> errors) {
+
+    public ListingData processListingHearingsRequest(ListingDetails listingDetails,
+                                                     String authToken, List<String> errors) {
         try {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null && areCharsForClaimantsRespValid(submitEvents, errors)) {
