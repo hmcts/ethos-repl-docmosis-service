@@ -48,10 +48,10 @@ public class InvalidCharacterCheckTest {
         List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata, "letter");
 
         assertEquals(4, errors.size());
-        assertEquals("Double  Space" + DOUBLE_SPACE_ERROR.replace("type", "letter"), errors.get(0));
-        assertEquals("New\nLine" + NEW_LINE_ERROR.replace("type", "letter"), errors.get(1));
-        assertEquals("Double  Space and New\nLine" + DOUBLE_SPACE_ERROR.replace("type", "letter"), errors.get(2));
-        assertEquals("Double  Space and New\nLine" + NEW_LINE_ERROR.replace("type", "letter"), errors.get(3));
+        assertEquals("Double  Space" + String.format(DOUBLE_SPACE_ERROR, "letter"), errors.get(0));
+        assertEquals("New\nLine" + String.format(NEW_LINE_ERROR, "letter"), errors.get(1));
+        assertEquals("Double  Space and New\nLine" + String.format(DOUBLE_SPACE_ERROR, "letter"), errors.get(2));
+        assertEquals("Double  Space and New\nLine" + String.format(NEW_LINE_ERROR, "letter"), errors.get(3));
 
     }
 }
