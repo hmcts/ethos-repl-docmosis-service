@@ -2,9 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,10 +43,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static org.mockito.ArgumentMatchers.isA;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -61,7 +60,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
-
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ListingGenerationController.class)
@@ -75,7 +73,8 @@ public class ListingGenerationControllerTest {
     private static final String GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL = "/generateHearingDocumentConfirmation";
     private static final String LISTING_SINGLE_CASES_URL = "/listingSingleCases";
     private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_URL = "/generateListingsDocSingleCases";
-    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL = "/generateListingsDocSingleCasesConfirmation";
+    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL =
+            "/generateListingsDocSingleCasesConfirmation";
     private static final String GENERATE_REPORT_URL = "/generateReport";
 
     @Autowired
@@ -126,7 +125,6 @@ public class ListingGenerationControllerTest {
 
     private ListingRequest getListingData() {
 
-        singleListingRequest = new ListingRequest();
         var listingDetails = new ListingDetails();
         var listingData = new ListingData();
 
@@ -189,6 +187,7 @@ public class ListingGenerationControllerTest {
 
         listingData.setListingCollection(listingTypeItems);
         listingDetails.setCaseData(listingData);
+        singleListingRequest = new ListingRequest();
         singleListingRequest.setCaseDetails(listingDetails);
 
         return singleListingRequest;
@@ -445,7 +444,6 @@ public class ListingGenerationControllerTest {
             .andExpect(jsonPath("$.errors", nullValue()))
             .andExpect(jsonPath("$.warnings", nullValue()));
     }
-
 
     @Test
     public void generateReportError400() throws Exception {
