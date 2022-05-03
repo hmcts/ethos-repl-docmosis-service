@@ -40,7 +40,7 @@ public class InvalidCharacterCheck {
         List<String> caseErrors;
         boolean charsCheck = true;
         for (SubmitEvent submitEvent : submitEvents) {
-            caseErrors = InvalidCharacterCheck.checkNamesForInvalidCharacters(submitEvent.getCaseData(), "cause list");
+            caseErrors = checkNamesForInvalidCharacters(submitEvent.getCaseData(), "cause list");
             if (CollectionUtils.isNotEmpty(caseErrors)) {
                 errors.addAll(caseErrors);
                 charsCheck = false;

@@ -1,11 +1,57 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import java.util.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_BY_HEARING_VENUE_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_BY_HEARING_TYPE_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_PRESS_LIST;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_PUBLIC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.ArgumentMatchers.*;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -54,7 +100,6 @@ import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReport
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.NEW_LINE_ERROR;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
@@ -72,57 +117,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
-
 import java.io.IOException;
 import java.time.LocalDate;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_BY_HEARING_TYPE_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_PRESS_LIST;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_PUBLIC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_BY_HEARING_VENUE_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ListingServiceTest {
@@ -405,7 +407,7 @@ public class ListingServiceTest {
                 "localReportsSummary=null, localReportsSummaryHdr2=null, " +
                 "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -426,8 +428,8 @@ public class ListingServiceTest {
                 "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
                 "localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -440,8 +442,8 @@ public class ListingServiceTest {
         value.setRespondentName("Forename" + "\n" + "Surname");
         item.setValue(value);
         submitEvents.get(0).getCaseData().setRespondentCollection(Collections.singletonList(item));
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         List<String> errors = new ArrayList<>();
         listingService.processListingHearingsRequest(listingDetails, "authToken", errors);
         assertEquals("Forename" + "\n" + "Surname is split over 2 lines. Please correct this before "
@@ -464,7 +466,7 @@ public class ListingServiceTest {
                 "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
                 "localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -484,8 +486,8 @@ public class ListingServiceTest {
                 " documentName=null, showAll=null, " + "localReportsSummaryHdr=null, localReportsSummary=null, " +
                 "localReportsSummaryHdr2=null, localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -505,8 +507,8 @@ public class ListingServiceTest {
                 "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null," +
                 " localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -536,8 +538,8 @@ public class ListingServiceTest {
         submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType("Valid Hearing");
         listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
         listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PUBLIC);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -558,8 +560,8 @@ public class ListingServiceTest {
         submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType(HEARING_TYPE_JUDICIAL_MEDIATION);
         listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
         listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PUBLIC);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -583,8 +585,8 @@ public class ListingServiceTest {
                 HEARING_TYPE_PRIVATE);
         listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
         listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PRESS_LIST);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -630,7 +632,7 @@ public class ListingServiceTest {
                 + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetails.getCaseData().setVenueAberdeen(ALL_VENUES);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -728,7 +730,7 @@ public class ListingServiceTest {
                 "localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -740,16 +742,16 @@ public class ListingServiceTest {
         submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
                 .get(1).getValue().setListedDate("");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         listingService.processListingHearingsRequest(listingDetailsRange, "authToken", new ArrayList<>());
     }
 
     @Test(expected = Exception.class)
     public void processListingHearings_causeListDateNull() throws IOException {
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         var listingData = listingService.processListingHearingsRequest(listingDetailsRange, "authToken", new ArrayList<>());
         var listingCollection = listingData.getListingCollection();
         listingCollection.get(0).getValue().setCauseListDate(null);
@@ -791,28 +793,28 @@ public class ListingServiceTest {
         listingDetailsRange.getCaseData().setListingDateFrom("2021-01-01");
         listingDetailsRange.getCaseData().setListingDateTo("2021-12-01");
 
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         var listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test(expected = Exception.class)
     public void processListingHearingsRequestWithException() throws IOException {
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
     }
 
     @Test
     public void processHearingDocument() throws IOException {
-        when(tornadoService.listingGeneration(anyString(), any(), anyString())).thenReturn(documentInfo);
+        when(tornadoService.listingGeneration(ArgumentMatchers.anyString(), ArgumentMatchers.any(), ArgumentMatchers.anyString())).thenReturn(documentInfo);
         DocumentInfo documentInfo1 = listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
         assertEquals(documentInfo, documentInfo1);
     }
 
     @Test(expected = Exception.class)
     public void processHearingDocumentWithException() throws IOException {
-        when(tornadoService.listingGeneration(anyString(), any(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(tornadoService.listingGeneration(ArgumentMatchers.anyString(), ArgumentMatchers.any(), ArgumentMatchers.anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
     }
 
@@ -860,7 +862,7 @@ public class ListingServiceTest {
         representedTypeRItem.setId("222");
         representedTypeRItem.setValue(representedTypeR);
         submitEvents.get(0).getCaseData().setRepCollection(new ArrayList<>(Collections.singleton(representedTypeRItem)));
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
         assertEquals(result, listingDataResult.toString());
     }
@@ -944,9 +946,9 @@ public class ListingServiceTest {
         bfActionReportData.setBfDateCollection(bfDateTypeItems);
         var mockedBfActionReport = Mockito.mock(BfActionReport.class);
 
-        doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
-                anyString(), anyString(), anyString(), anyString());
-        doReturn(bfActionReportData).when(mockedBfActionReport).runReport(any(ListingDetails.class),
+        doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+        doReturn(bfActionReportData).when(mockedBfActionReport).runReport(ArgumentMatchers.any(ListingDetails.class),
                 Mockito.anyList());
 
         var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
@@ -1023,7 +1025,7 @@ public class ListingServiceTest {
                 +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -1096,7 +1098,7 @@ public class ListingServiceTest {
                  +"))])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setManagingOffice("Glasgow");
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
@@ -1119,7 +1121,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
         submitEvents.remove(0);
         
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
 
         assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsDetail()));
@@ -1263,7 +1265,7 @@ public class ListingServiceTest {
                 +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -1355,7 +1357,7 @@ public class ListingServiceTest {
                 "eccTotalCasesPercent=null, migratedTotalCasesPercent=null), localReportsDetail=[])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setManagingOffice("Aberdeen");
         submitEvents.get(0).getCaseData().setPositionType(POSITION_TYPE_CASE_CLOSED);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
@@ -1367,7 +1369,7 @@ public class ListingServiceTest {
     public void generateCasesCompletedReportDataForEnglandWithConTrackNone() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
         assertEquals(1, listingDataResult.getLocalReportsDetail().size());
@@ -1377,7 +1379,7 @@ public class ListingServiceTest {
     public void generateCasesCompletedReportDataForEnglandWithConTrackFast() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
@@ -1389,7 +1391,7 @@ public class ListingServiceTest {
     public void generateCasesCompletedReportDataForEnglandWithConTrackStandard() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
@@ -1401,7 +1403,7 @@ public class ListingServiceTest {
     public void generateCasesCompletedReportDataForEnglandWithConTrackOpen() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
@@ -1418,7 +1420,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDate("2021-07-13");
         listingDetails.getCaseData().setListingDateFrom("2021-07-12");
         listingDetails.getCaseData().setListingDateTo("2021-07-14");
-        when(ccdClient.hearingsToJudgementsSearch(anyString(), anyString(), anyString())).thenReturn(List.of(new HearingsToJudgmentsSubmitEvent()));
+        when(ccdClient.hearingsToJudgementsSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(List.of(new HearingsToJudgmentsSubmitEvent()));
         var listingDataResult = (HearingsToJudgmentsReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(HEARINGS_TO_JUDGEMENTS_REPORT, listingDataResult.getReportType());
@@ -1439,7 +1441,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDateTo("2022-02-08");
         var submitEvent = new RespondentsReportSubmitEvent();
         submitEvent.setCaseData(new RespondentsReportCaseData());
-        when(ccdClient.respondentsReportSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
+        when(ccdClient.respondentsReportSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(List.of(submitEvent));
         var listingDataResult = (RespondentsReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(RESPONDENTS_REPORT, listingDataResult.getReportType());
@@ -1461,7 +1463,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDateTo("2021-07-14");
         var submitEvent = new SessionDaysSubmitEvent();
         submitEvent.setCaseData(new SessionDaysCaseData());
-        when(ccdClient.sessionDaysSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
+        when(ccdClient.sessionDaysSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(List.of(submitEvent));
         var listingDataResult = (SessionDaysReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(SESSION_DAYS_REPORT, listingDataResult.getReportType());
@@ -1483,7 +1485,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDateTo("2021-07-14");
         var submitEvent = new EccReportSubmitEvent();
         submitEvent.setCaseData(new EccReportCaseData());
-        when(ccdClient.eccReportSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
+        when(ccdClient.eccReportSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(List.of(submitEvent));
         var listingDataResult = (EccReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(ECC_REPORT, listingDataResult.getReportType());
@@ -1508,10 +1510,10 @@ public class ListingServiceTest {
         var submitEvent = new ClaimsByHearingVenueSubmitEvent();
         submitEvent.setCaseData(new ClaimsByHearingVenueCaseData());
 
-        when(ccdClient.claimsByHearingVenueSearch(anyString(), anyString(), anyString()))
+        when(ccdClient.claimsByHearingVenueSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(List.of(submitEvent));
         var userDetails = new UserDetails();
-        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(userService.getUserDetails(ArgumentMatchers.anyString())).thenReturn(userDetails);
 
         var listingDataResult = (ClaimsByHearingVenueReportData) listingService.generateReportData(listingDetails,
                 "authToken");
@@ -1535,7 +1537,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDateTo("2021-07-14");
         var submitEvent = new HearingsByHearingTypeSubmitEvent();
         submitEvent.setCaseData(new HearingsByHearingTypeCaseData());
-        when(ccdClient.hearingsByHearingTypeSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
+        when(ccdClient.hearingsByHearingTypeSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(List.of(submitEvent));
         var listingDataResult = (HearingsByHearingTypeReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(HEARINGS_BY_HEARING_TYPE_REPORT, listingDataResult.getReportType());
@@ -1566,10 +1568,10 @@ public class ListingServiceTest {
 
         var memberDaysReport = Mockito.mock(MemberDaysReport.class);
 
-        doReturn(localSubmitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
-            anyString(), anyString(), anyString(), anyString());
+        doReturn(localSubmitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(),
+            ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
 
-        doReturn(memberDaysReportData).when(memberDaysReport).runReport(any(ListingDetails.class),
+        doReturn(memberDaysReportData).when(memberDaysReport).runReport(ArgumentMatchers.any(ListingDetails.class),
             Mockito.anyList());
 
         var listingDataResult = (MemberDaysReportData) listingService.generateReportData(listingDetailsRange,
@@ -1584,7 +1586,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setReportType(CASES_AWAITING_JUDGMENT_REPORT);
         listingDetails.getCaseData().setDocumentName("name");
         var caseDataBuilder = new CaseDataBuilder();
-        when(ccdClient.casesAwaitingJudgmentSearch(anyString(), anyString(), anyString())).thenReturn(
+        when(ccdClient.casesAwaitingJudgmentSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(
                 List.of(caseDataBuilder.withPositionType("Draft with members")
                         .withHearing("1970-01-01T00:00:00.000", HEARING_STATUS_HEARD)
                         .buildAsSubmitEvent(ACCEPTED_STATE)));
@@ -1606,9 +1608,9 @@ public class ListingServiceTest {
                                     .withDateToPosition("2021-04-03")
                                     .withReceiptDate("2021-03-03")
                                     .buildAsSubmitEvent(ACCEPTED_STATE)));
-        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(NoPositionChangeSearchResult.class)))
+        when(ccdClient.runElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.eq(NoPositionChangeSearchResult.class)))
                 .thenReturn(result);
-        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(new ArrayList<>());
         var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
@@ -1635,9 +1637,9 @@ public class ListingServiceTest {
         multipleData.setMultipleName("Multiple Name");
         var submitMultipleData = new SubmitMultipleEvent();
         submitMultipleData.setCaseData(multipleData);
-        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(NoPositionChangeSearchResult.class)))
+        when(ccdClient.runElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.eq(NoPositionChangeSearchResult.class)))
                 .thenReturn(result);
-        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(List.of(submitMultipleData));
         var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
@@ -1647,7 +1649,7 @@ public class ListingServiceTest {
 
     @Test(expected = Exception.class)
     public void generateReportDataWithException() throws IOException {
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         listingService.generateReportData(listingDetails, "authToken");
     }
 }
