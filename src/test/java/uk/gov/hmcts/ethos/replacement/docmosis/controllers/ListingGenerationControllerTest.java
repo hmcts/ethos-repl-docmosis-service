@@ -125,9 +125,7 @@ public class ListingGenerationControllerTest {
 
     private ListingRequest getListingData() {
 
-        var listingDetails = new ListingDetails();
         var listingData = new ListingData();
-
         listingData.setDocMarkUp("Test doc markup");
         listingData.setDocumentName("test listing doc name");
         listingData.setListingDate("2021-10-20");
@@ -184,7 +182,7 @@ public class ListingGenerationControllerTest {
 
         var listingTypeItems = new ArrayList<ListingTypeItem>();
         listingTypeItems.add(new ListingTypeItem());
-
+        var listingDetails = new ListingDetails();
         listingData.setListingCollection(listingTypeItems);
         listingDetails.setCaseData(listingData);
         singleListingRequest = new ListingRequest();

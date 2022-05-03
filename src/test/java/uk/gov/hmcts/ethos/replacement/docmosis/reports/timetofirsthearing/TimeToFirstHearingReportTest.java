@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing;
 
 import org.assertj.core.util.Strings;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -9,12 +8,19 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 
 public class TimeToFirstHearingReportTest {
 
@@ -33,11 +39,16 @@ public class TimeToFirstHearingReportTest {
 
     private void verifyReportHeaderIsZero(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsDetailHdr();
-        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
-        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotal26wk())?0:Integer.parseInt(adhocReportType.getTotal26wk()));
-        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wk())?0:Integer.parseInt(adhocReportType.getTotalx26wk()));
-        assertEquals(0.00, Strings.isNullOrEmpty(adhocReportType.getTotal26wkPerCent())?0.00:Float.parseFloat(adhocReportType.getTotal26wkPerCent()), .00);
-        assertEquals(0.00, Strings.isNullOrEmpty(adhocReportType.getTotalx26wkPerCent())?0.00:Float.parseFloat(adhocReportType.getTotalx26wkPerCent()),.00);
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotal())
+                ? 0 : Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotal26wk())
+                ? 0 : Integer.parseInt(adhocReportType.getTotal26wk()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wk())
+                ? 0 : Integer.parseInt(adhocReportType.getTotalx26wk()));
+        assertEquals(0.00, Strings.isNullOrEmpty(adhocReportType.getTotal26wkPerCent())
+                ? 0.00 : Float.parseFloat(adhocReportType.getTotal26wkPerCent()), .00);
+        assertEquals(0.00, Strings.isNullOrEmpty(adhocReportType.getTotalx26wkPerCent())
+                ? 0.00 : Float.parseFloat(adhocReportType.getTotalx26wkPerCent()),.00);
     }
 
     @Test
@@ -69,7 +80,7 @@ public class TimeToFirstHearingReportTest {
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2021-01-01T00:00:00" ));
+        submitEvents.add(createSubmitEvent(hearings, CONCILIATION_TRACK_FAST_TRACK, "2021-01-01T00:00:00"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
@@ -96,11 +107,16 @@ public class TimeToFirstHearingReportTest {
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
 
         AdhocReportType adhocReportType = reportListingData.getLocalReportsDetailHdr();
-        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotalCases())?0:Integer.parseInt(adhocReportType.getTotalCases()));
-        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotal26wk())?0:Integer.parseInt(adhocReportType.getTotal26wk()));
-        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wk())?0:Integer.parseInt(adhocReportType.getTotalx26wk()));
-        assertEquals(100, Strings.isNullOrEmpty(adhocReportType.getTotal26wkPerCent())?0:Float.parseFloat(adhocReportType.getTotal26wkPerCent()), .00);
-        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wkPerCent())?0:Float.parseFloat(adhocReportType.getTotalx26wkPerCent()), .00);
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotalCases())
+                ? 0 : Integer.parseInt(adhocReportType.getTotalCases()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotal26wk())
+                ? 0 : Integer.parseInt(adhocReportType.getTotal26wk()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wk())
+                ? 0 : Integer.parseInt(adhocReportType.getTotalx26wk()));
+        assertEquals(100, Strings.isNullOrEmpty(adhocReportType.getTotal26wkPerCent())
+                ? 0 : Float.parseFloat(adhocReportType.getTotal26wkPerCent()), .00);
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wkPerCent())
+                ? 0 : Float.parseFloat(adhocReportType.getTotalx26wkPerCent()), .00);
     }
 
     @Test

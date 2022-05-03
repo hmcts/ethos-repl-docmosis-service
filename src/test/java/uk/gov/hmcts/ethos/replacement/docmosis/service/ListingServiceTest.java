@@ -396,22 +396,22 @@ public class ListingServiceTest {
                 + "tribunalCorrespondenceTelephone=null, "
                 + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
                 + "tribunalCorrespondenceEmail=null," + " reportDate=null, hearingDateType=Single, "
-                + "listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123," +
-                " value=ListingType(causeListDate=12 December 2019, " + "causeListTime=12:11, causeListVenue=AberdeenVenue, " +
-                "elmoCaseReference=4210000/2019, " + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing," +
-                " positionType=Awaiting ET3, " + "hearingJudgeName= , hearingEEMember= , hearingERMember= , " +
-                "hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
-                "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , " +
-                "estHearingLength=2 hours, hearingPanel= , " + "hearingRoom=Tribunal 4, respondentOthers= , " +
-                "hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, " +
-                "venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+                + "listingDate=2019-12-12, listingDateFrom=null, "
+                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123,"
+                + " value=ListingType(causeListDate=12 December 2019, " + "causeListTime=12:11, causeListVenue=AberdeenVenue, "
+                + "elmoCaseReference=4210000/2019, " + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing,"
+                + " positionType=Awaiting ET3, " + "hearingJudgeName= , hearingEEMember= , hearingERMember= , "
+                + "hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+                + "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , "
+                + "estHearingLength=2 hours, hearingPanel= , " + "hearingRoom=Tribunal 4, respondentOthers= , "
+                + "hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], "
+                + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, "
+                + "venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
+                + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
+                + "bfDateCollection=null, clerkResponsible=null, "
+                + "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, "
+                + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken", new ArrayList<>());
@@ -423,16 +423,16 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueAberdeen(null);
         listingDetails.getCaseData().setVenueGlasgow("GlasgowVenue");
         listingDetails.getCaseData().setListingVenue("Glasgow");
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null," +
-                " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null," +
-                " reportDate=null, " + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Glasgow, listingCollection=[], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, " +
-                "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, " +
-                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Brought Forward Report, documentName=null, showAll=null, " +
-                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null,"
+                + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null,"
+                + " reportDate=null, " + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                + "listingDateTo=null, listingVenue=Glasgow, listingCollection=[], listingVenueOfficeGlas=null, "
+                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, "
+                + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+                + "reportType=Brought Forward Report, documentName=null, showAll=null, "
+                + "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
+                + "localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
@@ -482,15 +482,15 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueAberdeen(null);
         listingDetails.getCaseData().setVenueDundee("DundeeVenue");
         listingDetails.getCaseData().setListingVenue("Dundee");
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, " +
-                "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, " +
-                "reportDate=null, hearingDateType=Single," + " listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Dundee, listingCollection=[], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, " +
-                "venueEdinburgh=null, hearingDocType=null, " + "hearingDocETCL=null, " +
-                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report," +
-                " documentName=null, showAll=null, " + "localReportsSummaryHdr=null, localReportsSummary=null, " +
-                "localReportsSummaryHdr2=null, localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+                + "reportDate=null, hearingDateType=Single," + " listingDate=2019-12-12, listingDateFrom=null, "
+                + "listingDateTo=null, listingVenue=Dundee, listingCollection=[], listingVenueOfficeGlas=null, "
+                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                + "venueEdinburgh=null, hearingDocType=null, " + "hearingDocETCL=null, "
+                + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report,"
+                + " documentName=null, showAll=null, " + "localReportsSummaryHdr=null, localReportsSummary=null, "
+                + "localReportsSummaryHdr2=null, localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(submitEvents);
