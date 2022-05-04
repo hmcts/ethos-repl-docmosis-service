@@ -58,7 +58,7 @@ class CaseCloseValidatorTest {
         caseData.getBfActions().get(0).getValue().setCleared(null);
         List<String> errors = CaseCloseValidator.validateBfActionsForCaseCloseEvent(caseData);
         assertEquals(1, errors.size());
-        assertEquals(CLOSING_CASE_WITH_BF_OPEN_ERROR, errors.get(0));
+        assertEquals(String.format(CLOSING_CASE_WITH_BF_OPEN_ERROR, caseData.getEthosCaseReference()), errors.get(0));
     }
 
     @Test

@@ -44,8 +44,8 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-    file name: spring-retry-1.3.2.jar
-    ]]></notes>
+     file name: spring-retry-1.3.2.jar
+     ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
         <cve>CVE-2013-4152</cve>
     </suppress>
@@ -65,23 +65,44 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: async-http-client-2.12.1.jar
+   file name: async-http-client-2.12.3.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.asynchttpclient/async\-http\-client@.*$</packageUrl>
         <cve>CVE-2021-43138</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: async-http-client-netty-utils-2.12.1.jar
+   file name: spring-retry-1.3.2.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
+        <cve>CVE-2016-1000027</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: async-http-client-netty-utils-2.12.3.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.asynchttpclient/async\-http\-client\-netty\-utils@.*$</packageUrl>
         <cve>CVE-2021-43138</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-    file name: spring-retry-1.3.2.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
+  file name: spring-beans-5.3.18.jar
+  ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.springframework/spring-beans@5.3.18</packageUrl>
+        <cve>CVE-2022-22968</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+  file name: spring-retry-1.3.3.jar
+  ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.3</packageUrl>
+        <cve>CVE-2022-22968</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+  file name: spring-retry-1.3.2.jar
+  ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.2</packageUrl>
         <cve>CVE-2016-1000027</cve>
     </suppress>
     <suppress>
@@ -90,6 +111,13 @@
     ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
         <cve>CVE-2022-22965</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+  file name: spring-retry-1.3.2.jar
+  ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.2</packageUrl>
+        <cve>CVE-2022-22968</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[

@@ -145,6 +145,7 @@ public class TimeToFirstHearingReportTest {
         DateListedType dateListedType = new DateListedType();
         dateListedType.setListedDate(listedDate);
         dateListedType.setHearingStatus(status);
+        dateListedType.setHearingCaseDisposed(YES);
         dateListedTypeItem.setValue(dateListedType);
 
         return dateListedTypeItem;

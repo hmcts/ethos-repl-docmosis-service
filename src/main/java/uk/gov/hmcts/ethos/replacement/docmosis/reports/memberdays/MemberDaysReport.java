@@ -11,9 +11,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +21,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDurationInMinutes;
 
 @Slf4j
 public class MemberDaysReport {
@@ -117,7 +115,7 @@ public class MemberDaysReport {
                 reportDetail.setHearingNumber(hearing.getValue().getHearingNumber());
                 reportDetail.setHearingType(hearing.getValue().getHearingType());
                 reportDetail.setHearingClerk(hearingDate.getValue().getHearingClerk());
-                reportDetail.setHearingDuration(getHearingDuration(hearingDate));
+                reportDetail.setHearingDuration(getHearingDurationInMinutes(hearingDate));
                 reportDetail.setParentHearingId(hearing.getId());
                 interimReportDetails.add(reportDetail);
             }
@@ -141,40 +139,6 @@ public class MemberDaysReport {
 
         return  (hearingListedDate.isEqual(hearingDatesFrom) ||  hearingListedDate.isAfter(hearingDatesFrom))
             && (hearingListedDate.isEqual(hearingDatesTo) || hearingListedDate.isBefore(hearingDatesTo));
-    }
-
-    private String getHearingDuration(DateListedTypeItem dateListedTypeItem) {
-        long startFinishDuration = 0;
-        long breakResumeDuration = 0;
-        long duration = 0;
-
-        if (dateListedTypeItem.getValue().getHearingTimingStart() != null
-            && dateListedTypeItem.getValue().getHearingTimingFinish() != null) {
-            var hearingStart = convertHearingTime(
-                dateListedTypeItem.getValue().getHearingTimingStart());
-            var hearingFinish = convertHearingTime(
-                dateListedTypeItem.getValue().getHearingTimingFinish());
-            startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
-
-            if (dateListedTypeItem.getValue().getHearingTimingBreak() != null
-                && dateListedTypeItem.getValue().getHearingTimingResume() != null) {
-                var hearingBreak = convertHearingTime(
-                    dateListedTypeItem.getValue().getHearingTimingBreak());
-                var hearingResume = convertHearingTime(
-                    dateListedTypeItem.getValue().getHearingTimingResume());
-                breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
-            }
-
-            duration = Math.abs(startFinishDuration - breakResumeDuration);
-        }
-
-        return String.valueOf(duration);
-    }
-
-    private LocalDateTime convertHearingTime(String dateToConvert) {
-        return dateToConvert.endsWith(".000")
-            ? LocalDateTime.parse(dateToConvert, OLD_DATE_TIME_PATTERN)
-            : LocalDateTime.parse(dateToConvert, OLD_DATE_TIME_PATTERN3);
     }
 
     private void addReportSummary(MemberDaysReportData reportData) {

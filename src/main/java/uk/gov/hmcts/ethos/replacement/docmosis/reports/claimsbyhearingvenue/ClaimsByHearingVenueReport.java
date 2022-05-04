@@ -1,16 +1,13 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -18,28 +15,24 @@ import java.util.List;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_BY_HEARING_VENUE_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 
-@RequiredArgsConstructor
-@Service
 public class ClaimsByHearingVenueReport {
     private static final String NULL_STRING_VALUE = "Null";
-    private ClaimsByHearingVenueReportDataSource reportDataSource;
-    private ReportParams searchParams;
+    private final ClaimsByHearingVenueReportDataSource dataSource;
 
-    public ClaimsByHearingVenueReport(ClaimsByHearingVenueReportDataSource dataSource, ReportParams params) {
-        reportDataSource = dataSource;
-        searchParams = params;
+    public ClaimsByHearingVenueReport(ClaimsByHearingVenueReportDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public ClaimsByHearingVenueReportData generateReport(String hearingDateType, String userFullName) {
-        var submitEvents = reportDataSource.getData(
-            UtilHelper.getListingCaseTypeId(searchParams.getCaseTypeId()),
-                searchParams.getDateFrom(), searchParams.getDateTo());
-        var claimsByHearingVenueReportData = initReport(searchParams.getCaseTypeId());
+    public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportParams reportParams) {
+        var submitEvents = dataSource.getData(
+            UtilHelper.getListingCaseTypeId(reportParams.getCaseTypeId()),
+                reportParams.getDateFrom(), reportParams.getDateTo());
+        var claimsByHearingVenueReportData = initReport(reportParams.getCaseTypeId());
 
-        setReportListingDate(claimsByHearingVenueReportData, searchParams.getDateFrom(),
-                searchParams.getDateTo(), hearingDateType);
-
-        claimsByHearingVenueReportData.setReportPrintedOnDescription(getReportedOnDetail(userFullName));
+        setReportListingDate(claimsByHearingVenueReportData, reportParams.getDateFrom(),
+                reportParams.getDateTo(), reportParams.getHearingDateType());
+        claimsByHearingVenueReportData.setReportPrintedOnDescription(
+                getReportedOnDetail(reportParams.getUserFullName()));
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             setReportData(submitEvents, claimsByHearingVenueReportData);
