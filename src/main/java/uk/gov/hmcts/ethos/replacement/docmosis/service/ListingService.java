@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -164,8 +165,10 @@ public class ListingService {
                                                      String authToken, List<String> errors) {
         try {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
-            if (submitEvents != null && InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents, errors)) {
+            if (submitEvents != null) {
                 log.info(CASES_SEARCHED + submitEvents.size());
+                List<String> invalidCharErrors = InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents);
+                if (CollectionUtils.isEmpty(invalidCharErrors)) {
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
@@ -176,8 +179,11 @@ public class ListingService {
                 listingTypeItems.sort(Comparator.comparing(o -> LocalDate.parse(o.getValue().getCauseListDate(),
                         CAUSE_LIST_DATE_TIME_PATTERN)));
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
+                }
+                else {
+                    errors.addAll(invalidCharErrors);
+                }
             }
-
             listingDetails.getCaseData().clearReportFields();
             return listingDetails.getCaseData();
         } catch (Exception ex) {

@@ -36,17 +36,12 @@ public class InvalidCharacterCheck {
         return errors;
     }
 
-    public static boolean areCharsForClaimantsRespValid(List<SubmitEvent> submitEvents, List<String> errors) {
-        List<String> caseErrors;
-        boolean charsCheck = true;
+    public static List<String> areCharsForClaimantsRespValid(List<SubmitEvent> submitEvents) {
+        List<String> errors = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
-            caseErrors = checkNamesForInvalidCharacters(submitEvent.getCaseData(), "cause list");
-            if (CollectionUtils.isNotEmpty(caseErrors)) {
-                errors.addAll(caseErrors);
-                charsCheck = false;
-            }
+            errors.addAll(checkNamesForInvalidCharacters(submitEvent.getCaseData(), "cause list"));
         }
-        return charsCheck;
+        return errors;
     }
 
     private static List<String> findAllParties(CaseData caseData) {
