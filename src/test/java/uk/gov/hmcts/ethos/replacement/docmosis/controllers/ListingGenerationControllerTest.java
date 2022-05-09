@@ -43,8 +43,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
@@ -71,7 +73,8 @@ public class ListingGenerationControllerTest {
     private static final String GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL = "/generateHearingDocumentConfirmation";
     private static final String LISTING_SINGLE_CASES_URL = "/listingSingleCases";
     private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_URL = "/generateListingsDocSingleCases";
-    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL = "/generateListingsDocSingleCasesConfirmation";
+    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL =
+            "/generateListingsDocSingleCasesConfirmation";
     private static final String GENERATE_REPORT_URL = "/generateReport";
 
     @Autowired
@@ -91,9 +94,7 @@ public class ListingGenerationControllerTest {
     private JsonNode requestContent1;
     private JsonNode requestContentSingleCase;
     private JsonNode requestContentSingleCase1;
-    private JsonNode listingRequestJson;
     private ListingDetails listingDetails;
-    private ListingData listingData;
     private CaseData caseData;
     private DocumentInfo documentInfo;
     private DefaultValues defaultValues;
@@ -124,10 +125,7 @@ public class ListingGenerationControllerTest {
 
     private ListingRequest getListingData() {
 
-        singleListingRequest = new ListingRequest();
-        var listingDetails = new ListingDetails();
         var listingData = new ListingData();
-
         listingData.setDocMarkUp("Test doc markup");
         listingData.setDocumentName("test listing doc name");
         listingData.setListingDate("2021-10-20");
@@ -184,9 +182,10 @@ public class ListingGenerationControllerTest {
 
         var listingTypeItems = new ArrayList<ListingTypeItem>();
         listingTypeItems.add(new ListingTypeItem());
-
+        var listingDetails = new ListingDetails();
         listingData.setListingCollection(listingTypeItems);
         listingDetails.setCaseData(listingData);
+        singleListingRequest = new ListingRequest();
         singleListingRequest.setCaseDetails(listingDetails);
 
         return singleListingRequest;
@@ -239,7 +238,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearings() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN), anyList()))
                 .thenReturn(listingDetails.getCaseData());
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class)))
                 .thenReturn(defaultValues);
@@ -444,7 +443,6 @@ public class ListingGenerationControllerTest {
             .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
-
     @Test
     public void generateReportError400() throws Exception {
         mvc.perform(post(GENERATE_REPORT_URL)
@@ -575,7 +573,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearingsError500() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN), anyList()))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)
