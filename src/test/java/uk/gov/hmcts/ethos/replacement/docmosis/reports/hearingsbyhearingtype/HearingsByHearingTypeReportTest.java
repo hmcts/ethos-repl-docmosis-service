@@ -1,18 +1,22 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeSubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHearingTypeSubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+
 
 class HearingsByHearingTypeReportTest {
 
@@ -145,6 +149,25 @@ class HearingsByHearingTypeReportTest {
     }
 
     @Test
+    void testIfDatesAreInOrder() {
+        submitEvents.clear();
+        submitEvents.addAll(caseDataBuilder.createSubmitEvents(HEARING_STATUS_HEARD, "",""));
+        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setListedDate("2022-01-02T00:00:00.000");
+        submitEvents.get(1).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setListedDate("2022-01-01T00:00:00.000");
+        submitEvents.get(2).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setListedDate("2022-01-03T00:00:00.000");
+        HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
+                new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        List<HearingsByHearingTypeReportSummary> reportSummaryList = reportData.getReportSummaryList();
+        assertEquals("2022-01-01", reportSummaryList.get(0).getFields().getDate());
+        assertEquals("2022-01-02", reportSummaryList.get(1).getFields().getDate());
+        assertEquals("2022-01-03", reportSummaryList.get(2).getFields().getDate());
+
+    }
+
+    @Test
     void testShowSubSplits() {
         submitEvents.clear();
         submitEvents.addAll(caseDataBuilder.createSubmitEvents(HEARING_STATUS_HEARD, "multiRef","subMulti"));
@@ -152,8 +175,8 @@ class HearingsByHearingTypeReportTest {
         List<HearingsByHearingTypeReportSummary2> reportSummary2List = reportData.getReportSummary2List();
         assertEquals("JM", reportSummary2List.get(0).getFields().getSubSplit());
         assertEquals("Hybrid", reportSummary2List.get(1).getFields().getSubSplit());
-        assertEquals("Stage 1", reportSummary2List.get(2).getFields().getSubSplit());
-        assertEquals("Video", reportSummary2List.get(3).getFields().getSubSplit());
+        assertEquals("Video", reportSummary2List.get(2).getFields().getSubSplit());
+        assertEquals("Stage 1", reportSummary2List.get(3).getFields().getSubSplit());
         assertEquals("Full Panel", reportSummary2List.get(4).getFields().getSubSplit());
     }
 
