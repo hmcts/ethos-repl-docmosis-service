@@ -299,7 +299,7 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.19'
     implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.19'
     implementation group: 'org.springframework', name: 'spring-web', version: '5.3.19'
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.19'
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.20'
     implementation('org.elasticsearch:elasticsearch') {
         version {
             strictly '7.17.2'
