@@ -452,7 +452,7 @@ public class ListingServiceTest {
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(),
                 anyString(), anyString(), anyString())).thenReturn(submitEvents);
         List<String> errors = new ArrayList<>();
-        listingService.checkInvalidChars(listingDetails, "authToken", errors);
+        listingService.checkInvalidCharsForAllParties(listingDetails, "authToken", errors);
         assertEquals("Respondent Forename" + "\n" + "Surname is split over 2 lines for case "
                 + submitEvents.get(0).getCaseData().getEthosCaseReference()
                 + ". Please correct this before "

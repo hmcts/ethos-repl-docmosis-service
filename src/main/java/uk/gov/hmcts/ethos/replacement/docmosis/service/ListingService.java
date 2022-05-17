@@ -571,7 +571,7 @@ public class ListingService {
         }
     }
 
-    public boolean checkInvalidChars(ListingDetails listingDetails, String authToken, List<String> errors) {
+    public boolean checkInvalidCharsForAllParties(ListingDetails listingDetails, String authToken, List<String> errors) {
         try {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {

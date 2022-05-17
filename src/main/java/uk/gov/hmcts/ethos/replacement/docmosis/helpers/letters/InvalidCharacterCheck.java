@@ -57,7 +57,7 @@ public class InvalidCharacterCheck {
         }
         if (CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
             for (RepresentedTypeRItem representedTypeRItem : caseData.getRepCollection()) {
-                parties.add("Respondent Rep" + representedTypeRItem.getValue().getNameOfRepresentative());
+                parties.add("Respondent Rep " + representedTypeRItem.getValue().getNameOfRepresentative());
             }
         }
         return parties;

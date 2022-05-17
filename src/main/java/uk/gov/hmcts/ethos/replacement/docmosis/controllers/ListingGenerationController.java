@@ -253,7 +253,7 @@ public class ListingGenerationController {
         if (hasListings(listingData)
                 || (isAllowedReportType(listingData)
                     && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
-            var documentInfo = listingService.processHearingDocument(listingData, caseTypeId, userToken);
+            var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
@@ -322,7 +322,8 @@ public class ListingGenerationController {
         var listingData = listingRequest.getCaseDetails().getCaseData();
         var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
         List<String> errorsList = new ArrayList<>();
-        boolean invalidCharsExist = listingService.checkInvalidChars(listingRequest.getCaseDetails(), userToken, errorsList);
+        boolean invalidCharsExist = listingService.checkInvalidCharsForAllParties(
+                listingRequest.getCaseDetails(), userToken, errorsList);
         if (hasListings(listingData) && !invalidCharsExist) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
