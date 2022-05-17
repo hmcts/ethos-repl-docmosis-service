@@ -137,7 +137,7 @@ public class ListingGenerationController {
 
         if (ListingHelper.isListingRangeValid(listingData, errors)) {
             listingData = listingService.processListingHearingsRequest(
-                    listingRequest.getCaseDetails(), userToken, errors);
+                    listingRequest.getCaseDetails(), userToken);
             if (CollectionUtils.isEmpty(errors)) {
                 String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
                     ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
@@ -253,7 +253,7 @@ public class ListingGenerationController {
         if (hasListings(listingData)
                 || (isAllowedReportType(listingData)
                     && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
-            var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
+            var documentInfo = listingService.processHearingDocument(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
@@ -321,8 +321,22 @@ public class ListingGenerationController {
 
         var listingData = listingRequest.getCaseDetails().getCaseData();
         var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
-
-        return getResponseEntity(listingData, caseTypeId, userToken);
+        List<String> errorsList = new ArrayList<>();
+        boolean invalidCharsExist = listingService.checkInvalidChars(listingRequest.getCaseDetails(), userToken, errorsList);
+        if (hasListings(listingData) && !invalidCharsExist) {
+            var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
+            updateListingDocMarkUp(listingData, documentInfo);
+            return ResponseEntity.ok(ListingCallbackResponse.builder()
+                    .data(listingData)
+                    .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
+                    .build());
+        } else {
+            errorsList.add("No cases with hearings have been found for your search criteria");
+            return ResponseEntity.ok(ListingCallbackResponse.builder()
+                    .errors(errorsList)
+                    .data(listingData)
+                    .build());
+        }
     }
 
     @PostMapping(value = "/generateHearingDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)

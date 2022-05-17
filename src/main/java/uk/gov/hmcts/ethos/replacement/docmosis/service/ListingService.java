@@ -162,13 +162,11 @@ public class ListingService {
     }
 
     public ListingData processListingHearingsRequest(ListingDetails listingDetails,
-                                                     String authToken, List<String> errors) {
+                                                     String authToken) {
         try {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
                 log.info(CASES_SEARCHED + submitEvents.size());
-                List<String> invalidCharErrors = InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents);
-                if (CollectionUtils.isEmpty(invalidCharErrors)) {
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
@@ -179,10 +177,8 @@ public class ListingService {
                 listingTypeItems.sort(Comparator.comparing(o -> LocalDate.parse(o.getValue().getCauseListDate(),
                         CAUSE_LIST_DATE_TIME_PATTERN)));
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
-                }
-                else {
-                    errors.addAll(invalidCharErrors);
-                }
+
+
             }
             listingDetails.getCaseData().clearReportFields();
             return listingDetails.getCaseData();
@@ -572,6 +568,27 @@ public class ListingService {
 
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + caseTypeId, ex);
+        }
+    }
+
+    public boolean checkInvalidChars(ListingDetails listingDetails, String authToken, List<String> errors) {
+        try {
+            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
+            if (submitEvents != null) {
+                log.info(CASES_SEARCHED + submitEvents.size());
+                List<String> invalidCharErrors = InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents);
+                if (CollectionUtils.isEmpty(invalidCharErrors)) {
+                    return true;
+                } else {
+                    errors.addAll(invalidCharErrors);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
         }
     }
 }
