@@ -177,8 +177,6 @@ public class ListingService {
                 listingTypeItems.sort(Comparator.comparing(o -> LocalDate.parse(o.getValue().getCauseListDate(),
                         CAUSE_LIST_DATE_TIME_PATTERN)));
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
-
-
             }
             listingDetails.getCaseData().clearReportFields();
             return listingDetails.getCaseData();
@@ -571,7 +569,8 @@ public class ListingService {
         }
     }
 
-    public boolean checkInvalidCharsForAllParties(ListingDetails listingDetails, String authToken, List<String> errors) {
+    public boolean checkInvalidCharsForAllParties(ListingDetails listingDetails,
+                                                  String authToken, List<String> errors) {
         try {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
