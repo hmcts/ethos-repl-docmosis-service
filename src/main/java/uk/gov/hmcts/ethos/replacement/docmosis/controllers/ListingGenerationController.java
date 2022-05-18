@@ -324,7 +324,8 @@ public class ListingGenerationController {
         List<String> errorsList = new ArrayList<>();
         boolean invalidCharsExist = listingService.checkInvalidCharsForAllParties(
                 listingRequest.getCaseDetails(), userToken, errorsList);
-        if (hasListings(listingData) && !invalidCharsExist) {
+        boolean listingsExist = hasListings(listingData);
+        if (!invalidCharsExist && listingsExist) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
@@ -332,7 +333,9 @@ public class ListingGenerationController {
                     .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
                     .build());
         } else {
-            errorsList.add("No cases with hearings have been found for your search criteria");
+            if (!listingsExist) {
+                errorsList.add("No cases with hearings have been found for your search criteria");
+            }
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .errors(errorsList)
                     .data(listingData)
