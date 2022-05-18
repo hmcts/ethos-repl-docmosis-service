@@ -21,6 +21,7 @@ import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
@@ -584,10 +585,8 @@ public class ListingService {
                 }
             }
             return true;
-        }
-
-        catch (Exception ex) {
-            throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+        } catch (Exception ex) {
+            throw new ReportException(MESSAGE + listingDetails.getCaseId(), ex);
         }
     }
 }
