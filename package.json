@@ -43,7 +43,7 @@
     "sonar-scanner": "^3.1.0",
     "sonarqube-scanner": "^2.5.0",
     "superagent-proxy": "^3.0.0",
-    "supertest": "^6.2.2",
+    "supertest": "6.2.3",
     "unirest": "^0.6.0",
     "uuid": "^8.3.2",
     "watch": "^1.0.2",
