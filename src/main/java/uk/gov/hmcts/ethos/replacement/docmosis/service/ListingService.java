@@ -575,7 +575,6 @@ public class ListingService {
         try {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
-                log.info(CASES_SEARCHED + submitEvents.size());
                 List<String> invalidCharErrors = InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents);
                 if (CollectionUtils.isEmpty(invalidCharErrors)) {
                     return true;
