@@ -30,7 +30,7 @@
     "mocha-multi": "^1.1.6",
     "mochawesome": "^7.1.2",
     "nock": "^13.2.4",
-    "nodemon": "^2.0.15",
+    "nodemon": "2.0.16",
     "nsp": "^3.2.1",
     "pa11y": "^6.1.1",
     "phantomjs-prebuilt": "^2.1.16",
