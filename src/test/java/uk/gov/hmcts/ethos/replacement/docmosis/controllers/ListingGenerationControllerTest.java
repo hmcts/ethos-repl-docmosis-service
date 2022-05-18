@@ -34,7 +34,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderServic
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -46,7 +45,6 @@ import java.util.Objects;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
@@ -238,7 +236,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearings() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN), anyList()))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
                 .thenReturn(listingDetails.getCaseData());
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class)))
                 .thenReturn(defaultValues);
@@ -573,7 +571,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearingsError500() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN), anyList()))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)
