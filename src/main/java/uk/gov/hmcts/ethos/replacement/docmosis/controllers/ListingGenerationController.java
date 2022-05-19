@@ -136,18 +136,17 @@ public class ListingGenerationController {
         var listingData = listingRequest.getCaseDetails().getCaseData();
 
         if (ListingHelper.isListingRangeValid(listingData, errors)) {
-
             listingData = listingService.processListingHearingsRequest(
                     listingRequest.getCaseDetails(), userToken);
-
-            String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
+            if (CollectionUtils.isEmpty(errors)) {
+                String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
                     ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
-            var defaultValues = defaultValuesReaderService.getDefaultValues(
+                var defaultValues = defaultValuesReaderService.getDefaultValues(
                     managingOffice,
                     UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
-            log.info("Post Default values loaded: " + defaultValues);
-            listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
-
+                log.info("Post Default values loaded: " + defaultValues);
+                listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
+            }
         }
 
         return getListingCallbackRespEntityErrors(errors, listingData);
@@ -322,8 +321,26 @@ public class ListingGenerationController {
 
         var listingData = listingRequest.getCaseDetails().getCaseData();
         var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
-
-        return getResponseEntity(listingData, caseTypeId, userToken);
+        List<String> errorsList = new ArrayList<>();
+        boolean invalidCharsExist = listingService.checkInvalidCharsForAllParties(
+                listingRequest.getCaseDetails(), userToken, errorsList);
+        boolean listingsExist = hasListings(listingData);
+        if (!invalidCharsExist && listingsExist) {
+            var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
+            updateListingDocMarkUp(listingData, documentInfo);
+            return ResponseEntity.ok(ListingCallbackResponse.builder()
+                    .data(listingData)
+                    .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
+                    .build());
+        } else {
+            if (!listingsExist) {
+                errorsList.add("No cases with hearings have been found for your search criteria");
+            }
+            return ResponseEntity.ok(ListingCallbackResponse.builder()
+                    .errors(errorsList)
+                    .data(listingData)
+                    .build());
+        }
     }
 
     @PostMapping(value = "/generateHearingDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)

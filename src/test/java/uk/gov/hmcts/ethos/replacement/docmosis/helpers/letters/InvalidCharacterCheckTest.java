@@ -45,13 +45,15 @@ public class InvalidCharacterCheckTest {
         representedTypeRItem.setValue(representedTypeR);
         casedata.setRepCollection(List.of(representedTypeRItem));
 
-        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata);
-
+        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata, "letter");
         assertEquals(4, errors.size());
-        assertEquals("Double  Space" + DOUBLE_SPACE_ERROR, errors.get(0));
-        assertEquals("New\nLine" + NEW_LINE_ERROR, errors.get(1));
-        assertEquals("Double  Space and New\nLine" + DOUBLE_SPACE_ERROR, errors.get(2));
-        assertEquals("Double  Space and New\nLine" + NEW_LINE_ERROR, errors.get(3));
-
+        assertEquals(String.format(DOUBLE_SPACE_ERROR, "Claimant Double  Space",
+                casedata.getEthosCaseReference(), "letter"), errors.get(0));
+        assertEquals(String.format(NEW_LINE_ERROR, "Claimant Rep New\nLine",
+                casedata.getEthosCaseReference(), "letter"), errors.get(1));
+        assertEquals(String.format(DOUBLE_SPACE_ERROR, "Respondent Double  Space and New\nLine",
+                casedata.getEthosCaseReference(), "letter"), errors.get(2));
+        assertEquals(String.format(NEW_LINE_ERROR, "Respondent Double  Space and New\nLine",
+                casedata.getEthosCaseReference(), "letter"), errors.get(3));
     }
 }

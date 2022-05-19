@@ -1,22 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
-import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 
 public class EccReportCaseDataBuilder {
     private final EccReportCaseData caseData = new EccReportCaseData();
-
 
     public void withNoEcc() {
         caseData.setEccCases(null);
@@ -39,7 +33,6 @@ public class EccReportCaseDataBuilder {
         item.setValue(type);
         return item;
     }
-
 
     public void withRespondents() {
         RespondentSumTypeItem item1 = getRespondent("Resp1");
