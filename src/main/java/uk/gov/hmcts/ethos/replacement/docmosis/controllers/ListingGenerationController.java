@@ -146,7 +146,6 @@ public class ListingGenerationController {
                     UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
                 log.info("Post Default values loaded: " + defaultValues);
                 listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
-
         }
 
         return getListingCallbackRespEntityErrors(errors, listingData);
