@@ -5,7 +5,6 @@ import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,8 @@ public class InvalidCharacterCheck {
 
     public static final String NEW_LINE_ERROR = "%s is split over 2 lines for case %s. Please correct this before "
             + "generating a %s";
-    public static final String DOUBLE_SPACE_ERROR = "%s contains a double space for case %s. Please correct this before"
+    public static final String DOUBLE_SPACE_ERROR = "%s contains a double space for case %s. "
+            + "Please correct this before"
             + " generating a %s";
     public static final String CAUSE_LIST = "cause list";
 
