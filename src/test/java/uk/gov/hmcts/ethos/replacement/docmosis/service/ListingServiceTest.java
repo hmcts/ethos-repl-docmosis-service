@@ -1,38 +1,24 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
 import org.apache.commons.collections4.CollectionUtils;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.Address;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
@@ -53,6 +39,8 @@ import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReport
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
@@ -441,7 +429,6 @@ public class ListingServiceTest {
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
-
 
     @Test
     public void processListingHearingsRequestEdinburgh() throws IOException {
