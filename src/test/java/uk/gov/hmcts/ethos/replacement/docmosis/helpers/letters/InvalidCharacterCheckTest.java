@@ -75,6 +75,7 @@ public class InvalidCharacterCheckTest {
         listingDetails.getCaseData().setListingCollection(Collections.singletonList(item));
         List<String> errors = new ArrayList<>();
         InvalidCharacterCheck.invalidCharactersExistAllListingTypes(listingDetails, errors);
-        assertEquals(String.format(NEW_LINE_ERROR, "Respondent Forename\nSurname", "1111", "cause list"), errors.get(0));
+        assertEquals(String.format(NEW_LINE_ERROR, "Respondent Forename\nSurname",
+                "1111", "cause list"), errors.get(0));
     }
 }
