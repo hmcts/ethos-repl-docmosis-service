@@ -223,7 +223,7 @@ ext {
     pact_version = '4.1.7'
     reformLoggingVersion = '5.1.9'
     serenity = '2.3.31'
-    tomcatEmbedVersion = '9.0.58'
+    tomcatEmbedVersion = '9.0.63'
     springVersion = '5.3.20'
 }
 
