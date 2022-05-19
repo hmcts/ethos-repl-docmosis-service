@@ -17,6 +17,7 @@ public class InvalidCharacterCheck {
             + "generating a %s";
     public static final String DOUBLE_SPACE_ERROR = "%s contains a double space for case %s. Please correct this before"
             + " generating a %s";
+    public static final String CAUSE_LIST = "cause list";
 
     private InvalidCharacterCheck() {
     }
@@ -25,14 +26,20 @@ public class InvalidCharacterCheck {
         List<String> errors = new ArrayList<>();
         List<String> nameOfParties = findAllParties(caseData);
         for (String name : nameOfParties) {
-            if (!Strings.isNullOrEmpty(name) && name.contains("  ")) {
-                errors.add(String.format(DOUBLE_SPACE_ERROR, name, caseData.getEthosCaseReference(), type));
-            }
-            if (!Strings.isNullOrEmpty(name) && name.contains("\n")) {
-                errors.add(String.format(NEW_LINE_ERROR, name, caseData.getEthosCaseReference(), type));
+            if (!Strings.isNullOrEmpty(name)) {
+                addInvalidCharsErrors(errors, name, caseData.getEthosCaseReference(), type);
             }
         }
         return errors;
+    }
+
+    public static void addInvalidCharsErrors(List<String> errors, String name, String caseNo, String type) {
+        if (name.contains("  ")) {
+            errors.add(String.format(DOUBLE_SPACE_ERROR, name, caseNo, type));
+        }
+        if (name.contains("\n")) {
+            errors.add(String.format(NEW_LINE_ERROR, name, caseNo, type));
+        }
     }
 
     private static List<String> findAllParties(CaseData caseData) {

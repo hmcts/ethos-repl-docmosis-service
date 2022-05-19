@@ -20,6 +20,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
@@ -96,8 +97,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.DOUBLE_SPACE_ERROR;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.NEW_LINE_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.CAUSE_LIST;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
@@ -573,27 +573,22 @@ public class ListingService {
         }
     }
 
-    private void addInvalidCharsErrors(List<String> errors, String name, String caseNo) {
-        if (name.contains("  ")) {
-            errors.add(String.format(DOUBLE_SPACE_ERROR, name, caseNo, "cause list"));
-        }
-        if (name.contains("\n")) {
-            errors.add(String.format(NEW_LINE_ERROR, name, caseNo, "cause list"));
-        }
-    }
-
     private void processListingType(ListingType listingType, List<String> invalidCharErrors) {
         if (!Strings.isNullOrEmpty(listingType.getRespondent())) {
-            addInvalidCharsErrors(invalidCharErrors, "Respondent " + listingType.getRespondent(), listingType.getElmoCaseReference());
+            InvalidCharacterCheck.addInvalidCharsErrors(invalidCharErrors, "Respondent "
+                    + listingType.getRespondent(), listingType.getElmoCaseReference(), CAUSE_LIST);
         }
         if (!Strings.isNullOrEmpty(listingType.getClaimantName())) {
-            addInvalidCharsErrors(invalidCharErrors, "Claimant " + listingType.getClaimantName(), listingType.getElmoCaseReference());
+            InvalidCharacterCheck.addInvalidCharsErrors(invalidCharErrors, "Claimant "
+                    + listingType.getClaimantName(), listingType.getElmoCaseReference(), CAUSE_LIST);
         }
         if (!Strings.isNullOrEmpty(listingType.getRespondentRepresentative())) {
-            addInvalidCharsErrors(invalidCharErrors, "Respondent Rep " + listingType.getRespondentRepresentative(), listingType.getElmoCaseReference());
+            InvalidCharacterCheck.addInvalidCharsErrors(invalidCharErrors, "Respondent Rep "
+                    + listingType.getRespondentRepresentative(), listingType.getElmoCaseReference(), CAUSE_LIST);
         }
         if (!Strings.isNullOrEmpty(listingType.getClaimantRepresentative())) {
-            addInvalidCharsErrors(invalidCharErrors, "Claimant Rep " + listingType.getClaimantRepresentative(), listingType.getElmoCaseReference());
+            InvalidCharacterCheck.addInvalidCharsErrors(invalidCharErrors, "Claimant Rep " +
+                    listingType.getClaimantRepresentative(), listingType.getElmoCaseReference(), CAUSE_LIST);
         }
     }
 
