@@ -69,14 +69,12 @@ public class InvalidCharacterCheckTest {
         ListingTypeItem item = new ListingTypeItem();
         item.setId(UUID.randomUUID().toString());
         ListingType value = new ListingType();
-        value.setRespondent("Forename" + "\n" + "Surname");
+        value.setRespondent("Forename\nSurname");
         value.setElmoCaseReference("1111");
         item.setValue(value);
         listingDetails.getCaseData().setListingCollection(Collections.singletonList(item));
         List<String> errors = new ArrayList<>();
         InvalidCharacterCheck.invalidCharactersExistAllListingTypes(listingDetails, errors);
-        assertEquals("Respondent Forename" + "\n" + "Surname is split over 2 lines for case 1111"
-                + ". Please correct this before "
-                + "generating a cause list", errors.get(0));
+        assertEquals(String.format(NEW_LINE_ERROR, "Respondent Forename\nSurname", "1111", "cause list"), errors.get(0));
     }
 }
