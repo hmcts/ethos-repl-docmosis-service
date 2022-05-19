@@ -139,13 +139,15 @@ public class ListingGenerationController {
         if (ListingHelper.isListingRangeValid(listingData, errors)) {
             listingData = listingService.processListingHearingsRequest(
                     listingRequest.getCaseDetails(), userToken);
-                String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
+
+            String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
                     ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
-                var defaultValues = defaultValuesReaderService.getDefaultValues(
+            var defaultValues = defaultValuesReaderService.getDefaultValues(
                     managingOffice,
                     UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
                 log.info("Post Default values loaded: " + defaultValues);
                 listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
+
         }
 
         return getListingCallbackRespEntityErrors(errors, listingData);
@@ -320,6 +322,7 @@ public class ListingGenerationController {
 
         var listingData = listingRequest.getCaseDetails().getCaseData();
         var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
+
         List<String> errorsList = new ArrayList<>();
         boolean invalidCharsExist = InvalidCharacterCheck.invalidCharactersExistAllListingTypes(
                 listingRequest.getCaseDetails(), errorsList);
@@ -339,6 +342,7 @@ public class ListingGenerationController {
                     .data(listingData)
                     .build());
         }
+
     }
 
     @PostMapping(value = "/generateHearingDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
