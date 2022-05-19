@@ -145,8 +145,8 @@ public class ListingGenerationController {
             var defaultValues = defaultValuesReaderService.getDefaultValues(
                     managingOffice,
                     UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
-                log.info("Post Default values loaded: " + defaultValues);
-                listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
+            log.info("Post Default values loaded: " + defaultValues);
+            listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
 
         }
 
