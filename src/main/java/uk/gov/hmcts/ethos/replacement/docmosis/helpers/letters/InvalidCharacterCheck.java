@@ -69,17 +69,21 @@ public class InvalidCharacterCheck {
 
     private static List<String> findAllListingTypeParties(ListingType listingType) {
         List<String> parties = new ArrayList<>();
-        if (!Strings.isNullOrEmpty(listingType.getRespondent().trim())) {
-            parties.add("Respondent " + listingType.getRespondent().trim());
+        if (!Strings.isNullOrEmpty(listingType.getRespondent())
+                && !listingType.getRespondent().isBlank()) {
+            parties.add("Respondent " + listingType.getRespondent());
         }
-        if (!Strings.isNullOrEmpty(listingType.getClaimantName().trim())) {
-            parties.add("Claimant " + listingType.getClaimantName().trim());
+        if (!Strings.isNullOrEmpty(listingType.getClaimantName())
+                && !listingType.getClaimantName().isBlank()) {
+            parties.add("Claimant " + listingType.getClaimantName());
         }
-        if (!Strings.isNullOrEmpty(listingType.getRespondentRepresentative().trim())) {
-            parties.add("Respondent Rep " + listingType.getRespondentRepresentative().trim());
+        if (!Strings.isNullOrEmpty(listingType.getRespondentRepresentative())
+                && !listingType.getRespondentRepresentative().isBlank()) {
+            parties.add("Respondent Rep " + listingType.getRespondentRepresentative());
         }
-        if (!Strings.isNullOrEmpty(listingType.getClaimantRepresentative().trim())) {
-            parties.add("Claimant Rep " + listingType.getClaimantRepresentative().trim());
+        if (!Strings.isNullOrEmpty(listingType.getClaimantRepresentative())
+                && !listingType.getClaimantRepresentative().isBlank()) {
+            parties.add("Claimant Rep " + listingType.getClaimantRepresentative());
         }
         return parties;
     }
