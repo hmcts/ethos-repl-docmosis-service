@@ -327,7 +327,6 @@ public class ListingGenerationController {
         if (!invalidCharsExist && !hasListings(listingData)) {
                 errorsList.add("No cases with hearings have been found for your search criteria");
         }
-
         if (errorsList.isEmpty()) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
