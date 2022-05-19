@@ -84,7 +84,7 @@ public class InvalidCharacterCheck {
         return parties;
     }
 
-    public static boolean checkNamesForInvalidCharactersAllListingTypes(ListingDetails listingDetails, List<String> errors) {
+    public static boolean invalidCharactersExistAllListingTypes(ListingDetails listingDetails, List<String> errors) {
         List<ListingTypeItem> listingTypeItems = listingDetails.getCaseData().getListingCollection();
         List<String> invalidCharErrors = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(listingTypeItems)) {
@@ -93,14 +93,14 @@ public class InvalidCharacterCheck {
                 invalidCharErrors.addAll(InvalidCharacterCheck.checkNamesForInvalidCharactersListingType(listingType));
             }
             if (CollectionUtils.isEmpty(invalidCharErrors)) {
-                return true;
+                return false;
             } else {
                 errors.addAll(invalidCharErrors);
-                return false;
+                return true;
             }
 
         } else {
-            return true;
+            return false;
         }
     }
 }

@@ -323,7 +323,7 @@ public class ListingGenerationController {
         var listingData = listingRequest.getCaseDetails().getCaseData();
         var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
         List<String> errorsList = new ArrayList<>();
-        boolean invalidCharsExist = InvalidCharacterCheck.checkNamesForInvalidCharactersAllListingTypes(
+        boolean invalidCharsExist = InvalidCharacterCheck.invalidCharactersExistAllListingTypes(
                 listingRequest.getCaseDetails(), errorsList);
         if (!invalidCharsExist && !hasListings(listingData)) {
                 errorsList.add("No cases with hearings have been found for your search criteria");

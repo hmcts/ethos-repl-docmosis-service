@@ -74,7 +74,7 @@ public class InvalidCharacterCheckTest {
         item.setValue(value);
         listingDetails.getCaseData().setListingCollection(Collections.singletonList(item));
         List<String> errors = new ArrayList<>();
-        InvalidCharacterCheck.checkNamesForInvalidCharactersAllListingTypes(listingDetails, errors);
+        InvalidCharacterCheck.invalidCharactersExistAllListingTypes(listingDetails, errors);
         assertEquals("Respondent Forename" + "\n" + "Surname is split over 2 lines for case 1111"
                 + ". Please correct this before "
                 + "generating a cause list", errors.get(0));
