@@ -37,10 +37,8 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
-import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueCaseData;
@@ -79,7 +77,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -125,9 +122,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -443,21 +438,6 @@ public class ListingServiceTest {
         assertEquals(result, listingDataResult.toString());
     }
 
-    @Test
-    public void checkInvalidCharsTest() {
-        ListingTypeItem item = new ListingTypeItem();
-        item.setId(UUID.randomUUID().toString());
-        ListingType value = new ListingType();
-        value.setRespondent("Forename" + "\n" + "Surname");
-        value.setElmoCaseReference("1111");
-        item.setValue(value);
-        listingDetails.getCaseData().setListingCollection(Collections.singletonList(item));
-        List<String> errors = new ArrayList<>();
-        listingService.checkInvalidCharsForAllParties(listingDetails, errors);
-        assertEquals("Respondent Forename" + "\n" + "Surname is split over 2 lines for case 1111"
-                + ". Please correct this before "
-                + "generating a cause list", errors.get(0));
-    }
 
     @Test
     public void processListingHearingsRequestEdinburgh() throws IOException {

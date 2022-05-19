@@ -6,12 +6,17 @@ import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
-
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.DOUBLE_SPACE_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.NEW_LINE_ERROR;
@@ -55,5 +60,23 @@ public class InvalidCharacterCheckTest {
                 casedata.getEthosCaseReference(), "letter"), errors.get(2));
         assertEquals(String.format(NEW_LINE_ERROR, "Respondent Double  Space and New\nLine",
                 casedata.getEthosCaseReference(), "letter"), errors.get(3));
+    }
+
+    @Test
+    public void checkInvalidCharsTestListingTypes() {
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseData(new ListingData());
+        ListingTypeItem item = new ListingTypeItem();
+        item.setId(UUID.randomUUID().toString());
+        ListingType value = new ListingType();
+        value.setRespondent("Forename" + "\n" + "Surname");
+        value.setElmoCaseReference("1111");
+        item.setValue(value);
+        listingDetails.getCaseData().setListingCollection(Collections.singletonList(item));
+        List<String> errors = new ArrayList<>();
+        InvalidCharacterCheck.checkNamesForInvalidCharactersAllListingTypes(listingDetails, errors);
+        assertEquals("Respondent Forename" + "\n" + "Surname is split over 2 lines for case 1111"
+                + ". Please correct this before "
+                + "generating a cause list", errors.get(0));
     }
 }

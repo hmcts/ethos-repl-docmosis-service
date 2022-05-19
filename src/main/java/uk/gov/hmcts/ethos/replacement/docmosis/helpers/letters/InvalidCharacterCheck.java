@@ -5,6 +5,9 @@ import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,29 +19,28 @@ public class InvalidCharacterCheck {
             + "generating a %s";
     public static final String DOUBLE_SPACE_ERROR = "%s contains a double space for case %s. Please correct this before"
             + " generating a %s";
-    public static final String CAUSE_LIST = "cause list";
 
     private InvalidCharacterCheck() {
     }
 
     public static List<String> checkNamesForInvalidCharacters(CaseData caseData, String type) {
-        List<String> errors = new ArrayList<>();
         List<String> nameOfParties = findAllParties(caseData);
-        for (String name : nameOfParties) {
-            if (!Strings.isNullOrEmpty(name)) {
-                addInvalidCharsErrors(errors, name, caseData.getEthosCaseReference(), type);
-            }
-        }
-        return errors;
+        return addInvalidCharsErrors(nameOfParties, caseData.getEthosCaseReference(), type);
     }
 
-    public static void addInvalidCharsErrors(List<String> errors, String name, String caseNo, String type) {
-        if (name.contains("  ")) {
-            errors.add(String.format(DOUBLE_SPACE_ERROR, name, caseNo, type));
+    public static List<String> addInvalidCharsErrors(List<String> nameOfParties, String caseNo, String type) {
+        List<String> errors = new ArrayList<>();
+        for (String name : nameOfParties) {
+            if (!Strings.isNullOrEmpty(name)) {
+                if (name.contains("  ")) {
+                    errors.add(String.format(DOUBLE_SPACE_ERROR, name, caseNo, type));
+                }
+                if (name.contains("\n")) {
+                    errors.add(String.format(NEW_LINE_ERROR, name, caseNo, type));
+                }
+            }
         }
-        if (name.contains("\n")) {
-            errors.add(String.format(NEW_LINE_ERROR, name, caseNo, type));
-        }
+       return errors;
     }
 
     private static List<String> findAllParties(CaseData caseData) {
@@ -58,5 +60,47 @@ public class InvalidCharacterCheck {
             }
         }
         return parties;
+    }
+
+    private static List<String> checkNamesForInvalidCharactersListingType(ListingType listingType) {
+        List<String> nameOfParties = findAllListingTypeParties(listingType);
+        return addInvalidCharsErrors(nameOfParties, listingType.getElmoCaseReference(), "cause list");
+    }
+
+    private static List<String> findAllListingTypeParties(ListingType listingType) {
+        List<String> parties = new ArrayList<>();
+        if (!Strings.isNullOrEmpty(listingType.getRespondent())) {
+            parties.add("Respondent " + listingType.getRespondent());
+        }
+        if (!Strings.isNullOrEmpty(listingType.getClaimantName())) {
+            parties.add("Claimant " + listingType.getClaimantName());
+        }
+        if (!Strings.isNullOrEmpty(listingType.getRespondentRepresentative())) {
+            parties.add("Respondent Rep " + listingType.getRespondentRepresentative());
+        }
+        if (!Strings.isNullOrEmpty(listingType.getClaimantRepresentative())) {
+            parties.add("Claimant Rep " + listingType.getClaimantRepresentative());
+        }
+        return parties;
+    }
+
+    public static boolean checkNamesForInvalidCharactersAllListingTypes(ListingDetails listingDetails, List<String> errors) {
+        List<ListingTypeItem> listingTypeItems = listingDetails.getCaseData().getListingCollection();
+        List<String> invalidCharErrors = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(listingTypeItems)) {
+            for (ListingTypeItem listingTypeItem : listingTypeItems) {
+                ListingType listingType = listingTypeItem.getValue();
+                invalidCharErrors.addAll(InvalidCharacterCheck.checkNamesForInvalidCharactersListingType(listingType));
+            }
+            if (CollectionUtils.isEmpty(invalidCharErrors)) {
+                return true;
+            } else {
+                errors.addAll(invalidCharErrors);
+                return false;
+            }
+
+        } else {
+            return true;
+        }
     }
 }
