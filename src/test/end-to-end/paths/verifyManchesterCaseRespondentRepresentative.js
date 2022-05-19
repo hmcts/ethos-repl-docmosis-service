@@ -13,4 +13,5 @@ Scenario('Verify Respondent Representative', async ({I}) => {
     await respondentRepresentative(I, eventNames.RESPONDENT_REPRESENTATIVE);
 
 }).tag('@nightly')
+    .tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

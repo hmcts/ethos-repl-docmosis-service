@@ -13,4 +13,5 @@ Scenario('Verify Case Details ', async ({I}) => {
     await caseDetails(I, caseNumber, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Dropback Shelf', 'Standard track');
 
 }).tag('@nightly')
+    .tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

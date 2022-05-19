@@ -14,6 +14,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
@@ -170,6 +171,9 @@ public class HearingsByHearingTypeReport {
         setLocalReportSummaryHdr2(submitEvents, reportData);
         setLocalReportSummary2(submitEvents, reportData);
         setLocalReportSummaryDetail(submitEvents, reportData);
+        reportData.getReportSummaryList().sort(Comparator.comparing(s -> s.getFields().getDate()));
+        reportData.getReportSummary2List().sort(Comparator.comparing(s -> s.getFields().getDate()));
+        reportData.getReportDetails().sort(Comparator.comparing(HearingsByHearingTypeReportDetail::getDetailDate));
     }
 
     private void setLocalReportSummaryHdr(

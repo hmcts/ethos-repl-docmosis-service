@@ -13,4 +13,5 @@ Scenario('Verify Manchester Fix Case API', async ({I}) => {
     await fixCaseAPI(I, eventNames.FIX_CASE_API);
 
 }).tag('@nightly')
+    .tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

@@ -14,7 +14,6 @@ import uk.gov.hmcts.ecm.common.model.reports.hearingsbyhearingtype.HearingsByHea
 
 public class HearingsByHearingTypeCaseDataBuilder {
 
-
     public HearingsByHearingTypeSubmitEvent withNoHearings() {
         HearingsByHearingTypeSubmitEvent submitEvent = new HearingsByHearingTypeSubmitEvent();
         HearingsByHearingTypeCaseData caseData = new HearingsByHearingTypeCaseData();

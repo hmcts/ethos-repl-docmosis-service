@@ -34,7 +34,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderServic
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -43,8 +42,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
@@ -71,7 +71,8 @@ public class ListingGenerationControllerTest {
     private static final String GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL = "/generateHearingDocumentConfirmation";
     private static final String LISTING_SINGLE_CASES_URL = "/listingSingleCases";
     private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_URL = "/generateListingsDocSingleCases";
-    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL = "/generateListingsDocSingleCasesConfirmation";
+    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL =
+            "/generateListingsDocSingleCasesConfirmation";
     private static final String GENERATE_REPORT_URL = "/generateReport";
 
     @Autowired
@@ -91,9 +92,7 @@ public class ListingGenerationControllerTest {
     private JsonNode requestContent1;
     private JsonNode requestContentSingleCase;
     private JsonNode requestContentSingleCase1;
-    private JsonNode listingRequestJson;
     private ListingDetails listingDetails;
-    private ListingData listingData;
     private CaseData caseData;
     private DocumentInfo documentInfo;
     private DefaultValues defaultValues;
@@ -124,10 +123,7 @@ public class ListingGenerationControllerTest {
 
     private ListingRequest getListingData() {
 
-        singleListingRequest = new ListingRequest();
-        var listingDetails = new ListingDetails();
         var listingData = new ListingData();
-
         listingData.setDocMarkUp("Test doc markup");
         listingData.setDocumentName("test listing doc name");
         listingData.setListingDate("2021-10-20");
@@ -184,9 +180,10 @@ public class ListingGenerationControllerTest {
 
         var listingTypeItems = new ArrayList<ListingTypeItem>();
         listingTypeItems.add(new ListingTypeItem());
-
+        var listingDetails = new ListingDetails();
         listingData.setListingCollection(listingTypeItems);
         listingDetails.setCaseData(listingData);
+        singleListingRequest = new ListingRequest();
         singleListingRequest.setCaseDetails(listingDetails);
 
         return singleListingRequest;
@@ -443,7 +440,6 @@ public class ListingGenerationControllerTest {
             .andExpect(jsonPath("$.errors", nullValue()))
             .andExpect(jsonPath("$.warnings", nullValue()));
     }
-
 
     @Test
     public void generateReportError400() throws Exception {
