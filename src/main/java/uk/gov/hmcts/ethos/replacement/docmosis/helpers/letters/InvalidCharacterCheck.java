@@ -90,7 +90,7 @@ public class InvalidCharacterCheck {
         if (CollectionUtils.isNotEmpty(listingTypeItems)) {
             for (ListingTypeItem listingTypeItem : listingTypeItems) {
                 ListingType listingType = listingTypeItem.getValue();
-                invalidCharErrors.addAll(InvalidCharacterCheck.checkNamesForInvalidCharactersListingType(listingType));
+                invalidCharErrors.addAll(checkNamesForInvalidCharactersListingType(listingType));
             }
             if (CollectionUtils.isEmpty(invalidCharErrors)) {
                 return false;
