@@ -69,17 +69,17 @@ public class InvalidCharacterCheck {
 
     private static List<String> findAllListingTypeParties(ListingType listingType) {
         List<String> parties = new ArrayList<>();
-        if (!Strings.isNullOrEmpty(listingType.getRespondent())) {
-            parties.add("Respondent " + listingType.getRespondent());
+        if (!Strings.isNullOrEmpty(listingType.getRespondent().trim())) {
+            parties.add("Respondent " + listingType.getRespondent().trim());
         }
-        if (!Strings.isNullOrEmpty(listingType.getClaimantName())) {
-            parties.add("Claimant " + listingType.getClaimantName());
+        if (!Strings.isNullOrEmpty(listingType.getClaimantName().trim())) {
+            parties.add("Claimant " + listingType.getClaimantName().trim());
         }
-        if (!Strings.isNullOrEmpty(listingType.getRespondentRepresentative())) {
-            parties.add("Respondent Rep " + listingType.getRespondentRepresentative());
+        if (!Strings.isNullOrEmpty(listingType.getRespondentRepresentative().trim())) {
+            parties.add("Respondent Rep " + listingType.getRespondentRepresentative().trim());
         }
-        if (!Strings.isNullOrEmpty(listingType.getClaimantRepresentative())) {
-            parties.add("Claimant Rep " + listingType.getClaimantRepresentative());
+        if (!Strings.isNullOrEmpty(listingType.getClaimantRepresentative().trim())) {
+            parties.add("Claimant Rep " + listingType.getClaimantRepresentative().trim());
         }
         return parties;
     }
