@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -18,9 +19,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
@@ -95,6 +96,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.DOUBLE_SPACE_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.NEW_LINE_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
@@ -570,20 +573,51 @@ public class ListingService {
         }
     }
 
-    public boolean checkInvalidCharsForAllParties(ListingDetails listingDetails,
-                                                  String authToken, List<String> errors) {
+    private void addInvalidCharsErrors(List<String> errors, String name, String caseNo) {
+        if (name.contains("  ")) {
+            errors.add(String.format(DOUBLE_SPACE_ERROR, name, caseNo, "cause list"));
+        }
+        if (name.contains("\n")) {
+            errors.add(String.format(NEW_LINE_ERROR, name, caseNo, "cause list"));
+        }
+    }
+
+    private void processListingType(ListingType listingType, List<String> invalidCharErrors) {
+        if (!Strings.isNullOrEmpty(listingType.getRespondent())) {
+            addInvalidCharsErrors(invalidCharErrors, "Respondent " + listingType.getRespondent(), listingType.getElmoCaseReference());
+        }
+        if (!Strings.isNullOrEmpty(listingType.getClaimantName())) {
+            addInvalidCharsErrors(invalidCharErrors, "Claimant " + listingType.getClaimantName(), listingType.getElmoCaseReference());
+        }
+        if (!Strings.isNullOrEmpty(listingType.getRespondentRepresentative())) {
+            addInvalidCharsErrors(invalidCharErrors, "Respondent Rep " + listingType.getRespondentRepresentative(), listingType.getElmoCaseReference());
+        }
+        if (!Strings.isNullOrEmpty(listingType.getClaimantRepresentative())) {
+            addInvalidCharsErrors(invalidCharErrors, "Claimant Rep " + listingType.getClaimantRepresentative(), listingType.getElmoCaseReference());
+        }
+    }
+
+    public boolean checkInvalidCharsForAllParties(ListingDetails listingDetails, List<String> errors) {
         try {
-            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
-            if (submitEvents != null) {
-                List<String> invalidCharErrors = InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents);
+            List<ListingTypeItem> listingTypeItems = listingDetails.getCaseData().getListingCollection();
+            List<String> invalidCharErrors = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(listingTypeItems)) {
+                log.info("Number of cases for checkInvalidCharsForAllParties: " + listingTypeItems.size());
+                for (ListingTypeItem listingTypeItem : listingTypeItems) {
+                    ListingType listingType = listingTypeItem.getValue();
+                    processListingType(listingType, invalidCharErrors);
+                }
                 if (CollectionUtils.isEmpty(invalidCharErrors)) {
                     return true;
                 } else {
                     errors.addAll(invalidCharErrors);
                     return false;
                 }
+
+            } else {
+                log.info("No cases for checkInvalidCharsForAllParties for : " + listingDetails.getCaseTypeId());
+                return true;
             }
-            return true;
         } catch (Exception ex) {
             throw new ReportException(MESSAGE + listingDetails.getCaseId(), ex);
         }

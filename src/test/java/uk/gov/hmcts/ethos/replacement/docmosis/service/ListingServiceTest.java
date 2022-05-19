@@ -37,8 +37,10 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueCaseData;
@@ -442,19 +444,17 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void checkInvalidCharsTest() throws IOException {
-        RespondentSumTypeItem item = new RespondentSumTypeItem();
+    public void checkInvalidCharsTest() {
+        ListingTypeItem item = new ListingTypeItem();
         item.setId(UUID.randomUUID().toString());
-        RespondentSumType value = new RespondentSumType();
-        value.setRespondentName("Forename" + "\n" + "Surname");
+        ListingType value = new ListingType();
+        value.setRespondent("Forename" + "\n" + "Surname");
+        value.setElmoCaseReference("1111");
         item.setValue(value);
-        submitEvents.get(0).getCaseData().setRespondentCollection(Collections.singletonList(item));
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        listingDetails.getCaseData().setListingCollection(Collections.singletonList(item));
         List<String> errors = new ArrayList<>();
-        listingService.checkInvalidCharsForAllParties(listingDetails, "authToken", errors);
-        assertEquals("Respondent Forename" + "\n" + "Surname is split over 2 lines for case "
-                + submitEvents.get(0).getCaseData().getEthosCaseReference()
+        listingService.checkInvalidCharsForAllParties(listingDetails, errors);
+        assertEquals("Respondent Forename" + "\n" + "Surname is split over 2 lines for case 1111"
                 + ". Please correct this before "
                 + "generating a cause list", errors.get(0));
     }

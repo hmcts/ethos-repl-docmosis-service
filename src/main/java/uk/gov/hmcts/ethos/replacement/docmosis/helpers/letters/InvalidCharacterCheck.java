@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 
@@ -32,14 +31,6 @@ public class InvalidCharacterCheck {
             if (!Strings.isNullOrEmpty(name) && name.contains("\n")) {
                 errors.add(String.format(NEW_LINE_ERROR, name, caseData.getEthosCaseReference(), type));
             }
-        }
-        return errors;
-    }
-
-    public static List<String> areCharsForClaimantsRespValid(List<SubmitEvent> submitEvents) {
-        List<String> errors = new ArrayList<>();
-        for (SubmitEvent submitEvent : submitEvents) {
-            errors.addAll(checkNamesForInvalidCharacters(submitEvent.getCaseData(), "cause list"));
         }
         return errors;
     }
