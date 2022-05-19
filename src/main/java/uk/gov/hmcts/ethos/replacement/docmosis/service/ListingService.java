@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -20,8 +20,6 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
@@ -56,7 +54,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysRe
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ClaimsByHearingVenueExcelReportDocumentInfoService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -64,7 +61,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
@@ -567,25 +563,6 @@ public class ListingService {
 
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + caseTypeId, ex);
-        }
-    }
-
-    public boolean checkInvalidCharsForAllParties(ListingDetails listingDetails,
-                                                  String authToken, List<String> errors) {
-        try {
-            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
-            if (submitEvents != null) {
-                List<String> invalidCharErrors = InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents);
-                if (CollectionUtils.isEmpty(invalidCharErrors)) {
-                    return true;
-                } else {
-                    errors.addAll(invalidCharErrors);
-                    return false;
-                }
-            }
-            return true;
-        } catch (Exception ex) {
-            throw new ReportException(MESSAGE + listingDetails.getCaseId(), ex);
         }
     }
 }
