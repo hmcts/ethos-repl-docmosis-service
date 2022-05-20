@@ -67,5 +67,6 @@
   "listingDateMonth": "05",
   "listingDateYear": "2022",
   "tribunalOffice": "Leeds",
-  "generateReport": "Generate Report"
+  "generateReport": "Generate Report",
+  "closeAndReturnToCaseDetailsButton": "Close and Return to case details"
 }

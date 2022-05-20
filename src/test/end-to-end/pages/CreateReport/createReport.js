@@ -24,6 +24,6 @@ module.exports = async function (jurisdiction, caseType, event) {
     await I.selectOption('//option[text()=\'Leeds\']', commonConfig.tribunalOffice);
     await I.navByClick(commonConfig.continue);
     await I.waitForNavigationToComplete(commonConfig.generateReport, 10);
-    await I.navByClick('//button[text()=\'Close and Return to case details\']');
+    await I.navByClick(commonConfig.closeAndReturnToCaseDetailsButton);
 };
 
