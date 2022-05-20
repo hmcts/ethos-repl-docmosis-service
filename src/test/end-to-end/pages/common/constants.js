@@ -24,7 +24,9 @@ const eventNames = {
     ALLOCATE_HEARING:'Allocate Hearing',
     HEARING_DETAILS:'Hearing Details',
     CASE_TRANSFER:'Case Transfer',
-    JUDGMENT:'Judgment'
+    JUDGMENT:'Judgment',
+    CREATE_REPORT: "Create Report",
+    GENERATE_REPORT: "Generate Report"
 };
 
 const states = {
