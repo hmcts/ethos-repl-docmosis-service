@@ -26,6 +26,7 @@ module.exports = () => {
         // executePrintHearingLists:steps.printHearingLists.printHearingLists,
         executeCaseTransfer:steps.caseTransfer.caseTransfer,
         executeJudgment:steps.amendJudgment.addAmendJudgment,
+        executeCreateReport: steps.createReport.createReport,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,
@@ -37,5 +38,6 @@ module.exports = () => {
         enterClaimantRepresentedPage7: steps.createCasePages.page7claimantRepresented,
         enterUploadDocPage8: steps.createCasePages.page8UploadDocumentsPage,
         submitPage9: steps.createCasePages.page9SubmitPage
+
     });
 };
