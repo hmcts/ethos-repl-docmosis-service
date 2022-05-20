@@ -4,13 +4,13 @@ const commonConfig = require('../../data/commonConfig.json');
 const testConfig = require("../../../config");
 const {eventNames} = require('../pages/common/constants.js');
 
-module.exports = async function (jurisdiction, caseType, event) {
+module.exports = async function (jurisdiction, caseType, eventName) {
     const I = this;
     await I.waitForText(commonConfig.createCase, testConfig.TestTimeToWaitForText);
     await I.wait(5);
-    await I.selectOption('#cc-jurisdiction', jurisdiction)
+    await I.selectOption('#cc-jurisdiction', jurisdiction);
     await I.selectOption('#cc-case-type', caseType);
-    await I.selectOption('#cc-event', event);
+    await I.selectOption('#cc-event', eventName);
     await I.navByClick(commonConfig.start);
     await I.selectOption('//option[text()=\'Cases Completed\']', commonConfig.reportType );
     await I.navByClick(commonConfig.continue);
