@@ -1,13 +1,12 @@
 const testConfig = require('./../../config');
-const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
+const {createReport} = require("../helpers/caseHelper");
+const commonConfig = require('../data/commonConfig.json');
 const {eventNames} = require('../pages/common/constants.js');
-const {acceptCaseEvent} = require("../helpers/caseHelper");
-let caseNumber;
 
-Feature('ECM Case Report Generation... ');
+Feature('Create Report... ');
 
 Scenario('Generate Report for ECM Case', async ({I}) => {
-    await I.authenticateWithIdam();
+    await createReport(I, commonConfig.jurisdictionType, commonConfig.caseType, eventNames.CREATE_REPORT);
 
-}).tag('@nightly')
+}).tag('@report')
     .retry(testConfig.TestRetryScenarios);
