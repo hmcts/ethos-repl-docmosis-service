@@ -45,14 +45,13 @@ public class SingleCasesValidatorTest {
         caseIds.add(ethosReference);
         submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID
-                , authToken);
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         assertEquals(1, validatedCases.size());
         assertFalse(validatedCases.get(0).isValid());
         assertEquals(ethosReference, validatedCases.get(0).getEthosReference());
-        assertEquals("Case is in state "+ SUBMITTED_STATE, validatedCases.get(0).getInvalidReason());
+        assertEquals("Case is in state " + SUBMITTED_STATE, validatedCases.get(0).getInvalidReason());
     }
-
 
     @Test
     public void shouldSetCaseInOtherMultipleAsValid() throws IOException {
@@ -117,8 +116,8 @@ public class SingleCasesValidatorTest {
 
     @Test
     public void shouldHandleAllCases() throws IOException {
-        var multipleReference = "multiple1";
         caseIds.addAll(List.of("case1", "case2", "case3", "case4"));
+        var multipleReference = "multiple1";
         submitEvents.add(createSubmitEvent("case1", SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
         submitEvents.add(createSubmitEvent("case2", SINGLE_CASE_TYPE, ACCEPTED_STATE, null));
         submitEvents.add(createSubmitEvent("case3", SINGLE_CASE_TYPE, ACCEPTED_STATE, multipleReference));
@@ -126,7 +125,7 @@ public class SingleCasesValidatorTest {
         var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
                 NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         assertEquals(4, validatedCases.size());
-        verify(validatedCases.get(0), "case1", false, "Case is in state "+ SUBMITTED_STATE);
+        verify(validatedCases.get(0), "case1", false, "Case is in state " + SUBMITTED_STATE);
         verify(validatedCases.get(1), "case2", true, null);
         verify(validatedCases.get(2), "case3", true, null);
         verify(validatedCases.get(3), "case4", false, "Case not found");
