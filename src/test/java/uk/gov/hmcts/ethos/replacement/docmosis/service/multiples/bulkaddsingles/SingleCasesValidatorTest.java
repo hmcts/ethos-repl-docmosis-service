@@ -53,6 +53,18 @@ public class SingleCasesValidatorTest {
         assertEquals("Case is in state "+ SUBMITTED_STATE, validatedCases.get(0).getInvalidReason());
     }
 
+
+    @Test
+    public void shouldSetCaseInOtherMultipleAsInvalid() throws IOException {
+        var ethosReference = "case1";
+        var otherMultipleReference = "other-multiple";
+        caseIds.add(ethosReference);
+        submitEvents.add(createSubmitEvent(ethosReference, MULTIPLE_CASE_TYPE, ACCEPTED_STATE, otherMultipleReference));
+
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
+        verify(validatedCases, ethosReference, true, null);
+    }
+
     @Test
     public void shouldSetCaseAlreadyInMultipleAsValid() throws IOException {
         var ethosReference = "case1";
