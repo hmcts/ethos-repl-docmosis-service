@@ -55,7 +55,7 @@ public class SingleCasesValidatorTest {
 
 
     @Test
-    public void shouldSetCaseInOtherMultipleAsInvalid() throws IOException {
+    public void shouldSetCaseInOtherMultipleAsValid() throws IOException {
         var ethosReference = "case1";
         var otherMultipleReference = "other-multiple";
         caseIds.add(ethosReference);
