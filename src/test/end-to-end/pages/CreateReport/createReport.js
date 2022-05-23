@@ -2,7 +2,7 @@
 
 const commonConfig = require('../../data/commonConfig.json');
 const testConfig = require("../../../config");
-const {eventNames} = require('../pages/common/constants.js');
+const {eventNames} = require('../common/constants.js');
 
 module.exports = async function (jurisdiction, caseType, eventName) {
     const I = this;
