@@ -26,7 +26,7 @@ module.exports = () => {
         // executePrintHearingLists:steps.printHearingLists.printHearingLists,
         executeCaseTransfer:steps.caseTransfer.caseTransfer,
         executeJudgment:steps.amendJudgment.addAmendJudgment,
-        executeCreateReport: steps.createReport.createReport,
+        executeCreateReport: steps.createReport.createECMReport,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,
