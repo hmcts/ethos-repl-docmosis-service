@@ -224,7 +224,6 @@ ext {
     reformLoggingVersion = '5.1.9'
     serenity = '2.3.31'
     tomcatEmbedVersion = '9.0.58'
-    springVersion = '5.3.20'
 }
 
 dependencyManagement {
