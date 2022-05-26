@@ -45,4 +45,4 @@ java:
     ETHOS_REPL_DB_PORT: '5432'
     ETHOS_REPL_DB_USER_NAME: ethos@ethos-postgres-db-{{ .Values.global.environment }}
     CASE_DOCUMENT_AM_URL: http://ccd-case-document-am-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-    SECURE_DOC_STORE_FEATURE: true
+    SECURE_DOC_STORE_FEATURE: false
