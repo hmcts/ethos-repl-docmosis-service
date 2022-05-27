@@ -308,7 +308,6 @@
         <packageUrl regex="true">^pkg:maven/org.springframework/spring-webmvc@.*$</packageUrl>
         <cve>CVE-2016-1000027</cve>
     </suppress>
-
     <suppress>
         <notes><![CDATA[
      file name: tomcat-embed-core-9.0.58.jar
