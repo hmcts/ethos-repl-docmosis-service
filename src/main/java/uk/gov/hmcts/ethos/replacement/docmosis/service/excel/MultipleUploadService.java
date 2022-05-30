@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.io.IOException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
-import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @Service("multipleUploadService")
@@ -25,11 +25,14 @@ public class MultipleUploadService {
 
     private final ExcelDocManagementService excelDocManagementService;
 
+    private final MultipleBatchUpdate2Service multipleBatchUpdate2Service;
+
     @Autowired
     public MultipleUploadService(ExcelReadingService excelReadingService,
-                                 ExcelDocManagementService excelDocManagementService) {
+                                 ExcelDocManagementService excelDocManagementService, MultipleBatchUpdate2Service multipleBatchUpdate2Service) {
         this.excelReadingService = excelReadingService;
         this.excelDocManagementService = excelDocManagementService;
+        this.multipleBatchUpdate2Service = multipleBatchUpdate2Service;
 
     }
 
@@ -61,6 +64,10 @@ public class MultipleUploadService {
                         excelDocManagementService.populateCaseImporterFile(
                                 userToken,
                                 multipleData.getCaseImporterFile().getUploadedDocument()));
+                var multipleObjects = excelReadingService.readExcel(
+                        userToken, MultiplesHelper.getExcelBinaryUrl(multipleData), errors, multipleData, FilterExcelType.ALL);
+              multipleBatchUpdate2Service.batchUpdate2Logic(userToken, multipleDetails, errors, multipleObjects);
+
 
             } else {
 
