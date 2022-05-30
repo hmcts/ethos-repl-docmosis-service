@@ -38,7 +38,7 @@ public class UpdateDataModelBuilder {
                 .positionType(multipleData.getPositionType())
                 .receiptDate(multipleData.getReceiptDate())
                 .hearingStage(multipleData.getHearingStage())
-
+                .subMultiple(caseData.getSubMultipleName())
                 .isRespondentRepRemovalUpdate(multipleData.getBatchRemoveRespondentRep())
                 .isClaimantRepRemovalUpdate(multipleData.getBatchRemoveClaimantRep())
 
