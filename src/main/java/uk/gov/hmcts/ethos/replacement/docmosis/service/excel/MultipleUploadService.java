@@ -43,10 +43,10 @@ public class MultipleUploadService {
         try {
 
             var multipleData = multipleDetails.getCaseData();
-
+            var excelBinaryUrl = MultiplesHelper.getExcelBinaryUrl(multipleData);
             XSSFSheet datatypeSheet = excelReadingService.checkExcelErrors(
                     userToken,
-                    MultiplesHelper.getExcelBinaryUrl(multipleData),
+                    excelBinaryUrl,
                     errors);
 
             if (errors.isEmpty()) {
@@ -65,7 +65,7 @@ public class MultipleUploadService {
                                 userToken,
                                 multipleData.getCaseImporterFile().getUploadedDocument()));
                 var multipleObjects = excelReadingService.readExcel(
-                        userToken, MultiplesHelper.getExcelBinaryUrl(multipleData), errors, multipleData, FilterExcelType.ALL);
+                        userToken, excelBinaryUrl, errors, multipleData, FilterExcelType.ALL);
               multipleBatchUpdate2Service.batchUpdate2Logic(userToken, multipleDetails, errors, multipleObjects);
 
 
