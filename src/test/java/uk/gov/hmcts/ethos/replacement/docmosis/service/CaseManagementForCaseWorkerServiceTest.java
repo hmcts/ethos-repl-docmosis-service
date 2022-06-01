@@ -386,7 +386,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -394,7 +394,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -402,7 +402,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -410,7 +410,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
