@@ -206,8 +206,8 @@ public class FlagsImageHelper {
 
     private static boolean reasonableAdjustment(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
-            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getReasonalAdjustment())) {
-                return caseData.getAdditionalCaseInfoType().getReasonalAdjustment().equals(YES);
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getReasonableAdjustment())) {
+                return caseData.getAdditionalCaseInfoType().getReasonableAdjustment().equals(YES);
             } else {
                 return false;
             }
