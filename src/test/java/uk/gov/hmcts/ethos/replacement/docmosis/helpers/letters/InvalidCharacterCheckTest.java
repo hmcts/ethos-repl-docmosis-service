@@ -4,21 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
-import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.DOUBLE_SPACE_ERROR;
@@ -66,22 +58,6 @@ public class InvalidCharacterCheckTest {
     }
 
     @Test
-    public void checkInvalidCharsTestListingTypes() {
-        ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseData(new ListingData());
-        ListingTypeItem item = new ListingTypeItem();
-        item.setId(UUID.randomUUID().toString());
-        ListingType value = new ListingType();
-        value.setRespondent("Forename\nSurname");
-        value.setElmoCaseReference("1111");
-        item.setValue(value);
-        listingDetails.getCaseData().setListingCollection(Collections.singletonList(item));
-        List<String> errors = new ArrayList<>();
-        InvalidCharacterCheck.invalidCharactersExistAllListingTypes(listingDetails, errors);
-        assertEquals(String.format(NEW_LINE_ERROR, "Respondent Forename\nSurname",
-                "1111", "cause list"), errors.get(0));
-    
-    @Test
     public void checkInvalidCharactersInNamesNoClaimantResp() {
         var casedata = caseDetails1.getCaseData();
         casedata.setClaimant("Single Space");
@@ -91,32 +67,5 @@ public class InvalidCharacterCheckTest {
         casedata.setRepCollection(null);
         List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata, "letter");
         assertEquals(0, errors.size());
-    }
-
-    @Test
-    public void areCharsForClaimantsRespValidTest() {
-        var casedata = caseDetails1.getCaseData();
-        casedata.setClaimant("Double  Space");
-        casedata.getRepresentativeClaimantType().setNameOfRepresentative("New\nLine");
-        casedata.getRespondentCollection().get(0).getValue().setRespondentName("Double  Space and New\nLine");
-
-        var representedTypeR = new RepresentedTypeR();
-        representedTypeR.setNameOfRepresentative("No Errors In Name");
-        var representedTypeRItem = new RepresentedTypeRItem();
-        representedTypeRItem.setValue(representedTypeR);
-        casedata.setRepCollection(List.of(representedTypeRItem));
-        SubmitEvent submitEvent = new SubmitEvent();
-        submitEvent.setCaseData(casedata);
-        List<SubmitEvent> submitEvents = List.of(submitEvent);
-        List<String> errors = InvalidCharacterCheck.areCharsForClaimantsRespValid(submitEvents);
-        assertEquals(4, errors.size());
-        assertEquals(String.format(DOUBLE_SPACE_ERROR, "Claimant Double  Space",
-                casedata.getEthosCaseReference(), "cause list"), errors.get(0));
-        assertEquals(String.format(NEW_LINE_ERROR, "Claimant Rep New\nLine",
-                casedata.getEthosCaseReference(), "cause list"), errors.get(1));
-        assertEquals(String.format(DOUBLE_SPACE_ERROR, "Respondent Double  Space and New\nLine",
-                casedata.getEthosCaseReference(), "cause list"), errors.get(2));
-        assertEquals(String.format(NEW_LINE_ERROR, "Respondent Double  Space and New\nLine",
-                casedata.getEthosCaseReference(), "cause list"), errors.get(3));
     }
 }
