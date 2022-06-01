@@ -35,6 +35,8 @@ public class FlagsImageHelper {
     private static final String COLOR_WHITE = "White";
     private static final String COLOR_DEEP_PINK = "DeepPink";
     private static final String COLOR_SLATE_GRAY = "SlateGray";
+    private static final String COLOR_YELLOW = "Yellow";
+    private static final String FLAG_REASONABLE_ADJUSTMENT = "REASONABLE ADJUSTMENT";
 
     private FlagsImageHelper() {
     }
@@ -53,6 +55,7 @@ public class FlagsImageHelper {
         setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_ECC, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_DIGITAL_FILE, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_REASONABLE_ADJUSTMENT, flagsImageFileName, flagsImageAltText, caseData);
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
 
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
@@ -100,6 +103,10 @@ public class FlagsImageHelper {
             case FLAG_DIGITAL_FILE:
                 flagRequired = digitalFile(caseData);
                 flagColor = COLOR_SLATE_GRAY;
+                break;
+            case FLAG_REASONABLE_ADJUSTMENT:
+                flagRequired = reasonableAdjustment(caseData);
+                flagColor = COLOR_YELLOW;
                 break;
             default:
                 flagRequired = false;
@@ -189,6 +196,18 @@ public class FlagsImageHelper {
         if (caseData.getAdditionalCaseInfoType() != null) {
             if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getDoNotPostpone())) {
                 return caseData.getAdditionalCaseInfoType().getDoNotPostpone().equals(YES);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean reasonableAdjustment(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getReasonableAdjustment())) {
+                return caseData.getAdditionalCaseInfoType().getReasonableAdjustment().equals(YES);
             } else {
                 return false;
             }

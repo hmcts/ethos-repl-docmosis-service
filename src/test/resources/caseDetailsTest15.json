@@ -41,7 +41,8 @@
       "additional_sensitive": "Yes",
       "additional_live_appeal": "Yes",
       "doNotPostpone": "Yes",
-      "digitalFile": "Yes"
+      "digitalFile": "Yes",
+      "reasonableAdjustment": "Yes"
     },
     "counterClaim": "ecc",
     "restrictedReporting": {
