@@ -108,6 +108,11 @@ async function judgment(I, eventName) {
     await I.wait(3);
     await I.executeJudgment();
 }
+async function generateReport(I, jurisdiction, caseType, eventName) {
+    await I.authenticateWithIdam();
+    await I.wait(3);
+    await I.executeCreateReport(jurisdiction, caseType, eventName);
+}
 
 module.exports = {
     acceptCaseEvent,
@@ -128,5 +133,6 @@ module.exports = {
     hearingDetails,
     hearingDetails,
     caseTransfer,
-    judgment
+    judgment,
+    generateReport
 };

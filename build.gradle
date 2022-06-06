@@ -40,7 +40,7 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    maxWarnings = 5108
+    maxWarnings = 4976
 
     toolVersion = '8.29'
 }
@@ -224,7 +224,6 @@ ext {
     reformLoggingVersion = '5.1.9'
     serenity = '2.3.31'
     tomcatEmbedVersion = '9.0.58'
-    springVersion = '5.3.20'
 }
 
 dependencyManagement {
@@ -269,8 +268,8 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: logbackVersion
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.189'
-    implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '0.0.5'
+    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.190'
+    implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '0.0.6'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
@@ -290,18 +289,6 @@ dependencies {
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatEmbedVersion
     implementation group: 'org.apache.xmlgraphics', name: 'batik-svgbrowser', version: '1.14'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
-    implementation group: 'org.springframework', name: 'spring-beans', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-aop', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-aspects', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-context', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-core', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-expression', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-jcl', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-orm', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-tx', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-web', version: springVersion
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
     implementation('org.elasticsearch:elasticsearch') {
         version {
             strictly '7.17.2'

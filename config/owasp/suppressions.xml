@@ -322,4 +322,11 @@
         <packageUrl regex="true">^pkg:maven/org.apache.tomcat.embed/tomcat-embed-websocket@.*$</packageUrl>
         <cve>CVE-2022-29885</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+     file name: spring-security-rsa-1.0.10.RELEASE.jar
+     ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org.springframework.security/spring-security-rsa@.*$</packageUrl>
+        <cve>CVE-2022-22976</cve>
+    </suppress>
 </suppressions>
