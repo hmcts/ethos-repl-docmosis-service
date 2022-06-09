@@ -68,5 +68,10 @@
   "listingDateYear": "2022",
   "tribunalOffice": "Leeds",
   "generateReport": "Generate Report",
-  "closeAndReturnToCaseDetailsButton": "Close and Return to case details"
+  "closeAndReturnToCaseDetailsButton": "Close and Return to case details",
+  "HearingStatus": "Heard",
+  "HearingTimingBreakMonth":"11",
+  "HearingTimingBreakYear":"2022",
+  "HearingTimingFinishHour": "00",
+  "errorText": "The finish time for a hearing cannot be the same or before the start time for Hearing 11\nStart time can't be in future\nBreak time can't be in future\nFinish time can't be in future\nHearing 11 contains a hearing with break and resume times of 00:00:00. If the hearing had a break then please update the times. If there was no break, please remove the hearing date and times from the break and resume fields before continuing."
 }
