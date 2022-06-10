@@ -14,5 +14,5 @@ Scenario('Validate future date check on the hearing details page', async ({I}) =
     await allocateHearing(I, eventNames.ALLOCATE_HEARING, 'Leeds');
     await updateHearingDetails(I, eventNames.HEARING_DETAILS);
 
-}).tag('@test99')
+}).tag('@nightly')
     .retry(testConfig.TestRetryScenarios);
