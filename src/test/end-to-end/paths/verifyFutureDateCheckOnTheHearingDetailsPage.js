@@ -4,9 +4,9 @@ const {eventNames} = require('../pages/common/constants.js');
 const {acceptCaseEvent, listHearing, allocateHearing, updateHearingDetails} = require("../helpers/caseHelper");
 let caseNumber;
 
-Feature('Verify future date check on hearing details page');
+Feature('Verify future date check on the hearing details page');
 
-Scenario('Validate future date check on the hearing page', async ({I}) => {
+Scenario('Validate future date check on the hearing details page', async ({I}) => {
 
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);

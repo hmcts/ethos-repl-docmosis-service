@@ -7,7 +7,7 @@ module.exports = async function () {
     const I = this;
     I.waitForText(commonConfig.hearingDetails, testConfig.TestTimeToWaitForText);
     await I.selectOption('#hearingCollection_0_hearingDateCollection_0_Hearing_status', commonConfig.HearingStatus);
-    await I.wait(5);
+    await I.wait(2);
     await I.click('#hearingCollection_0_hearingDateCollection_0_hearingCaseDisposed_No');
     await I.fillField('#hearingTimingStart-day', commonConfig.caseAcceptedDay);
     await I.fillField('#hearingTimingStart-month', commonConfig.HearingTimingBreakMonth);
@@ -21,7 +21,7 @@ module.exports = async function () {
     await I.fillField('#hearingTimingFinish-day', commonConfig.caseAcceptedDay);
     await I.fillField('#hearingTimingFinish-month', commonConfig.HearingTimingBreakMonth);
     await I.fillField('#hearingTimingFinish-year', commonConfig.HearingTimingBreakYear);
-    await I.navByClick(commonConfig.continue);
-    await I.wait(2);
-    // await I.see(commonConfig.errorText);
+    await I.fillField('#hearingTimingFinish-hour', commonConfig.HearingTimingFinishHour);
+    await I.click(commonConfig.continue);
+    await I.see(commonConfig.errorText);
 };
