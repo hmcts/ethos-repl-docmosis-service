@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -16,8 +17,6 @@ import java.util.List;
 import java.util.SortedMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate2Service")
@@ -46,7 +45,10 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Batch update type = 2");
 
-        var convertToSingle = multipleData.getMoveCases().getConvertToSingle();
+        var convertToSingle = NO;
+        if (multipleData.getMoveCases() != null && multipleData.getMoveCases().getConvertToSingle() != null) {
+            convertToSingle = multipleData.getMoveCases().getConvertToSingle();
+        }
 
         log.info("Convert to singles " + convertToSingle);
 
