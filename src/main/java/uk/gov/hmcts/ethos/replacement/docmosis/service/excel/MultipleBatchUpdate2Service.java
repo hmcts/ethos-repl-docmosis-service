@@ -70,8 +70,8 @@ public class MultipleBatchUpdate2Service {
         } else {
 
             var moveCasesType = multipleData.getMoveCases();
-            String updatedMultipleRef = moveCasesType.getUpdatedMultipleRef();
-            String updatedSubMultipleRef = moveCasesType.getUpdatedSubMultipleRef();
+            String updatedMultipleRef = moveCasesType != null ? moveCasesType.getUpdatedMultipleRef() : null;
+            String updatedSubMultipleRef = moveCasesType != null ? moveCasesType.getUpdatedSubMultipleRef() : null;
             String currentMultipleRef = multipleData.getMultipleReference();
 
             if (currentMultipleRef.equals(updatedMultipleRef)) {
