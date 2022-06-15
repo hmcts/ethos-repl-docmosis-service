@@ -68,5 +68,10 @@
   "listingDateYear": "2022",
   "tribunalOffice": "Leeds",
   "generateReport": "Generate Report",
-  "closeAndReturnToCaseDetailsButton": "Close and Return to case details"
+  "closeAndReturnToCaseDetailsButton": "Close and Return to case details",
+  "HearingStatus": "Heard",
+  "HearingTimingBreakMonth":"11",
+  "HearingTimingBreakYear":"2022",
+  "HearingTimingFinishHour": "09",
+  "errorText": "Start time can't be in future\nBreak time can't be in future\nFinish time can't be in future"
 }

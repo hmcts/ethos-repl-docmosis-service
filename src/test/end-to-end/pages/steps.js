@@ -23,6 +23,7 @@ module.exports = () => {
         executeAddAmendHearing:steps.amendHearing.addAmendHearing,
         executeAllocateHearing:steps.allocateHearing.allocateHearing,
         executeHearingDetails:steps.hearingDetails.hearingDetails,
+        amendHearingDetails:steps.hearingDetails.updateHearingDetails,
         // executePrintHearingLists:steps.printHearingLists.printHearingLists,
         executeCaseTransfer:steps.caseTransfer.caseTransfer,
         executeJudgment:steps.amendJudgment.addAmendJudgment,

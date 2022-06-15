@@ -91,6 +91,12 @@ async function hearingDetails(I, eventName) {
     await I.executeHearingDetails();
 }
 
+async function updateHearingDetails(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.amendHearingDetails();
+}
+
 // async function printHearingLists(I, eventName, jurisdiction) {
 //     await I.chooseNextStep(eventName, 3);
 //     await I.wait(3);
@@ -134,5 +140,6 @@ module.exports = {
     hearingDetails,
     caseTransfer,
     judgment,
-    generateReport
+    generateReport,
+    updateHearingDetails
 };
