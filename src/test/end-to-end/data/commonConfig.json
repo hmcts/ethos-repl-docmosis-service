@@ -7,6 +7,7 @@
   "caseAcceptedMonth": "05",
   "caseAcceptedYear": "2021",
   "submit": "Submit",
+  "start": "Start",
   "addNewButton": "Add new",
   "claimantRepresentativeYes": "#claimantRepresentedQuestion_Yes",
   "claimantRepresentativeName": "ECMRep1",
@@ -57,5 +58,15 @@
   "judgmentMadeYear": "2022",
   "judgmentSentDate": "06",
   "judgmentSentMonth": "01",
-  "judgmentSentYear": "2022"
+  "judgmentSentYear": "2022",
+  "createCase": "Create case",
+  "jurisdictionType": "Employment",
+  "caseType": "Leeds - Hearings/Reports",
+  "reportType": "Cases Completed",
+  "listingDateDay": "05",
+  "listingDateMonth": "05",
+  "listingDateYear": "2022",
+  "tribunalOffice": "Leeds",
+  "generateReport": "Generate Report",
+  "closeAndReturnToCaseDetailsButton": "Close and Return to case details"
 }

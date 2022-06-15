@@ -14,17 +14,19 @@ const eventNames = {
     CLAIMANT_RESPONDENT_DETAILS: 'Respondent Details',
     RESPONDENT_REPRESENTATIVE: 'Respondent Representative',
     JURISDICTION: 'Jurisdiction',
-    CLOSE_CASE:'Close Case',
-    LETTERS:'Letters',
-    RESTRICTED_REPORTING:'Restricted Reporting',
-    FIX_CASE_API:'Fix Case API',
-    BF_ACTION:'B/F Action',
-    PRINT_HEARING_LISTS:'Print Hearing lists',
-    LIST_HEARING:'List Hearing',
-    ALLOCATE_HEARING:'Allocate Hearing',
-    HEARING_DETAILS:'Hearing Details',
-    CASE_TRANSFER:'Case Transfer',
-    JUDGMENT:'Judgment'
+    CLOSE_CASE: 'Close Case',
+    LETTERS: 'Letters',
+    RESTRICTED_REPORTING: 'Restricted Reporting',
+    FIX_CASE_API: 'Fix Case API',
+    BF_ACTION: 'B/F Action',
+    PRINT_HEARING_LISTS: 'Print Hearing lists',
+    LIST_HEARING: 'List Hearing',
+    ALLOCATE_HEARING: 'Allocate Hearing',
+    HEARING_DETAILS: 'Hearing Details',
+    CASE_TRANSFER: 'Case Transfer',
+    JUDGMENT: 'Judgment',
+    CREATE_REPORT: 'Create Report',
+    GENERATE_REPORT: 'Generate Report'
 };
 
 const states = {
