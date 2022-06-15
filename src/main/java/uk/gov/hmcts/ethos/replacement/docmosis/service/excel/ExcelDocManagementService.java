@@ -104,7 +104,7 @@ public class ExcelDocManagementService {
     public CaseImporterFile populateCaseImporterFile(String userToken, UploadedDocumentType uploadedDocumentType) {
 
         var caseImporterFile = new CaseImporterFile();
-        var dateTime = LocalDateTime.now().atZone(ZoneId.of("Europe/London"));
+        var dateTime = LocalDateTime.now(ZoneId.of("Europe/London"));
         var userDetails = userService.getUserDetails(userToken);
 
         caseImporterFile.setUploadedDocument(uploadedDocumentType);
