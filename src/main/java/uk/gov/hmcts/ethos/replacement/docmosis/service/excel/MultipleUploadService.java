@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -25,11 +25,14 @@ public class MultipleUploadService {
 
     private final ExcelDocManagementService excelDocManagementService;
 
+    private final MultipleBatchUpdate2Service multipleBatchUpdate2Service;
+
     @Autowired
     public MultipleUploadService(ExcelReadingService excelReadingService,
-                                 ExcelDocManagementService excelDocManagementService) {
+                                 ExcelDocManagementService excelDocManagementService, MultipleBatchUpdate2Service multipleBatchUpdate2Service) {
         this.excelReadingService = excelReadingService;
         this.excelDocManagementService = excelDocManagementService;
+        this.multipleBatchUpdate2Service = multipleBatchUpdate2Service;
 
     }
 
@@ -40,10 +43,10 @@ public class MultipleUploadService {
         try {
 
             var multipleData = multipleDetails.getCaseData();
-
+            var excelBinaryUrl = MultiplesHelper.getExcelBinaryUrl(multipleData);
             XSSFSheet datatypeSheet = excelReadingService.checkExcelErrors(
                     userToken,
-                    MultiplesHelper.getExcelBinaryUrl(multipleData),
+                    excelBinaryUrl,
                     errors);
 
             if (errors.isEmpty()) {
@@ -61,6 +64,10 @@ public class MultipleUploadService {
                         excelDocManagementService.populateCaseImporterFile(
                                 userToken,
                                 multipleData.getCaseImporterFile().getUploadedDocument()));
+                var multipleObjects = excelReadingService.readExcel(
+                        userToken, excelBinaryUrl, errors, multipleData, FilterExcelType.ALL);
+              multipleBatchUpdate2Service.batchUpdate2Logic(userToken, multipleDetails, errors, multipleObjects);
+
 
             } else {
 

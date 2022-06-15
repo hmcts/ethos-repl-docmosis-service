@@ -336,5 +336,4 @@
         <packageUrl regex="true">^pkg:maven/org.springframework.security/spring-security-rsa@.*$</packageUrl>
         <cve>CVE-2022-22978</cve>
     </suppress>
-
 </suppressions>

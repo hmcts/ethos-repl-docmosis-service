@@ -38,7 +38,7 @@ public class UpdateDataModelBuilder {
                 .positionType(multipleData.getPositionType())
                 .receiptDate(multipleData.getReceiptDate())
                 .hearingStage(multipleData.getHearingStage())
-
+                .subMultiple(getSubMultipleName(caseData))
                 .isRespondentRepRemovalUpdate(multipleData.getBatchRemoveRespondentRep())
                 .isClaimantRepRemovalUpdate(multipleData.getBatchRemoveClaimantRep())
 
@@ -57,6 +57,14 @@ public class UpdateDataModelBuilder {
             return NO;
         } else {
             return YES;
+        }
+    }
+
+    private static String getSubMultipleName(CaseData caseData) {
+        if (caseData == null || isNullOrEmpty(caseData.getSubMultipleName())) {
+            return null;
+        } else {
+            return caseData.getSubMultipleName();
         }
     }
 
