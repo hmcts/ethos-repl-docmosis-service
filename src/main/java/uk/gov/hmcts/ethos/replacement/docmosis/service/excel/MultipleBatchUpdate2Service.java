@@ -83,13 +83,8 @@ public class MultipleBatchUpdate2Service {
                 } else {
 
                     log.info("Reading excel and add sub multiple references");
-                    var caseData = new CaseData();
-                    caseData.setSubMultipleName(updatedSubMultipleRef);
                     readExcelAndAddSubMultipleRef(userToken, multipleDetails, errors,
                             multipleObjectsFiltered, updatedSubMultipleRef);
-                    multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken,
-                            multipleDetails, errors, multipleObjects, caseData);
-
                 }
 
             } else {
