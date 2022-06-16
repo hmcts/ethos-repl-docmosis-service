@@ -189,4 +189,12 @@ public class UpdateDataModelBuilderTest {
 
         return multipleData;
     }
+
+    @Test
+    public void testSubMultiple() {
+        MultipleData multipleData = createMultipleData(SELECT_NONE_VALUE, SELECT_NONE_VALUE, SELECT_NONE_VALUE, JUDGEMENT_ID, SELECT_NONE_VALUE);
+        caseData.setSubMultipleName("SubMultiple");
+        UpdateDataModel updateDataModel = UpdateDataModelBuilder.build(multipleData, caseData);
+        assertEquals("SubMultiple", updateDataModel.getSubMultiple());
+    }
 }
