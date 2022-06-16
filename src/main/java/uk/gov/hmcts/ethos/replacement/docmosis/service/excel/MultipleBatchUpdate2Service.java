@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -17,6 +16,8 @@ import java.util.List;
 import java.util.SortedMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate2Service")
@@ -45,10 +46,7 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Batch update type = 2");
 
-        var convertToSingle = NO;
-        if (multipleData.getMoveCases() != null && multipleData.getMoveCases().getConvertToSingle() != null) {
-            convertToSingle = multipleData.getMoveCases().getConvertToSingle();
-        }
+        var convertToSingle = multipleData.getMoveCases().getConvertToSingle();
 
         log.info("Convert to singles " + convertToSingle);
 
@@ -70,8 +68,8 @@ public class MultipleBatchUpdate2Service {
         } else {
 
             var moveCasesType = multipleData.getMoveCases();
-            String updatedMultipleRef = moveCasesType != null ? moveCasesType.getUpdatedMultipleRef() : null;
-            String updatedSubMultipleRef = moveCasesType != null ? moveCasesType.getUpdatedSubMultipleRef() : null;
+            String updatedMultipleRef = moveCasesType.getUpdatedMultipleRef();
+            String updatedSubMultipleRef = moveCasesType.getUpdatedSubMultipleRef();
             String currentMultipleRef = multipleData.getMultipleReference();
 
             if (currentMultipleRef.equals(updatedMultipleRef)) {
@@ -85,13 +83,8 @@ public class MultipleBatchUpdate2Service {
                 } else {
 
                     log.info("Reading excel and add sub multiple references");
-                    var caseData = new CaseData();
-                    caseData.setSubMultipleName(updatedSubMultipleRef);
                     readExcelAndAddSubMultipleRef(userToken, multipleDetails, errors,
                             multipleObjectsFiltered, updatedSubMultipleRef);
-                    multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken,
-                            multipleDetails, errors, multipleObjects, caseData);
-
                 }
 
             } else {
@@ -286,9 +279,9 @@ public class MultipleBatchUpdate2Service {
     private SubmitMultipleEvent getUpdatedMultiple(String userToken, String caseTypeId, String updatedMultipleRef) {
 
         return multipleCasesReadingService.retrieveMultipleCasesWithRetries(
-                        userToken,
-                        caseTypeId,
-                        updatedMultipleRef).get(0);
+                userToken,
+                caseTypeId,
+                updatedMultipleRef).get(0);
 
     }
 
