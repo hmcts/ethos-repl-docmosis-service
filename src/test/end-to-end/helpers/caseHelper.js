@@ -1,10 +1,21 @@
 async function acceptCaseEvent(I, caseId, eventName) {
-    await I.wait(5);
     await I.authenticateWithIdam();
-    await I.wait(5);
+    await I.wait(2);
     await I.amOnPage('/case-details/' + caseId);
     await I.chooseNextStep(eventName, 3);
     await I.acceptTheCase();
+}
+
+async function rejectCaseEvent(I, caseId, eventName) {
+    await I.authenticateWithIdam();
+    await I.amOnPage('/case-details/' + caseId);
+    await I.chooseNextStep(eventName, 3);
+    await I.rejectTheCase();
+}
+
+async function submittedState(I, caseId) {
+    await I.authenticateWithIdam();
+    await I.amOnPage('/case-details/' + caseId);
 }
 
 async function caseDetails(I, caseId, eventName, clerkResponcible, physicalLocation, conciliationTrack) {
@@ -15,7 +26,6 @@ async function caseDetails(I, caseId, eventName, clerkResponcible, physicalLocat
 
 async function caseDetailsEvent(I, caseId, eventName, clerkResponcible, currentPosition, physicalLocation, conciliationTrack) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(5);
     await I.amendCaseDetailsWithCaseCurrentPosition(clerkResponcible, currentPosition, physicalLocation, conciliationTrack);
 }
 async function claimantDetails(I, eventName) {
@@ -119,6 +129,7 @@ async function judgment(I, eventName) {
     await I.wait(3);
     await I.executeJudgment();
 }
+
 async function generateReport(I, jurisdiction, caseType, eventName) {
     await I.authenticateWithIdam();
     await I.wait(3);
@@ -127,6 +138,8 @@ async function generateReport(I, jurisdiction, caseType, eventName) {
 
 module.exports = {
     acceptCaseEvent,
+    rejectCaseEvent,
+    submittedState,
     caseDetails,
     claimantDetails,
     claimantRepresentative,
