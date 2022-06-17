@@ -13,6 +13,11 @@ async function caseDetails(I, caseId, eventName, clerkResponcible, physicalLocat
     await I.amendTheCaseDetails(clerkResponcible, physicalLocation, conciliationTrack);
 }
 
+async function caseDetailsEvent(I, caseId, eventName, clerkResponcible, currentPosition, physicalLocation, conciliationTrack) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(5);
+    await I.amendCaseDetailsWithCaseCurrentPosition(clerkResponcible, currentPosition, physicalLocation, conciliationTrack);
+}
 async function claimantDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
@@ -141,5 +146,6 @@ module.exports = {
     caseTransfer,
     judgment,
     generateReport,
-    updateHearingDetails
+    updateHearingDetails,
+    caseDetailsEvent
 };
