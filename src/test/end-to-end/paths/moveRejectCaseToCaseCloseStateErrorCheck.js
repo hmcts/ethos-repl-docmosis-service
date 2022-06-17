@@ -11,7 +11,7 @@ const verifyState = (eventResponse, state) => {
 
 Feature('Verify whether the user able to move rejected case to case closed state');
 
-Scenario('Move rejected case to case closed state error message', async ({I}) => {
+Scenario('Move rejected case to case closed state error check', async ({I}) => {
 
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     await rejectCaseEvent(I, caseNumber, eventNames.REJECT_CASE);
