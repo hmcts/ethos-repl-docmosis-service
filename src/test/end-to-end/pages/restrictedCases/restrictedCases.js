@@ -9,16 +9,12 @@ module.exports = async function () {
     await I.selectOption('#restrictedReporting_dynamicRequestedBy', commonConfig.requestedBy);
     await I.click('#restrictedReporting_imposed_Yes');
     await I.click('#restrictedReporting_rule503b_Yes');
-    await I.wait(2);
     await I.fillField('#startDate-day', commonConfig.rule503bStartDate);
     await I.fillField('#startDate-month', commonConfig.rule503bStartDateMonth);
     await I.fillField('#startDate-year', commonConfig.rule503bStartDateYear);
     I.waitForText(commonConfig.excludedFromRegister, testConfig.TestTimeToWaitForText);
     await I.selectOption('#restrictedReporting_excludedRegister', commonConfig.excludedFromRegister);
     await I.click('#restrictedReporting_deletedPhyRegister_Yes');
-
     await I.navByClick(commonConfig.continue);
-    await I.wait(2);
     await I.click(commonConfig.submit)
-    await I.wait(5);
 };

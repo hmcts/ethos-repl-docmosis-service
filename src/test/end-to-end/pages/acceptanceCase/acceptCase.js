@@ -10,6 +10,6 @@ module.exports = async function () {
     await I.fillField('#dateAccepted-year', commonConfig.caseAcceptedYear);
     await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit)
-    await I.wait(5);
+    await I.wait(2);
 };
 

@@ -19,7 +19,6 @@ module.exports = async function (jurisdiction) {
     await I.fillField('#listedDate-month', commonConfig.hearingDateMonth);
     await I.fillField('#listedDate-year', commonConfig.hearingDateYear);
     await I.navByClick(commonConfig.continue);
-    await I.wait(2);
     await I.click(commonConfig.submit);
     await I.waitForEnabled({css: '#next-step'}, testConfig.TestTimeToWaitForText || 5);
 };
