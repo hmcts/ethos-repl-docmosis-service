@@ -23,5 +23,5 @@ module.exports = async function () {
     await I.fillField('#hearingTimingFinish-year', commonConfig.HearingTimingBreakYear);
     await I.fillField('#hearingTimingFinish-hour', commonConfig.HearingTimingFinishHour);
     await I.click(commonConfig.continue);
-    await I.see(commonConfig.errorText);
+    await I.see(commonConfig.startBreakFinishTimeErrorCheck);
 };

@@ -13,6 +13,7 @@ module.exports = () => {
         executeClaimantRepresentative:steps.amendClaimantRepresentative.amendClaimantRepresentative,
         executeRespondentDetails:steps.amendRespondentDetails.amendRespondentDetails,
         amendTheCaseDetails:steps.amendCaseDetails.amendCaseDetails,
+        amendCaseDetailsWithCaseCurrentPosition:steps.amendCaseDetails.amendCaseDetailsWithCasePosition,
         executeRespondentRepresentative:steps.amendRespondentRepresentative.amendRespondentRepresentative,
         executeAddAmendJurisdiction:steps.amendJurisdiction.addAmendJurisdiction,
         executeCloseCase:steps.desposeCase.desposeCase,
