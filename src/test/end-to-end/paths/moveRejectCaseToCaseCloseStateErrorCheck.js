@@ -5,10 +5,6 @@ const assert = require('assert');
 const {rejectCaseEvent, caseDetailsEvent} = require("../helpers/caseHelper");
 let caseNumber;
 
-const verifyState = (eventResponse, state) => {
-    assert.strictEqual(JSON.parse(eventResponse).state, state);
-};
-
 Feature('Verify whether the user able to move rejected case to case closed state');
 
 Scenario('Move rejected case to case closed state error check', async ({I}) => {
