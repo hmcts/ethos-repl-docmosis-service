@@ -38,7 +38,7 @@ public class UpdateDataModelBuilder {
                 .positionType(multipleData.getPositionType())
                 .receiptDate(multipleData.getReceiptDate())
                 .hearingStage(multipleData.getHearingStage())
-
+                .subMultiple(getSubMultipleName(caseData))
                 .isRespondentRepRemovalUpdate(multipleData.getBatchRemoveRespondentRep())
                 .isClaimantRepRemovalUpdate(multipleData.getBatchRemoveClaimantRep())
 
@@ -60,6 +60,14 @@ public class UpdateDataModelBuilder {
         }
     }
 
+    private static String getSubMultipleName(CaseData caseData) {
+        if (caseData == null || isNullOrEmpty(caseData.getSubMultipleName())) {
+            return null;
+        } else {
+            return caseData.getSubMultipleName();
+        }
+    }
+
     private static JurCodesType getJurCodesType(MultipleData multipleData, CaseData caseData) {
         if (caseData == null) {
             return null;
@@ -67,7 +75,8 @@ public class UpdateDataModelBuilder {
 
         List<JurCodesTypeItem> jurCodesCollection = caseData.getJurCodesCollection();
 
-        if (multipleData.getBatchUpdateJurisdiction().getValue() != null
+        if (multipleData.getBatchUpdateJurisdiction() != null
+                && multipleData.getBatchUpdateJurisdiction().getValue() != null
                 && jurCodesCollection != null) {
             String jurCodeToSearch = multipleData.getBatchUpdateJurisdiction().getValue().getLabel();
             Optional<JurCodesTypeItem> jurCodesTypeItemOptional =

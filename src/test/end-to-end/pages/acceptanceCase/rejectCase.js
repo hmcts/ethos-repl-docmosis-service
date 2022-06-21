@@ -11,6 +11,5 @@ module.exports = async function () {
     await I.checkOption('#preAcceptCase_rejectReason-Not\\ on\\ Prescribed\\ Form');
     await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit)
-    await I.wait(5);
 };
 

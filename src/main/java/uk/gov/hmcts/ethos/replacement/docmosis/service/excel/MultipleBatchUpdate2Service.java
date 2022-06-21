@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -82,10 +83,8 @@ public class MultipleBatchUpdate2Service {
                 } else {
 
                     log.info("Reading excel and add sub multiple references");
-
                     readExcelAndAddSubMultipleRef(userToken, multipleDetails, errors,
                             multipleObjectsFiltered, updatedSubMultipleRef);
-
                 }
 
             } else {
@@ -280,9 +279,9 @@ public class MultipleBatchUpdate2Service {
     private SubmitMultipleEvent getUpdatedMultiple(String userToken, String caseTypeId, String updatedMultipleRef) {
 
         return multipleCasesReadingService.retrieveMultipleCasesWithRetries(
-                        userToken,
-                        caseTypeId,
-                        updatedMultipleRef).get(0);
+                userToken,
+                caseTypeId,
+                updatedMultipleRef).get(0);
 
     }
 

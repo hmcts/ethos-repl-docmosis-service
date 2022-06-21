@@ -35,7 +35,7 @@ public class FlagsImageHelper {
     private static final String COLOR_WHITE = "White";
     private static final String COLOR_DEEP_PINK = "DeepPink";
     private static final String COLOR_SLATE_GRAY = "SlateGray";
-    private static final String COLOR_YELLOW = "Yellow";
+    private static final String COLOR_DARK_SLATE_BLUE = "DarkSlateBlue";
     private static final String FLAG_REASONABLE_ADJUSTMENT = "REASONABLE ADJUSTMENT";
 
     private FlagsImageHelper() {
@@ -106,7 +106,7 @@ public class FlagsImageHelper {
                 break;
             case FLAG_REASONABLE_ADJUSTMENT:
                 flagRequired = reasonableAdjustment(caseData);
-                flagColor = COLOR_YELLOW;
+                flagColor = COLOR_DARK_SLATE_BLUE;
                 break;
             default:
                 flagRequired = false;

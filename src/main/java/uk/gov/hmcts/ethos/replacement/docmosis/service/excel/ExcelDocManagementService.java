@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -103,7 +104,7 @@ public class ExcelDocManagementService {
     public CaseImporterFile populateCaseImporterFile(String userToken, UploadedDocumentType uploadedDocumentType) {
 
         var caseImporterFile = new CaseImporterFile();
-        var dateTime = LocalDateTime.now();
+        var dateTime = LocalDateTime.now(ZoneId.of("Europe/London"));
         var userDetails = userService.getUserDetails(userToken);
 
         caseImporterFile.setUploadedDocument(uploadedDocumentType);
@@ -111,7 +112,6 @@ public class ExcelDocManagementService {
         caseImporterFile.setUploadUser(userDetails.getFirstName() + " " + userDetails.getLastName());
 
         return caseImporterFile;
-
     }
 
     public DocumentInfo writeAndUploadScheduleDocument(String userToken,

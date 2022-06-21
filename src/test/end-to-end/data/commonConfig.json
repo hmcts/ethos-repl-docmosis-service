@@ -68,5 +68,11 @@
   "listingDateYear": "2022",
   "tribunalOffice": "Leeds",
   "generateReport": "Generate Report",
-  "closeAndReturnToCaseDetailsButton": "Close and Return to case details"
+  "closeAndReturnToCaseDetailsButton": "Close and Return to case details",
+  "HearingStatus": "Heard",
+  "HearingTimingBreakMonth":"11",
+  "HearingTimingBreakYear":"2022",
+  "HearingTimingFinishHour": "09",
+  "startBreakFinishTimeErrorCheck": "Start time can't be in future\nBreak time can't be in future\nFinish time can't be in future",
+  "moveAcceptedCaseToCloseCaseErrorCheck": "To set the current position to 'Case closed' and to close the case, please take the Close Case action."
 }
