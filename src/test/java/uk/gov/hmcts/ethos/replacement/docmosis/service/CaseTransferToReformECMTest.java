@@ -13,12 +13,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseTransferToReformECMTest {
@@ -79,7 +77,7 @@ public class CaseTransferToReformECMTest {
 
     @Test
     public void createCaseTransferCaseWithValidState() {
-        ccdRequest.getCaseDetails().setState(ACCEPTED_STATE);
+        ccdRequest.getCaseDetails().setState(SUBMITTED_STATE);
         var errors = caseTransferToReformECM.createCaseTransferToReformECM(ccdRequest.getCaseDetails(), authToken);
         assertEquals(0, errors.size());
     }
