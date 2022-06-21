@@ -1,21 +1,22 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
+import java.util.ArrayList;
+import java.util.List;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service("caseTransferToReformECM")
 public class CaseTransferToReformECM {
     private final PersistentQHelperService persistentQHelperService;
-    private final CcdClient ccdClient;
     public static final String CASE_STATE_ERROR_MSG = "Case %s should be in the submitted or " +
             "accepted state to be transferred to Reform ECM";
 
