@@ -135,6 +135,10 @@ async function generateReport(I, jurisdiction, caseType, eventName) {
     await I.wait(2);
     await I.executeCreateReport(jurisdiction, caseType, eventName);
 }
+async function scheduleHearingDuringTheWeekend(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.executeHearingListedInWeekend(jurisdiction);
+}
 
 module.exports = {
     acceptCaseEvent,
@@ -160,5 +164,6 @@ module.exports = {
     judgment,
     generateReport,
     updateHearingDetails,
-    caseDetailsEvent
+    caseDetailsEvent,
+    scheduleHearingDuringTheWeekend
 };

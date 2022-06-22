@@ -39,7 +39,8 @@ module.exports = () => {
         enterBroughtForwardDatesPage6: steps.createCasePages.page6BroughtForwardDates,
         enterClaimantRepresentedPage7: steps.createCasePages.page7claimantRepresented,
         enterUploadDocPage8: steps.createCasePages.page8UploadDocumentsPage,
-        submitPage9: steps.createCasePages.page9SubmitPage
+        submitPage9: steps.createCasePages.page9SubmitPage,
+        executeHearingListedInWeekend:steps.amendHearing.hearingListedInWeekend
 
     });
 };
