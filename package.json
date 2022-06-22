@@ -53,6 +53,7 @@
   "resolutions": {
     "async" : "^3.2.3",
     "ansi-regex": "^5.0.1",
+    "got": "^12.1.0",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
     "mem": "^9.0.2",

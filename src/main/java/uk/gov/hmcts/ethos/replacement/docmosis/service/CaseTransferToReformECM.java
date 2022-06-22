@@ -51,7 +51,7 @@ public class CaseTransferToReformECM {
 
     private void createCaseTransferEvent(CaseDetails caseDetails, String userToken,
                                          List<String> errors) {
-        persistentQHelperService.sendCreationEventToSingles(
+        persistentQHelperService.sendCreationEventToSinglesReformECM(
                 userToken,
                 caseDetails.getCaseTypeId(),
                 caseDetails.getJurisdiction(),
