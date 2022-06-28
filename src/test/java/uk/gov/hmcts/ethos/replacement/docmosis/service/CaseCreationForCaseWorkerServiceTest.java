@@ -66,14 +66,16 @@ public class CaseCreationForCaseWorkerServiceTest {
     @Test(expected = Exception.class)
     public void caseCreationRequestException() throws IOException {
         when(ccdClient.startCaseCreation(anyString(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
+        when(ccdClient.submitCaseCreation(anyString(), any(uk.gov.hmcts.ecm.common.model.ccd.CaseDetails.class),
+            any())).thenReturn(submitEvent);
         caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, authToken);
     }
 
     @Test
     public void caseCreationRequest() throws IOException {
         when(ccdClient.startCaseCreation(anyString(), any())).thenReturn(ccdRequest);
-        when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
+        when(ccdClient.submitCaseCreation(anyString(), any(uk.gov.hmcts.ecm.common.model.ccd.CaseDetails.class),
+            any())).thenReturn(submitEvent);
         SubmitEvent submitEvent1 = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, authToken);
         assertEquals(submitEvent1, submitEvent);
     }
@@ -87,7 +89,5 @@ public class CaseCreationForCaseWorkerServiceTest {
         assertEquals("2", caseData.getCaseRefNumberCount());
         assertEquals("2100005", caseData.getMultipleRefNumber());
     }
-
-
 
 }

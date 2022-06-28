@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,11 +22,11 @@ public class CaseCreationForCaseWorkerService {
     private final MultipleReferenceService multipleReferenceService;
 
     public SubmitEvent caseCreationRequest(CCDRequest ccdRequest, String userToken) {
-        var caseDetails = ccdRequest.getCaseDetails();
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
         try {
-            return ccdClient.submitCaseCreation(userToken, caseDetails,
-                   ccdClient.startCaseCreation(userToken, caseDetails));
+            var request = ccdClient.startCaseCreation(userToken, caseDetails);
+            return ccdClient.submitCaseCreation(userToken, caseDetails, request);
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }

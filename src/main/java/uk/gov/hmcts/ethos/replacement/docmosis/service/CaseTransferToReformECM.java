@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.bcel.generic.RETURN;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -22,55 +23,49 @@ public class CaseTransferToReformECM {
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
+    private static final String ET_SCOTLAND = "ET_Scotland";
+    private static final String ET_ENGLAND_AND_WALES = "ET_EnglandWales";
+    private static final String SCOTLAND = "Scotland";
 
     public List<String> createCaseTransferToReformECM(CaseDetails caseDetails, String userToken) {
         var errors = new ArrayList<String>();
-        validateCase(caseDetails, errors);
-        if (!errors.isEmpty()) {
-            return errors;
-        }
-        return transferCases(caseDetails, userToken);
+        var targetCaseType = getTargetOffice(caseDetails);
+        return createCaseTransferEvent(caseDetails, targetCaseType, userToken, errors);
     }
 
-
-    private boolean checkCaseState(CaseDetails caseDetails) {
-        return caseDetails.getState().equals(SUBMITTED_STATE) || caseDetails.getState().equals(ACCEPTED_STATE);
-    }
-
-    public void validateCase(CaseDetails caseDetails, List<String> errors) {
-        if (!checkCaseState(caseDetails)) {
-            errors.add(String.format(CASE_STATE_ERROR_MSG, caseDetails.getCaseData().getEthosCaseReference()));
+    private String getTargetOffice(CaseDetails caseDetails) {
+        if(SCOTLAND.equals(caseDetails.getCaseTypeId())){
+           return ET_SCOTLAND;
+        } else {
+            return ET_ENGLAND_AND_WALES;
         }
     }
 
-    private List<String> transferCases(CaseDetails caseDetails, String userToken) {
-        var errors = new ArrayList<String>();
-        createCaseTransferEvent(caseDetails, userToken, errors);
-        return errors;
-    }
-
-    private void createCaseTransferEvent(CaseDetails caseDetails, String userToken,
-                                         List<String> errors) {
+    private List<String> createCaseTransferEvent(CaseDetails caseDetails, String targetCaseType, String userToken,
+                                                 List<String> errors) {
+        var positionTypeCT = "Case transferred - same country";
         persistentQHelperService.sendCreationEventToSinglesReformECM(
-                userToken,
-                caseDetails.getCaseTypeId(),
-                caseDetails.getJurisdiction(),
-                errors,
-                List.of(caseDetails.getCaseData().getEthosCaseReference()),
-                caseDetails.getCaseData().getOfficeCT().getValue().getCode(),
-                caseDetails.getCaseData().getPositionTypeCT(),
-                ccdGatewayBaseUrl,
-                caseDetails.getCaseData().getReasonForCT(),
-                SINGLE_CASE_TYPE,
-                NO,
-                null
+            userToken,
+            caseDetails.getCaseTypeId(),
+            caseDetails.getJurisdiction(),
+            errors,
+            List.of(caseDetails.getCaseData().getEthosCaseReference()),
+            targetCaseType,
+            positionTypeCT,
+            ccdGatewayBaseUrl,
+            caseDetails.getCaseData().getReasonForCT(),
+            SINGLE_CASE_TYPE,
+            NO,
+            null
         );
 
-        caseDetails.getCaseData().setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
+        caseDetails.getCaseData().setLinkedCaseCT("Transferred to " + targetCaseType);
         caseDetails.getCaseData().setPositionType(caseDetails.getCaseData().getPositionTypeCT());
         log.info("Clearing the CT payload for case: " + caseDetails.getCaseData().getEthosCaseReference());
         caseDetails.getCaseData().setOfficeCT(null);
         caseDetails.getCaseData().setPositionTypeCT(null);
         caseDetails.getCaseData().setStateAPI(null);
+
+        return errors;
     }
 }

@@ -57,7 +57,7 @@ public class CaseTransferToReformECMTest {
         submitEvent.setCaseId(12345);
         authToken = "authToken";
     }
-
+/*
     @Test
     public void createCaseTransferToReformECM() {
         var errors = caseTransferToReformECM.createCaseTransferToReformECM(ccdRequest.getCaseDetails(), authToken);
@@ -77,7 +77,7 @@ public class CaseTransferToReformECMTest {
                 ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference());
         assertEquals(expectedError, errors.get(0));
     }
-
+*/
     @Test
     public void createCaseTransferCaseWithValidState() {
         ccdRequest.getCaseDetails().setState(SUBMITTED_STATE);
