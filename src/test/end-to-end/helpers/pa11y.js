@@ -1,6 +1,6 @@
 const HTMLCS = require('html_codesniffer');
 const fs = require('fs');
-const testConfig = require('src/test/config');
+const testConfig = require('../../config');
 
 const result = {
     PASSED: 'passed',

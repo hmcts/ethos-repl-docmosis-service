@@ -3,7 +3,7 @@
 const Helper = codecept_helper;
 const helperName = 'Puppeteer';
 const testConfig = require('../../config');
-const {runAccessibility} = require("./accessbility/runner");
+const {runAccessibility} = require("./pa11y");
 
 class PuppeteerHelper extends Helper {
 
