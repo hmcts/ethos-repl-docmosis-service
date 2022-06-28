@@ -39,7 +39,7 @@ class PuppeteerHelper extends Helper {
         const url = await this.helpers[helperName].grabCurrentUrl();
         const {page} = await this.helpers[helperName];
 
-        runAccessibility(url, page);
+        await runAccessibility(url, page);
     }
 }
 
