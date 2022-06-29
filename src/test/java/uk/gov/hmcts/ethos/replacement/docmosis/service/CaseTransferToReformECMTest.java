@@ -16,18 +16,19 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseTransferToReformECMTest {
-
+    static final String TRANSFERRED_POSITION_TYPE = "Case transferred to Reform ECM";
     @InjectMocks
     private CaseTransferToReformECM caseTransferToReformECM;
-    @Mock
-    private CcdClient ccdClient;
+
     private CCDRequest ccdRequest;
     private SubmitEvent submitEvent;
     private String authToken;
@@ -41,47 +42,36 @@ public class CaseTransferToReformECMTest {
         CaseDetails caseDetails = new CaseDetails();
         CaseData caseData = MultipleUtil.getCaseData("2123456/2020");
         caseData.setCaseRefNumberCount("2");
-        caseData.setPositionTypeCT("PositionTypeCT");
+        caseDetails.setCaseData(caseData);
+        caseDetails.setJurisdiction("Employment");
+        caseDetails.setState(ACCEPTED_STATE);
         DynamicFixedListType officeCT = new DynamicFixedListType();
         DynamicValueType valueType = new DynamicValueType();
         valueType.setCode(LEEDS_CASE_TYPE_ID);
         officeCT.setValue(valueType);
-        caseData.setOfficeCT(officeCT);
-        caseDetails.setCaseData(caseData);
-        caseDetails.setCaseTypeId("Manchester");
-        caseDetails.setJurisdiction("Employment");
-        caseDetails.setState(ACCEPTED_STATE);
+
+        caseDetails.getCaseData().setReasonForCT("test RECM case transfer - ET_EnglandWales");
+        caseDetails.getCaseData().setOfficeCT(officeCT);
+        caseDetails.setCaseTypeId("Leeds");
         ccdRequest.setCaseDetails(caseDetails);
         submitEvent = new SubmitEvent();
         submitEvent.setCaseData(caseData);
         submitEvent.setCaseId(12345);
         authToken = "authToken";
     }
-/*
+
     @Test
     public void createCaseTransferToReformECM() {
-        var errors = caseTransferToReformECM.createCaseTransferToReformECM(ccdRequest.getCaseDetails(), authToken);
+        var errors = caseTransferToReformECM.createCaseTransferToReformECM(ccdRequest.getCaseDetails(),
+            authToken);
+
         assertTrue(errors.isEmpty());
-        assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
-        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID,
-                ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+        assertEquals(TRANSFERRED_POSITION_TYPE, ccdRequest.getCaseDetails().getCaseData().getPositionType());
+        assertEquals(TRANSFERRED_POSITION_TYPE, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+
+        assertNull(ccdRequest.getCaseDetails().getCaseData().getOfficeCT());
+        assertNull(ccdRequest.getCaseDetails().getCaseData().getPositionTypeCT());
+        assertNull(ccdRequest.getCaseDetails().getCaseData().getStateAPI());
     }
 
-    @Test
-    public void createCaseTransferCaseWithInValidState() {
-        ccdRequest.getCaseDetails().setState(REJECTED_STATE);
-
-        var errors = caseTransferToReformECM.createCaseTransferToReformECM(ccdRequest.getCaseDetails(), authToken);
-
-        var expectedError = String.format(CaseTransferToReformECM.CASE_STATE_ERROR_MSG,
-                ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference());
-        assertEquals(expectedError, errors.get(0));
-    }
-*/
-    @Test
-    public void createCaseTransferCaseWithValidState() {
-        ccdRequest.getCaseDetails().setState(SUBMITTED_STATE);
-        var errors = caseTransferToReformECM.createCaseTransferToReformECM(ccdRequest.getCaseDetails(), authToken);
-        assertEquals(0, errors.size());
-    }
 }
