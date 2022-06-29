@@ -162,7 +162,7 @@ public class PersistentQHelper {
                                                                                   String positionType, String reasonForCT) {
         return TransferToReformECMDataModel.builder()
                 .officeCT(officeCT)
-                .positionTypeCT(positionType)
+                .positionType(positionType)
                 .ccdGatewayBaseUrl(ccdGatewayBaseUrl)
                 .reasonForCT(reasonForCT)
                 .build();

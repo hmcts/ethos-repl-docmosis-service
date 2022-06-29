@@ -1,12 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
@@ -14,14 +13,12 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseTransferToReformECMTest {
@@ -30,7 +27,6 @@ public class CaseTransferToReformECMTest {
     private CaseTransferToReformECM caseTransferToReformECM;
 
     private CCDRequest ccdRequest;
-    private SubmitEvent submitEvent;
     private String authToken;
 
     @Mock
@@ -54,7 +50,7 @@ public class CaseTransferToReformECMTest {
         caseDetails.getCaseData().setOfficeCT(officeCT);
         caseDetails.setCaseTypeId("Leeds");
         ccdRequest.setCaseDetails(caseDetails);
-        submitEvent = new SubmitEvent();
+        SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseData(caseData);
         submitEvent.setCaseId(12345);
         authToken = "authToken";
