@@ -159,10 +159,10 @@ public class PersistentQHelper {
     }
 
     public static TransferToReformECMDataModel getDataModelForTransferToReformECM(String ccdGatewayBaseUrl, String officeCT,
-                                                                                  String positionTypeCT, String reasonForCT) {
+                                                                                  String positionType, String reasonForCT) {
         return TransferToReformECMDataModel.builder()
                 .officeCT(officeCT)
-                .positionTypeCT(positionTypeCT)
+                .positionType(positionType)
                 .ccdGatewayBaseUrl(ccdGatewayBaseUrl)
                 .reasonForCT(reasonForCT)
                 .build();

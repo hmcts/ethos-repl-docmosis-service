@@ -336,4 +336,18 @@
         <packageUrl regex="true">^pkg:maven/org.springframework.security/spring-security-rsa@.*$</packageUrl>
         <cve>CVE-2022-22978</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: async:1.5.2
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/async@.*$</packageUrl>
+        <cve>CVE-2021-43138</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-crypto-5.7.1.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
+        <vulnerabilityName>CVE-2020-5408</vulnerabilityName>
+    </suppress>
 </suppressions>
