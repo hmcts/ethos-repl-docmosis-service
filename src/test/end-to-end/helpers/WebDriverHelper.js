@@ -36,6 +36,10 @@ class WebDriverHelper extends Helper {
             )(el)[0].click();
         }, selector);
     }
+
+    async runAccessibilityTest() {
+        await Promise.resolve();
+    }
 }
 
 module.exports = WebDriverHelper;

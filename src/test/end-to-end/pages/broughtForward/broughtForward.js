@@ -6,7 +6,6 @@ module.exports = async function () {
 
     const I = this;
     await I.click(commonConfig.addNewButton);
-    await I.wait(2);
     await I.waitForText(commonConfig.bfActionDescription, testConfig.TestTimeToWaitForText);
     await I.selectOption('#bfActions_0_cwActions', commonConfig.bfActionDescription);
 
@@ -14,7 +13,5 @@ module.exports = async function () {
     await I.fillField('#bfDate-month', commonConfig.bfDateMonth);
     await I.fillField('#bfDate-year', commonConfig.bfDateYear);
     await I.navByClick(commonConfig.continue);
-    await I.wait(2);
     await I.click(commonConfig.submit)
-    await I.wait(5);
 };

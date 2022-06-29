@@ -73,5 +73,7 @@
   "HearingTimingBreakMonth":"11",
   "HearingTimingBreakYear":"2022",
   "HearingTimingFinishHour": "09",
-  "errorText": "Start time can't be in future\nBreak time can't be in future\nFinish time can't be in future"
+  "startBreakFinishTimeErrorCheck": "Start time can't be in future\nBreak time can't be in future\nFinish time can't be in future",
+  "moveAcceptedCaseToCloseCaseErrorCheck": "To set the current position to 'Case closed' and to close the case, please take the Close Case action.",
+  "weekendHearingMsgError": "A hearing date you have entered falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing 11"
 }

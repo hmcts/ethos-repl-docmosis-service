@@ -75,7 +75,8 @@ public class UpdateDataModelBuilder {
 
         List<JurCodesTypeItem> jurCodesCollection = caseData.getJurCodesCollection();
 
-        if (multipleData.getBatchUpdateJurisdiction().getValue() != null
+        if (multipleData.getBatchUpdateJurisdiction() != null
+                && multipleData.getBatchUpdateJurisdiction().getValue() != null
                 && jurCodesCollection != null) {
             String jurCodeToSearch = multipleData.getBatchUpdateJurisdiction().getValue().getLabel();
             Optional<JurCodesTypeItem> jurCodesTypeItemOptional =

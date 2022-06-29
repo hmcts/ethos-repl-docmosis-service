@@ -11,12 +11,9 @@ module.exports = async function () {
 
     await I.fillField('#respondentCollection_0_responseRespondentAddress_responseRespondentAddress_postcodeInput', commonConfig.respondentPostCode);
     await I.click('#respondentCollection_0_responseRespondentAddress_responseRespondentAddress_postcodeLookup > button');
-    await I.wait(5);
+    await I.wait(2);
     I.waitForText(commonConfig.respondentAddress, testConfig.TestTimeToWaitForText);
     await I.selectOption('#respondentCollection_0_responseRespondentAddress_responseRespondentAddress_addressList', commonConfig.respondentAddress);
-    await I.wait(3);
     await I.navByClick(commonConfig.continue);
-    await I.wait(2);
     await I.click(commonConfig.submit)
-    await I.wait(5);
 };
