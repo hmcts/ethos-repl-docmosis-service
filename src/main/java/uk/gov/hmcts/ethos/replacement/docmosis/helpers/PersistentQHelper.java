@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -13,10 +14,9 @@ import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.DetachDataModel;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.PreAcceptDataModel;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.RejectDataModel;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.ResetStateDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.TransferToReformECMDataModel;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.UpdateDataModel;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
-
-import java.util.List;
 
 @Slf4j
 public class PersistentQHelper {
@@ -153,6 +153,16 @@ public class PersistentQHelper {
         return CreationSingleDataModel.builder()
                 .officeCT(officeCT)
                 .positionTypeCT(positionTypeCT)
+                .ccdGatewayBaseUrl(ccdGatewayBaseUrl)
+                .reasonForCT(reasonForCT)
+                .build();
+    }
+
+    public static TransferToReformECMDataModel getDataModelForTransferToReformECM(String ccdGatewayBaseUrl, String officeCT,
+                                                                                  String positionType, String reasonForCT) {
+        return TransferToReformECMDataModel.builder()
+                .officeCT(officeCT)
+                .positionType(positionType)
                 .ccdGatewayBaseUrl(ccdGatewayBaseUrl)
                 .reasonForCT(reasonForCT)
                 .build();

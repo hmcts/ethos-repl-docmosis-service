@@ -236,7 +236,6 @@ public class Helper {
         for (String office : getAllOffices()) {
 
             if (!currentOffice.equals(office)) {
-
                 offices.add(DynamicListHelper.getDynamicValue(office));
             }
         }
