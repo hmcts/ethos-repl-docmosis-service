@@ -67,9 +67,9 @@ public class CaseTransferToReformECMTest {
         assertEquals(POSITION_TYPE_CASE_TRANSFERRED_REFORM_ECM, caseData.getPositionType());
         assertEquals(POSITION_TYPE_CASE_TRANSFERRED_REFORM_ECM, caseData.getLinkedCaseCT());
 
-        assertNull(ccdRequest.getCaseDetails().getCaseData().getOfficeCT());
-        assertNull(ccdRequest.getCaseDetails().getCaseData().getPositionTypeCT());
-        assertNull(ccdRequest.getCaseDetails().getCaseData().getStateAPI());
+        assertNull(caseData.getOfficeCT());
+        assertNull(caseData.getPositionTypeCT());
+        assertNull(caseData.getStateAPI());
     }
 
 }
