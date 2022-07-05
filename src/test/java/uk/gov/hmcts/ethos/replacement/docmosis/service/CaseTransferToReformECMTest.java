@@ -19,10 +19,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_REFORM_ECM;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseTransferToReformECMTest {
-    static final String TRANSFERRED_POSITION_TYPE = "Case transferred to Reform ECM";
     @InjectMocks
     private CaseTransferToReformECM caseTransferToReformECM;
 
@@ -62,12 +62,14 @@ public class CaseTransferToReformECMTest {
             authToken);
 
         assertTrue(errors.isEmpty());
-        assertEquals(TRANSFERRED_POSITION_TYPE, ccdRequest.getCaseDetails().getCaseData().getPositionType());
-        assertEquals(TRANSFERRED_POSITION_TYPE, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        assertEquals(POSITION_TYPE_CASE_TRANSFERRED_REFORM_ECM, caseData.getCurrentPosition());
+        assertEquals(POSITION_TYPE_CASE_TRANSFERRED_REFORM_ECM, caseData.getPositionType());
+        assertEquals(POSITION_TYPE_CASE_TRANSFERRED_REFORM_ECM, caseData.getLinkedCaseCT());
 
-        assertNull(ccdRequest.getCaseDetails().getCaseData().getOfficeCT());
-        assertNull(ccdRequest.getCaseDetails().getCaseData().getPositionTypeCT());
-        assertNull(ccdRequest.getCaseDetails().getCaseData().getStateAPI());
+        assertNull(caseData.getOfficeCT());
+        assertNull(caseData.getPositionTypeCT());
+        assertNull(caseData.getStateAPI());
     }
 
 }
