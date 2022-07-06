@@ -89,6 +89,12 @@ async function bfAction(I, eventName) {
     await I.executeBFAction();
 }
 
+async function bfActionsOutstanding(I, eventName, caseID) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(2);
+    await I.executeBFActionsOutstanding(caseID);
+}
+
 async function listHearing(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(2);
@@ -167,5 +173,6 @@ module.exports = {
     generateReport,
     updateHearingDetails,
     caseDetailsEvent,
-    scheduleHearingDuringTheWeekend
+    scheduleHearingDuringTheWeekend,
+    bfActionsOutstanding
 };
