@@ -61,5 +61,12 @@
     "merge": "^2.1.1",
     "minimist": "^1.2.6",
     "yargs-parser": "^21.0.1"
+  },
+  "scripts": {
+    "lint": "NODE_PATH=. eslint .",
+    "eslint": "NODE_PATH=. eslint .",
+    "test-smoke": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @smoke --steps --reporter mocha-multi",
+    "test-e2e": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @test99 --steps --reporter mocha-multi"
+
   }
 }

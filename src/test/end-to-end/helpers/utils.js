@@ -45,7 +45,10 @@ class utilsComponent {
 
             case 1:
                 targetDate.setDate(targetDate.getDate() + 5);
-                weekend = targetDate.getDate();
+                dd = targetDate.getDate();
+                mm = targetDate.getMonth() + 1;
+                yyyy = targetDate.getFullYear();
+                weekend = yyyy + "-" + mm + "-" + dd;
                 break;
 
             case 2:

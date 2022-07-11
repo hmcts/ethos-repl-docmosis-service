@@ -89,10 +89,9 @@ async function bfAction(I, eventName) {
     await I.executeBFAction();
 }
 
-async function bfActionsOutstanding(I, eventName, caseID) {
+async function bfActionsOutstanding(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
-    await I.executeBFActionsOutstanding(caseID);
+    await I.executeBFActionsOutstanding();
 }
 
 async function listHearing(I, eventName, jurisdiction) {

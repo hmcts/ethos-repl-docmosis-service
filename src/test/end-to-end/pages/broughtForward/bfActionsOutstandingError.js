@@ -1,10 +1,10 @@
 'use strict';
 const commonConfig = require('../../data/commonConfig.json');
 const testConfig = require("../../../config");
-const {eventNames} = require("../common/constants");
 const {utilsComponent} = require("../../helpers/utils");
+const {eventNames} = require("../common/constants");
 
-module.exports = async function (caseID) {
+module.exports = async function () {
 
     const I = this;
     await I.click(commonConfig.addNewButton);
@@ -16,6 +16,7 @@ module.exports = async function (caseID) {
     await I.fillField('#bfDate-year', currentDate.split('-')[0]);
     await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit);
+    let caseID = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
     await I.chooseNextStep(eventNames.CLOSE_CASE, 3);
-    await I.see(commonConfig.bfActionsOutstandingErrorMsgCheck.replace('CaseID', caseID));
+    await I.see(commonConfig.bfActionsOutstandingErrorMsgCheck.replace('CaseID', caseID.split(' ')[2]));
 };

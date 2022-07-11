@@ -21,7 +21,7 @@ module.exports = () => {
         setRestrictedReporting: steps.restrictedCases.restrictedCases,
         executeFixCaseAPI: steps.fixCaseApi.fixCaseApi,
         executeBFAction: steps.broughtForward.broughtForward,
-        executeBFActionsOutstanding:steps.broughtForward.bfActionsOutstandingErrorMsg,
+        executeBFActionsOutstanding:steps.broughtForward.bfActionsOutstandingError,
         executeAddAmendHearing: steps.amendHearing.addAmendHearing,
         executeAllocateHearing: steps.allocateHearing.allocateHearing,
         executeHearingDetails: steps.hearingDetails.hearingDetails,
