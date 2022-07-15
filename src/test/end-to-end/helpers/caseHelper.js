@@ -28,6 +28,7 @@ async function caseDetailsEvent(I, caseId, eventName, clerkResponcible, currentP
     await I.chooseNextStep(eventName, 3);
     await I.amendCaseDetailsWithCaseCurrentPosition(clerkResponcible, currentPosition, physicalLocation, conciliationTrack);
 }
+
 async function claimantDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(2);
@@ -88,6 +89,11 @@ async function bfAction(I, eventName) {
     await I.executeBFAction();
 }
 
+async function bfActionsOutstanding(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.executeBFActionsOutstanding();
+}
+
 async function listHearing(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(2);
@@ -112,11 +118,11 @@ async function updateHearingDetails(I, eventName) {
     await I.amendHearingDetails();
 }
 
-// async function printHearingLists(I, eventName, jurisdiction) {
-//     await I.chooseNextStep(eventName, 3);
-//     await I.wait(3);
-//     await I.executePrintHearingLists(jurisdiction);
-// }
+async function printHearingLists(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executePrintHearingLists(jurisdiction);
+}
 
 async function caseTransfer(I, eventName) {
     await I.chooseNextStep(eventName, 3);
@@ -136,6 +142,11 @@ async function generateReport(I, jurisdiction, caseType, eventName) {
     await I.executeCreateReport(jurisdiction, caseType, eventName);
 }
 
+async function scheduleHearingDuringTheWeekend(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.executeHearingListedInWeekend(jurisdiction);
+}
+
 module.exports = {
     acceptCaseEvent,
     rejectCaseEvent,
@@ -152,7 +163,7 @@ module.exports = {
     fixCaseAPI,
     bfAction,
     listHearing,
-    // printHearingLists,
+    printHearingLists,
     allocateHearing,
     hearingDetails,
     hearingDetails,
@@ -160,5 +171,7 @@ module.exports = {
     judgment,
     generateReport,
     updateHearingDetails,
-    caseDetailsEvent
+    caseDetailsEvent,
+    scheduleHearingDuringTheWeekend,
+    bfActionsOutstanding
 };

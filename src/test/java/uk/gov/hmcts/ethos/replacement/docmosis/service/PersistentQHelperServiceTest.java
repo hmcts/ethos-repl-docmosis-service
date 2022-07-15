@@ -79,4 +79,25 @@ public class PersistentQHelperServiceTest {
 
     }
 
+    @Test
+    public void sendCreateEventToReformECMWithoutConfirmation() {
+
+        when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
+
+        persistentQHelperService.sendCreationEventToSinglesReformECM(userToken,
+                ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getJurisdiction(),
+                new ArrayList<>(), new ArrayList<>(Collections.singletonList("ethosCaseReference")),
+                LEEDS_CASE_TYPE_ID,
+                "positionTypeCT", "ccdGatewayBaseUrl", "",
+                SINGLE_CASE_TYPE, NO,
+                MultiplesHelper.generateMarkUp("ccdGatewayBaseUrl",
+                        ccdRequest.getCaseDetails().getCaseId(),
+                        ccdRequest.getCaseDetails().getCaseData().getMultipleRefNumber())
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
 }

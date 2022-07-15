@@ -32,6 +32,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorker
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferToReformECM;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ConciliationTrackService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
@@ -85,6 +86,7 @@ public class CaseActionsForCaseWorkerController {
     private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
     private final DepositOrderValidationService depositOrderValidationService;
     private final JudgmentValidationService judgmentValidationService;
+    private final CaseTransferToReformECM caseTransferToReformECM;
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "create a case for a caseWorker.")
@@ -1080,6 +1082,31 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var errors = caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), userToken);
+
+        return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
+    }
+
+    @PostMapping(value = "/caseTransferToReformECM", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "create a new Case in the Reform ECM")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> transferToReformECM(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("Transfer to Reform ECM ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var errors = caseTransferToReformECM.createCaseTransferToReformECM(ccdRequest.getCaseDetails(), userToken);
 
         return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
     }

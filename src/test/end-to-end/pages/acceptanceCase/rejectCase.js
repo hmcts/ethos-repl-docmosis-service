@@ -10,6 +10,7 @@ module.exports = async function () {
     await I.fillField('#dateRejected-year', commonConfig.caseAcceptedYear);
     await I.checkOption('#preAcceptCase_rejectReason-Not\\ on\\ Prescribed\\ Form');
     await I.navByClick(commonConfig.continue);
+    await I.runAccessibilityTest();
     await I.click(commonConfig.submit)
 };
 
