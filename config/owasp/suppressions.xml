@@ -9,13 +9,6 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: randomstring:1.2.2
-   ]]></notes>
-        <packageUrl regex="true">^pkg:npm/randomstring@.*$</packageUrl>
-        <vulnerabilityName>Possible SQL injection in mysql.escape function</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
    file name: poi-5.0.0.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org.apache.poi/poi@5.0.0</packageUrl>
@@ -37,293 +30,20 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: randomstring:1.2.2
+   file name: spring-security-crypto-5.7.1.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:npm/moment@2.29.1</packageUrl>
-        <vulnerabilityName>1069972</vulnerabilityName>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
+        <vulnerabilityName>CVE-2020-5408</vulnerabilityName>
     </suppress>
     <suppress>
         <notes><![CDATA[
-     file name: spring-retry-1.3.2.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
-        <cve>CVE-2013-4152</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: spring-retry-1.3.2.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
-        <cve>CVE-2013-7315</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: spring-retry-1.3.2.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
-        <cve>CVE-2014-0054</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: async-http-client-2.12.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.asynchttpclient/async\-http\-client@.*$</packageUrl>
-        <cve>CVE-2021-43138</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-retry-1.3.2.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: async-http-client-netty-utils-2.12.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.asynchttpclient/async\-http\-client\-netty\-utils@.*$</packageUrl>
-        <cve>CVE-2021-43138</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-  file name: spring-beans-5.3.18.jar
-  ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-beans@5.3.18</packageUrl>
-        <cve>CVE-2022-22968</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-  file name: spring-retry-1.3.3.jar
-  ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.3</packageUrl>
-        <cve>CVE-2022-22968</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-  file name: spring-retry-1.3.2.jar
-  ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.2</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: spring-retry-1.3.2.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
-        <cve>CVE-2022-22965</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-  file name: spring-retry-1.3.2.jar
-  ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework.retry/spring-retry@1.3.2</packageUrl>
-        <cve>CVE-2022-22968</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: spring-retry-1.3.3.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.retry/spring\-retry@.*$</packageUrl>
-        <cve>CVE-2022-22968</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: log4j-api-2.17.1.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j\-api@.*$</packageUrl>
-        <cve>CVE-2022-33915</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-transport-classes-epoll-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io\.netty/netty\-transport\-classes\-epoll@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-transport-classes-kqueue-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io\.netty/netty\-transport\-classes\-kqueue@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-transport-native-epoll-4.1.76.Final-linux-x86_64.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-transport-native-epoll@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-transport-native-kqueue-4.1.76.Final-osx-x86_64.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-transport-native-kqueue@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-transport-native-unix-common-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-transport-native-unix-common@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-buffer-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-buffer@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-codec-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-codec@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-codec-http-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-codec-http@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-codec-socks-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-codec-socks@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-common-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-common@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-handler-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-handler@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-handler-proxy-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-handler-proxy@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-resolver-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-resolver@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-    file name: netty-transport-4.1.76.Final.jar
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io.netty/netty-transport@.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-aop-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-aop@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-aspects-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-aspects@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-beans-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-beans@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-context-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-context@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-core-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-core@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-expression-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-expression@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-jcl-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-jcl@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-jdbc-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-jdbc@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-orm-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-orm@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-tx-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-tx@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-web-5.3.20.jar
+     file name: spring-web-5.3.21.jar
      ]]></notes>
         <packageUrl regex="true">^pkg:maven/org.springframework/spring-web@.*$</packageUrl>
         <cve>CVE-2016-1000027</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-     file name: spring-webmvc-5.3.20.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework/spring-webmvc@.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: tomcat-embed-core-9.0.58.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
-        <cve>CVE-2022-29885</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
      file name: tomcat-embed-core-9.0.58.jar
      ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
@@ -331,9 +51,9 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-     file name: tomcat-embed-websocket-9.0.58.jar
+     file name: tomcat-embed-core-9.0.58.jar
      ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
         <cve>CVE-2022-29885</cve>
     </suppress>
     <suppress>
@@ -345,30 +65,9 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-     file name: spring-security-rsa-1.0.10.RELEASE.jar
+     file name: tomcat-embed-websocket-9.0.58.jar
      ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework.security/spring-security-rsa@.*$</packageUrl>
-        <cve>CVE-2022-22976</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: spring-security-rsa-1.0.10.RELEASE.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.springframework.security/spring-security-rsa@.*$</packageUrl>
-        <cve>CVE-2022-22978</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: async:1.5.2
-   ]]></notes>
-        <packageUrl regex="true">^pkg:npm/async@.*$</packageUrl>
-        <cve>CVE-2021-43138</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-crypto-5.7.1.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
-        <vulnerabilityName>CVE-2020-5408</vulnerabilityName>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
+        <cve>CVE-2022-29885</cve>
     </suppress>
 </suppressions>
