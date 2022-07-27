@@ -269,7 +269,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.193'
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '0.0.6'
-    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.41'
+    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.44'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
