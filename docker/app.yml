@@ -37,7 +37,7 @@ services:
     ports:
       - 5429:5432
     environment:
-      ETHOS_REPL_DB_PASSWORD: "ethos"
+      ETHOS_REPL_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     volumes:
       - ethos-repl-database-data:/var/lib/postgresql/data
 
