@@ -19,8 +19,8 @@ services:
       CCD_GATEWAY_BASE_URL: "http://127.0.0.1:3453"
       ETHOS_REPL_SERVICE_S2S_SECRET: "AAAAAAAAAAAAAAAC"
       MICRO_SERVICE: "ethos_repl_service"
-      ETHOS_REPL_DB_HOST: "ethos-database"
-      ETHOS_REPL_DB_PASSWORD: "ethos"
+      ETHOS_REPL_DB_HOST:  "{{ .Release.Name }}-postgresql"
+      ETHOS_REPL_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
 
   tornado:
     image: "hmcts/tornado:latest"
@@ -37,7 +37,7 @@ services:
     ports:
       - 5429:5432
     environment:
-      ETHOS_REPL_DB_PASSWORD: "ethos"
+      ETHOS_REPL_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     volumes:
       - ethos-repl-database-data:/var/lib/postgresql/data
 
