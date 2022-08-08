@@ -11,6 +11,7 @@ module.exports = async function () {
     await I.waitForText(commonConfig.bfActionDescription, testConfig.TestTimeToWaitForText);
     await I.selectOption('#bfActions_0_cwActions', commonConfig.bfActionDescription);
     let currentDate = await utilsComponent.isWeekend();
+    console.log('Week end date-->::' + currentDate);
     await I.fillField('#bfDate-day', currentDate.split('-')[2]);
     await I.fillField('#bfDate-month', currentDate.split('-')[1]);
     await I.fillField('#bfDate-year', currentDate.split('-')[0]);
