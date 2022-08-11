@@ -11,4 +11,7 @@ module.exports = async function () {
     await I.fillField('#documentCollection_0_shortDescription', commonConfig.shortDescription);
     await I.click(commonConfig.continue);
     await I.click(commonConfig.submit);
+    await I.wait(5);
+    await I.click("//div[text()='Documents']");
+    await I.see('fileUpload.txt');
 };
