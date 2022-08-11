@@ -21,15 +21,16 @@ module.exports = () => {
         setRestrictedReporting: steps.restrictedCases.restrictedCases,
         executeFixCaseAPI: steps.fixCaseApi.fixCaseApi,
         executeBFAction: steps.broughtForward.broughtForward,
-        executeBFActionsOutstanding:steps.broughtForward.bfActionsOutstandingError,
+        executeBFActionsOutstanding: steps.broughtForward.bfActionsOutstandingError,
         executeAddAmendHearing: steps.amendHearing.addAmendHearing,
         executeAllocateHearing: steps.allocateHearing.allocateHearing,
         executeHearingDetails: steps.hearingDetails.hearingDetails,
         amendHearingDetails: steps.hearingDetails.updateHearingDetails,
-        executePrintHearingLists:steps.printHearingLists.printHearingLists,
+        executePrintHearingLists: steps.printHearingLists.printHearingLists,
         executeCaseTransfer: steps.caseTransfer.caseTransfer,
         executeJudgment: steps.amendJudgment.addAmendJudgment,
         executeCreateReport: steps.createReport.createReport,
-        executeHearingListedInWeekend: steps.amendHearing.hearingListedInWeekend
+        executeHearingListedInWeekend: steps.amendHearing.hearingListedInWeekend,
+        executeUploadDocument: steps.uploadDocument.uploadDocument
     });
 };

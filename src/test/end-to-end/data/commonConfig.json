@@ -70,11 +70,13 @@
   "generateReport": "Generate Report",
   "closeAndReturnToCaseDetailsButton": "Close and Return to case details",
   "HearingStatus": "Heard",
-  "HearingTimingBreakMonth":"11",
-  "HearingTimingBreakYear":"2022",
+  "HearingTimingBreakMonth": "11",
+  "HearingTimingBreakYear": "2022",
   "HearingTimingFinishHour": "09",
   "startBreakFinishTimeErrorCheck": "Start time can't be in future\nBreak time can't be in future\nFinish time can't be in future",
   "moveAcceptedCaseToCloseCaseErrorCheck": "To set the current position to 'Case closed' and to close the case, please take the Close Case action.",
   "weekendHearingMsgError": "A hearing date you have entered falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing 11",
-  "bfActionsOutstandingErrorMsgCheck": "You cannot close this case as there is currently no jurisdiction and no jurisdiction outcome associated with it\nCaseID contains one or more outstanding BFs. To enable this case to be closed, please clear the outstanding BFs."
+  "bfActionsOutstandingErrorMsgCheck": "You cannot close this case as there is currently no jurisdiction and no jurisdiction outcome associated with it\nCaseID contains one or more outstanding BFs. To enable this case to be closed, please clear the outstanding BFs.",
+  "shortDescription": "Upload Document Check",
+  "documentsTab": "Documents"
 }
