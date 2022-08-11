@@ -26,7 +26,8 @@ const eventNames = {
     CASE_TRANSFER: 'Case Transfer',
     JUDGMENT: 'Judgment',
     CREATE_REPORT: 'Create Report',
-    GENERATE_REPORT: 'Generate Report'
+    GENERATE_REPORT: 'Generate Report',
+    UPLOAD_DOCUMENT: 'Upload Document'
 };
 
 const states = {

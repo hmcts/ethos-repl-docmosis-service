@@ -147,6 +147,12 @@ async function scheduleHearingDuringTheWeekend(I, eventName, jurisdiction) {
     await I.executeHearingListedInWeekend(jurisdiction);
 }
 
+async function uploadDocumentEvent(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(2);
+    await I.executeClaimantDetails();
+}
+
 module.exports = {
     acceptCaseEvent,
     rejectCaseEvent,
@@ -173,5 +179,6 @@ module.exports = {
     updateHearingDetails,
     caseDetailsEvent,
     scheduleHearingDuringTheWeekend,
-    bfActionsOutstanding
+    bfActionsOutstanding,
+    uploadDocumentEvent
 };
