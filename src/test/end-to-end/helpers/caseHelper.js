@@ -149,8 +149,7 @@ async function scheduleHearingDuringTheWeekend(I, eventName, jurisdiction) {
 
 async function uploadDocumentEvent(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
-    await I.executeClaimantDetails();
+    await I.executeUploadDocument();
 }
 
 module.exports = {
