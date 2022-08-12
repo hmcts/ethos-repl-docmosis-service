@@ -44,11 +44,12 @@ class SingleCasesValidatorTest {
         singleCasesValidator = new SingleCasesValidator(ccdClient);
     }
 
-    @Test
-    public void shouldSetSubmittedCaseAsValid() throws IOException {
+    @ParameterizedTest
+    @CsvSource({ACCEPTED_STATE, SUBMITTED_STATE})
+    void shouldSetValidStateCaseAsValid(String caseState) throws IOException {
         var ethosReference = "case1";
         caseIds.add(ethosReference);
-        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
+        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, caseState, null));
 
         List<ValidatedSingleCase> validatedCases = singleCasesValidator.getValidatedCases(caseIds,
                 NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
