@@ -3,29 +3,26 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.multiples.bulkaddsingles
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_BULK_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
-public class SingleCasesValidatorTest {
+class SingleCasesValidatorTest {
     private final String authToken = "some-token";
     private List<SubmitEvent> submitEvents;
     private List<String> caseIds;
     private SingleCasesValidator singleCasesValidator;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
         var ccdClient = mock(CcdClient.class);
         caseIds = new ArrayList<>();
@@ -42,9 +39,23 @@ public class SingleCasesValidatorTest {
         caseIds.add(ethosReference);
         submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+        List<ValidatedSingleCase> validatedCases = singleCasesValidator.getValidatedCases(caseIds,
                 NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         verify(validatedCases, ethosReference, true, null);
+    }
+
+    @ParameterizedTest
+    @CsvSource({REJECTED_STATE, CLOSED_STATE, PENDING_STATE, OPEN_STATE, TRANSFERRED_STATE})
+    void shouldSetInvalidCaseStateAsInvalid(String caseState) throws IOException {
+        String ethosReference = "case1";
+        caseIds.add(ethosReference);
+        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, caseState, null));
+        List<ValidatedSingleCase> validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
+        assertEquals(1, validatedCases.size());
+        assertFalse(validatedCases.get(0).isValid());
+        assertEquals(ethosReference, validatedCases.get(0).getEthosReference());
+        assertEquals("Case is in state " + caseState, validatedCases.get(0).getInvalidReason());
     }
 
     @Test
