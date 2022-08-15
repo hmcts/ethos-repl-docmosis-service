@@ -1,0 +1,78 @@
+{
+  "judgeCodesWales": [
+    {
+      "existingJudgeCode": "0_G Cawthray",
+      "requiredJudgeCode": "3078_G Cawthray"
+
+    },
+    {
+      "existingJudgeCode": "0_G Duncan",
+      "requiredJudgeCode": "3102_G Duncan"
+    },
+    {
+      "existingJudgeCode": "0_R Evans",
+      "requiredJudgeCode": "3111_R Evans"
+    },
+    {
+      "existingJudgeCode": "0_N Webb",
+      "requiredJudgeCode": "3131_N Webb"
+    }
+  ],
+  "judgeCodesLondonCentral": [
+    {
+      "existingJudgeCode": "9876_P Klimov",
+      "requiredJudgeCode": "3105_P Klimov"
+
+    },
+    {
+      "existingJudgeCode": "1111_J Hopton",
+      "requiredJudgeCode": "3124_J Hopton"
+    },
+    {
+      "existingJudgeCode": "8765_J Smailes",
+      "requiredJudgeCode": "3130_J Smailes"
+    },
+    {
+      "existingJudgeCode": "1234_S Heath",
+      "requiredJudgeCode": "3123_S Heath"
+    }
+  ],
+  "judgeCodesLondonEast": [
+    {
+      "existingJudgeCode": "0_M Craft",
+      "requiredJudgeCode": "227_M Craft"
+
+    },
+    {
+      "existingJudgeCode": "0_I Noons",
+      "requiredJudgeCode": "3081_I Noons"
+    },
+    {
+      "existingJudgeCode": "0_S Richardson",
+      "requiredJudgeCode": "383_S Richardson"
+    },
+    {
+      "existingJudgeCode": "0_J Burns",
+      "requiredJudgeCode": "538_J Burns"
+    },
+    {
+      "existingJudgeCode": "0_E Fowell",
+      "requiredJudgeCode": "2963_E Fowell"
+    }
+  ],
+  "judgeCodesLondonSouth": [
+    {
+      "existingJudgeCode": "0_M Street",
+      "requiredJudgeCode": "2980_M Street"
+
+    },
+    {
+      "existingJudgeCode": "0_B Doyle",
+      "requiredJudgeCode": "82_B Doyle"
+    },
+    {
+      "existingJudgeCode": "0_L Burge",
+      "requiredJudgeCode": "3096_L Burge"
+    }
+  ]
+}
