@@ -4,8 +4,8 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
-    id 'org.springframework.boot' version '2.7.2'
-    id 'org.owasp.dependencycheck' version '7.1.1'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'org.owasp.dependencycheck' version '7.1.2'
     id 'com.github.ben-manes.versions' version '0.42.0'
     id 'org.sonarqube' version '3.4.0.2513'
     id 'au.com.dius.pact' version '4.3.14'
@@ -274,7 +274,7 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLoggingVersion
-    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.23'
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.24.2'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: feignVersion
     implementation group: 'io.github.openfeign', name: 'feign-core', version: feignVersion
@@ -291,12 +291,12 @@ dependencies {
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
     implementation('org.elasticsearch:elasticsearch') {
         version {
-            strictly '7.17.2'
+            strictly '7.17.3'
         }
     }
-    implementation 'org.postgresql:postgresql:42.4.1'
-    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-beta1'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.10'
+    implementation 'org.postgresql:postgresql:42.5.0'
+    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.11'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
