@@ -9,8 +9,8 @@ metadata:
   tags:
     - java
   links:
-    - url: https://hmcts-reform.slack.com/app_redirect?channel=ethos-repl-manchester
-      title: "#ethos-repl-manchester on Slack"
+    - url: https://hmcts-reform.slack.com/app_redirect?channel=ethos-repl-service
+      title: "#ethos-repl-service on Slack"
       icon: chat
 spec:
   type: service
