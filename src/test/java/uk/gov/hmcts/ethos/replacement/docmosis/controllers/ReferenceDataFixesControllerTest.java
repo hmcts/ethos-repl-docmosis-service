@@ -2,9 +2,15 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -12,6 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -24,17 +33,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDat
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringRunner.class)
@@ -75,16 +73,14 @@ public class ReferenceDataFixesControllerTest {
 
     @Test
     public void updateJudgeCodeTest() throws Exception {
-        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), eq(AUTH_TOKEN), new RefDataFixesCcdDataSource(AUTH_TOKEN))).thenReturn(new RefDataFixesData());
+        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), isA(String.class), isA(RefDataFixesCcdDataSource.class))).thenReturn(new RefDataFixesData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
-                .andExpect(jsonPath("$.warnings", nullValue()));
+                .andExpect(jsonPath("$.data", notNullValue()));
     }
 
     @Test
@@ -98,8 +94,8 @@ public class ReferenceDataFixesControllerTest {
 
     @Test
     public void updateJudgeCodeTestError500() throws Exception {
-        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), AUTH_TOKEN, new RefDataFixesCcdDataSource(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), isA(String.class), isA(RefDataFixesCcdDataSource.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -109,7 +105,7 @@ public class ReferenceDataFixesControllerTest {
 
     @Test
     public void updateJudgeCodeTestForbidden() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
