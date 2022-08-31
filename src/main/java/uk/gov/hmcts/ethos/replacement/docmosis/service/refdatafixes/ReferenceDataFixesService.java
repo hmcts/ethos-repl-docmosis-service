@@ -35,7 +35,8 @@ public class ReferenceDataFixesService {
         RefDataFixesData refDataFixesData = refDataFixesDetails.getCaseData();
         String existingJudgeCode = refDataFixesData.getExistingJudgeCode();
         String requiredJudgeCode = refDataFixesData.getRequiredJudgeCode();
-        String caseTypeId = refDataFixesDetails.getCaseTypeId();
+        String caseTypeId = refDataFixesDetails.getCaseTypeId().contains("_") ?
+                Strings.split(refDataFixesDetails.getCaseTypeId(), "_")[0] : refDataFixesDetails.getCaseTypeId();
         List<String> dates = getDateRangeForSearch(refDataFixesDetails);
         String dateFrom = dates.get(0);
         String dateTo = dates.get(1);
@@ -47,9 +48,9 @@ public class ReferenceDataFixesService {
                     CaseData caseData = submitEvent.getCaseData();
                     setJudgeName(caseData, existingJudgeCode, requiredJudgeCode);
 
-                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, refDataFixesDetails.getCaseTypeId(),
+                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
                             refDataFixesDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-                    ccdClient.submitEventForCase(authToken, caseData, refDataFixesDetails.getCaseTypeId(),
+                    ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
                             refDataFixesDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
                 }
                 log.info(String.format(

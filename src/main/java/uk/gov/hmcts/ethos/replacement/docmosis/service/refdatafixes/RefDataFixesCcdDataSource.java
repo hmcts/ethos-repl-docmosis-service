@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -20,7 +19,7 @@ public class RefDataFixesCcdDataSource implements RefDataFixesDataSource {
                     dateFrom, dateTo);
             return ccdClient.executeElasticSearch(authToken, caseTypeId, query);
         } catch (Exception e) {
-            throw new ReportException(String.format(
+            throw new RefDataFixesException(String.format(
                     "Failed to get hearings by hearing type search results for case type id %s", caseTypeId), e);
         }
     }
