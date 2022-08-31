@@ -3,7 +3,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -107,5 +110,11 @@ public class ReferenceDataFixesService {
         }
     }
 
+//    public RefDataFixesData insertClaimServedDate(RefDataFixesDetails refDataFixesDetails) {
+//        RefDataFixesData refDataFixesData = refDataFixesDetails.getCaseData();
+//        claimServedDateFixRepository.addClaimServedDate(Date.valueOf(refDataFixesData.getListingDateFrom()),
+//                Date.valueOf(refDataFixesData.getListingDateTo()),refDataFixesDetails.getCaseTypeId());
+//        return refDataFixesData;
+//    }
 
 }
