@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -12,15 +15,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesDetails;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -93,28 +90,28 @@ public class ReferenceDataFixesService {
         }
     }
 
-    public RefDataFixesData insertClaimServedDate(RefDataFixesDetails refDataFixesDetails, String authToken) {
-
-        var refDataFixesData = refDataFixesDetails.getCaseData();
-        ReportParams params = new ReportParams(
-                refDataFixesDetails.getCaseTypeId(),
-                refDataFixesData.getDateFrom(),
-                refDataFixesData.getDateTo());
-        try {
-            RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
-//            List<SubmitEvent> submitEvents = dataSource.getData(params);
-//            if (CollectionUtils.isNotEmpty(submitEvents)) {
-//                log.info(CASES_SEARCHED + submitEvents.size());
-//                for (SubmitEvent submitEvent : submitEvents) {
-//                    CaseData caseData = submitEvent.getCaseData();
-//                }
+//    public RefDataFixesData insertClaimServedDate(RefDataFixesDetails refDataFixesDetails, String authToken) {
 //
-//            }
-            return refDataFixesData;
-        } catch (Exception ex) {
-            throw new CaseRetrievalException(MESSAGE + refDataFixesDetails.getCaseId() + ex.getMessage());
-        }
-    }
+//        var refDataFixesData = refDataFixesDetails.getCaseData();
+//        ReportParams params = new ReportParams(
+//                refDataFixesDetails.getCaseTypeId(),
+//                refDataFixesData.getDateFrom(),
+//                refDataFixesData.getDateTo());
+//        try {
+//            RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
+////            List<SubmitEvent> submitEvents = dataSource.getData(params);
+////            if (CollectionUtils.isNotEmpty(submitEvents)) {
+////                log.info(CASES_SEARCHED + submitEvents.size());
+////                for (SubmitEvent submitEvent : submitEvents) {
+////                    CaseData caseData = submitEvent.getCaseData();
+////                }
+////
+////            }
+//            return refDataFixesData;
+//        } catch (Exception ex) {
+//            throw new CaseRetrievalException(MESSAGE + refDataFixesDetails.getCaseId() + ex.getMessage());
+//        }
+//    }
 
 //    public RefDataFixesData insertClaimServedDate(RefDataFixesDetails refDataFixesDetails) {
 //        RefDataFixesData refDataFixesData = refDataFixesDetails.getCaseData();

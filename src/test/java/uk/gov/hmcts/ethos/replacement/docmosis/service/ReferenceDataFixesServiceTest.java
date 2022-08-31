@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
@@ -23,8 +25,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ReferenceDataFixesServiceTest {
@@ -76,7 +76,35 @@ public class ReferenceDataFixesServiceTest {
     public void judgeCodeReplaceTest() {
         RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
                 refDataFixesDetails, "authToken", dataSource);
-        assertEquals(submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge(),
-                REQUIRED_CODE_1);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
+    public void judgeCodeCaseTypeIdTest() {
+        refDataFixesDetails.setCaseTypeId("Manchester_RefData");
+        RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                refDataFixesDetails, "authToken", dataSource);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
+    public void judgeCodeDateTest() {
+        refDataFixesDetails.getCaseData().setDate("2022-07-01");
+        refDataFixesDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                refDataFixesDetails, "authToken", dataSource);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
+    public void wrongJudgeCodeTest() {
+        refDataFixesDetails.getCaseData().setExistingJudgeCode("WrongJudgeCode");
+        RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                refDataFixesDetails, "authToken", dataSource);
+        assertNotEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 }
