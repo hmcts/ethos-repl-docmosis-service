@@ -36,17 +36,15 @@ public class ReferenceDataFixesServiceTest {
     private ReferenceDataFixesService referenceDataFixesService;
 
     private RefDataFixesDetails refDataFixesDetails;
-    private RefDataFixesData refDataFixesData;
-    private final String REQUIRED_CODE_1 = "requiredJudgeCode1";
+    private static final String REQUIRED_CODE_1 = "requiredJudgeCode1";
     private List<SubmitEvent> submitEvents;
-    private CcdClient client;
 
     @Before
     public void setUp() {
 
         dataSource = mock(RefDataFixesCcdDataSource.class);
         refDataFixesDetails = new RefDataFixesDetails();
-        refDataFixesData = new RefDataFixesData();
+        RefDataFixesData refDataFixesData = new RefDataFixesData();
         refDataFixesDetails.setCaseData(refDataFixesData);
         refDataFixesDetails.setJurisdiction("EMPLOYMENT");
         refDataFixesDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
@@ -55,8 +53,6 @@ public class ReferenceDataFixesServiceTest {
         refDataFixesData.setDateTo("2022-07-31");
         refDataFixesData.setExistingJudgeCode("existingJudgeCode1");
         refDataFixesData.setRequiredJudgeCode(REQUIRED_CODE_1);
-        SubmitEvent submitEvent1 = new SubmitEvent();
-        CaseData caseData1 = new CaseData();
         HearingTypeItem hearingTypeItem1 = new HearingTypeItem();
         hearingTypeItem1.setId("2222");
         HearingType hearingType1 = new HearingType();
@@ -67,7 +63,9 @@ public class ReferenceDataFixesServiceTest {
         HearingType hearingType2 = new HearingType();
         hearingType2.setJudge("existingJudgeCode2");
         hearingTypeItem2.setValue(hearingType2);
+        CaseData caseData1 = new CaseData();
         caseData1.setHearingCollection(Arrays.asList(hearingTypeItem1, hearingTypeItem2));
+        SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseData(caseData1);
         submitEvent1.setCaseId(1);
         submitEvents = new ArrayList<>(List.of(submitEvent1));

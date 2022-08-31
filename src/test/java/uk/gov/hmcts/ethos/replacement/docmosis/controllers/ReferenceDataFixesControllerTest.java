@@ -73,7 +73,10 @@ public class ReferenceDataFixesControllerTest {
 
     @Test
     public void updateJudgeCodeTest() throws Exception {
-        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), isA(String.class), isA(RefDataFixesCcdDataSource.class))).thenReturn(new RefDataFixesData());
+        when(referenceDataFixesService.updateJudgesItcoReferences(
+                isA(RefDataFixesDetails.class), isA(String.class),
+                isA(RefDataFixesCcdDataSource.class)))
+                .thenReturn(new RefDataFixesData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
@@ -94,7 +97,10 @@ public class ReferenceDataFixesControllerTest {
 
     @Test
     public void updateJudgeCodeTestError500() throws Exception {
-        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), isA(String.class), isA(RefDataFixesCcdDataSource.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(referenceDataFixesService.updateJudgesItcoReferences(
+                isA(RefDataFixesDetails.class), isA(String.class),
+                isA(RefDataFixesCcdDataSource.class)))
+                .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())

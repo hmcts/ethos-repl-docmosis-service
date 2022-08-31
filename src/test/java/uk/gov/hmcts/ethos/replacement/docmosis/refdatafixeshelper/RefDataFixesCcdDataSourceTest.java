@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.refDataFixesHelper;
+package uk.gov.hmcts.ethos.replacement.docmosis.refdatafixeshelper;
 
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
@@ -27,7 +27,7 @@ public class RefDataFixesCcdDataSourceTest {
         when(ccdClient.executeElasticSearch(anyString(), anyString(), anyString())).thenReturn(submitEvents);
 
         RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
-        List<SubmitEvent> results = dataSource.getData(caseTypeId,fromDate, toDate, ccdClient);
+        List<SubmitEvent> results = dataSource.getData(caseTypeId, fromDate, toDate, ccdClient);
         assertEquals(1, results.size());
         assertEquals(submitEvent, results.get(0));
     }
