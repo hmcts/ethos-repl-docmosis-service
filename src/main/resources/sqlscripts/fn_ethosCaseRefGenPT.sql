@@ -1,6 +1,6 @@
 ﻿/* CREATE FUNCTION */
 
-CREATE OR REPLACE FUNCTION fn_ethosCaseRefGen (numofcases INT, yr INT , office varchar(200)) RETURNS VARCHAR(12) AS $$
+CREATE OR REPLACE FUNCTION fn_ethosCaseRefGen ( numofcases INT, yr INT , office varchar(200)) RETURNS VARCHAR(12) AS $$
 
 -- =============================================
 -- Author:		Mohammed Hafejee

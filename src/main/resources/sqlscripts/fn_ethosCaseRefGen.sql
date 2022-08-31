@@ -1,7 +1,4 @@
-﻿/* CREATE FUNCTION */
-
-CREATE OR REPLACE FUNCTION fn_ethosCaseRefGen (numofcases INT, yr INT , office varchar(200)) RETURNS VARCHAR(10) AS $$
-
+﻿CREATE OR REPLACE FUNCTION "fn_ethoscaserefgen" (numofcases INT, yr INT , office varchar(200)) RETURNS VARCHAR(10) AS $$
 -- =============================================
 -- Author:		Mohammed Hafejee
 
@@ -531,6 +528,6 @@ BEGIN
 END CASE ;
 
 END;
-   $$ LANGUAGE plpgsql;
+ $$ LANGUAGE plpgsql;
 
 
