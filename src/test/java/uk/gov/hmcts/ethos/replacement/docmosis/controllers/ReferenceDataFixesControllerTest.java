@@ -26,10 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesDetails;
@@ -73,9 +73,9 @@ public class ReferenceDataFixesControllerTest {
     }
 
     @Test
-    public void hearingVenueReferenceData() throws Exception {
-        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), eq(AUTH_TOKEN))).thenReturn(new RefDataFixesData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+    public void updateJudgeCodeTest() throws Exception {
+        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), eq(AUTH_TOKEN), new RefDataFixesCcdDataSource(AUTH_TOKEN))).thenReturn(new RefDataFixesData());
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -87,22 +87,8 @@ public class ReferenceDataFixesControllerTest {
     }
 
     @Test
-    public void dateListedReferenceData() throws Exception {
-        when(referenceService.fetchDateListedRefData(isA(CaseDetails.class), eq(AUTH_TOKEN))).thenReturn(submitEvent.getCaseData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(DATE_LISTED_REFERENCE_DATA)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
-    public void hearingVenueReferenceDataError400() throws Exception {
-        mvc.perform(post(HEARING_VENUE_REFERENCE_DATA)
+    public void updateJudgeCodeTestError400() throws Exception {
+        mvc.perform(post(UPDATE_JUDGES)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -110,19 +96,10 @@ public class ReferenceDataFixesControllerTest {
     }
 
     @Test
-    public void dateListedReferenceDataError400() throws Exception {
-        mvc.perform(post(DATE_LISTED_REFERENCE_DATA)
-                .content("error")
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void hearingVenueReferenceDataError500() throws Exception {
-        when(referenceService.fetchHearingVenueRefData(isA(CaseDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
+    public void updateJudgeCodeTestError500() throws Exception {
+        when(referenceDataFixesService.updateJudgesItcoReferences(isA(RefDataFixesDetails.class), AUTH_TOKEN, new RefDataFixesCcdDataSource(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(HEARING_VENUE_REFERENCE_DATA)
+        mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -130,30 +107,9 @@ public class ReferenceDataFixesControllerTest {
     }
 
     @Test
-    public void dateListedReferenceDataError500() throws Exception {
-        when(referenceService.fetchDateListedRefData(isA(CaseDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(DATE_LISTED_REFERENCE_DATA)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void hearingVenueReferenceDataForbidden() throws Exception {
+    public void updateJudgeCodeTestForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(HEARING_VENUE_REFERENCE_DATA)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void dateListedReferenceDataForbidden() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(DATE_LISTED_REFERENCE_DATA)
+        mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

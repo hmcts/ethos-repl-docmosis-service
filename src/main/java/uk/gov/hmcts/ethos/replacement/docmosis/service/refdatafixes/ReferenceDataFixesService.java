@@ -1,12 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,6 +18,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesDetails;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,79 +30,85 @@ public class ReferenceDataFixesService {
     private static final String MESSAGE = "Failed to retrieve reference data for case id : ";
     private final CcdClient ccdClient;
 
-    public RefDataFixesData updateJudgesItcoReferences(RefDataFixesDetails refDataFixesDetails, String authToken) {
+    public RefDataFixesData updateJudgesItcoReferences(RefDataFixesDetails refDataFixesDetails, String authToken, RefDataFixesCcdDataSource dataSource) {
 
-        var refDataFixesData = refDataFixesDetails.getCaseData();
-        ReportParams params = new ReportParams(
-                refDataFixesDetails.getCaseTypeId(),
-                refDataFixesData.getListingDateFrom(),
-                refDataFixesData.getListingDateTo());
+        RefDataFixesData refDataFixesData = refDataFixesDetails.getCaseData();
+        String existingJudgeCode = refDataFixesData.getExistingJudgeCode();
+        String requiredJudgeCode = refDataFixesData.getRequiredJudgeCode();
+        String caseTypeId = refDataFixesDetails.getCaseTypeId();
+        List<String> dates = getDateRangeForSearch(refDataFixesDetails);
+        String dateFrom = dates.get(0);
+        String dateTo = dates.get(1);
         try {
-            RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken, ccdClient);
-            List<SubmitEvent> submitEvents = dataSource.getData(params);
-            List<JudgeCodes> judges = getJudges();
+            List<SubmitEvent> submitEvents = dataSource.getData(caseTypeId, dateFrom, dateTo, ccdClient);
             if (CollectionUtils.isNotEmpty(submitEvents)) {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 for (SubmitEvent submitEvent : submitEvents) {
                     CaseData caseData = submitEvent.getCaseData();
-                    for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                        HearingType hearingType = hearingTypeItem.getValue();
-                        hearingType.setJudge(updateJudgeName(
-                                judges,
-                                hearingType.getJudge(),
-                                Strings.split(refDataFixesDetails.getCaseTypeId(), "_")[0]));
-                    }
-                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, Strings.split(refDataFixesDetails.getCaseTypeId(), "_")[0],
+                    setJudgeName(caseData, existingJudgeCode, requiredJudgeCode);
+
+                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, refDataFixesDetails.getCaseTypeId(),
                             refDataFixesDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-                    ccdClient.submitEventForCase(authToken, caseData, Strings.split(refDataFixesDetails.getCaseTypeId(), "_")[0],
+                    ccdClient.submitEventForCase(authToken, caseData, refDataFixesDetails.getCaseTypeId(),
                             refDataFixesDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
                 }
+                log.info(String.format(
+                        "Existing Judge's code in all cases from %s to %s is " +
+                                "updated to required judge's code", dateFrom, dateTo));
             }
             return refDataFixesData;
         } catch (Exception ex) {
+            log.error(MESSAGE + refDataFixesDetails.getCaseId(), ex);
             throw new CaseRetrievalException(MESSAGE + refDataFixesDetails.getCaseId() + ex.getMessage());
         }
     }
 
-    private String updateJudgeName(List<JudgeCodes> judges, String judgeCode, String office) {
-      Optional<JudgeCodes> t = judges.stream().filter(i -> i.existingJudgeCode.equals(judgeCode) && i.office.equals(office)).findFirst();
-        if (t.isPresent()) {
-           return t.get().requiredJudgeCode;
+    private List<String> getDateRangeForSearch(RefDataFixesDetails refDataFixesDetails) {
+        var refDataFixesData = refDataFixesDetails.getCaseData();
+        boolean isRangeHearingDateType = refDataFixesData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        String dateFrom;
+        String dateTo;
+        if (!isRangeHearingDateType) {
+            dateFrom = LocalDate.parse(refDataFixesData.getDate(), OLD_DATE_TIME_PATTERN2)
+                    .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
+            dateTo = LocalDate.parse(refDataFixesData.getDate(), OLD_DATE_TIME_PATTERN2)
+                    .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
+        } else {
+            dateFrom = LocalDate.parse(refDataFixesData.getDateFrom(), OLD_DATE_TIME_PATTERN2)
+                    .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
+            dateTo = LocalDate.parse(refDataFixesData.getDateTo(), OLD_DATE_TIME_PATTERN2)
+                    .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
         }
-        return judgeCode;
+        return new ArrayList<>(List.of(dateFrom, dateTo));
     }
 
-    private List<JudgeCodes> getJudges() throws Exception {
-        try {
-
-            String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-                    .getResource("Judges.json")).toURI())));
-            ObjectMapper mapper = new ObjectMapper();
-
-            return Arrays.asList(mapper.readValue(json, JudgeCodes[].class));
-        } catch (Exception ex) {
-            throw new Exception(MESSAGE + ex.toString());
+    private void setJudgeName(CaseData caseData, String existingJudgeCode, String requiredJudgeCode) {
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            HearingType hearingType = hearingTypeItem.getValue();
+            if (!Strings.isNullOrEmpty(hearingType.getJudge()) && hearingType.getJudge().equals(existingJudgeCode)) {
+                hearingType.setJudge(requiredJudgeCode);
+                log.info(String.format("Judge's code in Case with ethosReference %s is updated", caseData.getEthosCaseReference()));
+            }
         }
     }
-
 
     public RefDataFixesData insertClaimServedDate(RefDataFixesDetails refDataFixesDetails, String authToken) {
 
         var refDataFixesData = refDataFixesDetails.getCaseData();
         ReportParams params = new ReportParams(
                 refDataFixesDetails.getCaseTypeId(),
-                refDataFixesData.getListingDateFrom(),
-                refDataFixesData.getListingDateTo());
+                refDataFixesData.getDateFrom(),
+                refDataFixesData.getDateTo());
         try {
-            RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken, ccdClient);
-            List<SubmitEvent> submitEvents = dataSource.getData(params);
-            if (CollectionUtils.isNotEmpty(submitEvents)) {
-                log.info(CASES_SEARCHED + submitEvents.size());
-                for (SubmitEvent submitEvent : submitEvents) {
-                    CaseData caseData = submitEvent.getCaseData();
-                }
-
-            }
+            RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
+//            List<SubmitEvent> submitEvents = dataSource.getData(params);
+//            if (CollectionUtils.isNotEmpty(submitEvents)) {
+//                log.info(CASES_SEARCHED + submitEvents.size());
+//                for (SubmitEvent submitEvent : submitEvents) {
+//                    CaseData caseData = submitEvent.getCaseData();
+//                }
+//
+//            }
             return refDataFixesData;
         } catch (Exception ex) {
             throw new CaseRetrievalException(MESSAGE + refDataFixesDetails.getCaseId() + ex.getMessage());

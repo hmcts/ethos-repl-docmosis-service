@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
@@ -51,8 +52,9 @@ public class ReferenceDataFixesController {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-
-       RefDataFixesData caseData = referenceDataFixesService.updateJudgesItcoReferences(refDataFixesRequest.getCaseDetails(), userToken);
+        RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(userToken);
+        RefDataFixesData caseData = referenceDataFixesService.updateJudgesItcoReferences(
+                refDataFixesRequest.getCaseDetails(), userToken, dataSource);
 
         return getCallbackRespEntityNoErrors(caseData);
     }

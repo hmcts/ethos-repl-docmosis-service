@@ -9,15 +9,15 @@ import lombok.Data;
 public class RefDataFixesData {
     @JsonProperty("hearingDateType")
     private String hearingDateType;
-    @JsonProperty("listingDate")
-    private String listingDate;
-    @JsonProperty("listingDateFrom")
-    private String listingDateFrom;
-    @JsonProperty("listingDateTo")
-    private String listingDateTo;
-    @JsonProperty("listingVenue")
-    private String listingVenue;
-    @JsonProperty("refDataType")
-    private String refDataType;
+    @JsonProperty("date")
+    private String date;
+    @JsonProperty("dateFrom")
+    private String dateFrom;
+    @JsonProperty("dateTo")
+    private String dateTo;
+    @JsonProperty("existingJudgeCode")
+    private String existingJudgeCode;
+    @JsonProperty("requiredJudgeCode")
+    private String requiredJudgeCode;
 }
 
