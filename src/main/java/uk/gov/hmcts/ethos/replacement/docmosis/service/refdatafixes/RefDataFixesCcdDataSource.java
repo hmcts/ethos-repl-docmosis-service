@@ -15,12 +15,12 @@ public class RefDataFixesCcdDataSource implements RefDataFixesDataSource {
     @Override
     public List<SubmitEvent> getData(String caseTypeId, String dateFrom, String dateTo, CcdClient ccdClient) {
         try {
-            var query = RefDataFixesElasticSearchQuery.create(
+            String query = RefDataFixesElasticSearchQuery.create(
                     dateFrom, dateTo);
             return ccdClient.executeElasticSearch(authToken, caseTypeId, query);
         } catch (Exception e) {
             throw new RefDataFixesException(String.format(
-                    "Failed to get hearings by hearing type search results for case type id %s", caseTypeId), e);
+                    "Failed to get cases for case type id %s", caseTypeId), e);
         }
     }
 }
