@@ -3,14 +3,13 @@ const requestModule = require('request-promise-native');
 const request = requestModule.defaults();
 const testConfig = require('../../config.js');
 const logger = Logger.getLogger('helpers/idamApi.js');
-const env = testConfig.TestEnv;
 
 async function getUserToken() {
     const username = testConfig.TestEnvCWUser;
     const password = testConfig.TestEnvCWPassword;
-    const redirectUri = `https://manage-case.aat.platform.hmcts.net/oauth2/callback`;
+    const redirectUri = testConfig.RedirectUri;
     const idamClientSecret = testConfig.TestIdamClientSecret;
-    const idamBaseUrl = 'https://idam-api.aat.platform.hmcts.net';
+    const idamBaseUrl = testConfig.IdamBaseUrl;
     const idamCodePath = `/oauth2/authorize?response_type=code&client_id=xuiwebapp&redirect_uri=${redirectUri}`;
 
     const codeResponse = await request.post({
@@ -38,7 +37,7 @@ async function getUserToken() {
 }
 
 async function getUserId(authToken) {
-    const idamBaseUrl = 'https://idam-api.aat.platform.hmcts.net';
+    const idamBaseUrl = testConfig.IdamBaseUrl;
     const idamDetailsPath = '/details';
 
     const userDetails = await request.get({
