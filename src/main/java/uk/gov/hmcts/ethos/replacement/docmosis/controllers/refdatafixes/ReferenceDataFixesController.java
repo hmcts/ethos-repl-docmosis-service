@@ -59,29 +59,4 @@ public class ReferenceDataFixesController {
 
         return getCallbackRespEntityNoErrors(caseData);
     }
-
-//    @PostMapping(value = "/insertClaimServedDate", consumes = APPLICATION_JSON_VALUE)
-//    @Operation(summary = "Insert the claim served date for existing cases")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-//                    content = {
-//                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
-//                    }),
-//            @ApiResponse(responseCode = "400", description = "Bad Request"),
-//            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-//    })
-//    public ResponseEntity<RefDataFixesCallbackResponse> insertClaimServedDate(
-//            @RequestBody RefDataFixesRequest refDataFixesRequest,
-//            @RequestHeader(value = "Authorization") String userToken) {
-//        log.info("INSERT CLAIM SERVED DATE ---> " + LOG_MESSAGE + refDataFixesRequest.getCaseDetails().getCaseId());
-//
-//        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-//            log.error("Invalid Token {}", userToken);
-//            return ResponseEntity.status(FORBIDDEN.value()).build();
-//        }
-//
-//        RefDataFixesData caseData = referenceDataFixesService.insertClaimServedDate(refDataFixesRequest.getCaseDetails(), userToken);
-//
-//        return getCallbackRespEntityNoErrors(caseData);
-//    }
 }

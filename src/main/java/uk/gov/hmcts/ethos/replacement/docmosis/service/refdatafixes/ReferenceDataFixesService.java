@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
-import uk.gov.hmcts.ecm.common.exceptions.CaseRetrievalException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -57,7 +55,7 @@ public class ReferenceDataFixesService {
             return refDataFixesData;
         } catch (Exception ex) {
             log.error(MESSAGE + refDataFixesDetails.getCaseId(), ex);
-            throw new CaseRetrievalException(MESSAGE + refDataFixesDetails.getCaseId() + ex.getMessage());
+            return null;
         }
     }
 
@@ -77,7 +75,7 @@ public class ReferenceDataFixesService {
             dateTo = LocalDate.parse(refDataFixesData.getDateTo(), OLD_DATE_TIME_PATTERN2)
                     .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
         }
-        return new ArrayList<>(List.of(dateFrom, dateTo));
+        return List.of(dateFrom, dateTo);
     }
 
     private void setJudgeName(CaseData caseData, String existingJudgeCode, String requiredJudgeCode) {
@@ -89,35 +87,5 @@ public class ReferenceDataFixesService {
             }
         }
     }
-
-//    public RefDataFixesData insertClaimServedDate(RefDataFixesDetails refDataFixesDetails, String authToken) {
-//
-//        var refDataFixesData = refDataFixesDetails.getCaseData();
-//        ReportParams params = new ReportParams(
-//                refDataFixesDetails.getCaseTypeId(),
-//                refDataFixesData.getDateFrom(),
-//                refDataFixesData.getDateTo());
-//        try {
-//            RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
-////            List<SubmitEvent> submitEvents = dataSource.getData(params);
-////            if (CollectionUtils.isNotEmpty(submitEvents)) {
-////                log.info(CASES_SEARCHED + submitEvents.size());
-////                for (SubmitEvent submitEvent : submitEvents) {
-////                    CaseData caseData = submitEvent.getCaseData();
-////                }
-////
-////            }
-//            return refDataFixesData;
-//        } catch (Exception ex) {
-//            throw new CaseRetrievalException(MESSAGE + refDataFixesDetails.getCaseId() + ex.getMessage());
-//        }
-//    }
-
-//    public RefDataFixesData insertClaimServedDate(RefDataFixesDetails refDataFixesDetails) {
-//        RefDataFixesData refDataFixesData = refDataFixesDetails.getCaseData();
-//        claimServedDateFixRepository.addClaimServedDate(Date.valueOf(refDataFixesData.getListingDateFrom()),
-//                Date.valueOf(refDataFixesData.getListingDateTo()),refDataFixesDetails.getCaseTypeId());
-//        return refDataFixesData;
-//    }
 
 }
