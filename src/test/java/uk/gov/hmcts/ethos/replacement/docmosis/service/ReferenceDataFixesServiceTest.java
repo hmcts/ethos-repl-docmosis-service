@@ -13,8 +13,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ReferenceDataFixesServiceTest {
     @InjectMocks
     private ReferenceDataFixesService referenceDataFixesService;
 
-    private RefDataFixesDetails refDataFixesDetails;
+    private AdminDetails adminDetails;
     private static final String REQUIRED_CODE_1 = "requiredJudgeCode1";
     private List<SubmitEvent> submitEvents;
 
@@ -45,16 +45,16 @@ public class ReferenceDataFixesServiceTest {
     public void setUp() {
 
         dataSource = mock(RefDataFixesCcdDataSource.class);
-        refDataFixesDetails = new RefDataFixesDetails();
-        RefDataFixesData refDataFixesData = new RefDataFixesData();
-        refDataFixesDetails.setCaseData(refDataFixesData);
-        refDataFixesDetails.setJurisdiction("EMPLOYMENT");
-        refDataFixesDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
-        refDataFixesData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
-        refDataFixesData.setDateFrom("2022-07-01");
-        refDataFixesData.setDateTo("2022-07-31");
-        refDataFixesData.setExistingJudgeCode("existingJudgeCode1");
-        refDataFixesData.setRequiredJudgeCode(REQUIRED_CODE_1);
+        adminDetails = new AdminDetails();
+        AdminData adminData = new AdminData();
+        adminDetails.setCaseData(adminData);
+        adminDetails.setJurisdiction("EMPLOYMENT");
+        adminDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
+        adminData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
+        adminData.setDateFrom("2022-07-01");
+        adminData.setDateTo("2022-07-31");
+        adminData.setExistingJudgeCode("existingJudgeCode1");
+        adminData.setRequiredJudgeCode(REQUIRED_CODE_1);
         HearingTypeItem hearingTypeItem1 = new HearingTypeItem();
         hearingTypeItem1.setId("2222");
         HearingType hearingType1 = new HearingType();
@@ -76,36 +76,36 @@ public class ReferenceDataFixesServiceTest {
 
     @Test
     public void judgeCodeReplaceTest() {
-        RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
-                refDataFixesDetails, "authToken", dataSource);
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
     public void judgeCodeCaseTypeIdTest() {
-        refDataFixesDetails.setCaseTypeId("Manchester_RefData");
-        RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
-                refDataFixesDetails, "authToken", dataSource);
+        adminDetails.setCaseTypeId("Manchester_RefData");
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
     public void judgeCodeDateTest() {
-        refDataFixesDetails.getCaseData().setDate("2022-07-01");
-        refDataFixesDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
-        RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
-                refDataFixesDetails, "authToken", dataSource);
+        adminDetails.getCaseData().setDate("2022-07-01");
+        adminDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
     public void wrongJudgeCodeTest() {
-        refDataFixesDetails.getCaseData().setExistingJudgeCode("WrongJudgeCode");
-        RefDataFixesData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
-                refDataFixesDetails, "authToken", dataSource);
+        adminDetails.getCaseData().setExistingJudgeCode("WrongJudgeCode");
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
         assertNotEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }

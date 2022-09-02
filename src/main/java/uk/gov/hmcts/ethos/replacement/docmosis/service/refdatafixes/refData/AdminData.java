@@ -6,9 +6,11 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class RefDataFixesData {
+public class AdminData {
     @JsonProperty("hearingDateType")
     private String hearingDateType;
+    @JsonProperty("name")
+    private String name;
     @JsonProperty("date")
     private String date;
     @JsonProperty("dateFrom")
@@ -19,5 +21,7 @@ public class RefDataFixesData {
     private String existingJudgeCode;
     @JsonProperty("requiredJudgeCode")
     private String requiredJudgeCode;
+    @JsonProperty("tribunalOffice")
+    private String tribunalOffice;
 }
 

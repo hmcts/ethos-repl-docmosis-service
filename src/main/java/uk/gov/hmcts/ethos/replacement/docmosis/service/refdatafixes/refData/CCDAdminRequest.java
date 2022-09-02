@@ -1,21 +1,20 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import uk.gov.hmcts.ecm.common.model.generic.GenericCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.generic.GenericRequest;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RefDataFixesCallbackResponse extends GenericCallbackResponse {
+public class CCDAdminRequest extends GenericRequest {
 
-    private RefDataFixesData data;
+    @JsonProperty("case_details")
+    private AdminDetails caseDetails;
 }
-

@@ -14,8 +14,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,14 +25,13 @@ public class ReferenceDataFixesService {
     private static final String MESSAGE = "Failed to retrieve reference data for case id : ";
     private final CcdClient ccdClient;
 
-    public RefDataFixesData updateJudgesItcoReferences(RefDataFixesDetails refDataFixesDetails, String authToken, RefDataFixesCcdDataSource dataSource) {
+    public AdminData updateJudgesItcoReferences(AdminDetails adminDetails, String authToken, RefDataFixesCcdDataSource dataSource) {
 
-        RefDataFixesData refDataFixesData = refDataFixesDetails.getCaseData();
-        String existingJudgeCode = refDataFixesData.getExistingJudgeCode();
-        String requiredJudgeCode = refDataFixesData.getRequiredJudgeCode();
-        String caseTypeId = refDataFixesDetails.getCaseTypeId().contains("_") ?
-                Strings.split(refDataFixesDetails.getCaseTypeId(), "_")[0] : refDataFixesDetails.getCaseTypeId();
-        List<String> dates = getDateRangeForSearch(refDataFixesDetails);
+        AdminData adminData = adminDetails.getCaseData();
+        String existingJudgeCode = adminData.getExistingJudgeCode();
+        String requiredJudgeCode = adminData.getRequiredJudgeCode();
+        String caseTypeId = adminData.getTribunalOffice();
+        List<String> dates = getDateRangeForSearch(adminDetails);
         String dateFrom = dates.get(0);
         String dateTo = dates.get(1);
         try {
@@ -44,23 +43,23 @@ public class ReferenceDataFixesService {
                     setJudgeName(caseData, existingJudgeCode, requiredJudgeCode);
 
                     CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
-                            refDataFixesDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
+                            adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
                     ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
-                            refDataFixesDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
+                            adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
                 }
                 log.info(String.format(
                         "Existing Judge's code in all cases from %s to %s is " +
                                 "updated to required judge's code", dateFrom, dateTo));
             }
-            return refDataFixesData;
+            return adminData;
         } catch (Exception ex) {
-            log.error(MESSAGE + refDataFixesDetails.getCaseId(), ex);
+            log.error(MESSAGE + adminDetails.getCaseId(), ex);
             return null;
         }
     }
 
-    private List<String> getDateRangeForSearch(RefDataFixesDetails refDataFixesDetails) {
-        var refDataFixesData = refDataFixesDetails.getCaseData();
+    private List<String> getDateRangeForSearch(AdminDetails adminDetails) {
+        var refDataFixesData = adminDetails.getCaseData();
         boolean isRangeHearingDateType = refDataFixesData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         String dateFrom;
         String dateTo;
@@ -86,6 +85,56 @@ public class ReferenceDataFixesService {
                 log.info(String.format("Judge's code in Case with ethosReference %s is updated", caseData.getEthosCaseReference()));
             }
         }
+    }
+
+    /**
+     * This method does not return anything. Initializes AdminData to null values
+     * to not show any existing values for both the creation and update of file locations
+     *
+     * @param  adminData  AdminData which is a generic data type for most of the
+     *                    methods which holds file location code, file location name
+     *                    and tribunal office and file location list.
+     */
+    public void initAdminData(AdminData adminData) {
+        adminData.setDate(null);
+        adminData.setDateFrom(null);
+        adminData.setDateTo(null);
+        adminData.setHearingDateType(null);
+        adminData.setExistingJudgeCode(null);
+        adminData.setRequiredJudgeCode(null);
+    }
+
+    /**
+     * This method is used to populate file location list according to selected tribunal office.
+     * Returns a list of errors. For this method there may only be one type of error which is
+     * ERROR_FILE_LOCATION_NOT_FOUND_BY_TRIBUNAL_OFFICE defined as
+     * "There is not any file location found in the %s office"
+     * Gets only adminData as parameter.
+     *
+     * @param  adminData  AdminData which is a generic data type for most of the
+     *                    methods which holds file location code, file location name
+     *                    and tribunal office and file location list. Used only tribunal office
+     *                    value.
+     * @return errors     A list of string values that contains error definitions.
+     */
+    public List<String> midEventSelectTribunalOffice(AdminData adminData) {
+//        List<String> errors = new ArrayList<>();
+//        String tribunalOffice = adminData.getTribunalOffice();
+//        List<FileLocation> fileLocationList = fileLocationRepository.findByTribunalOfficeOrderByNameAsc(
+//                TribunalOffice.valueOfOfficeName(tribunalOffice));
+//        if (fileLocationList == null || fileLocationList.isEmpty()) {
+//            errors.add(String.format(ERROR_FILE_LOCATION_NOT_FOUND_BY_TRIBUNAL_OFFICE, tribunalOffice));
+//            return errors;
+//        }
+//        List<DynamicValueType> fileLocationDynamicList = new ArrayList<>();
+//        for (FileLocation fileLocation : fileLocationList) {
+//            fileLocationDynamicList.add(DynamicValueType.create(fileLocation.getCode(), fileLocation.getName()));
+//        }
+//
+//        DynamicFixedListType fileLocationDynamicFixedList = new DynamicFixedListType();
+//        fileLocationDynamicFixedList.setListItems(fileLocationDynamicList);
+//        adminData.setFileLocationList(fileLocationDynamicFixedList);
+       return null;
     }
 
 }

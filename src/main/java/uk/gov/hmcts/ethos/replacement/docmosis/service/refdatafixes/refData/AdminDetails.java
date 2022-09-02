@@ -9,8 +9,8 @@ import uk.gov.hmcts.ecm.common.model.generic.GenericCaseDetails;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class RefDataFixesDetails extends GenericCaseDetails {
+public class AdminDetails extends GenericCaseDetails {
 
     @JsonProperty("case_data")
-    private RefDataFixesData caseData;
+    private AdminData caseData;
 }

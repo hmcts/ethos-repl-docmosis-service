@@ -11,8 +11,8 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 
 public class CallbackRespHelper {
 
@@ -38,10 +38,10 @@ public class CallbackRespHelper {
     }
 
     @NotNull
-    public static ResponseEntity<RefDataFixesCallbackResponse> getCallbackRespEntityNoErrors(
-            RefDataFixesData caseData) {
+    public static ResponseEntity<CCDAdminCallbackResponse> getCallbackRespEntityNoErrors(
+            AdminData caseData) {
 
-        return ResponseEntity.ok(RefDataFixesCallbackResponse.builder()
+        return ResponseEntity.ok(CCDAdminCallbackResponse.builder()
                 .data(caseData)
                 .build());
     }
@@ -51,6 +51,16 @@ public class CallbackRespHelper {
             List<String> errors, CaseData caseData) {
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
+    @NotNull
+    public static ResponseEntity<CCDAdminCallbackResponse> getCallbackRespEntityErrorsAdmin(
+            List<String> errors, AdminData caseData) {
+
+        return ResponseEntity.ok(CCDAdminCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
                 .build());

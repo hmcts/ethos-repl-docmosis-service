@@ -21,8 +21,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.controllers.refdatafixes.Referenc
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.RefDataFixesDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +41,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ER
 public class ReferenceDataFixesControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
-    private static final String UPDATE_JUDGES = "/updateJudgesItcoReferences";
+    private static final String UPDATE_JUDGES = "/admin/updateJudgesItcoReferences";
     private static final String DATE_LISTED_REFERENCE_DATA = "/dateListedReferenceData";
 
     @Autowired
@@ -74,9 +74,9 @@ public class ReferenceDataFixesControllerTest {
     @Test
     public void updateJudgeCodeTest() throws Exception {
         when(referenceDataFixesService.updateJudgesItcoReferences(
-                isA(RefDataFixesDetails.class), isA(String.class),
+                isA(AdminDetails.class), isA(String.class),
                 isA(RefDataFixesCcdDataSource.class)))
-                .thenReturn(new RefDataFixesData());
+                .thenReturn(new AdminData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_JUDGES)
                 .content(requestContent.toString())
@@ -98,7 +98,7 @@ public class ReferenceDataFixesControllerTest {
     @Test
     public void updateJudgeCodeTestError500() throws Exception {
         when(referenceDataFixesService.updateJudgesItcoReferences(
-                isA(RefDataFixesDetails.class), isA(String.class),
+                isA(AdminDetails.class), isA(String.class),
                 isA(RefDataFixesCcdDataSource.class)))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
