@@ -49,7 +49,7 @@ public class ReferenceDataFixesServiceTest {
         AdminData adminData = new AdminData();
         adminDetails.setCaseData(adminData);
         adminDetails.setJurisdiction("EMPLOYMENT");
-        adminDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
+        adminData.setTribunalOffice(MANCHESTER_CASE_TYPE_ID);
         adminData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         adminData.setDateFrom("2022-07-01");
         adminData.setDateTo("2022-07-31");
@@ -84,7 +84,7 @@ public class ReferenceDataFixesServiceTest {
 
     @Test
     public void judgeCodeCaseTypeIdTest() {
-        adminDetails.setCaseTypeId("Manchester_RefData");
+        adminDetails.getCaseData().setTribunalOffice("Manchester");
         AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -95,7 +95,7 @@ public class ReferenceDataFixesServiceTest {
     public void judgeCodeDateTest() {
         adminDetails.getCaseData().setDate("2022-07-01");
         adminDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());

@@ -41,7 +41,6 @@ public class ReferenceDataFixesService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     CaseData caseData = submitEvent.getCaseData();
                     setJudgeName(caseData, existingJudgeCode, requiredJudgeCode);
-
                     CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
                             adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
                     ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
@@ -89,11 +88,11 @@ public class ReferenceDataFixesService {
 
     /**
      * This method does not return anything. Initializes AdminData to null values
-     * to not show any existing values for both the creation and update of file locations
+     * to not show any existing values for update of judge codes
      *
      * @param  adminData  AdminData which is a generic data type for most of the
-     *                    methods which holds file location code, file location name
-     *                    and tribunal office and file location list.
+     *                    methods which holds judge code, dates
+     *                    and tribunal office
      */
     public void initAdminData(AdminData adminData) {
         adminData.setDate(null);
@@ -103,38 +102,4 @@ public class ReferenceDataFixesService {
         adminData.setExistingJudgeCode(null);
         adminData.setRequiredJudgeCode(null);
     }
-
-    /**
-     * This method is used to populate file location list according to selected tribunal office.
-     * Returns a list of errors. For this method there may only be one type of error which is
-     * ERROR_FILE_LOCATION_NOT_FOUND_BY_TRIBUNAL_OFFICE defined as
-     * "There is not any file location found in the %s office"
-     * Gets only adminData as parameter.
-     *
-     * @param  adminData  AdminData which is a generic data type for most of the
-     *                    methods which holds file location code, file location name
-     *                    and tribunal office and file location list. Used only tribunal office
-     *                    value.
-     * @return errors     A list of string values that contains error definitions.
-     */
-    public List<String> midEventSelectTribunalOffice(AdminData adminData) {
-//        List<String> errors = new ArrayList<>();
-//        String tribunalOffice = adminData.getTribunalOffice();
-//        List<FileLocation> fileLocationList = fileLocationRepository.findByTribunalOfficeOrderByNameAsc(
-//                TribunalOffice.valueOfOfficeName(tribunalOffice));
-//        if (fileLocationList == null || fileLocationList.isEmpty()) {
-//            errors.add(String.format(ERROR_FILE_LOCATION_NOT_FOUND_BY_TRIBUNAL_OFFICE, tribunalOffice));
-//            return errors;
-//        }
-//        List<DynamicValueType> fileLocationDynamicList = new ArrayList<>();
-//        for (FileLocation fileLocation : fileLocationList) {
-//            fileLocationDynamicList.add(DynamicValueType.create(fileLocation.getCode(), fileLocation.getName()));
-//        }
-//
-//        DynamicFixedListType fileLocationDynamicFixedList = new DynamicFixedListType();
-//        fileLocationDynamicFixedList.setListItems(fileLocationDynamicList);
-//        adminData.setFileLocationList(fileLocationDynamicFixedList);
-       return null;
-    }
-
 }
