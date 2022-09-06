@@ -305,6 +305,7 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.3'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.31'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
