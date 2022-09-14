@@ -12,8 +12,8 @@ const defaultSauceOptions = {
     acceptSslCerts: true,
     windowSize: '1600x900',
     tags: ['ecm-e2e'],
-    // extendedDebugging: true,
-    // capturePerformance: true
+    extendedDebugging: true,
+    capturePerformance: true
 };
 
 function merge(intoObject, fromObject) {
@@ -105,9 +105,9 @@ const setupConfig = {
         }
     },
     multiple: {
-        microsoft: {
-            browsers: getBrowserConfig('microsoft')
-        },
+        // microsoft: {
+        //     browsers: getBrowserConfig('microsoft')
+        // },
         chrome: {
             browsers: getBrowserConfig('chrome')
         },

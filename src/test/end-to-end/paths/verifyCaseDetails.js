@@ -19,7 +19,7 @@ Scenario('Verify Case Details ', async ({I}) => {
 
 }).tag('@e2e')
     .tag('@nightly')
-    .tag('@crossbrowser')
+    .tag('@crossbrowser2')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Case Details ( Using API)', async ({I}) => {
