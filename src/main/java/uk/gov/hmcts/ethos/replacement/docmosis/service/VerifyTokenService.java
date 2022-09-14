@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import springfox.documentation.annotations.Cacheable;
 
 import java.net.URL;
 import java.security.Key;
@@ -49,12 +48,11 @@ public class VerifyTokenService {
         }
     }
 
-    @Cacheable("jwks")
     private JWKSet loadJsonWebKeySet(String jwksUrl) {
         try {
             return JWKSet.load(new URL(jwksUrl));
         } catch (Exception e) {
-            log.error("JWKS key loading error");
+            log.error("JWKS key loading error", e);
             throw new RuntimeException("JWKS error", e);
         }
     }
@@ -73,7 +71,7 @@ public class VerifyTokenService {
             }
             throw new RuntimeException("Unsupported JWK " + jsonWebKey.getClass().getName());
         } catch (JOSEException e) {
-            log.error("Invalid JWK key");
+            log.error("Invalid JWK key", e);
             throw new RuntimeException("Invalid JWK", e);
         }
     }

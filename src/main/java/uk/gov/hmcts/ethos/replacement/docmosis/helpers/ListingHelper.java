@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDG
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_BY_HEARING_VENUE_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
@@ -74,13 +76,16 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RULE_50_APPLIES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 
 @Slf4j
 public class ListingHelper {
@@ -93,9 +98,11 @@ public class ListingHelper {
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
-            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT, MEMBER_DAYS_REPORT);
+            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT,
+            MEMBER_DAYS_REPORT, RESPONDENTS_REPORT, SESSION_DAYS_REPORT, ECC_REPORT, CLAIMS_BY_HEARING_VENUE_REPORT);
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
+    public static final DateTimeFormatter CAUSE_LIST_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     private ListingHelper() {
     }
@@ -109,9 +116,9 @@ public class ListingHelper {
             log.info("started getListingTypeFromCaseData");
             listingType.setElmoCaseReference(caseData.getEthosCaseReference());
             String listedDate = dateListedType.getListedDate();
-            listingType.setCauseListDate(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalDate(listedDate) : " ");
+            listingType.setCauseListDate(!isNullOrEmpty(listedDate)
+                    ? LocalDate.parse(listedDate, OLD_DATE_TIME_PATTERN).format(CAUSE_LIST_DATE_TIME_PATTERN) : " ");
             listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : " ");
-            log.info("getJurCodesCollection");
 
             listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollectionWithHide(
                     caseData.getJurCodesCollection()));
@@ -432,11 +439,7 @@ public class ListingHelper {
 
     public static StringBuilder getListingDate(ListingData listingData) {
         var sb = new StringBuilder();
-        if (RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())
-                && SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
-            return getServedClaimsReportPeriod(listingData);
-
-        } else if (RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
+        if (RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
             sb.append("\"Listed_date_from\":\"")
                     .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
             sb.append("\"Listed_date_to\":\"")
@@ -445,22 +448,6 @@ public class ListingHelper {
             sb.append("\"Listed_date\":\"")
                     .append(UtilHelper.listingFormatLocalDate(listingData.getListingDate())).append(NEW_LINE);
         }
-        return sb;
-    }
-
-    private static StringBuilder getServedClaimsReportPeriod(ListingData listingData) {
-        String listedDate;
-        var sb = new StringBuilder();
-
-        if (listingData.getListingDateFrom() != null && listingData.getListingDateTo() != null) {
-            listedDate = " Between " + UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())
-                    + " and " + UtilHelper.listingFormatLocalDate(listingData.getListingDateTo());
-        } else {
-            listedDate = " On " + UtilHelper.listingFormatLocalDate(listingData.getListingDate());
-        }
-
-        sb.append("\"Listed_date\":\"").append(listedDate).append(NEW_LINE);
-
         return sb;
     }
 
@@ -867,6 +854,12 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00794";
             case MEMBER_DAYS_REPORT:
                 return "EM-TRB-SCO-ENG-00800";
+            case RESPONDENTS_REPORT:
+                return "EM-TRB-SCO-ENG-00815";
+            case SESSION_DAYS_REPORT:
+                return "EM-TRB-SCO-ENG-00817";
+            case ECC_REPORT:
+                return "EM-TRB-SCO-ENG-00818";
             default:
                 return NO_DOCUMENT_FOUND;
         }

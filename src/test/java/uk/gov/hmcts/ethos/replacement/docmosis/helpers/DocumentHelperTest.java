@@ -10,17 +10,22 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 
 public class DocumentHelperTest {
 
@@ -40,10 +45,12 @@ public class DocumentHelperTest {
     private CaseDetails caseDetails13;
     private CaseDetails caseDetails14;
     private CaseDetails caseDetails15;
+    private CaseDetails caseDetails20;
     private CaseDetails caseDetailsEmpty;
     private CaseDetails caseDetailsScot1;
     private CaseDetails caseDetailsScot2;
     private CaseDetails caseDetailsScot3;
+    private CaseDetails caseDetailsScot4;
     private UserDetails userDetails;
 
     private InputStream venueAddressInputStream;
@@ -64,9 +71,11 @@ public class DocumentHelperTest {
         caseDetails13 = generateCaseDetails("caseDetailsTest13.json");
         caseDetails14 = generateCaseDetails("caseDetailsTest14.json");
         caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
+        caseDetails20 = generateCaseDetails("caseDetailsTest20.json");
         caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
         caseDetailsScot2 = generateCaseDetails("caseDetailsScotTest2.json");
         caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
+        caseDetailsScot4 = generateCaseDetails("caseDetailsScotTest4.json");
 
         caseDetailsEmpty = new CaseDetails();
         caseDetailsEmpty.setCaseData(new CaseData());
@@ -1361,6 +1370,17 @@ public class DocumentHelperTest {
     }
 
     @Test
+    public void buildDocumentContent20() throws URISyntaxException, IOException {
+        var expectedResult = getExpectedResult("expectedDocumentContent20.json");
+        var actualResult = DocumentHelper.buildDocumentContent(caseDetails20.getCaseData(), "",
+            userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
+            caseDetails20.getCaseData().getCorrespondenceType(),
+            caseDetails20.getCaseData().getCorrespondenceScotType(),
+            null, null).toString();
+        assertEquals(expectedResult, actualResult.trim());
+    }
+
+    @Test
     public void buildDocumentWithNotContent() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
@@ -1653,6 +1673,20 @@ public class DocumentHelperTest {
                 caseDetailsScot3.getCaseData().getCorrespondenceType(),
                 caseDetailsScot3.getCaseData().getCorrespondenceScotType(),
                 null, null).toString());
+    }
+
+    @Test
+    public void buildDocumentContentScot4() throws URISyntaxException, IOException {
+        var expectedResult = getExpectedResult("expectedDocumentContentScot4.json");
+        expectedResult = expectedResult.replace("current-date", UtilHelper.formatCurrentDate(LocalDate.now()));
+        expectedResult = expectedResult.replace("plus28",
+                UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28));
+        var actualResult = DocumentHelper.buildDocumentContent(caseDetailsScot4.getCaseData(), "",
+            userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
+            caseDetailsScot4.getCaseData().getCorrespondenceType(),
+            caseDetailsScot4.getCaseData().getCorrespondenceScotType(),
+            null, null).toString();
+        assertEquals(expectedResult, actualResult.trim());
     }
 
     @Test
@@ -2042,6 +2076,17 @@ public class DocumentHelperTest {
         assertEquals(expectedHearingVenue,
                 DocumentHelper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(),
                         correspondenceHearingNumber).getHearingVenue());
+    }
+
+    private String getExpectedResult(String resourceFileName) throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+            .getResource(resourceFileName)).toURI())));
+        var currentLocalDate = LocalDate.now();
+        var currentLocalDatePlus28Days = currentLocalDate.plusDays(28);
+        return expectedJson.replace("current-date-placeholder",
+                UtilHelper.formatCurrentDate(currentLocalDate))
+            .replace("current-date-plus28-placeholder",
+                UtilHelper.formatCurrentDate(currentLocalDatePlus28Days));
     }
 
 }

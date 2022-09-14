@@ -12,6 +12,6 @@ Scenario('Verify Jurisdiction', async ({I}) => {
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await jurisdiction(I, eventNames.JURISDICTION);
 
-}).tag('@e2e')
-    .tag('@manchester')
+}).tag('@nightly')
+    .tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

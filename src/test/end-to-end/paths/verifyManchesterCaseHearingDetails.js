@@ -14,6 +14,6 @@ Scenario('Verify Manchester case Hearing details', async ({I}) => {
     await allocateHearing(I, eventNames.ALLOCATE_HEARING, 'Manchester');
     await hearingDetails(I, eventNames.HEARING_DETAILS);
 
-}).tag('@e2e')
-    .tag('@manchester')
+}).tag('@nightly')
+    .tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

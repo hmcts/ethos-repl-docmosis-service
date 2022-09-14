@@ -1,34 +1,39 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.multiples.bulkaddsingles;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_BULK_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.PENDING_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
 
-public class SingleCasesValidatorTest {
+class SingleCasesValidatorTest {
     private final String authToken = "some-token";
     private List<SubmitEvent> submitEvents;
     private List<String> caseIds;
     private SingleCasesValidator singleCasesValidator;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
         var ccdClient = mock(CcdClient.class);
         caseIds = new ArrayList<>();
@@ -39,32 +44,41 @@ public class SingleCasesValidatorTest {
         singleCasesValidator = new SingleCasesValidator(ccdClient);
     }
 
-    @Test
-    public void shouldSetSubmittedCaseAsInvalid() throws IOException {
+    @ParameterizedTest
+    @CsvSource({ACCEPTED_STATE, SUBMITTED_STATE})
+    void shouldSetValidStateCaseAsValid(String caseState) throws IOException {
         var ethosReference = "case1";
-        var multipleReference = "multiple1";
         caseIds.add(ethosReference);
-        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
+        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, caseState, null));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
-                multipleReference, authToken);
+        List<ValidatedSingleCase> validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
+        verify(validatedCases, ethosReference, true, null);
+    }
+
+    @ParameterizedTest
+    @CsvSource({REJECTED_STATE, CLOSED_STATE, PENDING_STATE, OPEN_STATE, TRANSFERRED_STATE})
+    void shouldSetInvalidCaseStateAsInvalid(String caseState) throws IOException {
+        String ethosReference = "case1";
+        caseIds.add(ethosReference);
+        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, caseState, null));
+        List<ValidatedSingleCase> validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         assertEquals(1, validatedCases.size());
         assertFalse(validatedCases.get(0).isValid());
         assertEquals(ethosReference, validatedCases.get(0).getEthosReference());
-        assertEquals("Case is in state "+ SUBMITTED_STATE, validatedCases.get(0).getInvalidReason());
+        assertEquals("Case is in state " + caseState, validatedCases.get(0).getInvalidReason());
     }
 
     @Test
-    public void shouldSetCaseInOtherMultipleAsInvalid() throws IOException {
+    public void shouldSetCaseInOtherMultipleAsValid() throws IOException {
         var ethosReference = "case1";
-        var multipleReference = "multiple1";
         var otherMultipleReference = "other-multiple";
         caseIds.add(ethosReference);
         submitEvents.add(createSubmitEvent(ethosReference, MULTIPLE_CASE_TYPE, ACCEPTED_STATE, otherMultipleReference));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
-                multipleReference, authToken);
-        verify(validatedCases, ethosReference, false, "Case already assigned to " + otherMultipleReference);
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
+        verify(validatedCases, ethosReference, true, null);
     }
 
     @Test
@@ -74,31 +88,29 @@ public class SingleCasesValidatorTest {
         caseIds.add(ethosReference);
         submitEvents.add(createSubmitEvent(ethosReference, MULTIPLE_CASE_TYPE, ACCEPTED_STATE, multipleReference));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
-                multipleReference, authToken);
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         verify(validatedCases, ethosReference, true, null);
     }
 
     @Test
     public void shouldSetUnknownCaseAsInvalid() throws IOException {
         var ethosReference = "case1";
-        var multipleReference = "multiple1";
         caseIds.add(ethosReference);
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
-                multipleReference, authToken);
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         verify(validatedCases, ethosReference, false, "Case not found");
     }
 
     @Test
     public void shouldSetSingleAcceptedCaseAsValid() throws IOException {
         var ethosReference = "case1";
-        var multipleReference = "multiple1";
         caseIds.add(ethosReference);
         submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, ACCEPTED_STATE, null));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
-                multipleReference, authToken);
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         verify(validatedCases, ethosReference, true, null);
     }
 
@@ -110,34 +122,30 @@ public class SingleCasesValidatorTest {
     @Test
     public void shouldSetSingleAcceptedCaseWithMultipleReferenceAsValid() throws IOException {
         var ethosReference = "case1";
-        var multipleReference = "multiple1";
         var otherMultipleReference = "multiple2";
         caseIds.add(ethosReference);
         submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, ACCEPTED_STATE, otherMultipleReference));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
-                multipleReference, authToken);
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         verify(validatedCases, ethosReference, true, null);
     }
 
     @Test
     public void shouldHandleAllCases() throws IOException {
+        caseIds.addAll(List.of("case1", "case2", "case3", "case4"));
         var multipleReference = "multiple1";
-        var otherMultipleReference = "multiple2";
-        caseIds.addAll(List.of("case1", "case2", "case3", "case4", "case5"));
         submitEvents.add(createSubmitEvent("case1", SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
         submitEvents.add(createSubmitEvent("case2", SINGLE_CASE_TYPE, ACCEPTED_STATE, null));
         submitEvents.add(createSubmitEvent("case3", SINGLE_CASE_TYPE, ACCEPTED_STATE, multipleReference));
-        submitEvents.add(createSubmitEvent("case4", MULTIPLE_CASE_TYPE, ACCEPTED_STATE, otherMultipleReference));
 
-        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
-                multipleReference, authToken);
-        assertEquals(5, validatedCases.size());
-        verify(validatedCases.get(0), "case1", false, "Case is in state "+ SUBMITTED_STATE);
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
+                NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
+        assertEquals(4, validatedCases.size());
+        verify(validatedCases.get(0), "case1", true, null);
         verify(validatedCases.get(1), "case2", true, null);
         verify(validatedCases.get(2), "case3", true, null);
-        verify(validatedCases.get(3), "case4", false, "Case already assigned to " + otherMultipleReference);
-        verify(validatedCases.get(4), "case5", false, "Case not found");
+        verify(validatedCases.get(3), "case4", false, "Case not found");
     }
 
     private SubmitEvent createSubmitEvent(String ethosReference, String caseType, String state,

@@ -9,13 +9,16 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
@@ -23,6 +26,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
@@ -55,10 +59,10 @@ public class HearingsToJudgmentsReport {
     private final String listingDateTo;
 
     public HearingsToJudgmentsReport(HearingsToJudgmentsReportDataSource hearingsToJudgmentsReportDataSource,
-                                     String listingDateFrom, String listingDateTo) {
+                                     ReportParams params) {
         this.hearingsToJudgmentsReportDataSource = hearingsToJudgmentsReportDataSource;
-        this.listingDateFrom = listingDateFrom;
-        this.listingDateTo = listingDateTo;
+        this.listingDateFrom = params.getDateFrom();
+        this.listingDateTo = params.getDateTo();
     }
 
     public HearingsToJudgmentsReportData runReport(String caseTypeId) {
@@ -121,6 +125,7 @@ public class HearingsToJudgmentsReport {
             }
         }
 
+        reportData.getReportDetails().sort(Comparator.comparingInt(o -> Integer.parseInt(o.getTotalDays())));
         addReportSummary(reportData.getReportSummary(), allHearingsWithJudgments);
     }
 
@@ -175,10 +180,10 @@ public class HearingsToJudgmentsReport {
                 hearingJudgmentItem.judgmentWithin4Weeks = dateJudgmentMade.isBefore(hearingDatePlus4Wks);
                 hearingJudgmentItem.hearingDate = hearingListedDate.format(OLD_DATE_TIME_PATTERN2);
                 hearingJudgmentItem.judgmentDateSent = dateJudgmentSent.format(OLD_DATE_TIME_PATTERN2);
-                hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
+                hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent.plusDays(1)).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
-                hearingJudgmentItem.judge = hearingType.getJudge();
-
+                hearingJudgmentItem.judge = isNullOrEmpty(hearingType.getJudge()) ? NOT_ALLOCATED :
+                                        hearingType.getJudge().substring(hearingType.getJudge().indexOf('_') + 1);
                 hearingJudgmentsList.add(hearingJudgmentItem);
             }
         }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -54,7 +55,7 @@ public class ExcelDocManagementService {
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 
-        log.info("Add document to multiple");
+        log.info("Add document to multiple with reference:" + multipleData.getMultipleReference());
 
         addDocumentToMultiple(userToken, multipleData, documentSelfPath);
 
@@ -94,7 +95,7 @@ public class ExcelDocManagementService {
                 multipleData.getLeadCase());
         uploadExcelDocument(userToken, multipleDetails, excelBytes);
 
-        log.info("Add multiple case counter");
+        log.info("Add multiple case counter for multipleReference:" + multipleData.getMultipleReference());
 
         multipleData.setCaseCounter(String.valueOf(multipleCollection.size()));
 
@@ -103,7 +104,7 @@ public class ExcelDocManagementService {
     public CaseImporterFile populateCaseImporterFile(String userToken, UploadedDocumentType uploadedDocumentType) {
 
         var caseImporterFile = new CaseImporterFile();
-        var dateTime = LocalDateTime.now();
+        var dateTime = LocalDateTime.now(ZoneId.of("Europe/London"));
         var userDetails = userService.getUserDetails(userToken);
 
         caseImporterFile.setUploadedDocument(uploadedDocumentType);
@@ -111,7 +112,6 @@ public class ExcelDocManagementService {
         caseImporterFile.setUploadUser(userDetails.getFirstName() + " " + userDetails.getLastName());
 
         return caseImporterFile;
-
     }
 
     public DocumentInfo writeAndUploadScheduleDocument(String userToken,
@@ -148,7 +148,14 @@ public class ExcelDocManagementService {
                         documentManagementService.generateDownloadableURL(documentSelfPath)))
                 .url(documentManagementService.generateDownloadableURL(documentSelfPath))
                 .build();
-
     }
 
+    public DocumentInfo uploadExcelReportDocument(String userToken, String documentName, byte[] excelBytes) {
+        URI documentUri = documentManagementService.uploadDocument(userToken, excelBytes,
+            documentName, APPLICATION_EXCEL_VALUE, "Listings_Type");
+
+        log.info("Excel Report - URI documentSelfPath uploaded and created: " + documentUri.toString());
+
+        return getScheduleDocument(documentUri, documentName);
+    }
 }

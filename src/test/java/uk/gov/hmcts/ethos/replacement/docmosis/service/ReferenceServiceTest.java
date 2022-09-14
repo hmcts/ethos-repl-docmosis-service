@@ -77,21 +77,20 @@ public class ReferenceServiceTest {
         referenceSubmitEvent3.setCaseData(referenceData3);
         referenceSubmitEvent3.setCaseId(3);
 
-        ReferenceSubmitEvent referenceSubmitEvent4 = new ReferenceSubmitEvent();
         ReferenceData referenceData4 = new ReferenceData();
         ClerkType clerkType4 = new ClerkType();
         clerkType4.setFirstName("First Name 4");
         clerkType4.setLastName("Last Name 4");
+        ReferenceSubmitEvent referenceSubmitEvent4 = new ReferenceSubmitEvent();
         referenceData4.setClerkType(clerkType4);
         referenceSubmitEvent4.setCaseData(referenceData4);
         referenceSubmitEvent4.setCaseId(4);
-
-        ReferenceSubmitEvent referenceSubmitEvent5 = new ReferenceSubmitEvent();
         ReferenceData referenceData5 = new ReferenceData();
         ClerkType clerkType5 = new ClerkType();
         clerkType5.setFirstName("First Name 5");
         clerkType5.setLastName("Last Name 5");
         referenceData5.setClerkType(clerkType5);
+        ReferenceSubmitEvent referenceSubmitEvent5 = new ReferenceSubmitEvent();
         referenceSubmitEvent5.setCaseData(referenceData5);
         referenceSubmitEvent5.setCaseId(5);
 
@@ -103,17 +102,21 @@ public class ReferenceServiceTest {
         referenceSubmitEvent6.setCaseData(referenceData6);
         referenceSubmitEvent6.setCaseId(6);
 
-        referenceSubmitEvents = new ArrayList<>(Arrays.asList(referenceSubmitEvent1, referenceSubmitEvent2, referenceSubmitEvent3));
+        referenceSubmitEvents = new ArrayList<>(Arrays.asList(
+                referenceSubmitEvent1, referenceSubmitEvent2, referenceSubmitEvent3));
         referenceSubmitEvents.add(referenceSubmitEvent4);
         referenceSubmitEvents.add(referenceSubmitEvent5);
         referenceSubmitEvents.add(referenceSubmitEvent6);
 
-        referenceSubmitEventsNoVenues = new ArrayList<>(Arrays.asList(referenceSubmitEvent4, referenceSubmitEvent5, referenceSubmitEvent6));
+        referenceSubmitEventsNoVenues = new ArrayList<>(Arrays.asList(
+                referenceSubmitEvent4, referenceSubmitEvent5, referenceSubmitEvent6));
 
-        referenceSubmitEventsNoClerks = new ArrayList<>(Arrays.asList(referenceSubmitEvent1, referenceSubmitEvent2, referenceSubmitEvent3));
+        referenceSubmitEventsNoClerks = new ArrayList<>(Arrays.asList(
+                referenceSubmitEvent1, referenceSubmitEvent2, referenceSubmitEvent3));
         referenceSubmitEventsNoClerks.add(referenceSubmitEvent6);
 
-        referenceSubmitEventsNoJudges = new ArrayList<>(Arrays.asList(referenceSubmitEvent1, referenceSubmitEvent2, referenceSubmitEvent3));
+        referenceSubmitEventsNoJudges = new ArrayList<>(Arrays.asList(
+                referenceSubmitEvent1, referenceSubmitEvent2, referenceSubmitEvent3));
         referenceSubmitEventsNoJudges.add(referenceSubmitEvent4);
         referenceSubmitEventsNoJudges.add(referenceSubmitEvent5);
 
@@ -127,7 +130,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, "
                 + "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
                 + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, "
-                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
                 + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
                 + "feeGroupReference=null, claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
@@ -171,7 +174,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
-                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
                 + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
                 + "feeGroupReference=null, claimantWorkAddressQuestion=null, "
@@ -211,7 +214,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
-                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
@@ -249,7 +252,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
-                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
@@ -287,7 +290,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
-                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
@@ -322,7 +325,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
                 + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, "
-                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
                 + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
@@ -362,7 +365,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
-                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
@@ -401,7 +404,7 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
-                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +

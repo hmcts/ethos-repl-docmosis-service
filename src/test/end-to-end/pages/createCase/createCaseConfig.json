@@ -1,8 +1,0 @@
-{
-  "waitForText" : "Create Case",
-  "list1_text": "Employment",
-  "list2_text_case_type_manchester": "Manchester",
-  "list2_text_case_type_scotland": "Scotland",
-  "list3_text_event": "Create Case",
-  "startButton": ".button"
-}

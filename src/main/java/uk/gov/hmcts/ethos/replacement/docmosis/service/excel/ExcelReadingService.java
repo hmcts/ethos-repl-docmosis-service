@@ -71,9 +71,8 @@ public class ExcelReadingService {
 
         } catch (IOException e) {
 
-            log.error("Error reading the Excel");
-
-            throw new RuntimeException("Error reading the excel", e);
+            throw new RuntimeException("Error reading the excel for multiple reference"
+                    + multipleData.getMultipleReference(), e);
 
         }
 

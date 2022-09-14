@@ -16,14 +16,13 @@ import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedTypeItem;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.WEEKEND_DAYS_LIST;
 
 @Service
 @Slf4j
@@ -76,7 +75,7 @@ public class ServingClaimsReport {
                 && !Strings.isNullOrEmpty(caseData.getClaimServedDate())) {
             LocalDate caseReceiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN2);
             LocalDate caseClaimServedDate = LocalDate.parse(caseData.getClaimServedDate(), OLD_DATE_TIME_PATTERN2);
-            long actualNumberOfDaysToServingClaim = ChronoUnit.DAYS.between(caseReceiptDate, caseClaimServedDate);
+            var actualNumberOfDaysToServingClaim = getNumberOfDays(caseReceiptDate, caseClaimServedDate) + 1;
             var reportedNumberOfDaysToServingClaim = getReportedNumberOfDays(caseReceiptDate, caseClaimServedDate);
 
             var claimServedType = new ClaimServedType();
@@ -95,17 +94,19 @@ public class ServingClaimsReport {
 
     }
 
-    private int getReportedNumberOfDays(LocalDate caseReceiptDate, LocalDate caseClaimServedDate) {
-        Period period = Period.between(caseReceiptDate, caseClaimServedDate);
-        int totalNumberOfDays;
+    private long getNumberOfDays(LocalDate caseReceiptDate, LocalDate claimServedDate) {
+        return caseReceiptDate.datesUntil(claimServedDate)
+                .filter(d -> !WEEKEND_DAYS_LIST.contains(d.getDayOfWeek()))
+                .count();
+    }
 
-        if (period.getMonths() > 0 || period.getDays() >= 5) {
-            totalNumberOfDays = 5;
+    private long getReportedNumberOfDays(LocalDate caseReceiptDate, LocalDate caseClaimServedDate) {
+        var period = getNumberOfDays(caseReceiptDate, caseClaimServedDate);
+        if (period >= 5) {
+            return 5;
         } else {
-            totalNumberOfDays = period.getDays();
+            return period;
         }
-
-        return totalNumberOfDays;
     }
 
     private String getTotalServedClaims(AdhocReportType adhocReportType) {
@@ -128,7 +129,6 @@ public class ServingClaimsReport {
                 setServedClaimsDetailsByDay(adhocReportType, dayNumber);
             }
         }
-
     }
 
     private void setServedClaimsDetailsByDay(AdhocReportType adhocReportType, int dayNumber) {
@@ -137,20 +137,9 @@ public class ServingClaimsReport {
     }
 
     private List<ClaimServedTypeItem> getServedClaimItemsByDayNumber(AdhocReportType adhocReportType, int dayNumber) {
-        int claimsServedDayListUpperBoundary = 5;
-        List<ClaimServedTypeItem> acceptedClaimItems;
-
-        if (dayNumber >= claimsServedDayListUpperBoundary) {
-            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
-                    .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) >= dayNumber)
-                    .collect(Collectors.toList());
-        } else {
-            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
-                    .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
-                    .collect(Collectors.toList());
-        }
-
-        return acceptedClaimItems;
+        return adhocReportType.getClaimServedItems().stream()
+            .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
+            .collect(Collectors.toList());
     }
 
     private void setServedClaimsSummary(AdhocReportType adhocReportType, String totalServedClaims,
@@ -192,5 +181,4 @@ public class ServingClaimsReport {
                 break;
         }
     }
-
 }

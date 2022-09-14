@@ -16,6 +16,10 @@ import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.UpdateDataModel;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+
 public class UpdateDataModelBuilder {
 
     private UpdateDataModelBuilder() {
@@ -34,7 +38,7 @@ public class UpdateDataModelBuilder {
                 .positionType(multipleData.getPositionType())
                 .receiptDate(multipleData.getReceiptDate())
                 .hearingStage(multipleData.getHearingStage())
-
+                .subMultiple(getSubMultipleName(caseData))
                 .isRespondentRepRemovalUpdate(multipleData.getBatchRemoveRespondentRep())
                 .isClaimantRepRemovalUpdate(multipleData.getBatchRemoveClaimantRep())
 
@@ -43,7 +47,25 @@ public class UpdateDataModelBuilder {
                 .respondentSumType(getRespondentSumType(multipleData, caseData))
                 .judgementType(getJudgementType(multipleData, caseData))
                 .representedType(getRespondentRepType(multipleData, caseData))
+                .isFixCase(getFixCase(multipleData))
                 .build();
+    }
+
+    private static String getFixCase(MultipleData multipleData) {
+        if (isNullOrEmpty(multipleData.getIsFixCase())
+            || NO.equals(multipleData.getIsFixCase())) {
+            return NO;
+        } else {
+            return YES;
+        }
+    }
+
+    private static String getSubMultipleName(CaseData caseData) {
+        if (caseData == null || isNullOrEmpty(caseData.getSubMultipleName())) {
+            return null;
+        } else {
+            return caseData.getSubMultipleName();
+        }
     }
 
     private static JurCodesType getJurCodesType(MultipleData multipleData, CaseData caseData) {
@@ -53,7 +75,8 @@ public class UpdateDataModelBuilder {
 
         List<JurCodesTypeItem> jurCodesCollection = caseData.getJurCodesCollection();
 
-        if (multipleData.getBatchUpdateJurisdiction().getValue() != null
+        if (multipleData.getBatchUpdateJurisdiction() != null
+                && multipleData.getBatchUpdateJurisdiction().getValue() != null
                 && jurCodesCollection != null) {
             String jurCodeToSearch = multipleData.getBatchUpdateJurisdiction().getValue().getLabel();
             Optional<JurCodesTypeItem> jurCodesTypeItemOptional =

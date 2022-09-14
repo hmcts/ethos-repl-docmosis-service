@@ -13,5 +13,5 @@ Scenario('Verify Manchester case B/F Action', async ({I}) => {
     await bfAction(I, eventNames.BF_ACTION);
 
 }).tag('@e2e')
-    .tag('@manchester')
+    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

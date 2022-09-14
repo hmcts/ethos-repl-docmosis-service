@@ -13,6 +13,6 @@ Scenario('Verify Manchester case Allocate Hearing', async ({I}) => {
     await listHearing(I, eventNames.LIST_HEARING, 'Manchester');
     await allocateHearing(I, eventNames.ALLOCATE_HEARING, 'Manchester');
 
-}).tag('@e2e')
-    .tag('@manchester')
+}).tag('@nightly')
+    .tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

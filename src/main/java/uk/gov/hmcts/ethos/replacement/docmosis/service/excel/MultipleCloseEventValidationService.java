@@ -44,9 +44,6 @@ public class MultipleCloseEventValidationService {
         for (var submitEvent : submitEvents) {
             eventValidationService.validateCaseBeforeCloseEvent(submitEvent.getCaseData(),
                     submitEvent.getState().equals(REJECTED_STATE), true, errors);
-            if (!errors.isEmpty()) {
-                break;
-            }
         }
 
         return errors;

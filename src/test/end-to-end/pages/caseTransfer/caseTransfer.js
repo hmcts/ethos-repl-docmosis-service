@@ -14,5 +14,3 @@ module.exports = async function () {
     await I.click('Transfer Case');
     await I.waitForText(`Case Transfer: Transferred to ${commonConfig.caseTransferOffice}`, testConfig.TestTimeToWaitForText);
 };
-
-

@@ -2,20 +2,17 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.multiples.bulkaddsingles
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @Service
 @Slf4j
@@ -30,7 +27,6 @@ class SingleCasesValidator {
     }
 
     List<ValidatedSingleCase> getValidatedCases(List<String> ethosCaseReferences, String multipleCaseTypeId,
-                                                String multipleEthosReference,
                   String authToken) throws IOException {
         var partitionedCaseReferences = Lists.partition(ethosCaseReferences, ELASTICSEARCH_TERMS_SIZE);
 
@@ -48,31 +44,22 @@ class SingleCasesValidator {
                         .filter(se -> se.getCaseData().getEthosCaseReference().equals(ethosCaseReference))
                         .findFirst();
 
-                validatedSingleCases.add(create(ethosCaseReference, multipleEthosReference, searchResult));
+                validatedSingleCases.add(create(ethosCaseReference, searchResult));
             }
         }
         return validatedSingleCases;
     }
 
-    private ValidatedSingleCase create(String ethosCaseReference, String multipleEthosReference,
+    private ValidatedSingleCase create(String ethosCaseReference,
                                        Optional<SubmitEvent> submitEventOptional) {
         if (submitEventOptional.isPresent()) {
             var submitEvent = submitEventOptional.get();
 
-            if (!isAccepted(submitEvent)) {
+            if (!isAcceptedOrSubmitted(submitEvent)) {
                 return ValidatedSingleCase.createInvalidCase(ethosCaseReference,
                         "Case is in state " + submitEvent.getState());
             }
 
-            if (isSingleCaseType(submitEvent)) {
-                return ValidatedSingleCase.createValidCase(ethosCaseReference);
-            }
-
-            var existingMultipleReference = getExistingMultipleReference(submitEvent, multipleEthosReference);
-            if (existingMultipleReference != null) {
-                return ValidatedSingleCase.createInvalidCase(ethosCaseReference,
-                            "Case already assigned to " + existingMultipleReference);
-            }
         } else {
             return ValidatedSingleCase.createInvalidCase(ethosCaseReference, "Case not found");
         }
@@ -80,21 +67,7 @@ class SingleCasesValidator {
         return ValidatedSingleCase.createValidCase(ethosCaseReference);
     }
 
-    private boolean isAccepted(SubmitEvent submitEvent) {
-        return ACCEPTED_STATE.equals(submitEvent.getState());
-    }
-
-    private boolean isSingleCaseType(SubmitEvent submitEvent) {
-        return SINGLE_CASE_TYPE.equals(submitEvent.getCaseData().getEcmCaseType());
-    }
-
-    private String getExistingMultipleReference(SubmitEvent submitEvent, String multipleEthosReference) {
-        var existingMultipleReference = submitEvent.getCaseData().getMultipleReference();
-        if (StringUtils.isNotBlank(existingMultipleReference)
-                && !multipleEthosReference.equals(existingMultipleReference)) {
-            return existingMultipleReference;
-        } else {
-            return null;
-        }
+    private boolean isAcceptedOrSubmitted(SubmitEvent submitEvent) {
+        return ACCEPTED_STATE.equals(submitEvent.getState()) || SUBMITTED_STATE.equals(submitEvent.getState());
     }
 }

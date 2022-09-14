@@ -1,8 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicLetters;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -44,12 +47,14 @@ public class DocumentGenerationController {
     private final EventValidationService eventValidationService;
 
     @PostMapping(value = "/midAddressLabels", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populates the address labels list with the user selected addresses.")
+    @Operation(summary = "populates the address labels list with the user selected addresses.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> midAddressLabels(
             @RequestBody CCDRequest ccdRequest,
@@ -74,12 +79,14 @@ public class DocumentGenerationController {
     }
 
     @PostMapping(value = "/midSelectedAddressLabels", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populates the address labels list with the user selected addresses to be printed.")
+    @Operation(summary = "populates the address labels list with the user selected addresses to be printed.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> midSelectedAddressLabels(
             @RequestBody CCDRequest ccdRequest,
@@ -98,12 +105,14 @@ public class DocumentGenerationController {
     }
 
     @PostMapping(value = "/midValidateAddressLabels", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates the address labels collection and print attributes before printing.")
+    @Operation(summary = "validates the address labels collection and print attributes before printing.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> midValidateAddressLabels(
             @RequestBody CCDRequest ccdRequest,
@@ -124,12 +133,14 @@ public class DocumentGenerationController {
     }
 
     @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a document.")
+    @Operation(summary = "generate a document.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> generateDocument(
             @RequestBody CCDRequest ccdRequest,
@@ -173,12 +184,14 @@ public class DocumentGenerationController {
     }
 
     @PostMapping(value = "/generateDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a document confirmation.")
+    @Operation(summary = "generate a document confirmation.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> generateDocumentConfirmation(
             @RequestBody CCDRequest ccdRequest,
@@ -205,12 +218,14 @@ public class DocumentGenerationController {
     }
 
     @PostMapping(value = "/dynamicLetters", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populates a dynamic list for hearing numbers for letter")
+    @Operation(summary = "populates a dynamic list for hearing numbers for letter")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully",
-                response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> dynamicLetters(
             @RequestBody CCDRequest ccdRequest,
@@ -224,7 +239,7 @@ public class DocumentGenerationController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         DynamicLetters.dynamicLetters(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
-
-        return getCallbackRespEntityNoErrors(caseData);
+        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(caseData, "letter");
+        return getCallbackRespEntityErrors(errors, caseData);
     }
 }

@@ -5,11 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicLetters;
@@ -18,18 +16,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestr
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_BULK_CASE_TYPE_ID;
 
 public class DynamicListHelperTest {
 
@@ -39,8 +31,6 @@ public class DynamicListHelperTest {
     private CaseDetails caseDetails6;
     private CaseDetails caseDetailsScotTest1;
     private DynamicValueType dynamicValueType;
-    private MultipleDetails multipleDetails;
-    private List<SubmitEvent> submitEvents;
 
     @Before
     public void setUp() throws Exception {
@@ -50,10 +40,7 @@ public class DynamicListHelperTest {
         caseDetails6 = generateCaseDetails("caseDetailsTest6.json");
         caseDetailsScotTest1 = generateCaseDetails("caseDetailsScotTest1.json");
         dynamicValueType = new DynamicValueType();
-        multipleDetails = new MultipleDetails();
-        multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        submitEvents = MultipleUtil.getSubmitEvents();    }
-
+    }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
@@ -111,7 +98,7 @@ public class DynamicListHelperTest {
         dynamicValueRespondent.setLabel("Antonio Vazquez");
         List<DynamicValueType> listItems = DynamicListHelper.createDynamicRespondentName(caseDetails1.getCaseData().getRespondentCollection());
         listItems.add(DynamicListHelper.getDynamicCodeLabel("C: " + caseDetails1.getCaseData().getClaimant(), caseDetails1.getCaseData().getClaimant()));
-        var dynamicValue = DynamicListHelper.getDynamicValueType(caseDetails1.getCaseData(), listItems, "Respondent");
+        var dynamicValue = DynamicListHelper.getDynamicValueParty(caseDetails1.getCaseData(), listItems, "Respondent");
         assertEquals(dynamicValue, dynamicValueRespondent);
     }
 
@@ -166,20 +153,6 @@ public class DynamicListHelperTest {
         dynamicValueType.setLabel("1 - Single - Glasgow - 25 Nov 2019");
         assertEquals(dynamicValueType, caseDetailsScotTest1.getCaseData().getCorrespondenceScotType().getDynamicHearingNumber().getListItems().get(0));
         assertNull(caseDetailsScotTest1.getCaseData().getCorrespondenceType());
-    }
-
-    @Test
-    public void dynamicMultipleLetters() {
-        List<DynamicValueType> listItems = new ArrayList<>();
-        multipleDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
-        for (SubmitEvent submitEvent : submitEvents) {
-            if (submitEvent != null) {
-                MultipleUtil.addHearingToCaseData(submitEvent.getCaseData());
-                DynamicLetters.dynamicMultipleLetters(submitEvent, multipleDetails.getCaseData(), multipleDetails.getCaseTypeId(), listItems);
-            }
-        }
-        assertEquals(2, listItems.size());
-        assertNull(multipleDetails.getCaseData().getCorrespondenceScotType());
     }
 
     @Test
@@ -251,5 +224,21 @@ public class DynamicListHelperTest {
         assertNotNull(caseData.getJudgementCollection());
         JudgementType judgementType = caseData.getJudgementCollection().get(0).getValue();
         assertEquals("No Hearings", judgementType.getDynamicJudgementHearing().getListItems().get(0).getCode());
+    }
+
+    @Test
+    public void dynamicJudgment_ifHearingDateIsInvalid() {
+        var casedata = caseDetails2.getCaseData();
+        var judgmentType = new JudgementType();
+        judgmentType.setJudgmentHearingDate("2022-02-02");
+        var judgmentTypeItem = new JudgementTypeItem();
+        judgmentTypeItem.setValue(judgmentType);
+        casedata.setJudgementCollection(List.of(judgmentTypeItem));
+
+        DynamicJudgements.dynamicJudgements(casedata);
+
+        assertNotNull(casedata.getJudgementCollection());
+        var judgementType = casedata.getJudgementCollection().get(0).getValue();
+        assertNull(judgementType.getJudgmentHearingDate());
     }
 }

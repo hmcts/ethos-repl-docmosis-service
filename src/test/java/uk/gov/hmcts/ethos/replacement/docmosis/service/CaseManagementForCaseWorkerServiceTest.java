@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.auth.AUTH;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,24 +11,62 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService.LISTED_DATE_ON_WEEKEND_MESSAGE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -349,7 +386,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -357,7 +394,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -365,7 +402,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -373,7 +410,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -395,9 +432,11 @@ public class CaseManagementForCaseWorkerServiceTest {
                 "<font size='5'> - </font>" +
                 "<font color='Olive' size='5'> ECC </font>" +
                 "<font size='5'> - </font>" +
-                "<font color='SlateGray' size='5'> DIGITAL FILE </font>";
+                "<font color='SlateGray' size='5'> DIGITAL FILE </font>" +
+                "<font size='5'> - </font>" +
+                "<font color='DarkSlateBlue' size='5'> REASONABLE ADJUSTMENT </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-011111111.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0111111111.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -406,7 +445,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "<font color='DeepPink' size='5'> WITH OUTSTATION </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-100000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-1000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -434,6 +473,51 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .getHearingDateCollection().get(0).getValue().getHearingTimingStart());
         assertEquals("2019-11-01T12:11:00.000", caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingTimingFinish());
+    }
+
+    @Test
+    public void midEventAmendHearingDateOnWeekend() {
+        CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
+        var errors = new ArrayList<String>();
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection().get(0).getValue().setListedDate("2022-03-19T12:11:00.000");
+        var hearingNumber = caseData.getHearingCollection().get(0).getValue().getHearingNumber();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
+        assertFalse(errors.isEmpty());
+        assertEquals(LISTED_DATE_ON_WEEKEND_MESSAGE + hearingNumber, errors.get(0));
+    }
+
+    @Test
+    public void amendMidEventHearingDateFridayNight() {
+        CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
+        var errors = new ArrayList<String>();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    public void amendMidEventHearingDateMondayMorning() {
+        CaseData caseData = createCaseWithHearingDate("2022-03-21T00:00:00.000");
+        var errors = new ArrayList<String>();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
+        assertTrue(errors.isEmpty());
+    }
+
+    private CaseData createCaseWithHearingDate(String date) {
+        var caseData = new CaseData();
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        HearingTypeItem hearing = new HearingTypeItem();
+        hearing.setId(UUID.randomUUID().toString());
+        HearingType hearingType = new HearingType();
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        DateListedType dateListedType = new DateListedType();
+        dateListedType.setListedDate(date);
+        dateListedTypeItem.setId(UUID.randomUUID().toString());
+        dateListedTypeItem.setValue(dateListedType);
+        hearingType.setHearingDateCollection(Collections.singletonList(dateListedTypeItem));
+        hearing.setValue(hearingType);
+        hearings.add(hearing);
+        caseData.setHearingCollection(hearings);
+        return caseData;
     }
 
     @Test
@@ -502,6 +586,8 @@ public class CaseManagementForCaseWorkerServiceTest {
                 new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK);
         assertEquals("11111", casedata.getCaseRefECC());
         assertEquals(FLAG_ECC, casedata.getCaseSource());
+        assertTrue(casedata.getJurCodesCollection().get(0).getId().matches(
+                "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"));
     }
 
     @Test
