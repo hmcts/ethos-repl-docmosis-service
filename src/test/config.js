@@ -12,6 +12,7 @@ module.exports = {
     TestEnvCWUser: process.env.CCD_CASEWORKER_E2E_EMAIL || '',
     TestEnvCWPassword: process.env.CCD_CASEWORKER_E2E_PASSWORD || '',
     TestForXUI: process.env.TESTS_FOR_XUI_SERVICE === 'true',
+    TestAutoDelayEnabled: process.env.E2E_AUTO_DELAY_ENABLED === 'true',
     TestForAccessibility: process.env.TESTS_FOR_ACCESSIBILITY === 'true',
     TestForCrossBrowser: process.env.TESTS_FOR_CROSS_BROWSER === 'true',
     TestIdamClientSecret: process.env.IDAM_CLIENT_SECRET || '',
