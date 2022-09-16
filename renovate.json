@@ -1,9 +1,16 @@
 {
-  "enabledManagers": ["helm-requirements","gradle-wrapper", "gradle"],
-  "labels": ["dependencies"],
-  "helm-requirements":
-  {
-    "fileMatch": ["\\Chart.yaml$"],
+  "enabledManagers": [
+    "helm-requirements",
+    "gradle-wrapper",
+    "gradle"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "helm-requirements": {
+    "fileMatch": [
+      "\\Chart.yaml$"
+    ],
     "aliases": {
       "hmctspublic": "https://hmctspublic.azurecr.io/helm/v1/repo/"
     }
@@ -13,14 +20,37 @@
   "groupSlug": "all",
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
+      "matchPackagePatterns": [
+        "*"
+      ],
       "groupName": "all dependencies",
       "groupSlug": "all"
     },
     {
-      "matchPackageNames": ["elasticsearch"],
-      "allowedVersions": "<=7"
+      "matchPackageNames": [
+        "org.apache.tomcat.embed:tomcat-embed-core",
+        "org.apache.tomcat.embed:tomcat-embed-websocket"
+      ],
+      "allowedVersions": "<=9"
+    },
+    {
+      "matchPackagePrefixes": [
+        "com.github.hmcts.java-logging:"
+      ],
+      "allowedVersions": "<=5"
+    },
+    {
+      "matchPackageNames": [
+        "com.github.hmcts:ccd-case-document-am-client"
+      ],
+      "allowedVersions": "<1.59"
     }
   ],
-  "schedule": ["before 6am on Monday"]
+  "ignoreDeps": [
+    "com.github.hmcts:et-common",
+    "com.github.hmcts:et-data-model"
+  ],
+  "schedule": [
+    "before 6am on Monday"
+  ]
 }
