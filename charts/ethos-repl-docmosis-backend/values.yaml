@@ -14,8 +14,6 @@ java:
           alias: ETHOS_REPL_SERVICE_S2S_SECRET
         - name: repl-docmosis-backend-POSTGRES-PASS
           alias: ETHOS_REPL_DB_PASSWORD
-        - name: repl-docmosis-backend-POSTGRES-PASS-V11
-          alias: ETHOS_REPL_DB_V11_PASSWORD
     ethos-shared:
       resourceGroup: ethos
       secrets:
