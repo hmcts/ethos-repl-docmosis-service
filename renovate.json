@@ -43,7 +43,7 @@
       "matchPackageNames": [
         "com.github.hmcts:ccd-case-document-am-client"
       ],
-      "allowedVersions": "<1.59"
+      "allowedVersions": "=1.7.3"
     }
   ],
   "ignoreDeps": [
