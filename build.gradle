@@ -281,7 +281,10 @@ dependencies {
     implementation group: 'org.apache.santuario', name: 'xmlsec', version: '3.0.1'
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatEmbedVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatEmbedVersion
+    implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.15', ext: 'pom'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.7'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.31'
+
     implementation('org.elasticsearch:elasticsearch') {
         version {
             strictly '7.17.3'
