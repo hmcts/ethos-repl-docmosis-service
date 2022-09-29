@@ -1,11 +1,18 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.sql.Timestamp;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
@@ -14,6 +21,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.CaseDataEntity;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.CaseEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.CaseDataRepository;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.CaseEventRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
 
@@ -23,7 +34,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.Admi
 public class ReferenceDataFixesService {
     private static final String CASES_SEARCHED = "Cases searched: ";
     private static final String MESSAGE = "Failed to retrieve reference data for case id : ";
+    private static final String CLAIM_SERVED_DATE = "claimServedDate";
+    public static final String GENERATE_CORRESPONDENCE = "generateCorrespondence";
+    private static final Clock UTC_CLOCK = Clock.systemUTC();
+    private String description = "";
+    private String summary = "";
     private final CcdClient ccdClient;
+    private final CaseDataRepository caseDataRepository;
+    private final CaseEventRepository caseEventRepository;
 
     public AdminData updateJudgesItcoReferences(AdminDetails adminDetails, String authToken, RefDataFixesCcdDataSource dataSource) {
 
@@ -101,5 +119,95 @@ public class ReferenceDataFixesService {
         adminData.setHearingDateType(null);
         adminData.setExistingJudgeCode(null);
         adminData.setRequiredJudgeCode(null);
+    }
+
+    public AdminData insertClaimServedDate(AdminDetails adminDetails) {
+        try {
+            List<String> dates = getDateRangeForSearch(adminDetails);
+            AdminData adminData =  adminDetails.getCaseData();
+            List<CaseDataEntity> caseDataEntities = caseDataRepository.findCasesByCreationDateAndCaseType(
+                    Timestamp.valueOf(dates.get(0)),
+                    Timestamp.valueOf(dates.get(1)),
+                    adminData.getTribunalOffice());
+            for (CaseDataEntity caseDataEntity : caseDataEntities) {
+              CaseEvent ce =  caseEventRepository.findFirstCaseEventByEventIdAndState(GENERATE_CORRESPONDENCE,
+                      "Accepted", caseDataEntity.getId());
+              if (ce != null && ce.getCreatedDate() != null) {
+                  addFieldToPayload(caseDataEntity.getReference(), ce.getCreatedDate());
+              }
+            }
+
+            return adminData;
+        } catch (Exception ex) {
+            log.error(ex.toString());
+            return adminDetails.getCaseData();
+        }
+    }
+
+    private void addFieldToPayload(Long r, LocalDateTime eventDate) {
+        description = "Adding ClaimServedDate to case";
+        summary = "Adding ClaimServedDate to case";
+        Optional<CaseDataEntity> caseDataEntityOpt = caseDataRepository.findCaseDataByReference(r);
+        if (caseDataEntityOpt.isEmpty()) {
+            log.error(r + "not found");
+            return;
+        }
+
+        CaseDataEntity caseDataEntity = caseDataEntityOpt.get();
+        JsonNode caseData = caseDataEntity.getData();
+        var caseReference = caseDataEntity.getReference();
+        JsonNode dataClassification = caseDataEntity.getDataClassification();
+        if (Strings.isNullOrEmpty(caseData.findValue(CLAIM_SERVED_DATE).toString())) {
+            log.info("Adding field to case " + caseReference);
+            ((ObjectNode) caseData).put(CLAIM_SERVED_DATE, eventDate.toLocalDate().toString());
+            ((ObjectNode) dataClassification).put(CLAIM_SERVED_DATE, "PUBLIC");
+            caseDataEntity.setData(caseData);
+            caseDataEntity.setDataClassification(dataClassification);
+            if (!caseDataEntity.getData().findValue(CLAIM_SERVED_DATE).textValue().equals(eventDate.toLocalDate().toString())) {
+                log.info("Data has not been inserted correctly");
+                return;
+            }
+            log.info("Data has been inserted correctly");
+                findLatestEventAndCreateNew(caseDataEntity);
+                caseDataRepository.save(caseDataEntity);
+
+        } else {
+            log.info(CLAIM_SERVED_DATE + " already exists for case " + caseReference);
+        }
+    }
+
+    private void findLatestEventAndCreateNew(CaseDataEntity caseDataEntity) {
+        List<CaseEvent> latestEventsSingletonList = caseEventRepository
+                .findLatestEvents(caseDataEntity.getId(), PageRequest.of(0, 1));
+        if (CollectionUtils.isEmpty(latestEventsSingletonList)) {
+            log.error("Cannot find latest event for case " + caseDataEntity.getReference());
+            return;
+        }
+        log.info("Creating new history event for case " + caseDataEntity.getReference() );
+        CaseEvent newHistoryRecord = createHistoryEvent(caseDataEntity, latestEventsSingletonList.get(0));
+        caseEventRepository.save(newHistoryRecord);
+        log.info(caseDataEntity.getReference() + " updated from admin event");
+    }
+
+    private CaseEvent createHistoryEvent(CaseDataEntity caseDataEntity, CaseEvent caseEventEntity) {
+        return CaseEvent.builder()
+                .eventId("fixCaseAPI")
+                .eventName("Update to case data")
+                .caseDataId(caseDataEntity.getId())
+                .caseTypeId(caseEventEntity.getCaseTypeId())
+                .caseTypeVersion(caseEventEntity.getCaseTypeVersion())
+                .createdDate(LocalDateTime.now(UTC_CLOCK))
+                .data(caseDataEntity.getData())
+                .dataClassification(caseDataEntity.getDataClassification())
+                .stateId(caseEventEntity.getStateId())
+                .stateName(caseEventEntity.getStateName())
+                .userId("123456")
+                .description(description)
+                .summary(summary)
+                .userFirstName("ECM")
+                .userLastName("Local Dev (Stub)")
+                .securityClassification(caseEventEntity.getSecurityClassification())
+                .build();
+
     }
 }

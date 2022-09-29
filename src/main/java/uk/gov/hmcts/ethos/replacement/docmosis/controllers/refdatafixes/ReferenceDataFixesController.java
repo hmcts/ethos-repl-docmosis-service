@@ -7,18 +7,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminRequest;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
 @RestController
@@ -80,9 +84,9 @@ public class ReferenceDataFixesController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDAdminCallbackResponse> updateJudgesItcoReferences(
-            @RequestBody CCDAdminRequest CCDAdminRequest,
+            @RequestBody CCDAdminRequest ccdAdminRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("UPDATE JUDGES ITCO REFERENCES ---> " + LOG_MESSAGE + CCDAdminRequest.getCaseDetails().getCaseId());
+        log.info("UPDATE JUDGES ITCO REFERENCES ---> " + LOG_MESSAGE + ccdAdminRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -90,8 +94,34 @@ public class ReferenceDataFixesController {
         }
         RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(userToken);
         AdminData caseData = referenceDataFixesService.updateJudgesItcoReferences(
-                CCDAdminRequest.getCaseDetails(), userToken, dataSource);
+                ccdAdminRequest.getCaseDetails(), userToken, dataSource);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
+
+        @PostMapping(value = "/insertClaimServedDate", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Insert the claim served date for existing cases")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<CCDAdminCallbackResponse> insertClaimServedDate(
+            @RequestBody CCDAdminRequest ccdAdminRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("INSERT CLAIM SERVED DATE ---> " + LOG_MESSAGE + ccdAdminRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+            AdminData caseData = referenceDataFixesService.insertClaimServedDate(ccdAdminRequest.getCaseDetails());
+
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
 }
