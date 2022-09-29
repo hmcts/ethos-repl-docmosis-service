@@ -80,9 +80,9 @@ public class ReferenceDataFixesController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDAdminCallbackResponse> updateJudgesItcoReferences(
-            @RequestBody CCDAdminRequest CCDAdminRequest,
+            @RequestBody CCDAdminRequest ccdAdminRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("UPDATE JUDGES ITCO REFERENCES ---> " + LOG_MESSAGE + CCDAdminRequest.getCaseDetails().getCaseId());
+        log.info("UPDATE JUDGES ITCO REFERENCES ---> " + LOG_MESSAGE + ccdAdminRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -90,7 +90,7 @@ public class ReferenceDataFixesController {
         }
         RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(userToken);
         AdminData caseData = referenceDataFixesService.updateJudgesItcoReferences(
-                CCDAdminRequest.getCaseDetails(), userToken, dataSource);
+                ccdAdminRequest.getCaseDetails(), userToken, dataSource);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
