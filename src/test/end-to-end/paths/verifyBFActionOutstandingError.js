@@ -11,5 +11,5 @@ Scenario('Verify Close Case B/F Outstanding Actions Error Message', async ({I}) 
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await bfActionsOutstanding(I, eventNames.BF_ACTION);
 
-}).tag('@e2e')
+}).tag('@nightly')
     .retry(testConfig.TestRetryScenarios);
