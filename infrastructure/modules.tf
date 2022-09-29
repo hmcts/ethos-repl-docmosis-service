@@ -30,21 +30,3 @@ module "db" {
   common_tags        = var.common_tags
   subscription       = var.subscription
 }
-
-# POSTGRES v11 DB
-module "db-v11" {
-  source             = "git@github.com:hmcts/cnp-module-postgres?ref=postgresql_tf"
-  product            = var.product
-  component          = var.component
-  name               = join("-", [var.product,var.component,"postgres-db-v11"])
-  location           = var.location
-  env                = var.env
-  postgresql_user    = "ethos"
-  database_name      = "ethos"
-  postgresql_version = "11"
-  subnet_id          = data.azurerm_subnet.postgres.id
-  sku_name           = "GP_Gen5_2"
-  sku_tier           = "GeneralPurpose"
-  common_tags        = var.common_tags
-  subscription       = var.subscription
-}

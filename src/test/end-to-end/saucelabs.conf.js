@@ -1,26 +1,33 @@
 const config = require('../config.js');
 const supportedBrowsers = require('../crossbrowser/supportedBrowsers');
-const browser = process.env.BROWSER_GROUP || 'chrome';
 
-const waitForTimeout = 60000;
-const smartWait = 5000;
+const waitForTimeout = parseInt(process.env.WAIT_FOR_TIMEOUT) || 45000;
+const smartWait = parseInt(process.env.SMART_WAIT) || 30000;
+const browser = process.env.BROWSER_GROUP || 'chrome';
 
 const defaultSauceOptions = {
     username: process.env.SAUCE_USERNAME,
     accessKey: process.env.SAUCE_ACCESS_KEY,
     tunnelIdentifier: process.env.TUNNEL_IDENTIFIER || 'reformtunnel',
     acceptSslCerts: true,
+    windowSize: '1600x900',
     tags: ['ecm-e2e'],
     extendedDebugging: true,
     capturePerformance: true
 };
 
-const getBrowserConfig = browserGroup => {
+function merge(intoObject, fromObject) {
+    return Object.assign({}, intoObject, fromObject);
+}
+
+function getBrowserConfig(browserGroup) {
     const browserConfig = [];
     for (const candidateBrowser in supportedBrowsers[browserGroup]) {
         if (candidateBrowser) {
             const candidateCapabilities = supportedBrowsers[browserGroup][candidateBrowser];
-            candidateCapabilities['sauce:options'] = merge(defaultSauceOptions, candidateCapabilities['sauce:options']);
+            candidateCapabilities['sauce:options'] = merge(
+                defaultSauceOptions, candidateCapabilities['sauce:options']
+            );
             browserConfig.push({
                 browser: candidateCapabilities.browserName,
                 capabilities: candidateCapabilities
@@ -30,10 +37,6 @@ const getBrowserConfig = browserGroup => {
         }
     }
     return browserConfig;
-};
-
-function merge(intoObject, fromObject) {
-    return Object.assign({}, intoObject, fromObject);
 }
 
 const setupConfig = {
@@ -43,8 +46,8 @@ const setupConfig = {
         WebDriver: {
             url: config.TestUrl,
             browser,
-            waitForTimeout,
             smartWait,
+            waitForTimeout,
             cssSelectorsEnabled: 'true',
             host: 'ondemand.eu-central-1.saucelabs.com',
             port: 80,
@@ -52,11 +55,18 @@ const setupConfig = {
             capabilities: {}
 
         },
-        SauceLabsReportingHelper: {require: './helpers/SauceLabsReportingHelper.js'},
+        SauceLabsReportingHelper: {
+            require: './helpers/SauceLabsReportingHelper.js'
+        },
         WebDriverHelper: {
             require: './helpers/WebDriverHelper.js'
         },
-        JSWait: {require: './helpers/JSWait.js'},
+        JSWait: {
+            require: './helpers/JSWait.js'
+        },
+        Mochawesome: {
+            uniqueScreenshotNames: 'true'
+        }
     },
     plugins: {
         retryFailedStep: {
@@ -64,7 +74,7 @@ const setupConfig = {
             retries: 2
         },
         autoDelay: {
-            enabled: true,
+            enabled: config.TestAutoDelayEnabled,
             delayAfter: 2000
         }
     },
@@ -95,9 +105,9 @@ const setupConfig = {
         }
     },
     multiple: {
-        microsoft: {
-            browsers: getBrowserConfig('microsoft')
-        },
+        // microsoft: {
+        //     browsers: getBrowserConfig('microsoft')
+        // },
         chrome: {
             browsers: getBrowserConfig('chrome')
         },
@@ -105,7 +115,7 @@ const setupConfig = {
             browsers: getBrowserConfig('firefox')
         }
     },
-    name: 'ECM e2e tests'
+    name: 'ECM Cross Browser Tests'
 };
 
 exports.config = setupConfig;
