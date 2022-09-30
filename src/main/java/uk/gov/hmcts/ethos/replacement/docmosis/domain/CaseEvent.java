@@ -1,16 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.domain;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.Id;
 
-@Table(name = "case_event")
+@Table(name = "case_event", schema = "ccd_data")
 @Entity
 //@TypeDefs({
 //        @TypeDef(
@@ -25,9 +23,9 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class CaseEvent {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -51,11 +49,15 @@ public class CaseEvent {
     @Column(name = "state_id")
     private String stateId;
 
+    @JsonInclude()
+    @Transient
     @Column(name = "data", columnDefinition = "jsonb")
-    private JsonNode data;
+    private String data;
 
+    @JsonInclude()
+    @Transient
     @Column(name = "data_classification", columnDefinition = "jsonb")
-    private JsonNode dataClassification;
+    private String dataClassification;
 
     @Column(name = "event_name")
     private String eventName;
@@ -80,6 +82,15 @@ public class CaseEvent {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "security_classification")
-    @Type(type = "securityclassification")
     private SecurityClassification securityClassification;
+
+    public enum SecurityClassification implements Serializable {
+        PUBLIC(1), PRIVATE(2), RESTRICTED(3);
+
+        private final int rank;
+
+        SecurityClassification(int rank) {
+            this.rank = rank;
+        }
+    }
 }

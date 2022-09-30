@@ -1,17 +1,20 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.sql.Timestamp;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
 import org.elasticsearch.common.Strings;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
@@ -49,11 +52,11 @@ public class ReferenceDataFixesService {
         String existingJudgeCode = adminData.getExistingJudgeCode();
         String requiredJudgeCode = adminData.getRequiredJudgeCode();
         String caseTypeId = adminData.getTribunalOffice();
-        List<String> dates = getDateRangeForSearch(adminDetails);
+        List<String> dates = getDateRangeForSearch(adminDetails, OLD_DATE_TIME_PATTERN);
         String dateFrom = dates.get(0);
         String dateTo = dates.get(1);
         try {
-            List<SubmitEvent> submitEvents = dataSource.getData(caseTypeId, dateFrom, dateTo, ccdClient);
+            List<SubmitEvent> submitEvents = dataSource.getDataForJudges(caseTypeId, dateFrom, dateTo, ccdClient);
             if (CollectionUtils.isNotEmpty(submitEvents)) {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 for (SubmitEvent submitEvent : submitEvents) {
@@ -75,21 +78,21 @@ public class ReferenceDataFixesService {
         }
     }
 
-    private List<String> getDateRangeForSearch(AdminDetails adminDetails) {
+    private List<String> getDateRangeForSearch(AdminDetails adminDetails, DateTimeFormatter pattern) {
         var refDataFixesData = adminDetails.getCaseData();
         boolean isRangeHearingDateType = refDataFixesData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         String dateFrom;
         String dateTo;
         if (!isRangeHearingDateType) {
             dateFrom = LocalDate.parse(refDataFixesData.getDate(), OLD_DATE_TIME_PATTERN2)
-                    .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
+                    .atStartOfDay().format(pattern);
             dateTo = LocalDate.parse(refDataFixesData.getDate(), OLD_DATE_TIME_PATTERN2)
-                    .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
+                    .atStartOfDay().plusDays(1).minusSeconds(1).format(pattern);
         } else {
             dateFrom = LocalDate.parse(refDataFixesData.getDateFrom(), OLD_DATE_TIME_PATTERN2)
-                    .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
+                    .atStartOfDay().format(pattern);
             dateTo = LocalDate.parse(refDataFixesData.getDateTo(), OLD_DATE_TIME_PATTERN2)
-                    .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
+                    .atStartOfDay().plusDays(1).minusSeconds(1).format(pattern);
         }
         return List.of(dateFrom, dateTo);
     }
@@ -121,9 +124,41 @@ public class ReferenceDataFixesService {
         adminData.setRequiredJudgeCode(null);
     }
 
+    public AdminData insertClaimServedDateNew(AdminDetails adminDetails, RefDataFixesCcdDataSource dataSource, String authToken) {
+        AdminData adminData = adminDetails.getCaseData();
+        String caseTypeId = adminData.getTribunalOffice();
+        List<String> dates = getDateRangeForSearch(adminDetails, OLD_DATE_TIME_PATTERN);
+        String dateFrom = dates.get(0);
+        String dateTo = dates.get(1);
+        try {
+            List<SubmitEvent> submitEvents = dataSource.getDataForInsertClaimDate(caseTypeId, dateFrom, dateTo, ccdClient);
+            if (CollectionUtils.isNotEmpty(submitEvents)) {
+                log.info(CASES_SEARCHED + submitEvents.size());
+                for (SubmitEvent submitEvent : submitEvents) {
+                    CaseData caseData = submitEvent.getCaseData();
+                    //submitEvent.getCaseId()
+                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
+                            adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
+                    ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
+                            adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
+                }
+                log.info(String.format(
+                        "Existing Judge's code in all cases from %s to %s is " +
+                                "updated to required judge's code", dateFrom, dateTo));
+            }
+            return adminData;
+        } catch (Exception ex) {
+            log.error(MESSAGE + adminDetails.getCaseId(), ex);
+            return null;
+        }
+    }
+
+
+
     public AdminData insertClaimServedDate(AdminDetails adminDetails) {
         try {
-            List<String> dates = getDateRangeForSearch(adminDetails);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            List<String> dates = getDateRangeForSearch(adminDetails, formatter);
             AdminData adminData =  adminDetails.getCaseData();
             List<CaseDataEntity> caseDataEntities = caseDataRepository.findCasesByCreationDateAndCaseType(
                     Timestamp.valueOf(dates.get(0)),
@@ -144,7 +179,7 @@ public class ReferenceDataFixesService {
         }
     }
 
-    private void addFieldToPayload(Long r, LocalDateTime eventDate) {
+    private void addFieldToPayload(Long r, LocalDateTime eventDate) throws ParseException, JSONException {
         description = "Adding ClaimServedDate to case";
         summary = "Adding ClaimServedDate to case";
         Optional<CaseDataEntity> caseDataEntityOpt = caseDataRepository.findCaseDataByReference(r);
@@ -154,16 +189,22 @@ public class ReferenceDataFixesService {
         }
 
         CaseDataEntity caseDataEntity = caseDataEntityOpt.get();
-        JsonNode caseData = caseDataEntity.getData();
+        JSONParser parser = new JSONParser(caseDataEntity.getData());
+        JSONObject caseData = (JSONObject) parser.parse();
+
+        //JsonNode caseData = caseDataEntity.getData();
         var caseReference = caseDataEntity.getReference();
-        JsonNode dataClassification = caseDataEntity.getDataClassification();
-        if (Strings.isNullOrEmpty(caseData.findValue(CLAIM_SERVED_DATE).toString())) {
+        JSONParser parser2 = new JSONParser(caseDataEntity.getDataClassification());
+        JSONObject dataClassification = (JSONObject) parser2.parse();
+
+        //JsonNode dataClassification = caseDataEntity.getDataClassification();
+        if (!caseData.toString().contains(CLAIM_SERVED_DATE)) {
             log.info("Adding field to case " + caseReference);
-            ((ObjectNode) caseData).put(CLAIM_SERVED_DATE, eventDate.toLocalDate().toString());
-            ((ObjectNode) dataClassification).put(CLAIM_SERVED_DATE, "PUBLIC");
-            caseDataEntity.setData(caseData);
-            caseDataEntity.setDataClassification(dataClassification);
-            if (!caseDataEntity.getData().findValue(CLAIM_SERVED_DATE).textValue().equals(eventDate.toLocalDate().toString())) {
+            (caseData).put(CLAIM_SERVED_DATE, eventDate.toLocalDate().toString());
+            dataClassification.put(CLAIM_SERVED_DATE, "PUBLIC");
+            caseDataEntity.setData(caseData.toString());
+            caseDataEntity.setDataClassification(dataClassification.toString());
+            if (!caseData.get(CLAIM_SERVED_DATE).equals(eventDate.toLocalDate().toString())) {
                 log.info("Data has not been inserted correctly");
                 return;
             }

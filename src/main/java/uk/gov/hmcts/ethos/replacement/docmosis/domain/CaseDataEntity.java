@@ -1,16 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.domain;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 @Data
 @NoArgsConstructor
-@Table(name = "case_data")
+@Table(name = "case_data", schema = "ccd_data.public")
 @Entity
 public class CaseDataEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,11 +22,15 @@ public class CaseDataEntity {
     @Column(name = "reference")
     private Long reference;
 
+    @JsonInclude()
+    @Transient
     @Column(name = "data", columnDefinition = "jsonb")
-    private JsonNode data;
+    private String data;
 
+    @JsonInclude()
+    @Transient
     @Column(name = "data_classification", columnDefinition = "jsonb")
-    private JsonNode dataClassification;
+    private String dataClassification;
 
     @Column(name = "state")
     private String state;

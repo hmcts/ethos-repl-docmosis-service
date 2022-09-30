@@ -22,4 +22,16 @@ public class RefDataFixesElasticSearchQuery {
                 .size(MAX_ES_SIZE)
                 .query(boolQueryBuilder).toString();
     }
+
+    static String createForInsertClaimDate(String dateToSearchFrom, String dateToSearchTo) {
+        var boolQueryBuilder = boolQuery()
+                .must(new ExistsQueryBuilder("data.receiptDate"))
+                .filter(new RangeQueryBuilder(
+                        "data.receiptDate"
+                ).gte(dateToSearchFrom).lte(dateToSearchTo));
+
+        return new SearchSourceBuilder()
+                .size(MAX_ES_SIZE)
+                .query(boolQueryBuilder).toString();
+    }
 }
