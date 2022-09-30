@@ -30,10 +30,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.CaseDataReposit
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.CaseEventRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.ccd.client.CaseEventsApi;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service("referenceDataFixesService")
+@Service
 public class ReferenceDataFixesService {
     private static final String CASES_SEARCHED = "Cases searched: ";
     private static final String MESSAGE = "Failed to retrieve reference data for case id : ";
@@ -45,6 +47,8 @@ public class ReferenceDataFixesService {
     private final CcdClient ccdClient;
     private final CaseDataRepository caseDataRepository;
     private final CaseEventRepository caseEventRepository;
+    private final CaseEventsApi caseEventsApi;
+    private final AuthTokenGenerator authTokenGenerator;
 
     public AdminData updateJudgesItcoReferences(AdminDetails adminDetails, String authToken, RefDataFixesCcdDataSource dataSource) {
 
@@ -134,7 +138,19 @@ public class ReferenceDataFixesService {
             List<SubmitEvent> submitEvents = dataSource.getDataForInsertClaimDate(caseTypeId, dateFrom, dateTo, ccdClient);
             if (CollectionUtils.isNotEmpty(submitEvents)) {
                 log.info(CASES_SEARCHED + submitEvents.size());
+                //UserDetails userDetails = idamClient.getUserDetails(authToken);
+
+
                 for (SubmitEvent submitEvent : submitEvents) {
+                List<uk.gov.hmcts.reform.ccd.client.model.CaseEventDetail> caseEventDetails =
+                        caseEventsApi.findEventDetailsForCase(authToken,
+                            authTokenGenerator.generate(),
+                            "userDetails.getId()",
+                            "EMPLOYMENT",
+                            adminData.getTribunalOffice(),
+                            String.valueOf(submitEvent.getCaseId()));
+
+
                     CaseData caseData = submitEvent.getCaseData();
                     //submitEvent.getCaseId()
                     CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,

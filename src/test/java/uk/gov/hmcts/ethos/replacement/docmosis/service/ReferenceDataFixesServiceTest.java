@@ -71,7 +71,7 @@ public class ReferenceDataFixesServiceTest {
         submitEvent1.setCaseData(caseData1);
         submitEvent1.setCaseId(1);
         submitEvents = new ArrayList<>(List.of(submitEvent1));
-        when(dataSource.getData(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
+        when(dataSource.getDataForJudges(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
     }
 
     @Test

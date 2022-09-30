@@ -27,7 +27,7 @@ public class RefDataFixesCcdDataSourceTest {
         when(ccdClient.executeElasticSearch(anyString(), anyString(), anyString())).thenReturn(submitEvents);
 
         RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
-        List<SubmitEvent> results = dataSource.getData(caseTypeId, fromDate, toDate, ccdClient);
+        List<SubmitEvent> results = dataSource.getDataForJudges(caseTypeId, fromDate, toDate, ccdClient);
         assertEquals(1, results.size());
         assertEquals(submitEvent, results.get(0));
     }
@@ -41,7 +41,7 @@ public class RefDataFixesCcdDataSourceTest {
         CcdClient ccdClient = mock(CcdClient.class);
         when(ccdClient.executeElasticSearch(anyString(), anyString(), anyString())).thenThrow(new IOException());
         RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
-        dataSource.getData(caseTypeId, fromDate, toDate, ccdClient);
+        dataSource.getDataForJudges(caseTypeId, fromDate, toDate, ccdClient);
         fail("Should throw exception instead");
     }
 
