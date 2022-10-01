@@ -41,6 +41,7 @@ public class ReferenceDataFixesService {
         String requiredJudgeCode = adminData.getRequiredJudgeCode();
         String caseTypeId = getTribunalOffice(adminData.getTribunalOffice());
         List<String> dates = getDateRangeForSearch(adminDetails, OLD_DATE_TIME_PATTERN);
+
         String dateFrom = dates.get(0);
         String dateTo = dates.get(1);
         try {
@@ -84,6 +85,7 @@ public class ReferenceDataFixesService {
     }
 
     private List<String> getDateRangeForSearch(AdminDetails adminDetails, DateTimeFormatter pattern) {
+
         var refDataFixesData = adminDetails.getCaseData();
         boolean isRangeHearingDateType = refDataFixesData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         String dateFrom;

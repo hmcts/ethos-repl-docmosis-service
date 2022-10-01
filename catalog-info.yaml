@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "ethos-repl-docmosis-backend"
+  annotations:
+    # This must match folder-name/job-name in Jenkins.
+    jenkins.io/job-full-name: cft:HMCTS_d_to_i/ethos-repl-docmosis-service
+    github.com/project-slug: hmcts/ethos-repl-docmosis-service
+  tags:
+    - java
+  links:
+    - url: https://hmcts-reform.slack.com/app_redirect?channel=ethos-repl-service
+      title: "#ethos-repl-service on Slack"
+      icon: chat
+spec:
+  type: service
+  lifecycle: production
+  owner: dcd_group_ethos_v2
