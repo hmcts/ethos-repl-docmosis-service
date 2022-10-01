@@ -30,7 +30,7 @@ public class ReferenceDataFixesService {
         AdminData adminData = adminDetails.getCaseData();
         String existingJudgeCode = adminData.getExistingJudgeCode();
         String requiredJudgeCode = adminData.getRequiredJudgeCode();
-        String caseTypeId = adminData.getTribunalOffice();
+        String caseTypeId = getTribunalOffice(adminData.getTribunalOffice());
         List<String> dates = getDateRangeForSearch(adminDetails);
         String dateFrom = dates.get(0);
         String dateTo = dates.get(1);
@@ -54,6 +54,23 @@ public class ReferenceDataFixesService {
         } catch (Exception ex) {
             log.error(MESSAGE + adminDetails.getCaseId(), ex);
             return null;
+        }
+    }
+
+    private String getTribunalOffice(String tribunalOffice) {
+        switch (tribunalOffice) {
+            case "London Central":
+                return LONDON_CENTRAL_CASE_TYPE_ID;
+            case "London East":
+                return LONDON_EAST_CASE_TYPE_ID;
+            case "London South":
+                return LONDON_SOUTH_CASE_TYPE_ID;
+            case "Midlands East":
+                return MIDLANDS_EAST_CASE_TYPE_ID;
+            case "Midlands West":
+                return MIDLANDS_WEST_CASE_TYPE_ID;
+            default:
+                return tribunalOffice;
         }
     }
 
