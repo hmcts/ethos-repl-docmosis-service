@@ -5,24 +5,23 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrorsAdmin;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminRequest;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
 @RestController
@@ -118,11 +117,12 @@ public class ReferenceDataFixesController {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
+        List<String> errors = new ArrayList<>();
             RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(userToken);
-           // AdminData caseData = referenceDataFixesService.insertClaimServedDateNew(ccdAdminRequest.getCaseDetails(), dataSource, userToken);
-            AdminData caseData = referenceDataFixesService.insertClaimServedDate(ccdAdminRequest.getCaseDetails());
+           AdminData caseData = referenceDataFixesService.insertClaimServedDate(
+                   ccdAdminRequest.getCaseDetails(), userToken, dataSource, errors);
 
-        return getCallbackRespEntityNoErrors(caseData);
+        return getCallbackRespEntityErrorsAdmin(errors, caseData);
     }
 
 }

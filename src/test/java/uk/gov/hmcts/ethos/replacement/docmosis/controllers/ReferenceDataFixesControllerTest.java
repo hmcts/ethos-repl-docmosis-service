@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.anyList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,7 +43,7 @@ public class ReferenceDataFixesControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String UPDATE_JUDGES = "/admin/updateJudgesItcoReferences";
-    private static final String DATE_LISTED_REFERENCE_DATA = "/dateListedReferenceData";
+    private static final String INSERT_CLAIM_SERVED_DATA = "/admin/insertClaimServedDate";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -113,6 +114,54 @@ public class ReferenceDataFixesControllerTest {
     public void updateJudgeCodeTestForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(UPDATE_JUDGES)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void insertClaimServedDateTest() throws Exception {
+        when(referenceDataFixesService.insertClaimServedDate(
+                isA(AdminDetails.class), isA(String.class),
+                isA(RefDataFixesCcdDataSource.class), anyList()))
+                .thenReturn(new AdminData());
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()));
+    }
+
+    @Test
+    public void insertClaimServedDateTestError400() throws Exception {
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void insertClaimServedDateTestError500() throws Exception {
+        when(referenceDataFixesService.insertClaimServedDate(
+                isA(AdminDetails.class), isA(String.class),
+                isA(RefDataFixesCcdDataSource.class), anyList()))
+                .thenThrow(new InternalException(ERROR_MESSAGE));
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void insertClaimServedDateTestForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
