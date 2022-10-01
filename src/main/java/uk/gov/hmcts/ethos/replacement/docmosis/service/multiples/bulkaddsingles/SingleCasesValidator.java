@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @Service
 @Slf4j
@@ -54,7 +55,7 @@ class SingleCasesValidator {
         if (submitEventOptional.isPresent()) {
             var submitEvent = submitEventOptional.get();
 
-            if (!isAccepted(submitEvent)) {
+            if (!isAcceptedOrSubmitted(submitEvent)) {
                 return ValidatedSingleCase.createInvalidCase(ethosCaseReference,
                         "Case is in state " + submitEvent.getState());
             }
@@ -66,7 +67,7 @@ class SingleCasesValidator {
         return ValidatedSingleCase.createValidCase(ethosCaseReference);
     }
 
-    private boolean isAccepted(SubmitEvent submitEvent) {
-        return ACCEPTED_STATE.equals(submitEvent.getState());
+    private boolean isAcceptedOrSubmitted(SubmitEvent submitEvent) {
+        return ACCEPTED_STATE.equals(submitEvent.getState()) || SUBMITTED_STATE.equals(submitEvent.getState());
     }
 }

@@ -11,61 +11,33 @@
         <notes><![CDATA[
    file name: poi-5.0.0.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.apache.poi/poi@5.0.0</packageUrl>
-        <cve>CVE-2022-26336</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: poi-ooxml-lite-5.0.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.apache.poi/poi-ooxml-lite@5.0.0</packageUrl>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi@.*$</packageUrl>
         <cve>CVE-2022-26336</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: poi-ooxml-5.0.0.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org.apache.poi/poi-ooxml@5.0.0</packageUrl>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi\-ooxml@.*$</packageUrl>
         <cve>CVE-2022-26336</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-     file name: tomcat-embed-core-9.0.58.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
-        <cve>CVE-2022-34305</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: tomcat-embed-core-9.0.58.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
-        <cve>CVE-2022-29885</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: tomcat-embed-websocket-9.0.58.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
-        <cve>CVE-2022-34305</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-     file name: tomcat-embed-websocket-9.0.58.jar
-     ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
-        <cve>CVE-2022-29885</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: xalan-2.7.2.jar
+   file name: poi-ooxml-lite-5.0.0.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/xalan/xalan@.*$</packageUrl>
-        <cve>CVE-2022-34169</cve>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi\-ooxml\-lite@.*$</packageUrl>
+        <cve>CVE-2022-26336</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: spring-security-crypto-5.7.2.jar
+   file name: snakeyaml-1.32.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+        <vulnerabilityName>CVE-2022-38752</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-crypto-5.7.3.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
         <vulnerabilityName>CVE-2020-5408</vulnerabilityName>
@@ -76,5 +48,12 @@
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-web@.*$</packageUrl>
         <cve>CVE-2016-1000027</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: xalan-2.7.2.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/xalan/xalan@.*$</packageUrl>
+        <cve>CVE-2022-34169</cve>
     </suppress>
 </suppressions>
