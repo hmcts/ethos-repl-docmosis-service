@@ -10,8 +10,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 )
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, this is not a utility class
 public class DocmosisApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(DocmosisApplication.class, args);
     }
+
 }
 

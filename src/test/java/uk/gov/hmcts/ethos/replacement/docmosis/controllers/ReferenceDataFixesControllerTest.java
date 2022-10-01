@@ -130,7 +130,7 @@ public class ReferenceDataFixesControllerTest {
                 isA(RefDataFixesCcdDataSource.class), anyList()))
                 .thenReturn(new AdminData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
-        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA));
    }
    
     public void initAdminDataTest() throws Exception {
