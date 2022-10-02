@@ -1,31 +1,34 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.helper.CaseEventDetail;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService.GENERATE_CORRESPONDENCE;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ReferenceDataFixesServiceTest {
@@ -71,11 +74,13 @@ public class ReferenceDataFixesServiceTest {
         submitEvent1.setCaseId(1);
         submitEvents = new ArrayList<>(List.of(submitEvent1));
         when(dataSource.getDataForJudges(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
+        when(dataSource.getDataForInsertClaimDate(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
+
     }
 
     @Test
     public void judgeCodeReplaceTest() {
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
@@ -84,7 +89,7 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeCaseTypeIdTest() {
         adminDetails.getCaseData().setTribunalOffice("Manchester");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
@@ -119,5 +124,43 @@ public class ReferenceDataFixesServiceTest {
         assertNull(adminDetails.getCaseData().getHearingDateType());
         assertNull(adminDetails.getCaseData().getExistingJudgeCode());
         assertNull(adminDetails.getCaseData().getRequiredJudgeCode());
+    }
+
+    @Test
+    public void insertClaimServedDateTest() throws IOException {
+        CaseEventDetail caseEventDetail = CaseEventDetail.builder().build();
+        caseEventDetail.setId(GENERATE_CORRESPONDENCE);
+        caseEventDetail.setCreatedDate(LocalDateTime.parse("2022-09-20T00:00:00"));
+        CaseEventDetail caseEventDetail2 = CaseEventDetail.builder().build();
+        caseEventDetail2.setId(GENERATE_CORRESPONDENCE);
+        caseEventDetail2.setCreatedDate(LocalDateTime.parse("2022-09-26T00:00:00"));
+        when(ccdClient.retrieveCaseEventDetails(anyString(),
+                anyString(), anyString(), anyString()))
+                .thenReturn(Arrays.asList(caseEventDetail2, caseEventDetail));
+        referenceDataFixesService.insertClaimServedDate(
+                adminDetails, "authToken", dataSource, new ArrayList<>());
+        assertEquals("2022-09-20",
+                submitEvents.get(0).getCaseData().getClaimServedDate());
+    }
+
+    @Test
+    public void insertClaimServedDateTestNoEvent() throws IOException {
+        CaseEventDetail caseEventDetail = CaseEventDetail.builder().build();
+        caseEventDetail.setId("blahblah");
+        caseEventDetail.setCreatedDate(LocalDateTime.parse("2022-09-20T00:00:00"));
+        when(ccdClient.retrieveCaseEventDetails(anyString(),
+                anyString(), anyString(), anyString())).thenReturn(Collections.singletonList(caseEventDetail));
+        assertNull(submitEvents.get(0).getCaseData().getClaimServedDate());
+    }
+
+    @Test
+    public void insertClaimServedDateTestAlreadyExists() throws IOException {
+        CaseEventDetail caseEventDetail = CaseEventDetail.builder().build();
+        caseEventDetail.setId(GENERATE_CORRESPONDENCE);
+        caseEventDetail.setCreatedDate(LocalDateTime.parse("2022-09-20T00:00:00"));
+        submitEvents.get(0).getCaseData().setClaimServedDate("2022-10-01");
+        when(ccdClient.retrieveCaseEventDetails(anyString(),
+                anyString(), anyString(), anyString())).thenReturn(Collections.singletonList(caseEventDetail));
+        assertEquals("2022-10-01", submitEvents.get(0).getCaseData().getClaimServedDate());
     }
 }

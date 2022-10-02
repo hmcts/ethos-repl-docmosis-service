@@ -132,9 +132,9 @@ public class ReferenceDataFixesControllerTest {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(INSERT_CLAIM_SERVED_DATA));
    }
-   
-    public void initAdminDataTest() throws Exception {
 
+   @Test
+    public void initAdminDataTest() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(INIT_ADMIN_DATA)
                 .content(requestContent.toString())
