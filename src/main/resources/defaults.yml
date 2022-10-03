@@ -102,10 +102,10 @@ tribunal-offices:
       dx: DX 743570
       email: Manchesteret@justice.gov.uk
     midlands_east:
-      address1: Nottingham Justice Centre
+      address1: 50
       address2: Carrington Street
       town: Nottingham
-      postcode: NG2 1EE
+      postcode: NG1 7FG
       telephone: 0115 947 5701
       dx: DX 719030 Nottingham 32
       email: MidlandsEastET@justice.gov.uk
