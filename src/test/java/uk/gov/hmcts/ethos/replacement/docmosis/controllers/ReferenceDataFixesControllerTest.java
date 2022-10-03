@@ -5,12 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,9 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -33,6 +27,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDat
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringRunner.class)
@@ -42,8 +43,8 @@ public class ReferenceDataFixesControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String UPDATE_JUDGES = "/admin/updateJudgesItcoReferences";
+    private static final String INSERT_CLAIM_SERVED_DATA = "/admin/insertClaimServedDate";
     private static final String INIT_ADMIN_DATA = "/admin/initAdminData";
-    private static final String DATE_LISTED_REFERENCE_DATA = "/dateListedReferenceData";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -121,8 +122,17 @@ public class ReferenceDataFixesControllerTest {
     }
 
     @Test
-    public void initAdminDataTest() throws Exception {
+    public void insertClaimServedDateTest() throws Exception {
+        when(referenceDataFixesService.insertClaimServedDate(
+                isA(AdminDetails.class), isA(String.class),
+                isA(RefDataFixesCcdDataSource.class), anyList()))
+                .thenReturn(new AdminData());
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA));
+   }
 
+   @Test
+    public void initAdminDataTest() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(INIT_ADMIN_DATA)
                 .content(requestContent.toString())
@@ -133,6 +143,15 @@ public class ReferenceDataFixesControllerTest {
     }
 
     @Test
+    public void insertClaimServedDateTestError400() throws Exception {
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+   }
+   
+    @Test
     public void initAdminDataTestError400() throws Exception {
         mvc.perform(post(INIT_ADMIN_DATA)
                 .content("error")
@@ -140,6 +159,30 @@ public class ReferenceDataFixesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void insertClaimServedDateTestError500() throws Exception {
+        when(referenceDataFixesService.insertClaimServedDate(
+                isA(AdminDetails.class), isA(String.class),
+                isA(RefDataFixesCcdDataSource.class), anyList()))
+                .thenThrow(new InternalException(ERROR_MESSAGE));
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void insertClaimServedDateTestForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(INSERT_CLAIM_SERVED_DATA)
+         .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+     }
 
     @Test
     public void initAdminDataTestForbidden() throws Exception {
