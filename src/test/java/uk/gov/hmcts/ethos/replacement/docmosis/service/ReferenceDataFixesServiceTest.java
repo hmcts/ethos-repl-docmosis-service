@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.helper.CaseEventDetail;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
@@ -29,9 +30,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService.GENERATE_CORRESPONDENCE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -134,6 +132,7 @@ public class ReferenceDataFixesServiceTest {
     public void insertClaimServedDateTest() throws IOException {
         CaseEventDetail caseEventDetail = CaseEventDetail.builder().build();
         caseEventDetail.setId(GENERATE_CORRESPONDENCE);
+        caseEventDetail.setStateId(ACCEPTED_STATE);
         caseEventDetail.setCreatedDate(LocalDateTime.parse("2022-09-20T00:00:00"));
         CaseEventDetail caseEventDetail2 = CaseEventDetail.builder().build();
         caseEventDetail2.setId(GENERATE_CORRESPONDENCE);
