@@ -115,4 +115,11 @@ public class FixCaseApiServiceTest {
         assertNull(caseDetails.getCaseData().getMultipleReferenceLinkMarkUp());
     }
 
+    @Test
+    public void checkUpdateParentMultipleIdSetToNull() {
+        caseDetails.getCaseData().setParentMultipleCaseId("blah");
+        fixCaseApiService.checkUpdateMultipleReference(caseDetails, userToken);
+        assertNull(caseDetails.getCaseData().getParentMultipleCaseId());
+    }
+
 }

@@ -25,6 +25,10 @@ public class FixCaseApiService {
 
     public void checkUpdateMultipleReference(CaseDetails caseDetails, String userToken) {
         CaseData caseData = caseDetails.getCaseData();
+        if (caseData.getParentMultipleCaseId() != null) {
+            caseData.setParentMultipleCaseId(null);
+        }
+
         if (MULTIPLE_CASE_TYPE.equals(caseData.getEcmCaseType())) {
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
             List<SubmitMultipleEvent> submitMultipleEvents = multipleCasesReadingService.retrieveMultipleCases(
