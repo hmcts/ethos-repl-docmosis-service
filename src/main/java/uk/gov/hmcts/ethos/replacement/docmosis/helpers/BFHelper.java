@@ -23,22 +23,14 @@ public class BFHelper {
     }
 
     public static void updateBfActionItems(CaseData caseData) {
-
         List<BFActionTypeItem> bfActions = caseData.getBfActions();
-
         if (bfActions != null && !bfActions.isEmpty()) {
-
             for (BFActionTypeItem bfActionTypeItem : bfActions) {
                 var bfActionType = bfActionTypeItem.getValue();
-
                 if (isNullOrEmpty(bfActionType.getDateEntered())) {
                     bfActionType.setDateEntered(UtilHelper.formatCurrentDate2(LocalDate.now()));
                 }
-                var dateEntered = bfActions.get(0).getValue().getDateEntered().substring(0, 10);
-                LocalDate date = LocalDate.parse(dateEntered);
-                caseData.setClaimServedDate(String.valueOf(date));
             }
-
         }
 
     }
