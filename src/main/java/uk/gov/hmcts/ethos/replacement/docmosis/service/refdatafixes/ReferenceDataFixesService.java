@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,11 +26,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.Admi
 public class ReferenceDataFixesService {
     private static final String CASES_SEARCHED = "Cases searched: ";
     private static final String MESSAGE = "Failed to retrieve reference data for case id : ";
-    private static final String CLAIM_SERVED_DATE = "claimServedDate";
     public static final String GENERATE_CORRESPONDENCE = "generateCorrespondence";
-    private static final Clock UTC_CLOCK = Clock.systemUTC();
-    private String description = "";
-    private String summary = "";
     private final CcdClient ccdClient;
 
     public AdminData updateJudgesItcoReferences(AdminDetails adminDetails, String authToken, RefDataFixesCcdDataSource dataSource) {
