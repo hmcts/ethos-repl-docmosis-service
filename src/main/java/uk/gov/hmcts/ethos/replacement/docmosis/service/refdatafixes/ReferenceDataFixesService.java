@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -113,9 +114,9 @@ public class ReferenceDataFixesService {
      * This method does not return anything. Initializes AdminData to null values
      * to not show any existing values for update of judge codes
      *
-     * @param  adminData  AdminData which is a generic data type for most of the
-     *                    methods which holds judge code, dates
-     *                    and tribunal office
+     * @param adminData AdminData which is a generic data type for most of the
+     *                  methods which holds judge code, dates
+     *                  and tribunal office
      */
     public void initAdminData(AdminData adminData) {
         adminData.setDate(null);
@@ -137,34 +138,10 @@ public class ReferenceDataFixesService {
         String dateTo = dates.get(1);
         try {
             List<SubmitEvent> submitEvents = dataSource.getDataForInsertClaimDate(caseTypeId, dateFrom, dateTo, ccdClient);
-            LocalDate claimServedDate;
             if (CollectionUtils.isNotEmpty(submitEvents)) {
                 log.info("Cases Searched for inserting claim served date: " + submitEvents.size());
                 for (SubmitEvent submitEvent : submitEvents) {
-                    List<CaseEventDetail> caseEventDetails = ccdClient.retrieveCaseEventDetails(authToken,
-                            getTribunalOffice(adminData.getTribunalOffice()),
-                            adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-                    if (CollectionUtils.isNotEmpty(caseEventDetails)) {
-                        List<CaseEventDetail> generateCorrespondenceEvents = caseEventDetails
-                                .stream().filter(i -> i.getId().equals(
-                                        GENERATE_CORRESPONDENCE)).collect(Collectors.toList());
-                        if (CollectionUtils.isNotEmpty(generateCorrespondenceEvents)) {
-                            claimServedDate = generateCorrespondenceEvents.stream()
-                                    .sorted(CaseEventDetail::comparedTo)
-                                    .collect(Collectors.toList())
-                                    .get(0).getCreatedDate().toLocalDate();
-                            CaseData caseData = submitEvent.getCaseData();
-                            if (caseData.getClaimServedDate() == null) {
-                                caseData.setClaimServedDate(claimServedDate.toString());
-                            }
-                            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
-                                    adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-                            ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
-                                    adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
-                        } else {
-                            log.error("There was no generateCorrespondence event for case: " + adminDetails.getCaseId());
-                        }
-                    }
+                    insertClaimServedDateInSingleCase(submitEvent, authToken, caseTypeId, adminDetails);
                 }
                 log.info(String.format("Inserting Claim served date is completed in cases with receipt " +
                         "date from %s to %s", dateFrom, dateTo));
@@ -177,4 +154,48 @@ public class ReferenceDataFixesService {
             return null;
         }
     }
+
+    private void insertClaimServedDateInSingleCase(SubmitEvent submitEvent,
+                                       String authToken,
+                                       String caseTypeId,
+                                       AdminDetails adminDetails) throws IOException {
+
+        List<CaseEventDetail> caseEventDetails = ccdClient.retrieveCaseEventDetails(authToken,
+                getTribunalOffice(adminDetails.getCaseData().getTribunalOffice()),
+                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
+        if (CollectionUtils.isNotEmpty(caseEventDetails)) {
+            List<CaseEventDetail> generateCorrespondenceEvents = caseEventDetails
+                    .stream().filter(i -> i.getId().equals(
+                            GENERATE_CORRESPONDENCE)).collect(Collectors.toList());
+            if (CollectionUtils.isNotEmpty(generateCorrespondenceEvents)) {
+                setClaimServedDate(generateCorrespondenceEvents, submitEvent, authToken, caseTypeId, adminDetails);
+            } else {
+                log.error("There was no generateCorrespondence event for case: " + adminDetails.getCaseId());
+            }
+        }
+
+    }
+
+    private void setClaimServedDate(List<CaseEventDetail> generateCorrespondenceEvents,
+                                         SubmitEvent submitEvent,
+                                         String authToken,
+                                         String caseTypeId,
+                                         AdminDetails adminDetails) throws IOException {
+        LocalDate claimServedDate;
+        claimServedDate = generateCorrespondenceEvents.stream()
+                .sorted(CaseEventDetail::comparedTo)
+                .collect(Collectors.toList())
+                .get(0).getCreatedDate().toLocalDate();
+        CaseData caseData = submitEvent.getCaseData();
+        if (caseData.getClaimServedDate() == null) {
+            caseData.setClaimServedDate(claimServedDate.toString());
+        }
+        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
+                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
+        ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
+                adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
+
+    }
 }
+
+
