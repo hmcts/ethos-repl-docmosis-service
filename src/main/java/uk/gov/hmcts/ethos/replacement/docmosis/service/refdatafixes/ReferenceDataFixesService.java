@@ -166,7 +166,7 @@ public class ReferenceDataFixesService {
         if (CollectionUtils.isNotEmpty(caseEventDetails)) {
             List<CaseEventDetail> generateCorrespondenceEvents = caseEventDetails
                     .stream().filter(i -> i.getId().equals(
-                            GENERATE_CORRESPONDENCE)).collect(Collectors.toList());
+                            GENERATE_CORRESPONDENCE) && i.getStateId().equals(ACCEPTED_STATE)).collect(Collectors.toList());
             if (CollectionUtils.isNotEmpty(generateCorrespondenceEvents)) {
                 setClaimServedDate(generateCorrespondenceEvents, submitEvent, authToken, caseTypeId, adminDetails);
             } else {
