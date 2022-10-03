@@ -8,7 +8,7 @@ plugins {
     id 'org.owasp.dependencycheck' version '7.2.1'
     id 'com.github.ben-manes.versions' version '0.42.0'
     id 'org.sonarqube' version '3.4.0.2513'
-    id 'au.com.dius.pact' version '4.3.14'
+    id 'au.com.dius.pact' version '4.3.15'
     id 'io.freefair.lombok' version '6.5.1'
 }
 
@@ -270,20 +270,20 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLoggingVersion
-    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.25.3'
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.25.4'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
-    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.26'
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.27'
     implementation group: 'org.apache.santuario', name: 'xmlsec', version: '3.0.1'
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatEmbedVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatEmbedVersion
     implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.15', ext: 'pom'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.7'
-    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.31'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
     implementation('org.elasticsearch:elasticsearch') {
         version {
@@ -291,7 +291,7 @@ dependencies {
         }
     }
     implementation 'org.postgresql:postgresql:42.5.0'
-    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.2'
+    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.3'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.11'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -324,7 +324,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Contract Tests
-    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.3.14'
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.3.15'
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'java8', version: '4.1.39'
     contractTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
