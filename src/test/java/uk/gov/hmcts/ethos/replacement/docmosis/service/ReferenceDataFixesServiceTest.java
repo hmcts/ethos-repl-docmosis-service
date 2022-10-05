@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
@@ -134,6 +135,7 @@ public class ReferenceDataFixesServiceTest {
     public void insertClaimServedDateTest() throws IOException {
         CaseEventDetail caseEventDetail = CaseEventDetail.builder().build();
         caseEventDetail.setId(GENERATE_CORRESPONDENCE);
+        caseEventDetail.setStateId(ACCEPTED_STATE);
         caseEventDetail.setCreatedDate(LocalDateTime.parse("2022-09-20T00:00:00"));
         CaseEventDetail caseEventDetail2 = CaseEventDetail.builder().build();
         caseEventDetail2.setId(GENERATE_CORRESPONDENCE);
