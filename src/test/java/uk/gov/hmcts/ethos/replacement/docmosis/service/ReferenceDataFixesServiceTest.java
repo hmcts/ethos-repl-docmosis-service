@@ -91,6 +91,51 @@ public class ReferenceDataFixesServiceTest {
     }
 
     @Test
+    public void judgeCodeMidlandsWestTest() {
+        adminDetails.getCaseData().setTribunalOffice("Midlands West");
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
+    public void judgeCodeMidlandsEastTest() {
+        adminDetails.getCaseData().setTribunalOffice("Midlands East");
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
+    public void judgeCodeLondonEastTest() {
+        adminDetails.getCaseData().setTribunalOffice("London East");
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
+    public void judgeCodeLondonSouthTest() {
+        adminDetails.getCaseData().setTribunalOffice("London South");
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
+    public void judgeCodeLondonCentralTest() {
+        adminDetails.getCaseData().setTribunalOffice("London Central");
+        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+                adminDetails, "authToken", dataSource);
+        assertEquals(REQUIRED_CODE_1,
+                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+    }
+
+    @Test
     public void judgeCodeDateTest() {
         adminDetails.getCaseData().setDate("2022-07-01");
         adminDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
