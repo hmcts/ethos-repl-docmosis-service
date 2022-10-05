@@ -40,11 +40,12 @@ public class ReferenceDataFixesService {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 for (SubmitEvent submitEvent : submitEvents) {
                     CaseData caseData = submitEvent.getCaseData();
-                    setJudgeName(caseData, existingJudgeCode, requiredJudgeCode);
-                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
-                            adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-                    ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
-                            adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
+                    if (setJudgeName(caseData, existingJudgeCode, requiredJudgeCode)) {
+                        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
+                                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
+                        ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
+                                adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
+                    }
                 }
                 log.info(String.format(
                         "Existing Judge's code in all cases from %s to %s is " +
@@ -93,14 +94,17 @@ public class ReferenceDataFixesService {
         return List.of(dateFrom, dateTo);
     }
 
-    private void setJudgeName(CaseData caseData, String existingJudgeCode, String requiredJudgeCode) {
+    private boolean setJudgeName(CaseData caseData, String existingJudgeCode, String requiredJudgeCode) {
+       boolean judgeChanged = false;
         for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
             HearingType hearingType = hearingTypeItem.getValue();
             if (!Strings.isNullOrEmpty(hearingType.getJudge()) && hearingType.getJudge().equals(existingJudgeCode)) {
                 hearingType.setJudge(requiredJudgeCode);
                 log.info(String.format("Judge's code in Case with ethosReference %s is updated", caseData.getEthosCaseReference()));
+                judgeChanged = true;
             }
         }
+        return judgeChanged;
     }
 
     /**
