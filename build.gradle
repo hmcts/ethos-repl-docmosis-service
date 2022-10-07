@@ -67,12 +67,12 @@ sourceSets {
     test {
         java.srcDir 'src/test/java'
     }
-//    functional {
-//        java.srcDir 'src/test/functional/java'
-//        resources.srcDir 'src/test/functional/resources'
-//        compileClasspath += main.output + test.output
-//        runtimeClasspath += main.output + test.output
-//    }
+    functional {
+        java.srcDir 'src/test/functional/java'
+        resources.srcDir 'src/test/functional/resources'
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
     contractTest {
         java {
             compileClasspath += main.output
@@ -128,7 +128,7 @@ task codeceptSmoke(type: Exec, dependsOn: ':yarnInstall') {
 }
 
 task codeceptFunctional(type: Exec, dependsOn :'yarnInstall') {
-    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e', '--steps', '--reporter', 'mocha-multi'
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e-disabled', '--steps', '--reporter', 'mocha-multi'
 }
 
 task crossbrowser(dependsOn: ':codeceptFunctionalSauce') {
