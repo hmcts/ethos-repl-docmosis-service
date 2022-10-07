@@ -128,7 +128,7 @@ task codeceptSmoke(type: Exec, dependsOn: ':yarnInstall') {
 }
 
 task codeceptFunctional(type: Exec, dependsOn :'yarnInstall') {
-    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e', '--steps', '--reporter', 'mocha-multi'
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e-disabled', '--steps', '--reporter', 'mocha-multi'
 }
 
 task crossbrowser(dependsOn: ':codeceptFunctionalSauce') {
