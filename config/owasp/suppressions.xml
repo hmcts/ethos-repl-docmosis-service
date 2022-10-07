@@ -56,4 +56,11 @@
         <packageUrl regex="true">^pkg:maven/xalan/xalan@.*$</packageUrl>
         <cve>CVE-2022-34169</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: jackson-databind-2.13.4.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com.fasterxml.jackson.core/jackson-databind@.*$</packageUrl>
+        <cve>CVE-2022-42003</cve>
+    </suppress>
 </suppressions>
