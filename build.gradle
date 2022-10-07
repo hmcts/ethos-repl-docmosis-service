@@ -67,12 +67,12 @@ sourceSets {
     test {
         java.srcDir 'src/test/java'
     }
-    functional {
-        java.srcDir 'src/test/functional/java'
-        resources.srcDir 'src/test/functional/resources'
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-    }
+//    functional {
+//        java.srcDir 'src/test/functional/java'
+//        resources.srcDir 'src/test/functional/resources'
+//        compileClasspath += main.output + test.output
+//        runtimeClasspath += main.output + test.output
+//    }
     contractTest {
         java {
             compileClasspath += main.output
