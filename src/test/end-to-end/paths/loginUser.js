@@ -1,8 +1,8 @@
 const testConfig = require('../../config');
 
-Feature('Verify login smoke scenario');
+Feature('ExUI Smoke Test');
 
-Scenario('login to the manage case application', async ({ I }) => {
+Scenario('login to the manage case application', async ({I}) => {
     await I.authenticateWithIdam();
 
 }).retry(testConfig.TestRetryScenarios)
