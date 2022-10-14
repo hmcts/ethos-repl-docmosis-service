@@ -21,7 +21,7 @@ module.exports = async function (caseId1, caseId2) {
     await I.navByClick(commonConfig.continue);
     await I.navByClick(commonConfig.submit);
 
-    let multipleCaseId = await I.grabTextFrom('.markdown > h1:nth-of-type(2)');
-    await I.see(commonConfig.bfActionsOutstandingErrorMsgCheck.replace('caseId', multipleCaseId.split(' ')[2]));
+    let multiplesCaseId = await I.grabTextFrom('.markdown > h1:nth-of-type(2)');
+    await I.see(commonConfig.bfActionsOutstandingErrorMsgCheck.replace('caseId', multiplesCaseId.split(' ')[2]));
 
 };
