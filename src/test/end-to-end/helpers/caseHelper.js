@@ -152,6 +152,10 @@ async function uploadDocumentEvent(I, eventName) {
     await I.executeUploadDocument();
 }
 
+async function createLeedsOfficeMultiples(I, caseId1, caseId2) {
+    await I.executeLeedsOfficeMultiples(caseId1, caseId2);
+}
+
 module.exports = {
     acceptCaseEvent,
     rejectCaseEvent,
@@ -179,5 +183,6 @@ module.exports = {
     caseDetailsEvent,
     scheduleHearingDuringTheWeekend,
     bfActionsOutstanding,
-    uploadDocumentEvent
+    uploadDocumentEvent,
+    createLeedsOfficeMultiples
 };
