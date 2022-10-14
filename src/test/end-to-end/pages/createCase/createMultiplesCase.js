@@ -6,8 +6,8 @@ const testConfig = require("../../../config");
 module.exports = async function (caseId1, caseId2) {
 
     const I = this;
-    await I.waitForText(commonConfig.createCaseText, testConfig.TestTimeToWaitForText);
-    await I.selectOption('#cc-jurisdiction', commonConfig.jurisdictionType);
+    await I.click('//a[text()=\'Create case\']');
+    // await I.selectOption('#cc-jurisdiction', commonConfig.jurisdictionType);
     await I.selectOption('#cc-case-type', commonConfig.leedsMultiples);
     await I.selectOption('#cc-event', commonConfig.createMultiple);
 
@@ -22,6 +22,6 @@ module.exports = async function (caseId1, caseId2) {
     await I.navByClick(commonConfig.submit);
 
     let multiplesCaseId = await I.grabTextFrom('.markdown > h1:nth-of-type(2)');
-    await I.see(commonConfig.bfActionsOutstandingErrorMsgCheck.replace('caseId', multiplesCaseId.split(' ')[2]));
+    console.log("Multiples Case ID ==>::" + multiplesCaseId);
 
 };
