@@ -145,12 +145,7 @@ public class ReferenceDataFixesService {
             if (CollectionUtils.isNotEmpty(submitEvents)) {
                 log.info("Cases Searched for inserting claim served date: " + submitEvents.size());
                 for (SubmitEvent submitEvent : submitEvents) {
-                    try {
-                        insertClaimServedDateInSingleCase(submitEvent, authToken, caseTypeId, adminDetails);
-                    } catch (Exception ex) {
-                        errors.add(ex.getMessage());
-                        log.error(MESSAGE + adminDetails.getCaseId(), ex);
-                    }
+                    insertClaimServedDateInSingleCase(submitEvent, authToken, caseTypeId, adminDetails, errors);
                 }
                 log.info(String.format("Inserting Claim served date is completed in cases with receipt " +
                         "date from %s to %s", dateFrom, dateTo));
@@ -167,22 +162,26 @@ public class ReferenceDataFixesService {
     private void insertClaimServedDateInSingleCase(SubmitEvent submitEvent,
                                        String authToken,
                                        String caseTypeId,
-                                       AdminDetails adminDetails) throws IOException {
-
-        List<CaseEventDetail> caseEventDetails = ccdClient.retrieveCaseEventDetails(authToken,
-                getTribunalOffice(adminDetails.getCaseData().getTribunalOffice()),
-                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-        if (CollectionUtils.isNotEmpty(caseEventDetails)) {
-            List<CaseEventDetail> generateCorrespondenceEvents = caseEventDetails
-                    .stream().filter(i -> i.getId().equals(
-                            GENERATE_CORRESPONDENCE)
-                            && i.getStateId() != null
-                            && i.getStateId().equals(ACCEPTED_STATE)).collect(Collectors.toList());
-            if (CollectionUtils.isNotEmpty(generateCorrespondenceEvents)) {
-                setClaimServedDate(generateCorrespondenceEvents, submitEvent, authToken, caseTypeId, adminDetails);
-            } else {
-                log.error("There was no generateCorrespondence event for case: " + adminDetails.getCaseId());
+                                       AdminDetails adminDetails, List<String> errors) {
+        try {
+            List<CaseEventDetail> caseEventDetails = ccdClient.retrieveCaseEventDetails(authToken,
+                    getTribunalOffice(adminDetails.getCaseData().getTribunalOffice()),
+                    adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
+            if (CollectionUtils.isNotEmpty(caseEventDetails)) {
+                List<CaseEventDetail> generateCorrespondenceEvents = caseEventDetails
+                        .stream().filter(i -> i.getId().equals(
+                                GENERATE_CORRESPONDENCE)
+                                && i.getStateId() != null
+                                && i.getStateId().equals(ACCEPTED_STATE)).collect(Collectors.toList());
+                if (CollectionUtils.isNotEmpty(generateCorrespondenceEvents)) {
+                    setClaimServedDate(generateCorrespondenceEvents, submitEvent, authToken, caseTypeId, adminDetails);
+                } else {
+                    log.error("There was no generateCorrespondence event for case: " + adminDetails.getCaseId());
+                }
             }
+        } catch (Exception ex) {
+            errors.add(ex.getMessage());
+            log.error(MESSAGE + adminDetails.getCaseId(), ex);
         }
 
     }
