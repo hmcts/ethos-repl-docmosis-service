@@ -5,5 +5,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import java.util.List;
 
 public interface RefDataFixesDataSource {
-    List<SubmitEvent> getData(String caseTypeId, String dateFrom, String dateTo, CcdClient ccdClient);
+    List<SubmitEvent> getDataForJudges(String caseTypeId, String dateFrom, String dateTo, CcdClient ccdClient);
+    List<SubmitEvent> getDataForInsertClaimDate(String caseTypeId, String dateFrom, String dateTo, CcdClient ccdClient);
+
 }
