@@ -145,7 +145,12 @@ public class ReferenceDataFixesService {
             if (CollectionUtils.isNotEmpty(submitEvents)) {
                 log.info("Cases Searched for inserting claim served date: " + submitEvents.size());
                 for (SubmitEvent submitEvent : submitEvents) {
-                    insertClaimServedDateInSingleCase(submitEvent, authToken, caseTypeId, adminDetails);
+                    try {
+                        insertClaimServedDateInSingleCase(submitEvent, authToken, caseTypeId, adminDetails);
+                    } catch (Exception ex) {
+                        errors.add(ex.getMessage());
+                        log.error(MESSAGE + adminDetails.getCaseId(), ex);
+                    }
                 }
                 log.info(String.format("Inserting Claim served date is completed in cases with receipt " +
                         "date from %s to %s", dateFrom, dateTo));
