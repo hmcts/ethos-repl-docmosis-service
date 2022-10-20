@@ -61,7 +61,7 @@ withPipeline(type, product, component) {
             keepAll : true,
             reportDir : "functional-output",
             reportFiles : "ecm-e2e-result.html",
-            reportName : "ECM E2E smoke tests result"
+            reportName : "Smoke Tests"
     ]
   }
 
@@ -74,7 +74,7 @@ withPipeline(type, product, component) {
             keepAll : true,
             reportDir : "functional-output",
             reportFiles : "ecm-e2e-result.html",
-            reportName : "ECM E2E functional tests result"
+            reportName : "Functional Tests"
     ]
   }
 
@@ -87,7 +87,7 @@ withPipeline(type, product, component) {
             keepAll : true,
             reportDir : "functional-output",
             reportFiles : "ecm-e2e-result.html",
-            reportName : "ECM E2E Smoke test report"
+            reportName : "Smoke Tests"
     ]
   }
 
@@ -100,7 +100,7 @@ withPipeline(type, product, component) {
             keepAll : true,
             reportDir : "functional-output",
             reportFiles : "ecm-e2e-result.html",
-            reportName : "ECM E2E test report"
+            reportName : "Functional Tests"
     ]
   }
 }

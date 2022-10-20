@@ -78,5 +78,10 @@
   "weekendHearingMsgError": "A hearing date you have entered falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing 11",
   "bfActionsOutstandingErrorMsgCheck": "You cannot close this case as there is currently no jurisdiction and no jurisdiction outcome associated with it\nCaseID contains one or more outstanding BFs. To enable this case to be closed, please clear the outstanding BFs.",
   "shortDescription": "Upload Document Check",
-  "documentsTab": "Documents"
+  "documentsTab": "Documents",
+  "createCaseText": "Create case",
+  "leedsMultiples": "Leeds - Multiples",
+  "createMultiple": "Create Multiple",
+  "multiplesTest": "Multiples Automation ",
+  "multipleCaseId": "Multiple Number: caseId"
 }
