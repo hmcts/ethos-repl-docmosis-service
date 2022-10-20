@@ -152,28 +152,25 @@ async function uploadDocumentEvent(I, eventName) {
     await I.executeUploadDocument();
 }
 
-async function createLeedsOfficeMultiples(I, caseId1, caseId2) {
-    await I.amOnLoadedPage('https://manage-case.aat.platform.hmcts.net/cases');
+async function createLeedsOfficeMultiplesJourney(I, caseId1, caseId2) {
+    await I.amOnPage('https://manage-case.aat.platform.hmcts.net')
+    await I.wait(5);
     await I.executeLeedsOfficeMultiples(caseId1, caseId2);
 }
 
 async function getECMCaseID(I, ccdCaseID) {
     await I.amOnPage('/case-details/' + ccdCaseID);
-    await I.wait(2);
     let caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
     let ecmCaseID = caseNumberText.split(' ')[2];
-    console.log("ECM Case Number==>::" + ecmCaseID);
     return ecmCaseID;
 }
 
 async function getECMCaseNumber(I, eventName, ccdCaseID) {
     await I.amOnPage('/case-details/' + ccdCaseID);
-    await I.wait(2);
     await I.chooseNextStep(eventName, 3);
     await I.acceptTheCase();
     let caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
     let ecmCaseID = caseNumberText.split(' ')[2];
-    console.log("ECM Case Number ==>::" + ecmCaseID);
     return ecmCaseID;
 }
 
@@ -205,7 +202,7 @@ module.exports = {
     scheduleHearingDuringTheWeekend,
     bfActionsOutstanding,
     uploadDocumentEvent,
-    createLeedsOfficeMultiples,
+    createLeedsOfficeMultiplesJourney,
     getECMCaseID,
     getECMCaseNumber
 };
