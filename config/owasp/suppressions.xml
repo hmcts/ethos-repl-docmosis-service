@@ -37,7 +37,7 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: spring-security-crypto-5.7.3.jar
+   file name: spring-security-crypto-5.7.5.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
         <vulnerabilityName>CVE-2020-5408</vulnerabilityName>
