@@ -20,6 +20,10 @@ def type = "java"
 def product = "ethos"
 def component = "repl-docmosis-backend"
 
+def vaultOverrides = [
+        'aat' : params.ENVIRONMENT,
+]
+
 def secrets = [
         "ethos-${params.ENVIRONMENT}": [
                 secret('ccd-user-email', 'CCD_CASEWORKER_E2E_EMAIL'),
@@ -44,9 +48,8 @@ withNightlyPipeline(type, product, component) {
     env.IDAM_URL = params.IDAM_API_URL
     env.S2S_PROVIDER = params.S2S_PROVIDER_URL
     env.CCD_DATA_STORE_API_URL = params.CCD_DATA_STORE_URL
-
     env.RUNNING_ENV = params.ENVIRONMENT
-
+    overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
     enableFullFunctionalTest()
     enableCrossBrowserTest()
