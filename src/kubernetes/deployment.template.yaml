@@ -29,6 +29,9 @@ spec:
       labels:
         app: ${SERVICE_NAME}
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
       containers:
         - image: ${IMAGE_NAME}
           name: ${SERVICE_NAME}
