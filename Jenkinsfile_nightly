@@ -30,6 +30,9 @@ def secrets = [
                 secret('ccd-user-password', 'CCD_CASEWORKER_E2E_PASSWORD'),
                 secret('ethos-repl-service-s2s-secret', 'SERVICE_SECRET'),
                 secret('idam-client-secret', 'IDAM_CLIENT_SECRET')
+        ],
+        's2s-${env}':  [
+                secret('microservicekey-ccd-gw', 'MICROSERVICE_CCD_GW')
         ]
 ]
 
