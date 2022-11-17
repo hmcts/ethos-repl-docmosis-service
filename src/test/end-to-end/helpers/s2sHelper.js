@@ -6,7 +6,7 @@ const {expect} = require('chai');
 const s2sBaseUrl = `http://rpe-service-auth-provider-${env}.service.core-compute-${env}.internal/testing-support/lease`;
 
 async function getServiceToken() {
-    const oneTimePassword = totp(testConfig.TestS2SAuthSecret, {digits: 6, period: 30});
+    const oneTimePassword = totp(testConfig.S2SAuthSecret, {digits: 6, period: 30});
 
     let s2sHeaders = {
         'Content-Type': 'application/json'
