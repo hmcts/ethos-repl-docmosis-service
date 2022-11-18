@@ -6,14 +6,15 @@ const smartWait = parseInt(process.env.SMART_WAIT) || 30000;
 const browser = process.env.BROWSER_GROUP || 'chrome';
 
 const defaultSauceOptions = {
+    sauceConnect:true,
     username: process.env.SAUCE_USERNAME,
     accessKey: process.env.SAUCE_ACCESS_KEY,
     tunnelIdentifier: process.env.TUNNEL_IDENTIFIER || 'reformtunnel',
     acceptSslCerts: true,
     windowSize: '1600x900',
     tags: ['ecm-e2e'],
-    extendedDebugging: true,
-    capturePerformance: true
+    // extendedDebugging: true,
+    // capturePerformance: true
 };
 
 function merge(intoObject, fromObject) {
@@ -44,7 +45,7 @@ const setupConfig = {
     output: `${process.cwd()}/${config.TestOutputDir}`,
     helpers: {
         WebDriver: {
-            url: config.TestUrl,
+            url: process.env.TEST_E2E_URL || config.TestUrl,
             browser,
             smartWait,
             waitForTimeout,
@@ -52,6 +53,7 @@ const setupConfig = {
             host: 'ondemand.eu-central-1.saucelabs.com',
             port: 80,
             region: 'eu',
+            connectionRetryCount: 3,
             capabilities: {}
 
         },
