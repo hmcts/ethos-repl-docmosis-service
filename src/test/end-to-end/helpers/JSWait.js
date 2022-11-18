@@ -42,7 +42,7 @@ class JSWait extends codecept_helper {
             console.log('Test Url==>::' + url);
             await helper.amOnPage(url, 60);
             await helper.waitInUrl(url, 60);
-            // await helper.waitForElement('body');
+            await helper.waitForElement('body');
         }
     }
 

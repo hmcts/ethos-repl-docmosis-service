@@ -13,8 +13,8 @@ const defaultSauceOptions = {
     acceptSslCerts: true,
     windowSize: '1600x900',
     tags: ['ecm-e2e'],
-    // extendedDebugging: true,
-    // capturePerformance: true
+    extendedDebugging: true,
+    capturePerformance: true
 };
 
 function merge(intoObject, fromObject) {
@@ -45,7 +45,7 @@ const setupConfig = {
     output: `${process.cwd()}/${config.TestOutputDir}`,
     helpers: {
         WebDriver: {
-            url: process.env.TEST_E2E_URL || config.TestUrl,
+            url: config.TestEndToEndUrl,
             browser,
             smartWait,
             waitForTimeout,
@@ -53,7 +53,7 @@ const setupConfig = {
             host: 'ondemand.eu-central-1.saucelabs.com',
             port: 80,
             region: 'eu',
-            connectionRetryCount: 3,
+            connectionRetryCount: 2,
             capabilities: {}
 
         },
