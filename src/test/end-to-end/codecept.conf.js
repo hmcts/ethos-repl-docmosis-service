@@ -34,6 +34,8 @@ exports.config = {
         PuppeteerHelper: {
             require: './helpers/PuppeteerHelper.js'
         },
+        REST: {},
+        JSONResponse: {},
         JSWait: {require: './helpers/JSWait.js'},
     },
     include: {
