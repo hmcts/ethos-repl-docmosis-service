@@ -50,7 +50,8 @@
     "watch": "1.0.2",
     "webdriverio": "^7.19.4",
     "when": "3.7.8",
-    "totp-generator": "^0.0.14"
+    "totp-generator": "^0.0.14",
+    "got": "^12.1.0"
   },
   "resolutions": {
     "async": "^3.2.4",
