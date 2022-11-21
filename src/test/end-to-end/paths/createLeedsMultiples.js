@@ -11,7 +11,7 @@ let caseId;
 
 Feature('Create Leeds Office Multiples Case');
 
-BeforeSuite(async ({I}) => caseId = await createCaseInCcd('test/end-to-end/data/ccd-case-basic-data.json'));
+BeforeSuite(async ({I}) => caseId = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json'));
 
 Scenario('Leeds Office Multiples Journey...', async ({I}) => {
 
