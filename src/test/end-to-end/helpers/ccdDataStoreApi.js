@@ -7,13 +7,14 @@ const idamApi = require('./idamApi');
 const s2sService = require('./s2sHelper');
 const logger = Logger.getLogger('helpers/ccdDataStoreApi.js');
 const env = testConfig.TestEnv;
+let caseId;
 
 async function createCaseInCcd(dataLocation = 'ccd-case-basic-data.json', jurisdiction = 'Leeds') {
     console.log(`create case for ${jurisdiction} jurisdiction`);
     const saveCaseResponse = await createECMCase(dataLocation, jurisdiction).catch(error => {
         console.log(error);
     });
-    const caseId = JSON.parse(saveCaseResponse).id;
+     caseId = JSON.parse(saveCaseResponse).id;
     logger.info('Created case: %s', caseId);
     return caseId;
 }
