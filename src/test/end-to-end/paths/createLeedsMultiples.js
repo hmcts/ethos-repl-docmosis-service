@@ -8,7 +8,6 @@ const {
     getECMCaseNumber
 } = require("../helpers/caseHelper");
 let caseId;
-let caseId1;
 
 Feature('Create Leeds Office Multiples Case');
 
@@ -19,7 +18,7 @@ Scenario('Leeds Office Multiples Journey...', async ({I}) => {
     await acceptCaseEvent(I, caseId, eventNames.ACCEPT_CASE);
     let ecmCaseNumber1 = await getECMCaseID(I, caseId);
 
-    caseId1 = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
+    let caseId1 = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     let ecmCaseNumber2 = await getECMCaseNumber(I, eventNames.ACCEPT_CASE, caseId1);
 
     await createLeedsOfficeMultiplesJourney(I, ecmCaseNumber1, ecmCaseNumber2)
