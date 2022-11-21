@@ -143,7 +143,7 @@ task nightlyFunctional(dependsOn: ':codeceptFunctionalNightly') {
 
 task codeceptFunctionalSauce(type: Exec, dependsOn: ':yarnInstall') {
     workingDir '.'
-    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run-multiple', '--all', '--config', './src/test/end-to-end/saucelabs.conf.js', '--grep', '@crossbrowser', '--verbose', '--debug', '--steps', '--reporter', 'mocha-multi'
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run-multiple', '--all', '--config', './src/test/end-to-end/saucelabs.conf.js', '--grep', '@xb', '--verbose', '--debug', '--steps', '--reporter', 'mocha-multi'
 }
 
 task codeceptFunctionalNightly(type: Exec, dependsOn :'yarnInstall') {

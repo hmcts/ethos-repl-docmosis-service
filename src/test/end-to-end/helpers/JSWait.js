@@ -24,24 +24,24 @@ class JSWait extends codecept_helper {
         }
     }
 
-    async amOnLoadedPage(url, language = 'en') {
-        let newUrl = `${url}?lng=${language}`;
+    async amOnLoadedPage(url) {
         const helper = this.helpers.WebDriver || this.helpers.Puppeteer;
         const helperIsPuppeteer = this.helpers.Puppeteer;
 
-        if (newUrl.indexOf('http') !== 0) {
-            newUrl = helper.options.url + newUrl;
+        if (url.indexOf('http') !== 0) {
+            url = helper.options.url + url;
         }
 
         if (helperIsPuppeteer) {
-            helper.page.goto(newUrl).catch(err => {
+            helper.page.goto(url).catch(err => {
                 console.error(err.message);
             });
-            await helper.page.waitForNavigation({waitUntil: 'networkidle0'});
+            helper.page.waitForNavigation({waitUntil: ['domcontentloaded', 'networkidle0']}, 60);
 
         } else {
-            await helper.amOnPage(newUrl);
-            await helper.waitInUrl(url);
+            console.log('Test Url==>::' + url);
+            await helper.amOnPage(url, 60);
+            await helper.waitInUrl(url, 60);
             await helper.waitForElement('body');
         }
     }

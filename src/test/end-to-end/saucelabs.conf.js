@@ -6,6 +6,7 @@ const smartWait = parseInt(process.env.SMART_WAIT) || 30000;
 const browser = process.env.BROWSER_GROUP || 'chrome';
 
 const defaultSauceOptions = {
+    sauceConnect:true,
     username: process.env.SAUCE_USERNAME,
     accessKey: process.env.SAUCE_ACCESS_KEY,
     tunnelIdentifier: process.env.TUNNEL_IDENTIFIER || 'reformtunnel',
@@ -44,7 +45,7 @@ const setupConfig = {
     output: `${process.cwd()}/${config.TestOutputDir}`,
     helpers: {
         WebDriver: {
-            url: config.TestUrl,
+            url: config.TestEndToEndUrl,
             browser,
             smartWait,
             waitForTimeout,
@@ -52,6 +53,7 @@ const setupConfig = {
             host: 'ondemand.eu-central-1.saucelabs.com',
             port: 80,
             region: 'eu',
+            connectionRetryCount: 2,
             capabilities: {}
 
         },
