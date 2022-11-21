@@ -19,8 +19,9 @@ async function submittedState(I, caseId) {
 }
 
 async function caseDetails(I, caseId, eventName, clerkResponcible, physicalLocation, conciliationTrack) {
+    await I.authenticateWithIdam();
+    await I.amOnPage('/case-details/' + caseId);
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
     await I.amendTheCaseDetails(clerkResponcible, physicalLocation, conciliationTrack);
 }
 
