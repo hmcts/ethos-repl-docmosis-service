@@ -39,7 +39,6 @@ class JSWait extends codecept_helper {
             helper.page.waitForNavigation({waitUntil: ['domcontentloaded', 'networkidle0']}, 60);
 
         } else {
-            console.log('Test Url==>::' + url);
             await helper.amOnPage(url, 60);
             await helper.waitInUrl(url, 60);
             await helper.waitForElement('body');
