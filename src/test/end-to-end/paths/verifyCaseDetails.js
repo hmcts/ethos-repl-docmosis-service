@@ -18,6 +18,7 @@ Scenario('Verify Case Details ', async ({I}) => {
     await caseDetails(I, caseNumber, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
 
 }).tag('@e2e')
+    .tag('@xb')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Case Details ( Using API)', async ({I}) => {
