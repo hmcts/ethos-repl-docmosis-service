@@ -1,26 +1,21 @@
 async function acceptCaseEvent(I, caseId, eventName) {
-    await I.authenticateWithIdam();
-    await I.wait(2);
-    await I.amOnPage('/case-details/' + caseId);
+    await navigateCase(I, caseId);
     await I.chooseNextStep(eventName, 3);
     await I.acceptTheCase();
 }
 
 async function rejectCaseEvent(I, caseId, eventName) {
-    await I.authenticateWithIdam();
-    await I.amOnPage('/case-details/' + caseId);
+    await navigateCase(I, caseId);
     await I.chooseNextStep(eventName, 3);
     await I.rejectTheCase();
 }
 
 async function submittedState(I, caseId) {
-    await I.authenticateWithIdam();
-    await I.amOnPage('/case-details/' + caseId);
+    await navigateCase(I, caseId);
 }
 
 async function caseDetails(I, caseId, eventName, clerkResponcible, physicalLocation, conciliationTrack) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
     await I.amendTheCaseDetails(clerkResponcible, physicalLocation, conciliationTrack);
 }
 
@@ -174,6 +169,16 @@ async function getECMCaseNumber(I, eventName, ccdCaseID) {
     return ecmCaseID;
 }
 
+async function acceptCaseTest(I, caseId, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.acceptTheCase();
+}
+
+async function navigateCase(I, caseId) {
+    await I.authenticateWithIdam();
+    await I.amOnPage('/case-details/' + caseId);
+}
+
 module.exports = {
     acceptCaseEvent,
     rejectCaseEvent,
@@ -204,5 +209,7 @@ module.exports = {
     uploadDocumentEvent,
     createLeedsOfficeMultiplesJourney,
     getECMCaseID,
-    getECMCaseNumber
+    getECMCaseNumber,
+    acceptCaseTest,
+    navigateCase
 };

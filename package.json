@@ -63,8 +63,14 @@
     "moment": "^2.29.2",
     "yargs-parser": "^21.0.1",
     "vm2": "^3.9.11",
-    "minimatch": "^3.1.2",
-    "got": "^12.1.0"
+    "minimatch": "^3.1.2"
+  },
+  "scripts": {
+    "lint": "NODE_PATH=. eslint .",
+    "eslint": "NODE_PATH=. eslint .",
+    "test-smoke": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @smoke --steps --reporter mocha-multi",
+    "test-e2e": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @xb --steps --reporter mocha-multi",
+    "test-xb": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run-multiple ${BROWSER_GROUP:-'--all'} -c ./src/test/end-to-end/saucelabs.conf.js --plugins retryFailedStep --steps --grep '@xb' --reporter mocha-multi"
   }
 }
 
