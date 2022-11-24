@@ -1,3 +1,5 @@
+const testConfig = require('./../../config');
+
 async function acceptCaseEvent(I, caseId, eventName) {
     await navigateCase(I, caseId);
     await I.chooseNextStep(eventName, 3);
@@ -50,13 +52,11 @@ async function respondentRepresentative(I, eventName) {
 
 async function jurisdiction(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
     await I.executeAddAmendJurisdiction();
 }
 
 async function closeCase(I, eventName, clerkResponsible, physicalLocation) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
     await I.executeCloseCase(clerkResponsible, physicalLocation);
 }
 
@@ -177,6 +177,7 @@ async function acceptCaseTest(I, caseId, eventName) {
 async function navigateCase(I, caseId) {
     await I.authenticateWithIdam();
     await I.amOnPage('/case-details/' + caseId);
+    await I.wait(testConfig.TestTimeToWait);
 }
 
 module.exports = {

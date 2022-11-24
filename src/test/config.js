@@ -21,5 +21,6 @@ module.exports = {
     TestIdamClientSecret: process.env.IDAM_CLIENT_SECRET || '',
     TestS2SAuthSecret: process.env.SERVICE_SECRET || '',
     S2SAuthSecret: process.env.MICROSERVICE_CCD_GW || '',
-    CCDCaseId:''
+    CCDCaseId: '',
+    TestTimeToWait: parseInt(process.env.E2E_TEST_TIME_TO_WAIT || 2)
 };
