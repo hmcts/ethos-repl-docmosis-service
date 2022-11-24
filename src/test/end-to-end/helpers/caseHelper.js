@@ -158,19 +158,20 @@ async function leedsMultiplesJourney(I, caseId1, caseId2) {
 }
 
 async function getECMCaseNumber(I, caseId, eventName, caseState) {
-    await I.authenticateWithIdam();
-    if (caseState === caseState.ACCEPTED) {
+    if (caseState === 'Accepted') {
+        await I.authenticateWithIdam();
         await I.amOnPage('/case-details/' + caseId);
         await I.wait(testConfig.TestTimeToWait);
         caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
+        ecmCaseID = caseNumberText.split(' ')[2];
     } else {
         await I.amOnPage('/case-details/' + caseId);
         await I.wait(testConfig.TestTimeToWait);
         await I.chooseNextStep(eventName, 3);
         await I.acceptTheCase();
         caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
+        ecmCaseID = caseNumberText.split(' ')[2];
     }
-    ecmCaseID = caseNumberText.split(' ')[2];
     return ecmCaseID;
 }
 
