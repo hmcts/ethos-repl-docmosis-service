@@ -1,4 +1,5 @@
 const testConfig = require('./../../config');
+const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {navigateCase} = require("../helpers/caseHelper");
 const {eventNames} = require('../pages/common/constants.js');
 const {acceptCaseTest, caseDetails} = require("../helpers/caseHelper");
