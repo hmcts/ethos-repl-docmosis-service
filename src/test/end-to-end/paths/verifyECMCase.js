@@ -9,6 +9,5 @@ Scenario('Check whether the user able to create a ccd case or not...', async () 
     console.log('CCD CaseID ==>::  ' + caseNumber);
 
 }).retry(testConfig.TestRetryScenarios)
-    .tag('@smoke')
     .tag('@nightly')
 
