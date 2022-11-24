@@ -1,4 +1,6 @@
 const testConfig = require('./../../config');
+let caseNumberText;
+let ecmCaseID;
 
 async function acceptCaseEvent(I, caseId, eventName) {
     await navigateCase(I, caseId);
@@ -28,61 +30,61 @@ async function caseDetailsEvent(I, caseId, eventName, clerkResponcible, currentP
 
 async function claimantDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeClaimantDetails();
 }
 
 async function claimantRepresentative(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeClaimantRepresentative();
 }
 
 async function claimantRespondentDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeRespondentDetails();
 }
 
 async function respondentRepresentative(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeRespondentRepresentative();
 }
 
 async function jurisdiction(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeAddAmendJurisdiction();
 }
 
 async function closeCase(I, eventName, clerkResponsible, physicalLocation) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeCloseCase(clerkResponsible, physicalLocation);
 }
 
 async function letters(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeLettersEvent();
 }
 
 async function restrictedReporting(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.setRestrictedReporting();
 }
 
 async function fixCaseAPI(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeFixCaseAPI();
 }
 
 async function bfAction(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeBFAction();
 }
 
@@ -93,49 +95,49 @@ async function bfActionsOutstanding(I, eventName) {
 
 async function listHearing(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeAddAmendHearing(jurisdiction);
 }
 
 async function allocateHearing(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeAllocateHearing(jurisdiction);
 }
 
 async function hearingDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeHearingDetails();
 }
 
 async function updateHearingDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.amendHearingDetails();
 }
 
 async function printHearingLists(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(3);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executePrintHearingLists(jurisdiction);
 }
 
 async function caseTransfer(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeCaseTransfer();
 }
 
 async function judgment(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeJudgment();
 }
 
 async function generateReport(I, jurisdiction, caseType, eventName) {
     await I.authenticateWithIdam();
-    await I.wait(2);
+    await I.wait(testConfig.TestTimeToWait);
     await I.executeCreateReport(jurisdiction, caseType, eventName);
 }
 
@@ -149,25 +151,26 @@ async function uploadDocumentEvent(I, eventName) {
     await I.executeUploadDocument();
 }
 
-async function createLeedsOfficeMultiplesJourney(I, caseId1, caseId2) {
+async function leedsMultiplesJourney(I, caseId1, caseId2) {
     await I.amOnPage('https://manage-case.aat.platform.hmcts.net')
     await I.wait(5);
     await I.executeLeedsOfficeMultiples(caseId1, caseId2);
 }
 
-async function getECMCaseID(I, ccdCaseID) {
-    await I.amOnPage('/case-details/' + ccdCaseID);
-    let caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
-    let ecmCaseID = caseNumberText.split(' ')[2];
-    return ecmCaseID;
-}
-
-async function getECMCaseNumber(I, eventName, ccdCaseID) {
-    await I.amOnPage('/case-details/' + ccdCaseID);
-    await I.chooseNextStep(eventName, 3);
-    await I.acceptTheCase();
-    let caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
-    let ecmCaseID = caseNumberText.split(' ')[2];
+async function getECMCaseNumber(I, caseId, eventName, caseState) {
+    await I.authenticateWithIdam();
+    if (caseState === caseState.ACCEPTED) {
+        await I.amOnPage('/case-details/' + caseId);
+        await I.wait(testConfig.TestTimeToWait);
+        caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
+    } else {
+        await I.amOnPage('/case-details/' + caseId);
+        await I.wait(testConfig.TestTimeToWait);
+        await I.chooseNextStep(eventName, 3);
+        await I.acceptTheCase();
+        caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
+    }
+    ecmCaseID = caseNumberText.split(' ')[2];
     return ecmCaseID;
 }
 
@@ -210,8 +213,7 @@ module.exports = {
     scheduleHearingDuringTheWeekend,
     bfActionsOutstanding,
     uploadDocumentEvent,
-    createLeedsOfficeMultiplesJourney,
-    getECMCaseID,
+    leedsMultiplesJourney,
     getECMCaseNumber,
     acceptCaseTest,
     navigateCase
