@@ -1,8 +1,7 @@
 const testConfig = require('./../../config');
 const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
-const {navigateCase} = require("../helpers/caseHelper");
 const {eventNames} = require('../pages/common/constants.js');
-const {acceptCaseEvent, caseDetails} = require("../helpers/caseHelper");
+const {acceptCaseEvent, caseDetails, navigateCase} = require("../helpers/caseHelper");
 let caseId;
 
 Feature('Leeds Singles Case and move to Accepted state');
