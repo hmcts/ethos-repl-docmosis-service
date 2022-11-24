@@ -5,7 +5,7 @@ const {acceptCaseEvent, caseDetails, navigateCase} = require("../helpers/caseHel
 let caseId;
 
 Feature('Leeds Singles Case and move to Accepted state');
-BeforeSuite(async ({I}) => caseId = await createCaseInCcd('test/end-to-end/data/ccd-case-basic-data.json'));
+BeforeSuite(async ({I}) => caseId = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json'));
 
 Scenario('Verify Accept Case', async ({I}) => {
     await acceptCaseEvent(I, caseId, eventNames.ACCEPT_CASE);
