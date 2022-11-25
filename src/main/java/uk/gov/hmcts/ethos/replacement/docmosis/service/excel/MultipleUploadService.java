@@ -58,12 +58,11 @@ public class MultipleUploadService {
                 log.info("Update the document information");
                 log.info("File name uploaded: "
                         + multipleData.getCaseImporterFile().getUploadedDocument().getDocumentFilename());
-
+                setSubMultipleInSingleCaseData(userToken, errors, multipleDetails);
                 multipleData.setCaseImporterFile(
                         excelDocManagementService.populateCaseImporterFile(
                                 userToken,
                                 multipleData.getCaseImporterFile().getUploadedDocument()));
-                setSubMultipleInSingleCaseData(userToken, errors, multipleDetails);
 
             } else {
 
