@@ -1,24 +1,30 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.io.IOException;
-import java.util.*;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.getDataTypeSheet;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.getDocumentCollection;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.TESTING_FILE_NAME_EMPTY;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.TESTING_FILE_NAME_WITH_TWO;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.TESTING_FILE_NAME_WRONG_COLUMN_ROW;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService.ERROR_SHEET_EMPTY;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService.ERROR_SHEET_NUMBER_COLUMNS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService.ERROR_SHEET_NUMBER_ROWS;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleUploadServiceTest {
@@ -29,8 +35,6 @@ public class MultipleUploadServiceTest {
     private MultipleBatchUpdate2Service multipleBatchUpdate2Service;
     @Mock
     private ExcelDocManagementService excelDocManagementService;
-    @Mock
-    private CcdClient ccdClient;
     @InjectMocks
     private MultipleUploadService multipleUploadService;
 
@@ -60,40 +64,6 @@ public class MultipleUploadServiceTest {
                 errors);
 
         assertEquals(0, errors.size());
-    }
-
-    @Test
-    public void bulkUploadLogicSetSubMultipleInCaseDataTest() throws IOException {
-        excelReadingService = new ExcelReadingService(excelDocManagementService, ccdClient);
-        List<String> errors = new ArrayList<>();
-        SubmitEvent submitEvent = new SubmitEvent();
-        CaseData caseData = new CaseData();
-        caseData.setEthosCaseReference("1234");
-        submitEvent.setCaseData(caseData);
-        MultipleObject multipleObject =  MultipleObject.builder()
-                .subMultiple("subMultiple")
-                .ethosCaseRef("1234")
-                .build();
-        SortedMap<String, Object> map = new TreeMap<>(Map.of("1234", multipleObject));
-        when(excelReadingService.checkExcelErrors(
-                userToken,
-                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-                new ArrayList<>()))
-                .thenReturn(getDataTypeSheet(TESTING_FILE_NAME_WITH_TWO));
-        when(ccdClient.retrieveCasesElasticSearch(anyString(),
-                anyString(), anyList()))
-                .thenReturn(List.of(submitEvent));
-        when(excelReadingService.readExcel(anyString(),
-                anyString(),
-                anyList(),
-                any(),
-                any()))
-                .thenReturn(map);
-        multipleUploadService.bulkUploadLogic(userToken,
-                multipleDetails,
-                errors);
-
-        assertEquals("subMultiple", submitEvent.getCaseData().getSubMultipleName());
     }
 
     @Test
