@@ -63,6 +63,7 @@ public class MultipleUploadService {
                         excelDocManagementService.populateCaseImporterFile(
                                 userToken,
                                 multipleData.getCaseImporterFile().getUploadedDocument()));
+
                 setSubMultipleInSingleCaseData(userToken, errors, multipleDetails);
 
             } else {

@@ -62,7 +62,6 @@ public class MultipleUploadServiceTest {
         multipleUploadService.bulkUploadLogic(userToken,
                 multipleDetails,
                 errors);
-
         assertEquals(0, errors.size());
     }
 
