@@ -1,15 +1,17 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
-import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @Service("multipleUploadService")
@@ -61,6 +63,7 @@ public class MultipleUploadService {
                         excelDocManagementService.populateCaseImporterFile(
                                 userToken,
                                 multipleData.getCaseImporterFile().getUploadedDocument()));
+                setSubMultipleInSingleCaseData(userToken, errors, multipleDetails);
 
             } else {
 
@@ -76,6 +79,27 @@ public class MultipleUploadService {
 
         }
 
+    }
+
+    private void setSubMultipleInSingleCaseData(String userToken,
+                                                List<String> errors,
+                                                MultipleDetails multipleDetails) {
+        SortedMap<String, Object> multipleObjects =  excelReadingService.readExcel(userToken,
+                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
+                errors,
+                multipleDetails.getCaseData(),
+                FilterExcelType.ALL);
+        multipleObjects.forEach((key, value) -> {
+            var multipleObject = (MultipleObject) value;
+                try {
+                    excelReadingService.setSubMultipleFieldInSingleCaseData(userToken,
+                            multipleDetails,
+                            multipleObject.getEthosCaseRef(),
+                            multipleObject.getSubMultiple());
+                } catch (IOException e) {
+                    log.error(e.toString());
+                }
+        });
     }
 
     private void validateSheet(XSSFSheet datatypeSheet, MultipleData multipleData, List<String> errors) {
@@ -99,7 +123,6 @@ public class MultipleUploadService {
             if (datatypeSheet.getRow(0).getLastCellNum() != MultiplesHelper.HEADERS.size()) {
 
                 errors.add(ERROR_SHEET_NUMBER_COLUMNS + MultiplesHelper.HEADERS.size());
-
             }
 
         } else {
