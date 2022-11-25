@@ -92,9 +92,9 @@ public class ExcelReadingService {
         List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
                 UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()), List.of(ethosRef));
         submitEvents.get(0).getCaseData().setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
-        CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, multipleDetails.getCaseTypeId(),
+        CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
                 multipleDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
-        ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), multipleDetails.getCaseTypeId(),
+        ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
                 multipleDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
     }
 
