@@ -1,23 +1,21 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedMap;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate2Service")
@@ -27,6 +25,7 @@ public class MultipleBatchUpdate2Service {
     private final MultipleCasesReadingService multipleCasesReadingService;
     private final ExcelReadingService excelReadingService;
     private final MultipleHelperService multipleHelperService;
+
 
     @Autowired
     public MultipleBatchUpdate2Service(ExcelDocManagementService excelDocManagementService,
@@ -78,7 +77,7 @@ public class MultipleBatchUpdate2Service {
 
                 if (isNullOrEmpty(updatedSubMultipleRef)) {
 
-                    log.info("Keep cases in the same multiple");
+                    log.info("Keep cases in the same sub-multiple");
 
                 } else {
 
@@ -218,22 +217,30 @@ public class MultipleBatchUpdate2Service {
                         FilterExcelType.ALL);
 
         List<MultipleObject> newMultipleObjectsUpdated = addSubMultipleRefToMultipleObjects(multipleObjectsFiltered,
-                multipleObjects, updatedSubMultipleRef);
-
+                multipleObjects, updatedSubMultipleRef, userToken, multipleDetails);
         excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 
     private List<MultipleObject> addSubMultipleRefToMultipleObjects(List<String> multipleObjectsFiltered,
                                                                     SortedMap<String, Object> multipleObjects,
-                                                                    String updatedSubMultipleRef) {
+                                                                    String updatedSubMultipleRef,
+                                                                    String userToken,
+                                                                    MultipleDetails multipleDetails) {
 
         List<MultipleObject> newMultipleObjectsUpdated = new ArrayList<>();
-
         multipleObjects.forEach((key, value) -> {
             var multipleObject = (MultipleObject) value;
             if (multipleObjectsFiltered.contains(key)) {
                 multipleObject.setSubMultiple(updatedSubMultipleRef);
+                try {
+                    excelReadingService.setSubMultipleFieldInSingleCaseData(userToken,
+                            multipleDetails,
+                            multipleObject.getEthosCaseRef(),
+                            updatedSubMultipleRef);
+                } catch (IOException e) {
+                    log.error(e.toString());
+                }
             }
             newMultipleObjectsUpdated.add(multipleObject);
         });

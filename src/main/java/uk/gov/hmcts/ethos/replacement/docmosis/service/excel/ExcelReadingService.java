@@ -8,10 +8,16 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.elasticsearch.common.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 
@@ -41,10 +47,12 @@ public class ExcelReadingService {
     private static final String ERROR_DOCUMENT_NOT_VALID = "Document uploaded not valid";
 
     private final ExcelDocManagementService excelDocManagementService;
+    private final CcdClient ccdClient;
 
     @Autowired
-    public ExcelReadingService(ExcelDocManagementService excelDocManagementService) {
+    public ExcelReadingService(ExcelDocManagementService excelDocManagementService, CcdClient ccdClient) {
         this.excelDocManagementService = excelDocManagementService;
+        this.ccdClient = ccdClient;
     }
 
     public XSSFWorkbook readWorkbook(String userToken, String documentBinaryUrl) throws IOException {
@@ -78,6 +86,16 @@ public class ExcelReadingService {
 
         return multipleObjects;
 
+    }
+
+    public void setSubMultipleFieldInSingleCaseData(String userToken, MultipleDetails multipleDetails, String ethosRef, String subMultiple) throws IOException {
+        List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
+                UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()), List.of(ethosRef));
+        submitEvents.get(0).getCaseData().setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
+        CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
+        ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
     }
 
     public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors)
