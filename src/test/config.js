@@ -20,5 +20,7 @@ module.exports = {
     TestForCrossBrowser: process.env.TESTS_FOR_CROSS_BROWSER === 'true',
     TestIdamClientSecret: process.env.IDAM_CLIENT_SECRET || '',
     TestS2SAuthSecret: process.env.SERVICE_SECRET || '',
-    S2SAuthSecret: process.env.MICROSERVICE_CCD_GW || ''
+    S2SAuthSecret: process.env.MICROSERVICE_CCD_GW || '',
+    CCDCaseId: '',
+    TestTimeToWait: parseInt(process.env.E2E_TEST_TIME_TO_WAIT || 3)
 };

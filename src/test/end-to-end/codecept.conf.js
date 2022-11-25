@@ -1,8 +1,13 @@
 const config = require('../config.js');
+const {createCaseInCcd} = require("./helpers/ccdDataStoreApi");
 
 exports.config = {
     tests: config.TestPathToRun,
     output: `${process.cwd()}/${config.TestOutputDir}`,
+    async bootstrap() {
+        config.CCDCaseId = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
+        return config.CCDCaseId;
+    },
     helpers: {
         Puppeteer: {
             url: config.TestUrl,

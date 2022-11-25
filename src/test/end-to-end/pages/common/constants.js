@@ -30,7 +30,7 @@ const eventNames = {
     UPLOAD_DOCUMENT: 'Upload Document'
 };
 
-const states = {
+const caseState = {
     SUBMITTED: 'Submitted',
     ACCEPTED: 'Accepted',
     REJECTED: 'Rejected',
@@ -41,5 +41,5 @@ const states = {
 module.exports = {
     ccdUserType,
     eventNames,
-    states
+    caseState
 };

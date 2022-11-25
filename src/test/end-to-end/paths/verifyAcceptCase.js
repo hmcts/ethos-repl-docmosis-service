@@ -1,16 +1,16 @@
 const testConfig = require('./../../config');
-const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
+const {navigateCase} = require("../helpers/caseHelper");
 const {eventNames} = require('../pages/common/constants.js');
-const {acceptCaseEvent} = require("../helpers/caseHelper");
-let caseNumber;
+const {acceptCaseTest} = require("../helpers/caseHelper");
 
 Feature('Leeds Singles Case and move to Accepted state');
 
-Scenario('Verify Accept Case', async ({I}) => {
+Before(async ({I}) => {
+    await navigateCase(I, testConfig.CCDCaseId);
+});
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
-    await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
+Scenario('Verify Accept Case', async ({I}) => {
+    await acceptCaseTest(I, testConfig.CCDCaseId, eventNames.ACCEPT_CASE);
 
 }).tag('@e2e')
-    .tag('@xb')
     .retry(testConfig.TestRetryScenarios);

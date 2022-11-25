@@ -1,9 +1,8 @@
 const testConfig = require('./../../config');
-const {createCaseInCcd, updateECMCaseInCcd} = require("../helpers/ccdDataStoreApi");
+const {updateECMCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames, states} = require('../pages/common/constants.js');
 const assert = require('assert');
-const {acceptCaseEvent, caseDetails} = require("../helpers/caseHelper");
-let caseNumber;
+const {caseDetails, navigateCase} = require("../helpers/caseHelper");
 
 const verifyState = (eventResponse, state) => {
     assert.strictEqual(JSON.parse(eventResponse).state, state);
@@ -11,21 +10,18 @@ const verifyState = (eventResponse, state) => {
 
 Feature('Leeds Singles Case and move to Case Details state');
 
-Scenario('Verify Case Details ', async ({I}) => {
+Before(async ({I}) => {
+    await navigateCase(I, testConfig.CCDCaseId);
+})
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
-    await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
-    await caseDetails(I, caseNumber, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
+Scenario('Verify Case Details ', async ({I}) => {
+    await caseDetails(I, testConfig.CCDCaseId, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
 
 }).tag('@e2e')
-    .tag('@xb')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Case Details ( Using API)', async ({I}) => {
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
-    console.log('..... caseCreated in CCD , caseNumber is ==  ' + caseNumber);
-
-    const acceptedState = await updateECMCaseInCcd(caseNumber, eventNames.PRE_ACCEPTANCE_CASE, 'src/test/end-to-end/data/ccd-accept-case.json');
+    const acceptedState = await updateECMCaseInCcd(testConfig.CCDCaseId, eventNames.PRE_ACCEPTANCE_CASE, 'src/test/end-to-end/data/ccd-accept-case.json');
     verifyState(acceptedState, states.ACCEPTED);
 
 }).tag('@nightly')
