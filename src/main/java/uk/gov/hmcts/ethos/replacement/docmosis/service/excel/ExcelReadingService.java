@@ -88,6 +88,13 @@ public class ExcelReadingService {
 
     }
 
+    /**
+     * Given a case number and subMultiple name, case is found and its subMultiple property is populated.
+     * @param userToken used for IDAM Authentication
+     * @param multipleDetails multipleDetails to get caseTypeId, jurisdiction
+     * @param ethosRef case number
+     * @param subMultiple subMultiple name to be assigned to single case
+     */
     public void setSubMultipleFieldInSingleCaseData(String userToken, MultipleDetails multipleDetails, String ethosRef, String subMultiple) throws IOException {
         List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
                 UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()), List.of(ethosRef));

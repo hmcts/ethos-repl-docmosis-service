@@ -96,8 +96,8 @@ public class MultipleUploadService {
                         multipleObject.getEthosCaseRef(),
                         multipleObject.getSubMultiple());
             } catch (IOException e) {
-                log.error(e.toString());
-            }
+                log.error(String.format("Error in setting subMultiple for case %s:",
+                        multipleObject.getEthosCaseRef()) + e.toString());            }
         });
     }
 
