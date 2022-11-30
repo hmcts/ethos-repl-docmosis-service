@@ -9,10 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
@@ -26,8 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
@@ -137,25 +132,6 @@ public class ExcelReadingServiceTest {
                 .thenReturn(body.getInputStream());
         excelReadingService.readExcel(userToken, documentBinaryUrl, errors, multipleData, FilterExcelType.ALL);
         assertEquals(1, errors.size());
-    }
-
-    @Test
-    public void setSubMultipleFieldInSingleCaseDataTest() throws IOException {
-        SubmitEvent submitEvent = new SubmitEvent();
-        CaseData caseData = new CaseData();
-        caseData.setEthosCaseReference("1234");
-        submitEvent.setCaseData(caseData);
-        MultipleDetails multipleDetails = new MultipleDetails();
-        multipleDetails.setJurisdiction("EMPLOYMENT");
-        multipleDetails.setCaseTypeId("Leeds_Multiple");
-        when(ccdClient.retrieveCasesElasticSearch(anyString(),
-                anyString(), anyList()))
-                .thenReturn(List.of(submitEvent));
-        excelReadingService.setSubMultipleFieldInSingleCaseData(userToken,
-                multipleDetails,
-                "1234",
-                "subMultiple");
-        assertEquals("subMultiple", caseData.getSubMultipleName());
     }
 
     @Test(expected = Exception.class)

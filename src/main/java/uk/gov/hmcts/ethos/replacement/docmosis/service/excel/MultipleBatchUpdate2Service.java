@@ -9,6 +9,7 @@ import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -25,17 +26,18 @@ public class MultipleBatchUpdate2Service {
     private final MultipleCasesReadingService multipleCasesReadingService;
     private final ExcelReadingService excelReadingService;
     private final MultipleHelperService multipleHelperService;
-
+    private final CcdClient ccdClient;
 
     @Autowired
     public MultipleBatchUpdate2Service(ExcelDocManagementService excelDocManagementService,
                                        MultipleCasesReadingService multipleCasesReadingService,
                                        ExcelReadingService excelReadingService,
-                                       MultipleHelperService multipleHelperService) {
+                                       MultipleHelperService multipleHelperService, CcdClient ccdClient) {
         this.excelDocManagementService = excelDocManagementService;
         this.multipleCasesReadingService = multipleCasesReadingService;
         this.excelReadingService = excelReadingService;
         this.multipleHelperService = multipleHelperService;
+        this.ccdClient = ccdClient;
     }
 
     public void batchUpdate2Logic(String userToken, MultipleDetails multipleDetails,
@@ -234,10 +236,11 @@ public class MultipleBatchUpdate2Service {
             if (multipleObjectsFiltered.contains(key)) {
                 multipleObject.setSubMultiple(updatedSubMultipleRef);
                 try {
-                    excelReadingService.setSubMultipleFieldInSingleCaseData(userToken,
+                    MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
                             multipleDetails,
                             multipleObject.getEthosCaseRef(),
-                            updatedSubMultipleRef);
+                            updatedSubMultipleRef,
+                            ccdClient);
                 } catch (IOException e) {
                     log.error(String.format("Error in setting subMultiple for case %s:",
                             multipleObject.getEthosCaseRef()) + e.toString());                }

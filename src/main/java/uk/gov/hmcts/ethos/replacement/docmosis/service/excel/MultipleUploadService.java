@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -26,12 +27,15 @@ public class MultipleUploadService {
     private final ExcelReadingService excelReadingService;
 
     private final ExcelDocManagementService excelDocManagementService;
+    private final CcdClient ccdClient;
 
     @Autowired
     public MultipleUploadService(ExcelReadingService excelReadingService,
-                                 ExcelDocManagementService excelDocManagementService) {
+                                 ExcelDocManagementService excelDocManagementService,
+                                 CcdClient ccdClient) {
         this.excelReadingService = excelReadingService;
         this.excelDocManagementService = excelDocManagementService;
+        this.ccdClient = ccdClient;
 
     }
 
@@ -91,10 +95,11 @@ public class MultipleUploadService {
         multipleObjects.forEach((key, value) -> {
             var multipleObject = (MultipleObject) value;
             try {
-                excelReadingService.setSubMultipleFieldInSingleCaseData(userToken,
+                MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
                         multipleDetails,
                         multipleObject.getEthosCaseRef(),
-                        multipleObject.getSubMultiple());
+                        multipleObject.getSubMultiple(),
+                        ccdClient);
             } catch (IOException e) {
                 log.error(String.format("Error in setting subMultiple for case %s:",
                         multipleObject.getEthosCaseRef()) + e.toString());            }
