@@ -1,30 +1,25 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-
-import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleBatchUpdate2ServiceTest {
@@ -37,6 +32,8 @@ public class MultipleBatchUpdate2ServiceTest {
     private ExcelReadingService excelReadingService;
     @Mock
     private MultipleHelperService multipleHelperService;
+    @Mock
+    private CcdClient ccdClient;
 
     @InjectMocks
     private MultipleBatchUpdate2Service multipleBatchUpdate2Service;
@@ -46,6 +43,7 @@ public class MultipleBatchUpdate2ServiceTest {
     private MultipleDetails multipleDetails;
     private String userToken;
     private List<SubmitMultipleEvent> submitMultipleEvents;
+    private MultiplesHelper multiplesHelper;
 
     @Before
     public void setUp() {
@@ -113,6 +111,8 @@ public class MultipleBatchUpdate2ServiceTest {
                 .thenReturn(multipleObjects);
         multipleDetails.getCaseData().getMoveCases().setConvertToSingle(NO);
         multipleDetails.getCaseData().getMoveCases().setUpdatedSubMultipleRef("246000/1");
+        multipleDetails.setCaseTypeId("Leeds_Multiple");
+        multipleDetails.setJurisdiction("Employment");
         multipleBatchUpdate2Service.batchUpdate2Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),

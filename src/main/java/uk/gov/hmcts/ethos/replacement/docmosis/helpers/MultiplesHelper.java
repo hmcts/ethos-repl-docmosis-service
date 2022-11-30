@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
@@ -209,11 +210,13 @@ public class MultiplesHelper {
                                                     CcdClient ccdClient) throws IOException {
         List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
                 UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()), List.of(ethosRef));
-        submitEvents.get(0).getCaseData().setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
-        CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
-                multipleDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
-        ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
-                multipleDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
+        if (CollectionUtils.isNotEmpty(submitEvents)) {
+            submitEvents.get(0).getCaseData().setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
+            CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+                    multipleDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
+            ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+                    multipleDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
+        }
     }
 
     public static void resetMidFields(MultipleData multipleData) {
