@@ -512,7 +512,7 @@ public class ListingService {
 
         if (dateListedType.getHearingStatus() != null) {
             List<String> invalidHearingStatuses = Arrays.asList(HEARING_STATUS_SETTLED,
-                    HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED);
+                    HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED, HEARING_STATUS_VACATED);
             return invalidHearingStatuses.stream().noneMatch(str -> str.equals(dateListedType.getHearingStatus()));
         } else {
             return true;
