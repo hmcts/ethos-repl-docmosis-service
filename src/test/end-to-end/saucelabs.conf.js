@@ -6,7 +6,7 @@ const smartWait = parseInt(process.env.SMART_WAIT) || 30000;
 const browser = process.env.BROWSER_GROUP || 'chrome';
 
 const defaultSauceOptions = {
-    sauceConnect:true,
+    sauceConnect: true,
     username: process.env.SAUCE_USERNAME,
     accessKey: process.env.SAUCE_ACCESS_KEY,
     tunnelIdentifier: process.env.TUNNEL_IDENTIFIER || 'reformtunnel',
@@ -107,9 +107,9 @@ const setupConfig = {
         }
     },
     multiple: {
-        // microsoft: {
-        //     browsers: getBrowserConfig('microsoft')
-        // },
+        microsoft: {
+            browsers: getBrowserConfig('microsoft')
+        },
         chrome: {
             browsers: getBrowserConfig('chrome')
         },
