@@ -1,16 +1,15 @@
 const testConfig = require('./../../config');
 const {uploadDocumentEvent} = require("../helpers/caseHelper");
-const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames} = require('../pages/common/constants.js');
-const {submittedState} = require("../helpers/caseHelper");
-let caseNumber;
+const {navigateCase} = require("../helpers/caseHelper");
 
 Feature('Validate Upload Document');
 
-Scenario('Verify Upload Document', async ({I}) => {
+Before(async ({I}) => {
+    await navigateCase(I, testConfig.CCDCaseId);
+});
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
-    await submittedState(I, caseNumber);
+Scenario('Verify Upload Document', async ({I}) => {
     await uploadDocumentEvent(I, eventNames.UPLOAD_DOCUMENT);
 
 }).tag('@nightly')
