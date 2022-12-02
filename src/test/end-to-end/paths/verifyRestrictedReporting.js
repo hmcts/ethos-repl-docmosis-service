@@ -1,17 +1,15 @@
 const testConfig = require('./../../config');
-const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames} = require('../pages/common/constants.js');
-const {acceptCaseEvent, restrictedReporting} = require("../helpers/caseHelper");
-let caseNumber;
+const {navigateCase, restrictedReporting} = require("../helpers/caseHelper");
 
 Feature('Create a Leeds Singles Case & Execute Restricted Reporting');
 
-Scenario('Verify Restricted Reporting', async ({I}) => {
+Before(async ({I}) => {
+    await navigateCase(I, testConfig.CCDCaseId);
+});
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
-    await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
+Scenario('Verify Restricted Reporting', async ({I}) => {
     await restrictedReporting(I, eventNames.RESTRICTED_REPORTING);
 
 }).tag('@e2e')
-    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

@@ -12,7 +12,7 @@ Feature('Leeds Singles Case and move to Case Details state');
 
 Before(async ({I}) => {
     await navigateCase(I, testConfig.CCDCaseId);
-})
+});
 
 Scenario('Verify Case Details ', async ({I}) => {
     await caseDetails(I, testConfig.CCDCaseId, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
