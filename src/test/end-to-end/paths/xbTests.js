@@ -17,5 +17,5 @@ Scenario('Execute Case Details Test', async ({I}) => {
     await acceptCaseEvent(I, caseId, eventNames.ACCEPT_CASE);
     await caseDetails(I, caseId, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
 
-}).tag('@xb')
+}).tag('@ignore')
     .retry(testConfig.TestRetryScenarios);
