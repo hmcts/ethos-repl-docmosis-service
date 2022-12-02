@@ -9,7 +9,7 @@ Before(async ({I}) => {
 });
 
 Scenario('Verify Manchester Accept Case', async ({I}) => {
-    // await acceptCaseTest(I, testConfig.MOCase, eventNames.ACCEPT_CASE);
+    await acceptCaseTest(I, testConfig.MOCase, eventNames.ACCEPT_CASE);
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
