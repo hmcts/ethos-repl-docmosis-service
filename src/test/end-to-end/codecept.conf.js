@@ -27,7 +27,7 @@ exports.config = {
                     'height': 960
                 },
                 args: [
-                    // '--headless',
+                    '--headless',
                     '--disable-gpu',
                     '--no-sandbox',
                     '--allow-running-insecure-content',
@@ -82,7 +82,7 @@ exports.config = {
     },
     multiple: {
         parallel: {
-            chunks: 2,
+            chunks: 3,
             browsers: ['chrome']
         }
     },
