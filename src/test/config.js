@@ -22,5 +22,6 @@ module.exports = {
     TestS2SAuthSecret: process.env.SERVICE_SECRET || '',
     S2SAuthSecret: process.env.MICROSERVICE_CCD_GW || '',
     CCDCaseId: '',
+    MOCase: '',
     TestTimeToWait: parseInt(process.env.E2E_TEST_TIME_TO_WAIT || 3)
 };
