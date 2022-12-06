@@ -75,6 +75,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_VACATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
@@ -512,7 +513,7 @@ public class ListingService {
 
         if (dateListedType.getHearingStatus() != null) {
             List<String> invalidHearingStatuses = Arrays.asList(HEARING_STATUS_SETTLED,
-                    HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED);
+                    HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED, HEARING_STATUS_VACATED);
             return invalidHearingStatuses.stream().noneMatch(str -> str.equals(dateListedType.getHearingStatus()));
         } else {
             return true;
