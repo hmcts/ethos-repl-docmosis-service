@@ -1,14 +1,15 @@
 const testConfig = require('./../../config');
-const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 
-Feature('Verify CCD Case Creation...').retry(testConfig.TestRetryFeatures);
-let caseNumber;
+Feature(' Create CCD Case...').retry(testConfig.TestRetryFeatures);
 
-Scenario('Check whether the user able to create a ccd case or not...', async () => {
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
-    console.log('CCD CaseID ==>::  ' + caseNumber);
+Scenario('Leeds Office Case', async () => {
+    console.log('Leeds Office Case ==>::  ' + testConfig.CCDCaseId);
 
 }).retry(testConfig.TestRetryScenarios)
     .tag('@smoke')
-    .tag('@nightly')
 
+Scenario('Manchester Office Case', async () => {
+    console.log('Manchester Office Case ==>::  ' + testConfig.MOCase);
+
+}).retry(testConfig.TestRetryScenarios)
+    .tag('@smoke')

@@ -124,11 +124,11 @@ task yarnInstall(type: Exec) {
 }
 
 task codeceptSmoke(type: Exec, dependsOn: ':yarnInstall') {
-    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@smoke', '--steps', '--reporter', 'mocha-multi'
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@smoke', '--reporter', 'mocha-multi'
 }
 
 task codeceptFunctional(type: Exec, dependsOn :'yarnInstall') {
-    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e', '--steps', '--reporter', 'mocha-multi'
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e', '--reporter', 'mocha-multi'
 }
 
 task crossbrowser(dependsOn: ':codeceptFunctionalSauce') {
@@ -143,7 +143,7 @@ task nightlyFunctional(dependsOn: ':codeceptFunctionalNightly') {
 
 task codeceptFunctionalSauce(type: Exec, dependsOn: ':yarnInstall') {
     workingDir '.'
-    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run-multiple', '--all', '--config', './src/test/end-to-end/saucelabs.conf.js', '--grep', '@crossbrowser', '--verbose', '--debug', '--steps', '--reporter', 'mocha-multi'
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run-multiple', '--all', '--config', './src/test/end-to-end/saucelabs.conf.js', '--grep', '@xb', '--verbose', '--debug', '--reporter', 'mocha-multi'
 }
 
 task codeceptFunctionalNightly(type: Exec, dependsOn :'yarnInstall') {
@@ -265,6 +265,7 @@ dependencyManagement {
 dependencies {
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.196'
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '0.0.7'
+
     implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.41'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'

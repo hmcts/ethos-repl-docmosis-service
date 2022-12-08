@@ -8,12 +8,10 @@ let caseNumber;
 Feature('Execute Case Close Scenario');
 
 Scenario('Verify Case Close', async ({I}) => {
-
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await jurisdiction(I, eventNames.JURISDICTION);
     await closeCase(I, eventNames.CLOSE_CASE, commonConfig.clerkResponsible, commonConfig.physicalLocation)
 
 }).tag('@e2e')
-    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);

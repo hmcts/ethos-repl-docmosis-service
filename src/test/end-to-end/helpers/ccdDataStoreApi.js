@@ -9,12 +9,10 @@ const logger = Logger.getLogger('helpers/ccdDataStoreApi.js');
 const env = testConfig.TestEnv;
 
 async function createCaseInCcd(dataLocation = 'ccd-case-basic-data.json', jurisdiction = 'Leeds') {
-    console.log(`create case for ${jurisdiction} jurisdiction`);
     const saveCaseResponse = await createECMCase(dataLocation, jurisdiction).catch(error => {
         console.log(error);
     });
     const caseId = JSON.parse(saveCaseResponse).id;
-    logger.info('Created case: %s', caseId);
     return caseId;
 }
 

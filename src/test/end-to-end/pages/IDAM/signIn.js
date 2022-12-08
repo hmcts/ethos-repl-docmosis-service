@@ -5,10 +5,10 @@ const testConfig = require('../../../config');
 module.exports = async function () {
 
     const I = this;
-    I.amOnPage('/', 60);
-    I.waitForText('Sign in');
-    I.fillField('username', testConfig.TestEnvCWUser);
-    I.fillField('password', testConfig.TestEnvCWPassword);
-    I.click('input[value="Sign in"]');
-    I.waitForText('Case list');
+    await I.amOnLoadedPage('/');
+    await I.waitForText('Sign in');
+    await I.fillField('username', testConfig.TestEnvCWUser);
+    await I.fillField('password', testConfig.TestEnvCWPassword);
+    await I.click('input[value="Sign in"]');
+    await I.waitForText('Case list');
 };

@@ -64,6 +64,10 @@
         <cve>CVE-2022-42003</cve>
     </suppress>
     <suppress>
+        <packageUrl regex="true">^pkg:npm/got@.*$</packageUrl>
+        <cve>1080920</cve>
+      </suppress>
+    <suppress>
         <notes><![CDATA[
     file name: commons-beanutils-1.9.4.jar
     ]]></notes>

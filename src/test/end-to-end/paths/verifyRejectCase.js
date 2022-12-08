@@ -11,5 +11,4 @@ Scenario('Verify Reject Case', async ({I}) => {
     await rejectCaseEvent(I, caseNumber, eventNames.REJECT_CASE);
 
 }).tag('@e2e')
-    .tag('@nightly')
     .retry(testConfig.TestRetryScenarios);
