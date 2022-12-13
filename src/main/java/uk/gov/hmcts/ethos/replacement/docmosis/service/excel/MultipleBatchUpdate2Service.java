@@ -3,18 +3,17 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
@@ -27,16 +26,18 @@ public class MultipleBatchUpdate2Service {
     private final MultipleCasesReadingService multipleCasesReadingService;
     private final ExcelReadingService excelReadingService;
     private final MultipleHelperService multipleHelperService;
+    private final CcdClient ccdClient;
 
     @Autowired
     public MultipleBatchUpdate2Service(ExcelDocManagementService excelDocManagementService,
                                        MultipleCasesReadingService multipleCasesReadingService,
                                        ExcelReadingService excelReadingService,
-                                       MultipleHelperService multipleHelperService) {
+                                       MultipleHelperService multipleHelperService, CcdClient ccdClient) {
         this.excelDocManagementService = excelDocManagementService;
         this.multipleCasesReadingService = multipleCasesReadingService;
         this.excelReadingService = excelReadingService;
         this.multipleHelperService = multipleHelperService;
+        this.ccdClient = ccdClient;
     }
 
     public void batchUpdate2Logic(String userToken, MultipleDetails multipleDetails,
@@ -78,7 +79,7 @@ public class MultipleBatchUpdate2Service {
 
                 if (isNullOrEmpty(updatedSubMultipleRef)) {
 
-                    log.info("Keep cases in the same multiple");
+                    log.info("Keep cases in the same sub-multiple");
 
                 } else {
 
@@ -218,22 +219,31 @@ public class MultipleBatchUpdate2Service {
                         FilterExcelType.ALL);
 
         List<MultipleObject> newMultipleObjectsUpdated = addSubMultipleRefToMultipleObjects(multipleObjectsFiltered,
-                multipleObjects, updatedSubMultipleRef);
-
+                multipleObjects, updatedSubMultipleRef, userToken, multipleDetails);
         excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 
     private List<MultipleObject> addSubMultipleRefToMultipleObjects(List<String> multipleObjectsFiltered,
                                                                     SortedMap<String, Object> multipleObjects,
-                                                                    String updatedSubMultipleRef) {
+                                                                    String updatedSubMultipleRef,
+                                                                    String userToken,
+                                                                    MultipleDetails multipleDetails) {
 
         List<MultipleObject> newMultipleObjectsUpdated = new ArrayList<>();
-
         multipleObjects.forEach((key, value) -> {
             var multipleObject = (MultipleObject) value;
             if (multipleObjectsFiltered.contains(key)) {
                 multipleObject.setSubMultiple(updatedSubMultipleRef);
+                try {
+                    MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
+                            multipleDetails,
+                            multipleObject.getEthosCaseRef(),
+                            updatedSubMultipleRef,
+                            ccdClient);
+                } catch (IOException e) {
+                    log.error(String.format("Error in setting subMultiple for case %s:",
+                            multipleObject.getEthosCaseRef()) + e.toString());                }
             }
             newMultipleObjectsUpdated.add(multipleObject);
         });

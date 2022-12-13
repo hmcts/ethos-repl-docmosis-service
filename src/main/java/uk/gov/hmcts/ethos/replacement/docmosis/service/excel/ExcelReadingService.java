@@ -10,11 +10,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_2;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
@@ -43,7 +42,7 @@ public class ExcelReadingService {
     private final ExcelDocManagementService excelDocManagementService;
 
     @Autowired
-    public ExcelReadingService(ExcelDocManagementService excelDocManagementService) {
+    public ExcelReadingService(ExcelDocManagementService excelDocManagementService, CcdClient ccdClient) {
         this.excelDocManagementService = excelDocManagementService;
     }
 

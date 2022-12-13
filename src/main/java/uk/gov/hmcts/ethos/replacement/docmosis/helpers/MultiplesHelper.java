@@ -1,12 +1,19 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.elasticsearch.common.Strings;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
@@ -187,6 +194,29 @@ public class MultiplesHelper {
 
     public static String getExcelBinaryUrl(MultipleData multipleData) {
         return multipleData.getCaseImporterFile().getUploadedDocument().getDocumentBinaryUrl();
+    }
+
+    /**
+     * Given a case number and subMultiple name, case is found and its subMultiple property is populated.
+     * @param userToken used for IDAM Authentication
+     * @param multipleDetails multipleDetails to get caseTypeId, jurisdiction
+     * @param ethosRef case number
+     * @param subMultiple subMultiple name to be assigned to single case
+     */
+    public static void setSubMultipleFieldInSingleCaseData(String userToken,
+                                                    MultipleDetails multipleDetails,
+                                                    String ethosRef,
+                                                    String subMultiple,
+                                                    CcdClient ccdClient) throws IOException {
+        List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
+                UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()), List.of(ethosRef));
+        if (CollectionUtils.isNotEmpty(submitEvents)) {
+            submitEvents.get(0).getCaseData().setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
+            CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+                    multipleDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
+            ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+                    multipleDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
+        }
     }
 
     public static void resetMidFields(MultipleData multipleData) {
