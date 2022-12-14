@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 @Slf4j
@@ -87,23 +84,26 @@ public class MultipleUploadService {
     private void setSubMultipleInSingleCaseData(String userToken,
                                                 List<String> errors,
                                                 MultipleDetails multipleDetails) {
-        SortedMap<String, Object> multipleObjects =  excelReadingService.readExcel(userToken,
-                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-                errors,
-                multipleDetails.getCaseData(),
-                FilterExcelType.ALL);
-        multipleObjects.forEach((key, value) -> {
-            var multipleObject = (MultipleObject) value;
-            try {
-                MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
-                        multipleDetails,
-                        multipleObject.getEthosCaseRef(),
-                        multipleObject.getSubMultiple(),
-                        ccdClient);
-            } catch (IOException e) {
-                log.error(String.format("Error in setting subMultiple for case %s:",
-                        multipleObject.getEthosCaseRef()) + e.toString());            }
-        });
+        // to do send them to service bus
+//        SortedMap<String, Object> multipleObjects =  excelReadingService.readExcel(userToken,
+//                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
+//                errors,
+//                multipleDetails.getCaseData(),
+//                FilterExcelType.ALL);
+//        multipleObjects.forEach((key, value) -> {
+//            var multipleObject = (MultipleObject) value;
+//            try {
+//
+////                MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
+////                        multipleDetails,
+////                        multipleObject.getEthosCaseRef(),
+////                        multipleObject.getSubMultiple(),
+////                        ccdClient);
+//            } catch (IOException e) {
+//                log.error(String.format("Error in setting subMultiple for case %s:",
+//                        multipleObject.getEthosCaseRef()) + e.toString());
+//            }
+       // });
     }
 
     private void validateSheet(XSSFSheet datatypeSheet, MultipleData multipleData, List<String> errors) {
