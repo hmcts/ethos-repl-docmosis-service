@@ -1,22 +1,37 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import org.junit.Before;
-import org.junit.Test;
-import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
-import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
-import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
+import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
+import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
+@RunWith(SpringJUnit4ClassRunner.class)
 public class MultiplesHelperTest {
 
     private MultipleData multipleData;
+
+    @Mock
+    private CcdClient ccdClient;
 
     @Before
     public void setUp()  {
@@ -115,6 +130,37 @@ public class MultiplesHelperTest {
         assertEquals(MultiplesHelper.createCollectionOrderedByCaseRef(refList), expectedResult);
     }
 
+    @Test
+    public void setSubMultipleFieldInSingleCaseDataTest() throws IOException {
+        MultipleDetails multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseData(MultipleUtil.getMultipleData());
+        String userToken = "authString";
+        SubmitEvent submitEvent = new SubmitEvent();
+        CaseData caseData = new CaseData();
+        caseData.setEthosCaseReference("1234");
+        submitEvent.setCaseData(caseData);
+        multipleDetails.setJurisdiction("EMPLOYMENT");
+        multipleDetails.setCaseTypeId("Leeds_Multiple");
+        MultipleData multipleData = new MultipleData();
+        multipleData.setCaseCounter("1");
+        CaseImporterFile caseImporterFile = new CaseImporterFile();
+        UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
+        uploadedDocumentType.setDocumentBinaryUrl("url");
+        caseImporterFile.setUploadedDocument(uploadedDocumentType);
+        multipleData.setCaseImporterFile(caseImporterFile);
+        multipleDetails.setCaseData(multipleData);
+
+        when(ccdClient.retrieveCasesElasticSearch(anyString(),
+                anyString(), anyList()))
+                .thenReturn(List.of(submitEvent));
+        MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
+                multipleDetails,
+                "1234",
+                "subMultiple",
+                ccdClient);
+
+        assertEquals("subMultiple", caseData.getSubMultipleName());
+    }
     private CaseIdTypeItem createCaseIdTypeItem(String id, String value) {
 
         CaseType caseType = new CaseType();
