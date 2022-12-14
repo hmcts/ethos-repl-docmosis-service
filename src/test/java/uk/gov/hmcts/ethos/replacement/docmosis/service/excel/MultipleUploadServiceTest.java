@@ -86,51 +86,6 @@ public class MultipleUploadServiceTest {
     }
 
     @Test
-    public void bulkUploadLogicSetSubMultipleTest() throws IOException {
-        List<String> errors = new ArrayList<>();
-        SubmitEvent submitEvent = new SubmitEvent();
-        CaseData caseData = new CaseData();
-        caseData.setEthosCaseReference("1234");
-        submitEvent.setCaseData(caseData);
-        multipleDetails.setJurisdiction("EMPLOYMENT");
-        multipleDetails.setCaseTypeId("Leeds_Multiple");
-        MultipleData multipleData = new MultipleData();
-        multipleData.setCaseCounter("1");
-        CaseImporterFile caseImporterFile = new CaseImporterFile();
-        UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
-        uploadedDocumentType.setDocumentBinaryUrl("url");
-        caseImporterFile.setUploadedDocument(uploadedDocumentType);
-        multipleData.setCaseImporterFile(caseImporterFile);
-        multipleDetails.setCaseData(multipleData);
-        when(excelReadingService.checkExcelErrors(
-                userToken,
-                "url",
-                new ArrayList<>()))
-                .thenReturn(getDataTypeSheet(TESTING_FILE_NAME_WITH_TWO));
-        MultipleObject multipleObject = MultipleObject.builder()
-                .subMultiple("subMultiple")
-                .ethosCaseRef("1234")
-                .flag1("1")
-                .flag2("2")
-                .flag3("3")
-                .flag4("4")
-                .build();
-        SortedMap<String, Object> multipleObjects = new TreeMap<>(Map.of("1234", multipleObject));
-
-       when(excelReadingService.readExcel(eq(userToken),eq("url"), eq(errors), eq(multipleData),
-                any()))
-               .thenReturn(multipleObjects);
-        when(ccdClient.retrieveCasesElasticSearch(anyString(),
-                anyString(), anyList()))
-                .thenReturn(List.of(submitEvent));
-        multipleUploadService.bulkUploadLogic(userToken,
-                multipleDetails,
-                errors);
-
-        assertEquals("subMultiple", caseData.getSubMultipleName());
-    }
-
-    @Test
     public void bulkUploadLogicWrongColumnRow() throws IOException {
 
         List<String> errors = new ArrayList<>();
