@@ -408,6 +408,8 @@ class HearingsToJudgmentsReportTest {
 
     @ParameterizedTest
     @CsvSource({
+
+
             "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-08-26,42,2500121/2021,1,One Test,"
                     + HEARING_TYPE_JUDICIAL_HEARING + "," + YES + "," + ACCEPTED_STATE,
             "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-08-26,41,2500122/2021,2,Two Test,"
@@ -415,7 +417,13 @@ class HearingsToJudgmentsReportTest {
             "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-08-26,40,2500123/2021,3,Three Test,"
                     + HEARING_TYPE_PERLIMINARY_HEARING_CM + ",," + CLOSED_STATE,
             "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-08-26,39,2500124/2021,4,Four Test,"
-                    + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES + "," + CLOSED_STATE})
+                    + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES + "," + CLOSED_STATE,
+            "2021-07-16T10:00:00,2021-07-16,2021-08-26,2021-08-26,42,2500121/2021,5,Five Test,"
+                    + HEARING_TYPE_JUDICIAL_HEARING + "," + YES + "," + ACCEPTED_STATE,
+            "2021-07-18 10:00:00.000,2021-07-18,2021-08-26,2021-08-26,40,2500123/2021,6,Six Test,"
+                    + HEARING_TYPE_PERLIMINARY_HEARING_CM + ",," + CLOSED_STATE,
+            "2021-07-17,2021-07-17,2021-08-26,2021-08-26,41,2500122/2021,7,Seven Test,"
+                    + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO + "," + ACCEPTED_STATE})
     void shouldContainCorrectDetailValuesForHearingsWithValidJudgment(String hearingListedDate, String judgmentHearingDate,
                                                                       String dateJudgmentMade, String dateJudgmentSent,
                                                                       String expectedTotalDays, String caseReference,

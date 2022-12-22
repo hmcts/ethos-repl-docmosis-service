@@ -159,7 +159,9 @@ public class HearingsToJudgmentsReport {
 
         for (var dateListedTypeItem : hearingType.getHearingDateCollection()) {
             var dateListedType = dateListedTypeItem.getValue();
-            var hearingListedDate = LocalDate.parse(dateListedType.getListedDate(), OLD_DATE_TIME_PATTERN);
+            var hearingListedLocalDateFormat = ReportHelper.getFormattedLocalDate(dateListedType.getListedDate());
+            var hearingListedDate = LocalDate.parse(hearingListedLocalDateFormat, OLD_DATE_TIME_PATTERN2);
+
             var judgements = judgmentsCollection.stream()
                                 .filter(j -> judgmentHearingDateMatchHearingListedDate(j, hearingListedDate))
                                 .collect(Collectors.toList());
@@ -194,6 +196,7 @@ public class HearingsToJudgmentsReport {
     private boolean judgmentHearingDateMatchHearingListedDate(JudgementTypeItem judgment, LocalDate hearingListedDate) {
         return judgment.getValue() != null
                 && judgment.getValue().getJudgmentHearingDate() != null
+                && hearingListedDate != null
                 && hearingListedDate.isEqual(
                         LocalDate.parse(judgment.getValue().getJudgmentHearingDate(), OLD_DATE_TIME_PATTERN2));
     }
@@ -245,6 +248,10 @@ public class HearingsToJudgmentsReport {
     }
 
     private boolean isWithinDateRange(LocalDate hearingListedDate) {
+        if (hearingListedDate == null) {
+            return false;
+        }
+
         var from = LocalDate.parse(listingDateFrom, OLD_DATE_TIME_PATTERN);
         var to = LocalDate.parse(listingDateTo, OLD_DATE_TIME_PATTERN);
         return (!hearingListedDate.isBefore(from)) && (!hearingListedDate.isAfter(to));
