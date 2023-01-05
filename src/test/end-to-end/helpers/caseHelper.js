@@ -182,6 +182,7 @@ async function acceptCaseTest(I, caseId, eventName) {
 
 async function navigateCase(I, caseId) {
     await I.authenticateWithIdam();
+    console.log("Environment ==>::" + await I.grabCurrentUrl());
     await I.amOnPage('/case-details/' + caseId);
     await I.wait(testConfig.TestTimeToWait);
 }
