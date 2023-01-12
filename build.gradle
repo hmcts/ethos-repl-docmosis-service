@@ -220,7 +220,7 @@ ext {
     log4JVersion = '2.19.0'
     reformLoggingVersion = '5.1.9'
     serenity = '3.3.4'
-    tomcatEmbedVersion = '9.0.68'
+    tomcatEmbedVersion = '9.0.70'
 }
 
 ext["rest-assured.version"] = '5.1.0'
