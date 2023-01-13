@@ -153,8 +153,8 @@ async function uploadDocumentEvent(I, eventName) {
 
 async function leedsMultiplesJourney(I, caseId1, caseId2) {
     await I.amOnPage('https://manage-case.aat.platform.hmcts.net')
-    await I.wait(5);
-    await I.executeLeedsOfficeMultiples(caseId1, caseId2);
+    await I.wait(testConfig.TestTimeToWait);
+    await I.createMultiplesCase(caseId1, caseId2);
 }
 
 async function getECMCaseNumber(I, caseId, eventName, caseState) {

@@ -5,7 +5,7 @@ const testConfig = require('../../../config');
 module.exports = async function () {
 
     const I = this;
-    await I.amOnLoadedPage('/');
+    await I.amOnLoadedPage('/', testConfig.TestTimeToWaitForText);
     await I.waitForText('Sign in');
     await I.fillField('username', testConfig.TestEnvCWUser);
     await I.fillField('password', testConfig.TestEnvCWPassword);

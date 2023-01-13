@@ -8,7 +8,9 @@ module.exports = async function (caseId1, caseId2) {
     const I = this;
     await I.navByClick(commonConfig.createCase);
     await I.selectOption('#cc-jurisdiction', commonConfig.jurisdictionType);
+    await I.wait(testConfig.TestTimeToWaitForMultiples);
     await I.selectOption('#cc-case-type', commonConfig.leedsMultiples);
+    await I.wait(testConfig.TestTimeToWaitForMultiples);
     await I.selectOption('#cc-event', commonConfig.createMultiple);
 
     await I.navByClick(commonConfig.start);
@@ -18,7 +20,9 @@ module.exports = async function (caseId1, caseId2) {
 
     await I.fillField('#leadCase', caseId1);
     await I.click(commonConfig.addNewButton);
-    await I.fillField('#caseIdCollection_0_ethos_CaseReference', caseId2);
+    await I.wait(testConfig.TestTimeToWaitForMultiples);
+    await I.fillField('//*[@id=\'caseIdCollection_0_ethos_CaseReference\']', caseId2);
+    await I.wait(testConfig.TestTimeToWaitForMultiples);
     await I.navByClick(commonConfig.continue);
     await I.navByClick(commonConfig.submit);
 
