@@ -12,5 +12,5 @@ Scenario('Leeds Office Multiples Journey...', async ({I}) => {
     let ecmCaseNumber2 = await getECMCaseNumber(I, testConfig.CCDCaseId, eventNames.ACCEPT_CASE, caseState.ACCEPTED);
     await leedsMultiplesJourney(I, ecmCaseNumber1, ecmCaseNumber2)
 
-}).tag('@ci')
+}).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
