@@ -169,15 +169,10 @@ async function amendMultipleDetailsTest(I, ecmCase) {
 }
 
 async function getECMCaseNumber(I, caseId, eventName, eventState) {
-    if (eventState === caseState.ACCEPTED) {
-        await I.authenticateWithIdam();
-        await I.amOnPage('/case-details/' + caseId);
-        await I.wait(testConfig.TestTimeToWait);
-    } else {
-        await I.amOnPage('/case-details/' + caseId);
-        await I.wait(testConfig.TestTimeToWait);
-        await acceptCaseTest(I, caseId, eventName)
-    }
+    await I.authenticateWithIdam();
+    await I.amOnPage('/case-details/' + caseId);
+    await acceptCaseTest(I, caseId, eventName)
+
     caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
     ecmCaseID = caseNumberText.split(' ')[2];
     console.log("ECM Case==>::" + ecmCaseID);
