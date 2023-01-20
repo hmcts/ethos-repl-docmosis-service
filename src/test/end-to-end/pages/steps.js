@@ -34,6 +34,6 @@ module.exports = () => {
         executeUploadDocument: steps.uploadDocument.uploadDocument,
         createMultiplesCase: steps.createCase.createMultiplesCase,
         multiplesSingleCase:steps.multiples.multiplesSingleCase,
-        amendMultipleDetails:steps.multiples.amendMultipleDetails.js
+        amendMultipleDetails:steps.multiples.amendMultipleDetails
     });
 };
