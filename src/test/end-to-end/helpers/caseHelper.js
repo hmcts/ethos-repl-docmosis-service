@@ -163,16 +163,13 @@ async function getECMCaseNumber(I, caseId, eventName, eventState) {
         await I.authenticateWithIdam();
         await I.amOnPage('/case-details/' + caseId);
         await I.wait(testConfig.TestTimeToWait);
-        caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
-        ecmCaseID = caseNumberText.split(' ')[2];
     } else {
         await I.amOnPage('/case-details/' + caseId);
         await I.wait(testConfig.TestTimeToWait);
-        await I.chooseNextStep(eventName, 3);
-        await I.acceptTheCase();
-        caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
-        ecmCaseID = caseNumberText.split(' ')[2];
+        await acceptCaseTest(I, caseId, eventName)
     }
+    caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
+    ecmCaseID = caseNumberText.split(' ')[2];
     return ecmCaseID;
 }
 
