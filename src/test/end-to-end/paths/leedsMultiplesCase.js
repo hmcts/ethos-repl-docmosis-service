@@ -13,5 +13,5 @@ Scenario('Leeds Multiples Journey...', async ({I}) => {
 
     await leedsMultiplesJourney(I, ecmCaseNumber1, ecmCaseNumber2);
 
-}).tag('@e2e')
+}).tag('@bug')
     .retry(testConfig.TestRetryScenarios);
