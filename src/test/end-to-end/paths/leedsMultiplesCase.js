@@ -1,10 +1,15 @@
 const testConfig = require('./../../config');
 const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames, caseState} = require('../pages/common/constants.js');
-const {leedsMultiplesJourney, getECMCaseNumber} = require("../helpers/caseHelper");
+const {
+    leedsMultiplesJourney,
+    getECMCaseNumber,
+    leedsMultiplesTest,
+    amendMultipleDetailsTest
+} = require("../helpers/caseHelper");
 let caseId;
 
-Feature('Leeds Office Multiples Case');
+Feature('Leeds Office Multiples');
 BeforeSuite(async ({I}) => caseId = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json'));
 
 Scenario('Leeds Multiples Journey...', async ({I}) => {
@@ -15,3 +20,19 @@ Scenario('Leeds Multiples Journey...', async ({I}) => {
 
 }).tag('@bug')
     .retry(testConfig.TestRetryScenarios);
+
+Scenario('Leeds Multiples Journey...', async ({I}) => {
+    let ecmCase = await getECMCaseNumber(I, caseId, eventNames.ACCEPT_CASE, caseState.SUBMITTED);
+    await leedsMultiplesTest(I, ecmCase);
+
+}).tag('@ci')
+    .retry(testConfig.TestRetryScenarios);
+
+Scenario('Amend Multiple Details...', async ({I}) => {
+    let caseId = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
+    let ecmCase = await getECMCaseNumber(I, caseId, eventNames.ACCEPT_CASE, caseState.SUBMITTED);
+    await amendMultipleDetailsTest(I, ecmCase);
+
+}).tag('@wip')
+    .retry(testConfig.TestRetryScenarios);
+

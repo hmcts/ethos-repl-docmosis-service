@@ -158,6 +158,16 @@ async function leedsMultiplesJourney(I, caseId1, caseId2) {
     await I.createMultiplesCase(caseId1, caseId2);
 }
 
+async function leedsMultiplesTest(I, ecmCase) {
+    await I.amOnPage(testConfig.TestUrl);
+    await I.multiplesSingleCase(ecmCase);
+}
+
+async function amendMultipleDetailsTest(I, ecmCase) {
+    await I.amOnPage(testConfig.TestUrl);
+    await I.amendMultipleDetails(ecmCase);
+}
+
 async function getECMCaseNumber(I, caseId, eventName, eventState) {
     if (eventState === caseState.ACCEPTED) {
         await I.authenticateWithIdam();
@@ -170,6 +180,7 @@ async function getECMCaseNumber(I, caseId, eventName, eventState) {
     }
     caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
     ecmCaseID = caseNumberText.split(' ')[2];
+    console.log("ECM Case==>::" + ecmCaseID);
     return ecmCaseID;
 }
 
@@ -215,5 +226,7 @@ module.exports = {
     leedsMultiplesJourney,
     getECMCaseNumber,
     acceptCaseTest,
-    navigateCase
+    navigateCase,
+    leedsMultiplesTest,
+    amendMultipleDetailsTest
 };
