@@ -7,11 +7,11 @@ let caseId;
 Feature('Leeds Office Multiples Case');
 BeforeSuite(async ({I}) => caseId = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json'));
 
-Scenario('Leeds Office Multiples Journey...', async ({I}) => {
+Scenario('Leeds Multiples Journey...', async ({I}) => {
     let ecmCaseNumber1 = await getECMCaseNumber(I, testConfig.CCDCaseId, eventNames.ACCEPT_CASE, caseState.ACCEPTED);
     let ecmCaseNumber2 = await getECMCaseNumber(I, caseId, eventNames.ACCEPT_CASE, caseState.CLOSED);
 
-    await leedsMultiplesJourney(I, ecmCaseNumber1, ecmCaseNumber2)
+    await leedsMultiplesJourney(I, ecmCaseNumber1, ecmCaseNumber2);
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
