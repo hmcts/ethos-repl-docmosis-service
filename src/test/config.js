@@ -12,6 +12,8 @@ module.exports = {
     TestPathToRun: process.env.E2E_TEST_PATH || './paths/**/*.js',
     TestOutputDir: process.env.E2E_OUTPUT_DIR || './functional-output',
     TestTimeToWaitForText: parseInt(process.env.E2E_TEST_TIME_TO_WAIT_FOR_TEXT || 30),
+    TestTimeToWaitForMultiples:parseInt(process.env.E2E_TEST_TIME_TO_WAIT_FOR_TEXT || 5),
+    TestTimeToWait: parseInt(process.env.E2E_TEST_TIME_TO_WAIT || 3),
     TestEnvCWUser: process.env.CCD_CASEWORKER_E2E_EMAIL || '',
     TestEnvCWPassword: process.env.CCD_CASEWORKER_E2E_PASSWORD || '',
     TestForXUI: process.env.TESTS_FOR_XUI_SERVICE === 'true',
@@ -22,6 +24,5 @@ module.exports = {
     TestS2SAuthSecret: process.env.SERVICE_SECRET || '',
     S2SAuthSecret: process.env.MICROSERVICE_CCD_GW || '',
     CCDCaseId: '',
-    MOCase: '',
-    TestTimeToWait: parseInt(process.env.E2E_TEST_TIME_TO_WAIT || 3)
+    MOCase: ''
 };

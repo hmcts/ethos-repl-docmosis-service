@@ -32,6 +32,6 @@ module.exports = () => {
         executeCreateReport: steps.createReport.createReport,
         executeHearingListedInWeekend: steps.amendHearing.hearingListedInWeekend,
         executeUploadDocument: steps.uploadDocument.uploadDocument,
-        executeLeedsOfficeMultiples: steps.createCase.createMultiplesCase
+        createMultiplesCase: steps.createCase.createMultiplesCase
     });
 };

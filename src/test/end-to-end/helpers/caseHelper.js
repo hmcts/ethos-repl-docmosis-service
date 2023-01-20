@@ -1,4 +1,6 @@
 const testConfig = require('./../../config');
+const {caseState} = require('../pages/common/constants.js');
+const commonConfig = require('../data/commonConfig.json');
 let caseNumberText;
 let ecmCaseID;
 
@@ -152,26 +154,22 @@ async function uploadDocumentEvent(I, eventName) {
 }
 
 async function leedsMultiplesJourney(I, caseId1, caseId2) {
-    await I.amOnPage('https://manage-case.aat.platform.hmcts.net')
-    await I.wait(5);
-    await I.executeLeedsOfficeMultiples(caseId1, caseId2);
+    await I.amOnPage(testConfig.TestUrl);
+    await I.createMultiplesCase(caseId1, caseId2);
 }
 
-async function getECMCaseNumber(I, caseId, eventName, caseState) {
-    if (caseState === 'Accepted') {
+async function getECMCaseNumber(I, caseId, eventName, eventState) {
+    if (eventState === caseState.ACCEPTED) {
         await I.authenticateWithIdam();
         await I.amOnPage('/case-details/' + caseId);
         await I.wait(testConfig.TestTimeToWait);
-        caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
-        ecmCaseID = caseNumberText.split(' ')[2];
     } else {
         await I.amOnPage('/case-details/' + caseId);
         await I.wait(testConfig.TestTimeToWait);
-        await I.chooseNextStep(eventName, 3);
-        await I.acceptTheCase();
-        caseNumberText = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
-        ecmCaseID = caseNumberText.split(' ')[2];
+        await acceptCaseTest(I, caseId, eventName)
     }
+    caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
+    ecmCaseID = caseNumberText.split(' ')[2];
     return ecmCaseID;
 }
 
