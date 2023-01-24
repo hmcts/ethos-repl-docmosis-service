@@ -1,5 +1,5 @@
 module.exports = {
-    TestUrl: process.env.TEST_E2E_URL || 'https://manage-case.aat.platform.hmcts.net',
+    TestUrl: process.env.TEST_URL || 'https://manage-case.aat.platform.hmcts.net',
     TestEndToEndUrl: process.env.TEST_E2E_URL || 'https://manage-case.aat.platform.hmcts.net',
     IdamBaseUrl: process.env.IDAM_URL || 'https://idam-api.aat.platform.hmcts.net',
     RedirectUri: process.env.REDIRECT_URI || `https://manage-case.aat.platform.hmcts.net/oauth2/callback`,

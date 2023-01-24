@@ -154,7 +154,7 @@ async function uploadDocumentEvent(I, eventName) {
 }
 
 async function leedsMultiplesJourney(I, caseId1, caseId2) {
-    await I.amOnPage(testConfig.TestUrl);
+    await I.amOnPage(testConfig.TestUrl.replace(process.env.TEST_URL, testConfig.TestEndToEndUrl));
     await I.createMultiplesCase(caseId1, caseId2);
 }
 
@@ -180,6 +180,7 @@ async function acceptCaseTest(I, caseId, eventName) {
 
 async function navigateCase(I, caseId) {
     await I.authenticateWithIdam();
+    console.log(await I.grabCurrentUrl());
     await I.amOnPage('/case-details/' + caseId);
     await I.wait(testConfig.TestTimeToWait);
 }
