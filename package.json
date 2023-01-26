@@ -50,9 +50,7 @@
     "watch": "1.0.2",
     "webdriverio": "^7.19.4",
     "when": "3.7.8",
-    "totp-generator": "^0.0.14",
-    "cookiejar": "^2.1.4",
-    "ua-parser-js": "^1.0.33"
+    "totp-generator": "^0.0.14"
   },
   "resolutions": {
     "async": "^3.2.4",
@@ -66,7 +64,9 @@
     "yargs-parser": "^21.0.1",
     "vm2": "^3.9.11",
     "minimatch": "^3.1.2",
-    "qs" : ">=6.10.3"
+    "qs" : ">=6.10.3",
+    "cookiejar": "^2.1.4",
+    "ua-parser-js": "^1.0.33"
   }
 }
 
