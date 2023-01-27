@@ -27,7 +27,8 @@ const eventNames = {
     JUDGMENT: 'Judgment',
     CREATE_REPORT: 'Create Report',
     GENERATE_REPORT: 'Generate Report',
-    UPLOAD_DOCUMENT: 'Upload Document'
+    UPLOAD_DOCUMENT: 'Upload Document',
+    AMEND_MULTIPLE_DETAILS:'Amend Multiple Details'
 };
 
 const caseState = {

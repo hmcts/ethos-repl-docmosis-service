@@ -158,19 +158,28 @@ async function leedsMultiplesJourney(I, caseId1, caseId2) {
     await I.createMultiplesCase(caseId1, caseId2);
 }
 
-async function getECMCaseNumber(I, caseId, eventName, eventState) {
-    if (eventState === caseState.ACCEPTED) {
-        await I.authenticateWithIdam();
-        await I.amOnPage('/case-details/' + caseId);
-        await I.wait(testConfig.TestTimeToWait);
-    } else {
-        await I.amOnPage('/case-details/' + caseId);
-        await I.wait(testConfig.TestTimeToWait);
+async function leedsMultiplesTest(I, ecmCase) {
+    await I.amOnPage(testConfig.TestUrl);
+    await I.multiplesSingleCase(ecmCase);
+}
+
+async function amendMultipleDetailsTest(I, eventName, ecmCase) {
+    await I.amOnPage('/case-details/' + testConfig.MultiplesCaseId);
+    await I.wait(testConfig.TestTimeToWait);
+    await I.chooseNextStep(eventName, 3);
+    await I.amendMultipleDetails(ecmCase);
+}
+
+async function getECMCaseNumber(I, caseId, eventName) {
+    await I.authenticateWithIdam();
+    await I.amOnPage('/case-details/' + caseId);
+    await I.wait(testConfig.TestTimeToWait);
+    if (caseId !== testConfig.CCDCaseId) {
         await acceptCaseTest(I, caseId, eventName)
+
     }
     caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
-    ecmCaseID = caseNumberText.split(' ')[2];
-    return ecmCaseID;
+    return caseNumberText.split(' ')[2];
 }
 
 async function acceptCaseTest(I, caseId, eventName) {
@@ -215,5 +224,7 @@ module.exports = {
     leedsMultiplesJourney,
     getECMCaseNumber,
     acceptCaseTest,
-    navigateCase
+    navigateCase,
+    leedsMultiplesTest,
+    amendMultipleDetailsTest
 };
