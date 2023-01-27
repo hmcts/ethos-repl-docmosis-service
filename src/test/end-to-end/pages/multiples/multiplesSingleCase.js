@@ -20,8 +20,11 @@ module.exports = async function (ecmCase1) {
     await I.navByClick(commonConfig.goButton);
     await I.navByClick(commonConfig.goButton);
 
-    let multiplesCaseId = await I.grabTextFrom('.markdown > h1:nth-of-type(2)');
+    console.log(await I.grabTextFrom('.markdown > h1:nth-of-type(2)'));
     await I.wait(testConfig.TestTimeToWaitForMultiples);
-    console.log(multiplesCaseId);
 
+    let url = await I.grabCurrentUrl();
+    let caseId = url.split('/');
+    testConfig.MultiplesCaseId = caseId[5].split('#')[0];
+    console.log(testConfig.MultiplesCaseId);
 };

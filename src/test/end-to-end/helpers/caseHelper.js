@@ -163,20 +163,23 @@ async function leedsMultiplesTest(I, ecmCase) {
     await I.multiplesSingleCase(ecmCase);
 }
 
-async function amendMultipleDetailsTest(I, ecmCase) {
-    await I.amOnPage(testConfig.TestUrl);
+async function amendMultipleDetailsTest(I, eventName, ecmCase) {
+    await I.amOnPage('/case-details/' + testConfig.MultiplesCaseId);
+    await I.wait(testConfig.TestTimeToWait);
+    await I.chooseNextStep(eventName, 3);
     await I.amendMultipleDetails(ecmCase);
 }
 
-async function getECMCaseNumber(I, caseId, eventName, eventState) {
+async function getECMCaseNumber(I, caseId, eventName) {
     await I.authenticateWithIdam();
     await I.amOnPage('/case-details/' + caseId);
-    await acceptCaseTest(I, caseId, eventName)
+    await I.wait(testConfig.TestTimeToWait);
+    if (caseId !== testConfig.CCDCaseId) {
+        await acceptCaseTest(I, caseId, eventName)
 
+    }
     caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
-    ecmCaseID = caseNumberText.split(' ')[2];
-    console.log("ECM Case==>::" + ecmCaseID);
-    return ecmCaseID;
+    return caseNumberText.split(' ')[2];
 }
 
 async function acceptCaseTest(I, caseId, eventName) {
