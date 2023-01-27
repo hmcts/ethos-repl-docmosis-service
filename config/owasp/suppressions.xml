@@ -65,7 +65,7 @@
     </suppress>
     <suppress>
         <packageUrl regex="true">^pkg:npm/got@.*$</packageUrl>
-        <cve>1088948</cve>
+        <cve>1080920</cve>
       </suppress>
     <suppress>
         <notes><![CDATA[
@@ -207,5 +207,9 @@
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
         <cpe>cpe:/a:apache_tomcat:apache_tomcat</cpe>
+    </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/got@.*$</packageUrl>
+        <cve>1088948</cve>
     </suppress>
 </suppressions>
