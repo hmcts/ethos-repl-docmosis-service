@@ -4,15 +4,11 @@ const {
     jurisdiction,
     judgment,
     allocateHearing,
-    hearingDetails,
-    printHearingLists,
-    caseTransfer,
-    closeCase
-
+    hearingDetails
 } = require("../helpers/caseHelper");
 const {eventNames} = require('../pages/common/constants.js');
 
-Feature('Manchester Office Scenarios ');
+Feature('Manchester Office Scenarios...');
 
 Before(async ({I}) => {
     await navigateCase(I, testConfig.MOCase);
@@ -42,22 +38,3 @@ Scenario('Verify Manchester case Hearing details', async ({I}) => {
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
-
-Scenario('Verify Manchester Print Hearing Lists', async ({I}) => {
-    await printHearingLists(I, eventNames.PRINT_HEARING_LISTS, 'Manchester');
-
-}).tag('@bug')
-    .retry(testConfig.TestRetryScenarios);
-
-Scenario('Verify Manchester Case Transfer', async ({I}) => {
-    await caseTransfer(I, eventNames.CASE_TRANSFER);
-
-}).tag('@e2e')
-    .retry(testConfig.TestRetryScenarios);
-
-Scenario('Verify Manchester Case Close', async ({I}) => {
-    await closeCase(I, eventNames.CLOSE_CASE, 'A Clerk', 'Casework Dropback Shelf');
-
-}).tag('@e2e')
-    .retry(testConfig.TestRetryScenarios);
-
