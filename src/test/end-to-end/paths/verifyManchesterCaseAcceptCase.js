@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Manchester Accept Case', async ({I}) => {
     await acceptCaseTest(I, testConfig.MOCase, eventNames.ACCEPT_CASE);
 
-}).tag('@e2e')
+}).tag('@moved')
     .retry(testConfig.TestRetryScenarios);
