@@ -11,5 +11,5 @@ Scenario('Verify Manchester Case Transfer', async ({I}) => {
     await navigateCase(I, caseNumber);
     await caseTransfer(I, eventNames.CASE_TRANSFER);
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);

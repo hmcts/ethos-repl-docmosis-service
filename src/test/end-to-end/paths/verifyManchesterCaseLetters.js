@@ -12,5 +12,5 @@ Before(async ({I}) => {
 Scenario('Verify Manchester case Letters', async ({I}) => {
     await letters(I, eventNames.LETTERS);
 
-}).tag('@moved')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);

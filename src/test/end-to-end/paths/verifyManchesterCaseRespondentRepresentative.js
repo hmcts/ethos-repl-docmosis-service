@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Respondent Representative', async ({I}) => {
     await respondentRepresentative(I, eventNames.RESPONDENT_REPRESENTATIVE);
 
-}).tag('@moved')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);
