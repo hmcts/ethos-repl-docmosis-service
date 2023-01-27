@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -47,6 +48,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
@@ -124,6 +126,13 @@ public class Helper {
                     .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
                             || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                     .collect(Collectors.toList());
+            if (caseData.getRespondentCollection().size() == 1
+                    && YES.equals(caseData.getRespondentCollection().get(0).getValue().getResponseStruckOut())
+                    && YES.equals(caseData.getRespondentCollection().get(0).getValue().getResponseReceived())
+                    && !Strings.isNullOrEmpty(caseData.getRespondentCollection().get(0).getValue()
+                    .getResponseReceivedDate())) {
+                return caseData.getRespondentCollection();
+            }
         }
 
         return activeRespondents;
