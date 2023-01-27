@@ -2,6 +2,8 @@
   "goButton": "form button[type=\"submit\"]",
   "continueButton": "//button[text()='Continue']",
   "ecmCaseCss": "//*[@id='undefined']//*[contains(@class, 'markdown')]/h1",
+  "addCasesToMultipleCss": "//*[@id=\"typeOfAmendment-Add cases to multiple\"]",
+  "addNewBtn": "//button[text()='Add new']",
   "continue": "Continue",
   "caseReference": "dt > ccd-markdown > div > markdown > h1",
   "caseAcceptedDay": "05",
