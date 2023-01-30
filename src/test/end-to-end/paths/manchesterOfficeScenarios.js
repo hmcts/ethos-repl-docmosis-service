@@ -13,7 +13,7 @@ const {
     fixCaseAPI,
     listHearing
 } = require("../helpers/caseHelper");
-const {eventNames, states} = require('../pages/common/constants.js');
+const {eventNames} = require('../pages/common/constants.js');
 
 Feature('Manchester Office Scenarios ');
 
