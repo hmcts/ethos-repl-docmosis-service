@@ -13,7 +13,7 @@ module.exports = {
     TestOutputDir: process.env.E2E_OUTPUT_DIR || './functional-output',
     TestTimeToWaitForText: parseInt(process.env.E2E_TEST_TIME_TO_WAIT_FOR_TEXT || 30),
     TestTimeToWaitForMultiples:parseInt(process.env.E2E_TEST_TIME_TO_WAIT_FOR_TEXT || 5),
-    TestTimeToWait: parseInt(process.env.E2E_TEST_TIME_TO_WAIT || 3),
+    TestTimeToWait: parseInt(process.env.E2E_TEST_TIME_TO_WAIT || 5),
     TestEnvCWUser: process.env.CCD_CASEWORKER_E2E_EMAIL || '',
     TestEnvCWPassword: process.env.CCD_CASEWORKER_E2E_PASSWORD || '',
     TestForXUI: process.env.TESTS_FOR_XUI_SERVICE === 'true',
