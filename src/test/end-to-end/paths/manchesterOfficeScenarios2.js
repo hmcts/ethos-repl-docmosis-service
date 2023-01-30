@@ -32,7 +32,6 @@ Scenario('Verify Manchester case Allocate Hearing', async ({I}) => {
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-
 Scenario('Verify Manchester case Hearing details', async ({I}) => {
     await hearingDetails(I, eventNames.HEARING_DETAILS);
 
