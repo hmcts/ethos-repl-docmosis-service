@@ -1,16 +1,15 @@
 const testConfig = require('./../../config');
-const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames} = require('../pages/common/constants.js');
-const {acceptCaseEvent, jurisdiction} = require("../helpers/caseHelper");
-let caseNumber;
+const {navigateCase, jurisdiction, judgment} = require("../helpers/caseHelper");
 
 Feature('Manchester Office Single Case & Execute Jurisdiction Event');
 
-Scenario('Verify Jurisdiction', async ({I}) => {
+Before(async ({I}) => {
+    await navigateCase(I, testConfig.MOCase);
+});
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Manchester');
-    await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
+Scenario('Verify Jurisdiction', async ({I}) => {
     await jurisdiction(I, eventNames.JURISDICTION);
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);
