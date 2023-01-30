@@ -21,7 +21,7 @@ Before(async ({I}) => {
     await navigateCase(I, testConfig.MOCase);
 });
 
-Scenario('Verify Manchester Accept Case', async ({I}) => {
+Scenario('Verify Accept Case', async ({I}) => {
     await acceptCaseTest(I, testConfig.MOCase, eventNames.ACCEPT_CASE);
 
 }).tag('@e2e')
@@ -58,31 +58,31 @@ Scenario('Verify Respondent Representative', async ({I}) => {
     .retry(testConfig.TestRetryScenarios);
 
 
-Scenario('Verify Manchester case List Hearing', async ({I}) => {
+Scenario('Verify List Hearing', async ({I}) => {
     await listHearing(I, eventNames.LIST_HEARING, 'Manchester');
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Manchester case Letters', async ({I}) => {
+Scenario('Verify Letters', async ({I}) => {
     await letters(I, eventNames.LETTERS);
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Manchester case B/F Action', async ({I}) => {
+Scenario('Verify B/F Action', async ({I}) => {
     await bfAction(I, eventNames.BF_ACTION);
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Manchester case Restricted Reporting', async ({I}) => {
+Scenario('Verify Restricted Reporting', async ({I}) => {
     await restrictedReporting(I, eventNames.RESTRICTED_REPORTING);
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Manchester Fix Case API', async ({I}) => {
+Scenario('Verify Fix Case API', async ({I}) => {
     await fixCaseAPI(I, eventNames.FIX_CASE_API);
 
 }).tag('@e2e')

@@ -13,5 +13,5 @@ Scenario('Verify Case Close', async ({I}) => {
     await jurisdiction(I, eventNames.JURISDICTION);
     await closeCase(I, eventNames.CLOSE_CASE, commonConfig.clerkResponsible, commonConfig.physicalLocation)
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);

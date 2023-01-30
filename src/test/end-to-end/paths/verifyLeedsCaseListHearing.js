@@ -12,6 +12,5 @@ Scenario('Verify Leeds case List Hearing', async ({I}) => {
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await listHearing(I, eventNames.LIST_HEARING, 'Leeds');
 
-}).tag('@e2e')
-    .tag('@nightly')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);
