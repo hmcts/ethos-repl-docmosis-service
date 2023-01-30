@@ -174,10 +174,6 @@
         <cve>1085318</cve>
     </suppress>
     <suppress>
-        <packageUrl regex="true">^pkg:npm/flat@.*$</packageUrl>
-        <cve>1089152</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[
    file name: snakeyaml-1.33.jar
    ]]></notes>

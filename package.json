@@ -66,7 +66,8 @@
     "minimatch": "^3.1.2",
     "qs" : ">=6.10.3",
     "cookiejar": "^2.1.4",
-    "ua-parser-js": "^1.0.33"
+    "ua-parser-js": "^1.0.33",
+    "flat": "5.0.2"
   }
 }
 
