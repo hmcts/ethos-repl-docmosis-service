@@ -1,8 +1,6 @@
 const testConfig = require('./../../config');
-const {caseState} = require('../pages/common/constants.js');
 const commonConfig = require('../data/commonConfig.json');
 let caseNumberText;
-let ecmCaseID;
 
 async function acceptCaseEvent(I, caseId, eventName) {
     await navigateCase(I, caseId);
@@ -184,14 +182,13 @@ async function getECMCaseNumber(I, caseId, eventName) {
 
 async function acceptCaseTest(I, caseId, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.acceptTheCase();
 }
 
 async function navigateCase(I, caseId) {
     await I.authenticateWithIdam();
-    await I.wait(testConfig.TestTimeToWait);
     await I.amOnPage('/case-details/' + caseId);
+    await I.wait(testConfig.TestTimeToWait);
 }
 
 module.exports = {
