@@ -20,19 +20,19 @@ Scenario('Verify Jurisdiction', async ({I}) => {
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Manchester Case Judgment', async ({I}) => {
+Scenario('Verify Judgment', async ({I}) => {
     await judgment(I, eventNames.JUDGMENT);
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Manchester case Allocate Hearing', async ({I}) => {
+Scenario('Verify Allocate Hearing', async ({I}) => {
     await allocateHearing(I, eventNames.ALLOCATE_HEARING, 'Manchester');
 
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Manchester case Hearing details', async ({I}) => {
+Scenario('Verify Hearing details', async ({I}) => {
     await hearingDetails(I, eventNames.HEARING_DETAILS);
 
 }).tag('@e2e')
