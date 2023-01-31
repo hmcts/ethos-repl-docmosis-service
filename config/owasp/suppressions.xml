@@ -208,4 +208,18 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
         <cpe>cpe:/a:apache_tomcat:apache_tomcat</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: flat:4.1.1
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/flat@.*$</packageUrl>
+        <vulnerabilityName>1089152</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: got:7.1.0
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/got@.*$</packageUrl>
+        <vulnerabilityName>1088948</vulnerabilityName>
+    </suppress>
 </suppressions>
