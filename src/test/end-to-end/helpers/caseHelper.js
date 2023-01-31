@@ -1,8 +1,6 @@
 const testConfig = require('./../../config');
-const {caseState} = require('../pages/common/constants.js');
 const commonConfig = require('../data/commonConfig.json');
 let caseNumberText;
-let ecmCaseID;
 
 async function acceptCaseEvent(I, caseId, eventName) {
     await navigateCase(I, caseId);
@@ -32,61 +30,51 @@ async function caseDetailsEvent(I, caseId, eventName, clerkResponcible, currentP
 
 async function claimantDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeClaimantDetails();
 }
 
 async function claimantRepresentative(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeClaimantRepresentative();
 }
 
 async function claimantRespondentDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeRespondentDetails();
 }
 
 async function respondentRepresentative(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeRespondentRepresentative();
 }
 
 async function jurisdiction(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeAddAmendJurisdiction();
 }
 
 async function closeCase(I, eventName, clerkResponsible, physicalLocation) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeCloseCase(clerkResponsible, physicalLocation);
 }
 
 async function letters(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeLettersEvent();
 }
 
 async function restrictedReporting(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.setRestrictedReporting();
 }
 
 async function fixCaseAPI(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeFixCaseAPI();
 }
 
 async function bfAction(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeBFAction();
 }
 
@@ -97,49 +85,41 @@ async function bfActionsOutstanding(I, eventName) {
 
 async function listHearing(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeAddAmendHearing(jurisdiction);
 }
 
 async function allocateHearing(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeAllocateHearing(jurisdiction);
 }
 
 async function hearingDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeHearingDetails();
 }
 
 async function updateHearingDetails(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.amendHearingDetails();
 }
 
 async function printHearingLists(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executePrintHearingLists(jurisdiction);
 }
 
 async function caseTransfer(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeCaseTransfer();
 }
 
 async function judgment(I, eventName) {
     await I.chooseNextStep(eventName, 3);
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeJudgment();
 }
 
 async function generateReport(I, jurisdiction, caseType, eventName) {
     await I.authenticateWithIdam();
-    await I.wait(testConfig.TestTimeToWait);
     await I.executeCreateReport(jurisdiction, caseType, eventName);
 }
 
@@ -176,7 +156,6 @@ async function getECMCaseNumber(I, caseId, eventName) {
     await I.wait(testConfig.TestTimeToWait);
     if (caseId !== testConfig.CCDCaseId) {
         await acceptCaseTest(I, caseId, eventName)
-
     }
     caseNumberText = await I.grabTextFrom(commonConfig.ecmCaseCss);
     return caseNumberText.split(' ')[2];
@@ -211,7 +190,6 @@ module.exports = {
     listHearing,
     printHearingLists,
     allocateHearing,
-    hearingDetails,
     hearingDetails,
     caseTransfer,
     judgment,

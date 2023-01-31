@@ -10,5 +10,5 @@ Scenario('Verify Reject Case', async ({I}) => {
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     await rejectCaseEvent(I, caseNumber, eventNames.REJECT_CASE);
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);

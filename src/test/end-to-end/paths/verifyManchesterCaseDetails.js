@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Case Details ', async ({I}) => {
     await caseDetails(I, testConfig.MOCase, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Dropback Shelf', 'Standard track');
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);

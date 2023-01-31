@@ -6,7 +6,7 @@ module.exports = async function (jurisdiction) {
 
     const I = this;
     I.waitForText(commonConfig.allocateHearing, testConfig.TestTimeToWaitForText);
-    I.selectOption('#hearingCollection_0_judge', 'A Judge');
+    I.retry(3).selectOption('#hearingCollection_0_judge', 'A Judge');
     if (jurisdiction === 'Leeds')
     {
         I.selectOption('#hearingCollection_0_hearingDateCollection_0_hearingRoomLeeds', 'Leeds Magistrates');

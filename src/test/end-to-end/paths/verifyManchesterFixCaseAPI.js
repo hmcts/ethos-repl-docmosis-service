@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Manchester Fix Case API', async ({I}) => {
     await fixCaseAPI(I, eventNames.FIX_CASE_API);
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);

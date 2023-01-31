@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Manchester case List Hearing', async ({I}) => {
     await listHearing(I, eventNames.LIST_HEARING, 'Manchester');
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);
