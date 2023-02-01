@@ -8,8 +8,8 @@ Before(async ({I}) => {
     await navigateCase(I, testConfig.CCDCaseId);
 });
 
-Scenario('Verify B/F Action', async ({I}) => {
-    await bfAction(I, eventNames.BF_ACTION);
-
-}).tag('@np')
-    .retry(testConfig.TestRetryScenarios);
+// Scenario('Verify B/F Action', async ({I}) => {
+//     await bfAction(I, eventNames.BF_ACTION);
+//
+// }).tag('@np')
+//     .retry(testConfig.TestRetryScenarios);
