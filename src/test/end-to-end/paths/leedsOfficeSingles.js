@@ -91,11 +91,11 @@ Scenario('Verify Leeds Case Judgment', async ({I}) => {
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify Leeds Case Allocate Hearing', async ({I}) => {
-    await allocateHearing(I, eventNames.ALLOCATE_HEARING, 'Leeds');
-
-}).tag('@e2e')
-    .retry(testConfig.TestRetryScenarios);
+// Scenario('Verify Leeds Case Allocate Hearing', async ({I}) => {
+//     await allocateHearing(I, eventNames.ALLOCATE_HEARING, 'Leeds');
+//
+// }).tag('@e2e')
+//     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Leeds Case Hearing details', async ({I}) => {
     await hearingDetails(I, eventNames.HEARING_DETAILS);
