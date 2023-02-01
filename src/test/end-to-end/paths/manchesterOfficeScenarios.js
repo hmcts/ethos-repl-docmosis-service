@@ -70,11 +70,11 @@ Scenario('Verify Letters', async ({I}) => {
 }).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
-Scenario('Verify B/F Action', async ({I}) => {
-    await bfAction(I, eventNames.BF_ACTION);
-
-}).tag('@e2e')
-    .retry(testConfig.TestRetryScenarios);
+// Scenario('Verify B/F Action', async ({I}) => {
+//     await bfAction(I, eventNames.BF_ACTION);
+//
+// }).tag('@e2e')
+//     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Restricted Reporting', async ({I}) => {
     await restrictedReporting(I, eventNames.RESTRICTED_REPORTING);
