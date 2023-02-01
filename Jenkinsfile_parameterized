@@ -16,15 +16,15 @@ properties([
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
     enableSlackNotifications('#ethos-repl-service')
 
-    after('functional:preview') {
+    afterSuccess('functional:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
-    after('functional:demo') {
+    afterSuccess('functional:demo') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
-    after('functional:aat') {
+    afterSuccess('functional:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 }
