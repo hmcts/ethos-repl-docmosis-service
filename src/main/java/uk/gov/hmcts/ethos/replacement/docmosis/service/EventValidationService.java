@@ -137,35 +137,61 @@ public class EventValidationService {
         return errors;
     }
 
-    public List<String> validateRespRepNames(CaseData caseData) {
+    public List<String> validateAndSetRespRepNames(uk.gov.hmcts.ecm.common.model.ccd.CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
-            ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
-            int index;
-            while (repItr.hasNext()) {
-                index = repItr.nextIndex() + 1;
-                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getLabel();
-                if (!isNullOrEmpty(respRepName)
-                        && CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
-                    ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
-                    var validLink = false;
-                    while (respItr.hasNext()) {
-                        var respondentSumType = respItr.next().getValue();
-                        if ((respRepName.equals(respondentSumType.getRespondentName()))
-                                || (respondentSumType.getResponseRespondentName() != null
-                                && respRepName.equals(respondentSumType.getResponseRespondentName()))) {
-                            validLink = true;
-                            caseData.getRepCollection().get(index - 1).getValue().setRespRepName(respRepName);
-                            break;
-                        }
+        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())
+            && CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
+            List<RepresentedTypeRItem> repCollection = caseData.getRepCollection();
+            List<RepresentedTypeRItem> updatedRepList = new ArrayList<>();
+            int repCollectionSize = caseData.getRepCollection().size();
+
+            //reverse update it - from the last to the first element by removing repetition
+            for (int index = repCollectionSize - 1;  index > -1; index--) {
+                String tempCollCurrentName = repCollection.get(index).getValue()
+                    .getDynamicRespRepName().getValue().getLabel();
+                if (isValidRespondentName(caseData, tempCollCurrentName)) {
+                    if (!repCollection.isEmpty()
+                        && updatedRepList.stream()
+                        .noneMatch(r -> r.getValue().getDynamicRespRepName().getValue().getLabel()
+                            .equals(tempCollCurrentName))) {
+                        repCollection.get(index).getValue().setRespRepName(tempCollCurrentName);
+                        updatedRepList.add(repCollection.get(index));
                     }
-                    if (!validLink) {
-                        errors.add(RESP_REP_NAME_MISMATCH_ERROR_MESSAGE + " - " + index);
-                    }
+                } else {
+                    errors.add(RESP_REP_NAME_MISMATCH_ERROR_MESSAGE + " - " + tempCollCurrentName);
+                    return errors;
                 }
             }
+
+            //clear the old rep collection
+            if (repCollectionSize > 0) {
+                caseData.getRepCollection().subList(0, repCollectionSize).clear();
+            }
+
+            //populate the rep collection with the new & updated rep entries and
+            //sort the collection by respondent name
+            updatedRepList.sort((o1, o2) -> o1.getValue().getRespRepName().compareTo(o2.getValue().getRespRepName()));
+            caseData.setRepCollection(updatedRepList);
         }
+
         return errors;
+    }
+
+    private boolean isValidRespondentName(uk.gov.hmcts.ecm.common.model.ccd.CaseData caseData,
+                                          String tempCollCurrentName) {
+        boolean isValidName = false;
+        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
+            var respRepNames = caseData.getRespondentCollection()
+                .stream()
+                .map(e -> e.getValue().getRespondentName())
+                .collect(Collectors.toList());
+
+            if (!respRepNames.isEmpty()) {
+                isValidName = respRepNames.contains(tempCollCurrentName);
+            }
+        }
+
+        return isValidName;
     }
 
     public List<String> validateHearingNumber(CaseData caseData, CorrespondenceType correspondenceType,

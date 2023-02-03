@@ -55,7 +55,7 @@ withPipeline(type, product, component) {
   syncBranchesWithMaster(branchesToSync)
   enableSlackNotifications('#ethos-repl-service')
 
-  after('smoketest:preview') {
+  afterSuccess('smoketest:preview') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
 
     publishHTML target: [
@@ -68,7 +68,7 @@ withPipeline(type, product, component) {
     ]
   }
 
-  after('functionalTest:preview') {
+  afterSuccess('functionalTest:preview') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
 
     publishHTML target: [
@@ -81,7 +81,7 @@ withPipeline(type, product, component) {
     ]
   }
 
-  after('smoketest:aat') {
+  afterSuccess('smoketest:aat') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
 
     publishHTML target: [
@@ -94,7 +94,7 @@ withPipeline(type, product, component) {
     ]
   }
 
-  after('functionalTest:aat') {
+  afterSuccess('functionalTest:aat') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
 
     publishHTML target: [
