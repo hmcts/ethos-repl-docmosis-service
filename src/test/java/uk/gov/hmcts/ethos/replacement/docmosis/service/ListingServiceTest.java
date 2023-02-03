@@ -484,6 +484,57 @@ public class ListingServiceTest {
     }
 
     @Test
+    public void processListingHearingsRequestForNewcastleCFT() throws IOException {
+        listingDetails.getCaseData().setListingVenue("Newcastle CFT");
+        listingDetails.getCaseData().setListingDateFrom("2022-12-1");
+        listingDetails.getCaseData().setListingDateTo("2022-12-28");
+        listingDetails.getCaseData().setListingDate("2022-12-15");
+
+        String expectedHearingVenueNameForNewcastleCFT = "Newcastle CFCTC";
+        submitEvents.get(0).getCaseData().getHearingCollection()
+            .subList(0, submitEvents.get(0).getCaseData().getHearingCollection().size()).clear();
+        String expectedHearingVenue = "Newcastle CFT";
+        HearingType hearingTypeOne = new HearingType();
+        hearingTypeOne.setHearingVenue(expectedHearingVenue);
+        hearingTypeOne.setHearingType("Hearing");
+        hearingTypeOne.setHearingFormat(List.of("In person"));
+        hearingTypeOne.setHearingNumber("1223");
+        hearingTypeOne.setHearingSitAlone("Full Panel");
+        hearingTypeOne.setHearingEstLengthNum("2");
+        hearingTypeOne.setHearingEstLengthNumType("Hours");
+        DateListedTypeItem dateListedTypeItemOne = new DateListedTypeItem();
+        dateListedTypeItemOne.setId("c409336e-8bf3-405f-b29d-074c59196c8d");
+
+        DateListedType dateListedTypeOne = new DateListedType();
+        dateListedTypeOne.setListedDate("2022-12-15T11:00:00.000");
+        dateListedTypeOne.setHearingStatus("Listed");
+        dateListedTypeOne.setHearingVenueDay("Newcastle CFT");
+        dateListedTypeOne.setHearingVenueNameForNewcastleCFT("Newcastle CFCTC");
+        dateListedTypeOne.setHearingTimingStart("2022-12-15T11:00:00.000");
+        dateListedTypeOne.setHearingTimingFinish("2022-12-15T11:00:00.000");
+        dateListedTypeItemOne.setValue(dateListedTypeOne);
+
+        hearingTypeOne.setHearingDateCollection(List.of(dateListedTypeItemOne));
+
+        HearingTypeItem hearingTypeItemOne = new HearingTypeItem();
+        hearingTypeItemOne.setId("3912807b-e862-43f2-8436-0eeeccb74220");
+        hearingTypeItemOne.setValue(hearingTypeOne);
+        List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
+        hearingTypeItems.add(hearingTypeItemOne);
+        submitEvents.get(0).getCaseData().setHearingCollection(hearingTypeItems);
+
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
+        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
+            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
+        String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
+        assertNotNull(actualHearingVenueNameForNewcastleCFT);
+        assertEquals(expectedHearingVenueNameForNewcastleCFT, actualHearingVenueNameForNewcastleCFT);
+        assertEquals(expectedHearingVenue, actualHearingVenue);
+    }
+
+    @Test
     public void processListingHearingsRequestNonScottish() throws IOException {
         listingDetails.getCaseData().setVenueAberdeen(null);
         listingDetails.getCaseData().setListingVenue("Leeds");
