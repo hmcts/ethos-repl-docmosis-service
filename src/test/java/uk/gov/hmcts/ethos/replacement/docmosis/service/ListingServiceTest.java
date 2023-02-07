@@ -78,7 +78,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -112,6 +111,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPOR
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
@@ -120,6 +121,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CA
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
@@ -145,9 +148,6 @@ public class ListingServiceTest {
     private ListingDetails listingDetailsRange;
     private DocumentInfo documentInfo;
     private List<SubmitEvent> submitEvents;
-    private static final String TEESSIDE_MAGS = "Teesside Mags";
-    private static final String NEWCASTLE_CFT = "Newcastle CFT";
-    private static final String NEWCASTLE_CFCTC ="Newcastle CFCTC";
 
     @Before
     public void setUp() {
@@ -524,7 +524,7 @@ public class ListingServiceTest {
 
     @Test
     public void processListingHearingsRequestForTeessideMags_NonNullHearingVenueName() throws IOException {
-        String expectedHearingVenueName = "Teesside Justice Centre";
+        String expectedHearingVenueName = TEESSIDE_JUSTICE_CENTRE;
         String expectedHearingVenue = TEESSIDE_MAGS;
 
         setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
