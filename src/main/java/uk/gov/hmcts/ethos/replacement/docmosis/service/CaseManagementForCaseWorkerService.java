@@ -41,9 +41,14 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
@@ -262,12 +267,29 @@ public class CaseManagementForCaseWorkerService {
         if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
             setHearingScottishOffices(dateListedType, hearingType);
         }
+
+        if (caseTypeId.equals(NEWCASTLE_CASE_TYPE_ID)) {
+            setHearingVenueDayForNewcastleUniqueOffices(dateListedType, hearingType);
+        }
+
         setHearingVenueDay(dateListedType, hearingType);
     }
 
     private void setHearingVenueDay(DateListedType dateListedType, HearingType hearingType) {
         if (dateListedType.getHearingVenueDay() == null) {
             dateListedType.setHearingVenueDay(hearingType.getHearingVenue());
+        }
+    }
+
+    private void setHearingVenueDayForNewcastleUniqueOffices(DateListedType dateListedType, HearingType hearingType) {
+        if (NEWCASTLE_CFT.equals(hearingType.getHearingVenue())) {
+            dateListedType.setHearingVenueDay(NEWCASTLE_CFT);
+            dateListedType.setHearingVenueNameForNewcastleCFT(NEWCASTLE_CFCTC);
+        }
+
+        if (TEESSIDE_MAGS.equals(hearingType.getHearingVenue())) {
+            dateListedType.setHearingVenueDay(TEESSIDE_MAGS);
+            dateListedType.setHearingVenueNameForTeessideMags(TEESSIDE_JUSTICE_CENTRE);
         }
     }
 
