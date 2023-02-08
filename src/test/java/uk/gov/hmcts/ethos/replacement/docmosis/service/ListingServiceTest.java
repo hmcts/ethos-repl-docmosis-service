@@ -488,7 +488,7 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void processListingHearingsRequestForNewcastleCft_NonNullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NonNullHearingVenueName() throws IOException {
         String expectedHearingVenueName = NEWCASTLE_CFCTC;
         String expectedHearingVenue = NEWCASTLE_CFT;
 
@@ -506,7 +506,7 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void processListingHearingsRequestForNewcastleCFT_NullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NullHearingVenueName() throws IOException {
         String expectedHearingVenueName = null;
         String expectedHearingVenue = "Kings Court";
 
@@ -523,7 +523,7 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void processListingHearingsRequestForTeessideMags_NonNullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags_NonNullHearingVenueName() throws IOException {
         String expectedHearingVenueName = TEESSIDE_JUSTICE_CENTRE;
         String expectedHearingVenue = TEESSIDE_MAGS;
 
@@ -541,7 +541,7 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void processListingHearingsRequestForTeessideMags_NullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags__NullHearingVenueName() throws IOException {
         String expectedHearingVenueName = null;
         String expectedHearingVenue = TEESSIDE_MAGS;
         setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
@@ -556,7 +556,7 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void processListingHearingsRequestNonNewcastle() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenue_NonNewcastle() throws IOException {
         String expectedHearingVenueName = "Harrowgate CJC";
         String expectedHearingVenue = "Leeds";
         setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
