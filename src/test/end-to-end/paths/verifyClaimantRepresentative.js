@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Claimant Representative', async ({I}) => {
     await claimantRepresentative(I, eventNames.CLAIMANT_REPRESENTATIVE);
 
-}).tag('@np')
+}).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Letters', async ({I}) => {
     await letters(I, eventNames.LETTERS);
 
-}).tag('@np')
+}).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

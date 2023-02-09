@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Restricted Reporting', async ({I}) => {
     await restrictedReporting(I, eventNames.RESTRICTED_REPORTING);
 
-}).tag('@np')
+}).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

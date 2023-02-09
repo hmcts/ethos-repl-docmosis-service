@@ -17,7 +17,7 @@ Before(async ({I}) => {
 Scenario('Verify Case Details ', async ({I}) => {
     await caseDetails(I, testConfig.CCDCaseId, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
 
-}).tag('@np')
+}).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Case Details ( Using API)', async ({I}) => {

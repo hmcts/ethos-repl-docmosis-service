@@ -11,5 +11,5 @@ Before(async ({I}) => {
 Scenario('Verify Jurisdiction', async ({I}) => {
     await jurisdiction(I, eventNames.JURISDICTION);
 
-}).tag('@np')
+}).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

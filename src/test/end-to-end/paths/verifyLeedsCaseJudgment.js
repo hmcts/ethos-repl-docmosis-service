@@ -13,5 +13,5 @@ Scenario('Verify Leeds Case Judgment', async ({I}) => {
     await jurisdiction(I, eventNames.JURISDICTION);
     await judgment(I, eventNames.JUDGMENT);
 
-}).tag('@np')
+}).tag('@e2e')
     .retry(testConfig.TestRetryScenarios);

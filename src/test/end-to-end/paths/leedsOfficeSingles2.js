@@ -15,7 +15,7 @@ BeforeSuite(async ({I}) => caseId = await createCaseInCcd('src/test/end-to-end/d
 Scenario('Verify Reject Case', async ({I}) => {
     await rejectCaseEvent(I, caseId, eventNames.REJECT_CASE);
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Leeds Case Transfer', async ({I}) => {
@@ -23,7 +23,7 @@ Scenario('Verify Leeds Case Transfer', async ({I}) => {
     await navigateCase(I, caseNumber);
     await caseTransfer(I, eventNames.CASE_TRANSFER);
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Case Close', async ({I}) => {
@@ -32,6 +32,6 @@ Scenario('Verify Case Close', async ({I}) => {
     await jurisdiction(I, eventNames.JURISDICTION);
     await closeCase(I, eventNames.CLOSE_CASE, commonConfig.clerkResponsible, commonConfig.physicalLocation)
 
-}).tag('@e2e')
+}).tag('@np')
     .retry(testConfig.TestRetryScenarios);
 
