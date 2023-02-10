@@ -156,10 +156,6 @@
         <cve>1085297</cve>
     </suppress>
     <suppress>
-        <packageUrl regex="true">^pkg:npm/flat@.*$</packageUrl>
-        <cve>1089152</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[
     file name: LatencyUtils-2.0.3.jar
     ]]></notes>
