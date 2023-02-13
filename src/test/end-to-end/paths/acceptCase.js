@@ -12,5 +12,5 @@ Before(async ({I}) => {
 Scenario('Leeds Singles Case and move to Accepted state', async ({I}) => {
     await acceptCaseTest(I, testConfig.CCDCaseId, eventNames.ACCEPT_CASE);
 
-}).tag('@e2e')
+}).tag('@ci')
     .retry(testConfig.TestRetryScenarios);
