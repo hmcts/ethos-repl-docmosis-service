@@ -224,4 +224,8 @@
         <cpe>cpe:2.3:a:fasterxml:woodstox</cpe>
         <cve>CVE-2022-40152</cve>
     </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/cacheable-request@.*$</packageUrl>
+        <cve>1091050</cve>
+    </suppress>
 </suppressions>
