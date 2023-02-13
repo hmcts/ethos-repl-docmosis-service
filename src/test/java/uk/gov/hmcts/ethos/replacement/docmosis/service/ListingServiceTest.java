@@ -111,6 +111,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPOR
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
@@ -119,6 +121,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CA
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
@@ -484,18 +488,102 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void processListingHearingsRequestForNewcastleCFT() throws IOException {
-        listingDetails.getCaseData().setListingVenue("Newcastle CFT");
+    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NonNullHearingVenueName() throws IOException {
+        String expectedHearingVenueName = NEWCASTLE_CFCTC;
+        String expectedHearingVenue = NEWCASTLE_CFT;
+
+        setNewcastleTestCaseDetails(NEWCASTLE_CFT, expectedHearingVenueName);
+
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
+        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
+            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
+        String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
+        assertNotNull(actualHearingVenueNameForNewcastleCFT);
+        assertEquals(expectedHearingVenueName, actualHearingVenueNameForNewcastleCFT);
+        assertEquals(expectedHearingVenue, actualHearingVenue);
+    }
+
+    @Test
+    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NullHearingVenueName() throws IOException {
+        String expectedHearingVenueName = null;
+        String expectedHearingVenue = "Kings Court";
+
+        setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
+
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
+        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
+            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
+        String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
+        assertNull(actualHearingVenueNameForNewcastleCFT);
+        assertEquals(expectedHearingVenue, actualHearingVenue);
+    }
+
+    @Test
+    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags_NonNullHearingVenueName() throws IOException {
+        String expectedHearingVenueName = TEESSIDE_JUSTICE_CENTRE;
+        String expectedHearingVenue = TEESSIDE_MAGS;
+
+        setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
+
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
+        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        String actualHearingVenueName = caseData.getHearingCollection().get(0).getValue()
+            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForTeessideMags();
+        String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
+        assertNotNull(actualHearingVenueName);
+        assertEquals(expectedHearingVenueName, actualHearingVenueName);
+        assertEquals(expectedHearingVenue, actualHearingVenue);
+    }
+
+    @Test
+    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags__NullHearingVenueName() throws IOException {
+        String expectedHearingVenueName = null;
+        String expectedHearingVenue = TEESSIDE_MAGS;
+        setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
+        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        String actualHearingVenueNameForTeessideMags = caseData.getHearingCollection().get(0).getValue()
+            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForTeessideMags();
+        String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
+        assertNull(actualHearingVenueNameForTeessideMags);
+        assertEquals(expectedHearingVenue, actualHearingVenue);
+    }
+
+    @Test
+    public void processListingHearingsRequest_SetCauseListVenue_NonNewcastle() throws IOException {
+        String expectedHearingVenueName = "Harrowgate CJC";
+        String expectedHearingVenue = "Leeds";
+        setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
+
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
+        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
+            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
+        String actualHearingVenueNameForTeessideMags = caseData.getHearingCollection().get(0).getValue()
+            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForTeessideMags();
+        String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
+        assertNull(actualHearingVenueNameForNewcastleCFT);
+        assertNull(actualHearingVenueNameForTeessideMags);
+        assertEquals(expectedHearingVenue, actualHearingVenue);
+    }
+
+    private void setNewcastleTestCaseDetails(String hearingVenue, String hearingVenueName) {
+        listingDetails.getCaseData().setListingVenue(hearingVenue);
         listingDetails.getCaseData().setListingDateFrom("2022-12-1");
         listingDetails.getCaseData().setListingDateTo("2022-12-28");
         listingDetails.getCaseData().setListingDate("2022-12-15");
 
-        String expectedHearingVenueNameForNewcastleCFT = "Newcastle CFCTC";
         submitEvents.get(0).getCaseData().getHearingCollection()
             .subList(0, submitEvents.get(0).getCaseData().getHearingCollection().size()).clear();
-        String expectedHearingVenue = "Newcastle CFT";
         HearingType hearingTypeOne = new HearingType();
-        hearingTypeOne.setHearingVenue(expectedHearingVenue);
+        hearingTypeOne.setHearingVenue(hearingVenue);
         hearingTypeOne.setHearingType("Hearing");
         hearingTypeOne.setHearingFormat(List.of("In person"));
         hearingTypeOne.setHearingNumber("1223");
@@ -508,8 +596,16 @@ public class ListingServiceTest {
         DateListedType dateListedTypeOne = new DateListedType();
         dateListedTypeOne.setListedDate("2022-12-15T11:00:00.000");
         dateListedTypeOne.setHearingStatus("Listed");
-        dateListedTypeOne.setHearingVenueDay("Newcastle CFT");
-        dateListedTypeOne.setHearingVenueNameForNewcastleCFT("Newcastle CFCTC");
+        dateListedTypeOne.setHearingVenueDay(hearingVenue);
+
+        if (hearingVenue.equals(TEESSIDE_MAGS)) {
+            dateListedTypeOne.setHearingVenueNameForTeessideMags(hearingVenueName);
+        }
+
+        if (hearingVenue.equals(NEWCASTLE_CFT)) {
+            dateListedTypeOne.setHearingVenueNameForNewcastleCFT(hearingVenueName);
+        }
+
         dateListedTypeOne.setHearingTimingStart("2022-12-15T11:00:00.000");
         dateListedTypeOne.setHearingTimingFinish("2022-12-15T11:00:00.000");
         dateListedTypeItemOne.setValue(dateListedTypeOne);
@@ -522,16 +618,6 @@ public class ListingServiceTest {
         List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
         hearingTypeItems.add(hearingTypeItemOne);
         submitEvents.get(0).getCaseData().setHearingCollection(hearingTypeItems);
-
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-            anyString(), anyString())).thenReturn(submitEvents);
-        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
-        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
-            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
-        String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
-        assertNotNull(actualHearingVenueNameForNewcastleCFT);
-        assertEquals(expectedHearingVenueNameForNewcastleCFT, actualHearingVenueNameForNewcastleCFT);
-        assertEquals(expectedHearingVenue, actualHearingVenue);
     }
 
     @Test

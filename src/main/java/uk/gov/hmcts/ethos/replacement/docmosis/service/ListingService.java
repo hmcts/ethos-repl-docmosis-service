@@ -133,6 +133,7 @@ public class ListingService {
 
     public CaseData processListingSingleCasesRequest(CaseDetails caseDetails) {
         var caseData = caseDetails.getCaseData();
+
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
@@ -218,8 +219,8 @@ public class ListingService {
                 dateFrom, dateTo, venueToSearch, venueToSearchMapping);
     }
 
-    private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem,
-                                                      ListingData listingData, CaseData caseData) {
+    private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData,
+                                                      CaseData caseData) {
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
         if (isHearingTypeValid(listingData, hearingTypeItem)) {
             int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
@@ -240,6 +241,7 @@ public class ListingService {
                 if (!isListingVenueValid || !isListingDateValid || !isListingStatusValid) {
                     continue;
                 }
+
                 var listingTypeItem = new ListingTypeItem();
                 var listingType = ListingHelper.getListingTypeFromCaseData(
                         listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(),
@@ -247,10 +249,7 @@ public class ListingService {
                 listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
                 listingTypeItem.setValue(listingType);
 
-                if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFT)
-                    || listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_MAGS)) {
-                    setCauseListVenueForNewcastle(dateListedTypeItem, listingTypeItem);
-                }
+                setCauseListVenueForNewcastle(dateListedTypeItem, listingTypeItem);
 
                 listingTypeItems.add(listingTypeItem);
             }
@@ -258,15 +257,18 @@ public class ListingService {
         return listingTypeItems;
     }
 
-    private void setCauseListVenueForNewcastle(DateListedTypeItem dateListedTypeItem, ListingTypeItem listingTypeItem) {
-        if (dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT() != null) {
-            listingTypeItem.getValue().setCauseListVenue(
-                dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT());
+    private void setCauseListVenueForNewcastle(DateListedTypeItem dateListedTypeItem,
+                                               ListingTypeItem listingTypeItem) {
+        if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFT) &&
+            dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT() != null) {
+                listingTypeItem.getValue().setCauseListVenue(
+                    dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT());
         }
 
-        if (dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags() != null) {
-            listingTypeItem.getValue().setCauseListVenue(
-                dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags());
+        if (listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_MAGS) &&
+            dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags() != null) {
+                listingTypeItem.getValue().setCauseListVenue(
+                    dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags());
         }
     }
 
