@@ -599,11 +599,15 @@ public class ListingServiceTest {
         dateListedTypeOne.setHearingVenueDay(hearingVenue);
 
         if (hearingVenue.equals(TEESSIDE_MAGS)) {
+            dateListedTypeOne.setHearingVenueDay(hearingVenue);
             dateListedTypeOne.setHearingVenueNameForTeessideMags(hearingVenueName);
+            listingDetails.getCaseData().setVenueAberdeen(null);
         }
 
         if (hearingVenue.equals(NEWCASTLE_CFT)) {
+            dateListedTypeOne.setHearingVenueDay(hearingVenue);
             dateListedTypeOne.setHearingVenueNameForNewcastleCFT(hearingVenueName);
+            listingDetails.getCaseData().setVenueAberdeen(null);
         }
 
         dateListedTypeOne.setHearingTimingStart("2022-12-15T11:00:00.000");

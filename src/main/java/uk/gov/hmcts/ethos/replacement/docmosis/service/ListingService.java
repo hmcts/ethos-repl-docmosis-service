@@ -84,13 +84,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
@@ -98,6 +98,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+
 
 @RequiredArgsConstructor
 @Slf4j
@@ -259,13 +260,13 @@ public class ListingService {
 
     private void setCauseListVenueForNewcastle(DateListedTypeItem dateListedTypeItem,
                                                ListingTypeItem listingTypeItem) {
-        if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFT) &&
+        if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFCTC) &&
             dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT() != null) {
                 listingTypeItem.getValue().setCauseListVenue(
                     dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT());
         }
 
-        if (listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_MAGS) &&
+        if (listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_JUSTICE_CENTRE) &&
             dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags() != null) {
                 listingTypeItem.getValue().setCauseListVenue(
                     dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags());
