@@ -85,12 +85,14 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVAT
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.CAUSE_LIST_DATE_TIME_PATTERN;
@@ -203,7 +205,7 @@ public class ListingService {
         Map.Entry<String, String> entry =
                 ListingHelper.getListingVenueToSearch(listingData).entrySet().iterator().next();
         String venueToSearchMapping = entry.getKey();
-        String venueToSearch = entry.getValue();
+        String venueToSearch = getCheckedHearingVenueToSearch(entry.getValue());
         String dateFrom;
         String dateTo;
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
@@ -218,6 +220,18 @@ public class ListingService {
         return ccdClient.retrieveCasesVenueAndDateElasticSearch(
                 authToken, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()),
                 dateFrom, dateTo, venueToSearch, venueToSearchMapping);
+    }
+
+    private String getCheckedHearingVenueToSearch(String venueToCheck) {
+        if (NEWCASTLE_CFCTC.equals(venueToCheck)) {
+            return NEWCASTLE_CFT;
+        }
+
+        if (TEESSIDE_JUSTICE_CENTRE.equals(venueToCheck)) {
+            return TEESSIDE_MAGS;
+        }
+
+        return venueToCheck;
     }
 
     private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData,
