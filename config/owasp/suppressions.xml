@@ -212,4 +212,16 @@
         <packageUrl regex="true">^pkg:npm/got@.*$</packageUrl>
         <cve>1088948</cve>
     </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/%40sideway%2Fformula@.*$</packageUrl>
+        <cve>1091026</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: woodstox-core-6.2.8.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.woodstox\/woodstox-core@.*$</packageUrl>
+        <cpe>cpe:2.3:a:fasterxml:woodstox</cpe>
+        <cve>CVE-2022-40152</cve>
+    </suppress>
 </suppressions>
