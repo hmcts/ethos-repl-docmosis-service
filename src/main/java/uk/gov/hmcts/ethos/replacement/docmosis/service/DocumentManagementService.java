@@ -122,22 +122,15 @@ public class DocumentManagementService {
     public UploadedDocument downloadFile(String authToken, String urlString) {
         var user = userService.getUserDetails(authToken);
         ResponseEntity<Resource> response;
-        if (secureDocStoreEnabled) {
-            response = caseDocumentClient.getDocumentBinary(
-                    authToken,
-                    authTokenGenerator.generate(),
-                    getDocumentUUID(urlString)
-            );
 
-        } else {
-            response = documentDownloadClientApi.downloadBinary(
-                    authToken,
-                    authTokenGenerator.generate(),
-                    String.join(",", user.getRoles()),
-                    user.getUid(),
-                    getDownloadUrl(urlString)
-            );
-        }
+        response = documentDownloadClientApi.downloadBinary(
+                authToken,
+                authTokenGenerator.generate(),
+                String.join(",", user.getRoles()),
+                user.getUid(),
+                getDownloadUrl(urlString)
+        );
+
         if (HttpStatus.OK.equals(response.getStatusCode())) {
             return UploadedDocument.builder()
                     .content(response.getBody())
