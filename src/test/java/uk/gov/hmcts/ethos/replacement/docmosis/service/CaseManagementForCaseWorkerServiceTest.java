@@ -45,6 +45,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,6 +63,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LIST
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_CALLBACK;
@@ -539,6 +541,89 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .getHearingDateCollection().get(0).getValue().getHearingDundee());
         assertEquals(DUNDEE_OFFICE, caseData.getHearingCollection().get(3).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingVenueDay());
+    }
+
+    @Test
+    public void amendHearingsNewcastleCFT() {
+        CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
+        String expectedHearingVenueNameForNewcastleCFT = "Newcastle CFCTC";
+        String expectedHearingVenue = "Newcastle CFT";
+        HearingType hearingTypeOne = new HearingType();
+        hearingTypeOne.setHearingVenue(expectedHearingVenue);
+        hearingTypeOne.setHearingType("Hearing");
+        hearingTypeOne.setHearingFormat(List.of("In person"));
+        hearingTypeOne.setHearingNumber("1223");
+        hearingTypeOne.setHearingSitAlone("Full Panel");
+        hearingTypeOne.setHearingEstLengthNum("2");
+        hearingTypeOne.setHearingEstLengthNumType("Hours");
+        DateListedTypeItem dateListedTypeItemOne = new DateListedTypeItem();
+        dateListedTypeItemOne.setId("c409336e-8bf3-405f-b29d-074c59196c8d");
+
+        DateListedType dateListedTypeOne = new DateListedType();
+        dateListedTypeOne.setListedDate("2022-12-15T11:00:00.000");
+        dateListedTypeOne.setHearingStatus("Listed");
+        dateListedTypeOne.setHearingVenueDay("Newcastle CFT");
+        dateListedTypeOne.setHearingVenueNameForNewcastleCFT("Newcastle CFCTC");
+        dateListedTypeOne.setHearingTimingStart("2022-12-15T11:00:00.000");
+        dateListedTypeOne.setHearingTimingFinish("2022-12-15T11:00:00.000");
+        dateListedTypeItemOne.setValue(dateListedTypeOne);
+
+        hearingTypeOne.setHearingDateCollection(List.of(dateListedTypeItemOne));
+
+        HearingTypeItem hearingTypeItemOne = new HearingTypeItem();
+        hearingTypeItemOne.setId("3912807b-e862-43f2-8436-0eeeccb74220");
+        hearingTypeItemOne.setValue(hearingTypeOne);
+        List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
+        hearingTypeItems.add(hearingTypeItemOne);
+        caseData.setHearingCollection(hearingTypeItems);
+
+        caseManagementForCaseWorkerService.amendHearing(caseData, NEWCASTLE_CASE_TYPE_ID);
+
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection()
+            .get(0).getValue().getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
+        assertNotNull(actualHearingVenueNameForNewcastleCFT);
+        assertEquals(expectedHearingVenueNameForNewcastleCFT, actualHearingVenueNameForNewcastleCFT);
+    }
+
+    @Test
+    public void amendHearingsTeessideMags() {
+        CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
+        String expectedHearingVenueNameForTeessideMags = "Teesside Justice Centre";
+        String expectedHearingVenue = "Teesside Mags";
+        HearingType hearingTypeOne = new HearingType();
+        hearingTypeOne.setHearingVenue(expectedHearingVenue);
+        hearingTypeOne.setHearingType("Hearing");
+        hearingTypeOne.setHearingFormat(List.of("In person"));
+        hearingTypeOne.setHearingNumber("1223");
+        hearingTypeOne.setHearingSitAlone("Full Panel");
+        hearingTypeOne.setHearingEstLengthNum("5");
+        hearingTypeOne.setHearingEstLengthNumType("Hours");
+        DateListedTypeItem dateListedTypeItemOne = new DateListedTypeItem();
+        dateListedTypeItemOne.setId("c409336e-8bf3-405f-b29d-074c59196c8d");
+
+        DateListedType dateListedTypeOne = new DateListedType();
+        dateListedTypeOne.setListedDate("2022-12-15T11:00:00.000");
+        dateListedTypeOne.setHearingStatus("Listed");
+        dateListedTypeOne.setHearingVenueDay(expectedHearingVenue);
+        dateListedTypeOne.setHearingVenueNameForTeessideMags(expectedHearingVenueNameForTeessideMags);
+        dateListedTypeOne.setHearingTimingStart("2022-12-15T11:00:00.000");
+        dateListedTypeOne.setHearingTimingFinish("2022-12-15T11:00:00.000");
+        dateListedTypeItemOne.setValue(dateListedTypeOne);
+        hearingTypeOne.setHearingDateCollection(List.of(dateListedTypeItemOne));
+
+        HearingTypeItem hearingTypeItemOne = new HearingTypeItem();
+        hearingTypeItemOne.setId("3912807b-e862-43f2-8436-0eeeccb74220");
+        hearingTypeItemOne.setValue(hearingTypeOne);
+        List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
+        hearingTypeItems.add(hearingTypeItemOne);
+        caseData.setHearingCollection(hearingTypeItems);
+
+        caseManagementForCaseWorkerService.amendHearing(caseData, NEWCASTLE_CASE_TYPE_ID);
+
+        String actualHearingVenueNameForTeessideMags = caseData.getHearingCollection()
+            .get(0).getValue().getHearingDateCollection().get(0).getValue().getHearingVenueNameForTeessideMags();
+        assertNotNull(actualHearingVenueNameForTeessideMags);
+        assertEquals(expectedHearingVenueNameForTeessideMags, actualHearingVenueNameForTeessideMags);
     }
 
     @Test

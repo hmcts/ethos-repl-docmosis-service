@@ -61,6 +61,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_DEV;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_USER;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_TIME_PATTERN;
@@ -79,6 +81,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
@@ -679,7 +683,14 @@ public class ListingHelper {
         } else if (!isNullOrEmpty(listingData.getVenueEdinburgh())
                 && !listingData.getVenueEdinburgh().equals(ALL_VENUES)) {
             return createMap(LISTING_EDINBURGH_VENUE_FIELD_NAME, listingData.getVenueEdinburgh());
+        } else if (!isNullOrEmpty(listingData.getListingVenue())
+            && listingData.getListingVenue().equals(NEWCASTLE_CFT)) {
+            return createMap(LISTING_VENUE_FIELD_NAME, NEWCASTLE_CFCTC);
+        } else if (!isNullOrEmpty(listingData.getListingVenue())
+            && listingData.getListingVenue().equals(TEESSIDE_MAGS)) {
+            return createMap(LISTING_VENUE_FIELD_NAME, TEESSIDE_JUSTICE_CENTRE);
         }
+
         return !isNullOrEmpty(listingData.getListingVenue())
                 ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
                 : createMap("", "");
@@ -711,6 +722,10 @@ public class ListingHelper {
                 return dateListedType.getHearingEdinburgh() != null ? dateListedType.getHearingEdinburgh() : " ";
             case ABERDEEN_OFFICE:
                 return dateListedType.getHearingAberdeen() != null ? dateListedType.getHearingAberdeen() : " ";
+            case NEWCASTLE_CFT:
+                return NEWCASTLE_CFCTC;
+            case TEESSIDE_MAGS:
+                return TEESSIDE_JUSTICE_CENTRE;
             default:
                 return dateListedType.getHearingVenueDay() != null ? dateListedType.getHearingVenueDay() : " ";
         }
