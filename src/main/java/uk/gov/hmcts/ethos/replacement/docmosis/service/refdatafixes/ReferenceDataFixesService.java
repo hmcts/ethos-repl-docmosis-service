@@ -49,7 +49,10 @@ public class ReferenceDataFixesService {
                     if (setJudgeName(caseData, existingJudgeCode, requiredJudgeCode)) {
                         CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
                                 adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-                        ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
+
+                        CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
+
+                        ccdClient.submitEventForCase(authToken, returnedRequestCaseData, caseTypeId,
                                 adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
                     }
                 }
@@ -192,6 +195,8 @@ public class ReferenceDataFixesService {
                                          String caseTypeId,
                                          AdminDetails adminDetails) throws IOException {
         LocalDate claimServedDate;
+        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
+                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
         claimServedDate = generateCorrespondenceEvents.stream()
                 .sorted(CaseEventDetail::comparedTo)
                 .collect(Collectors.toList())
@@ -200,9 +205,10 @@ public class ReferenceDataFixesService {
         if (caseData.getClaimServedDate() == null) {
             caseData.setClaimServedDate(claimServedDate.toString());
         }
-        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
-                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-        ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
+
+        CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
+
+        ccdClient.submitEventForCase(authToken, returnedRequestCaseData, caseTypeId,
                 adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
 
     }

@@ -83,7 +83,7 @@ public class MultipleBatchUpdate3Service {
             if (YES.equals(multipleData.getBatchRemoveClaimantRep())
                     || YES.equals(multipleData.getBatchRemoveRespondentRep())) {
                 submitEventForCase(userToken, multipleDetails.getCaseTypeId(),
-                        caseSearched.getCaseId(), caseSearched.getCaseData(), multipleDetails.getJurisdiction());
+                        caseSearched.getCaseId(), multipleDetails.getJurisdiction());
             }
         } else {
 
@@ -94,12 +94,13 @@ public class MultipleBatchUpdate3Service {
 
     }
 
-    private void submitEventForCase(String userToken, String caseTypeId, long caseId, CaseData caseData,
+    private void submitEventForCase(String userToken, String caseTypeId, long caseId,
                                     String jurisdiction) {
         try {
             CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, caseTypeId,
                    jurisdiction, String.valueOf(caseId));
-            ccdClient.submitEventForCase(userToken, caseData, caseTypeId,
+            CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
+            ccdClient.submitEventForCase(userToken, returnedRequestCaseData, caseTypeId,
                    jurisdiction, returnedRequest, String.valueOf(caseId));
         } catch (Exception e) {
             throw new CaseCreationException("Error while submitting event for case: " + caseId + e.toString());
