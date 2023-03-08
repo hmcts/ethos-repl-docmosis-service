@@ -39,11 +39,11 @@ public class BulkPreAcceptTask implements Runnable {
             CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
             casePreAcceptType.setCaseAccepted(YES);
             casePreAcceptType.setDateAccepted(UtilHelper.formatCurrentDate2(LocalDate.now()));
-            submitEvent.getCaseData().setPreAcceptCase(casePreAcceptType);
             CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken,
                     UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), caseId);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+            returnedRequest.getCaseDetails().getCaseData().setPreAcceptCase(casePreAcceptType);
+            ccdClient.submitEventForCase(authToken, returnedRequest.getCaseDetails().getCaseData(),
                     UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {

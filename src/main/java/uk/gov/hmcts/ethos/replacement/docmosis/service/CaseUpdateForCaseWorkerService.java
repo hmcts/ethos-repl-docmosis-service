@@ -31,16 +31,18 @@ public class CaseUpdateForCaseWorkerService {
             String caseId = ccdRequest.getCaseDetails().getCaseId();
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken,
                     caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), caseId);
-            String managingOffice = caseDetails.getCaseData().getManagingOffice() != null
-                    ? caseDetails.getCaseData().getManagingOffice()
+            String managingOffice = returnedRequest.getCaseDetails().getCaseData().getManagingOffice() != null
+                    ? returnedRequest.getCaseDetails().getCaseData().getManagingOffice()
                     : "";
             var defaultValues = defaultValuesReaderService.getDefaultValues(
                     managingOffice, caseDetails.getCaseTypeId());
-            ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
+            returnedRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
 
             log.info("Post Default values added to the case: " + defaultValues);
-            return ccdClient.submitEventForCase(authToken, caseDetails.getCaseData(),
-                    caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), returnedRequest, caseId);
+            return ccdClient.submitEventForCase(authToken, returnedRequest.getCaseDetails().getCaseData(),
+                    returnedRequest.getCaseDetails().getCaseTypeId(),
+                    returnedRequest.getCaseDetails().getJurisdiction(),
+                    returnedRequest, caseId);
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }

@@ -201,12 +201,10 @@ public class ReferenceDataFixesService {
                 .sorted(CaseEventDetail::comparedTo)
                 .collect(Collectors.toList())
                 .get(0).getCreatedDate().toLocalDate();
-        CaseData caseData = submitEvent.getCaseData();
-        if (caseData.getClaimServedDate() == null) {
-            caseData.setClaimServedDate(claimServedDate.toString());
-        }
-
         CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
+        if (returnedRequestCaseData.getClaimServedDate() == null) {
+            returnedRequestCaseData.setClaimServedDate(claimServedDate.toString());
+        }
 
         ccdClient.submitEventForCase(authToken, returnedRequestCaseData, caseTypeId,
                 adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
