@@ -7,7 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
@@ -188,6 +190,13 @@ public class ReferenceDataFixesServiceTest {
         when(ccdClient.retrieveCaseEventDetails(anyString(),
                 anyString(), anyString(), anyString()))
                 .thenReturn(Arrays.asList(caseEventDetail2, caseEventDetail));
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        ccdRequest.setCaseDetails(caseDetails);
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(),
+                anyString()))
+                .thenReturn(ccdRequest);
         referenceDataFixesService.insertClaimServedDate(
                 adminDetails, "authToken", dataSource, new ArrayList<>());
         assertEquals("2022-09-20",
