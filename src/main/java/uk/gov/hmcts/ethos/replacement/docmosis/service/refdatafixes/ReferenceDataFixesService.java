@@ -49,7 +49,10 @@ public class ReferenceDataFixesService {
                     if (setJudgeName(caseData, existingJudgeCode, requiredJudgeCode)) {
                         CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
                                 adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-                        ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
+
+                        CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
+
+                        ccdClient.submitEventForCase(authToken, returnedRequestCaseData, caseTypeId,
                                 adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
                     }
                 }
@@ -192,17 +195,18 @@ public class ReferenceDataFixesService {
                                          String caseTypeId,
                                          AdminDetails adminDetails) throws IOException {
         LocalDate claimServedDate;
+        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
+                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
         claimServedDate = generateCorrespondenceEvents.stream()
                 .sorted(CaseEventDetail::comparedTo)
                 .collect(Collectors.toList())
                 .get(0).getCreatedDate().toLocalDate();
-        CaseData caseData = submitEvent.getCaseData();
-        if (caseData.getClaimServedDate() == null) {
-            caseData.setClaimServedDate(claimServedDate.toString());
+        CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
+        if (returnedRequestCaseData.getClaimServedDate() == null) {
+            returnedRequestCaseData.setClaimServedDate(claimServedDate.toString());
         }
-        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
-                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-        ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
+
+        ccdClient.submitEventForCase(authToken, returnedRequestCaseData, caseTypeId,
                 adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
 
     }

@@ -16,6 +16,7 @@ import static org.mockito.Mockito.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
@@ -94,6 +95,8 @@ public class MultipleBatchUpdate3ServiceTest {
         multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList("JD"));
         multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil
                 .generateDynamicList("Respondent Rep"));
+        multipleDetails.setJurisdiction("Employment");
+        multipleDetails.setCaseTypeId("Leeds");
         multipleDetails.getCaseData().setBatchRemoveClaimantRep(YES);
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
         RepresentedTypeC representedTypeC = new RepresentedTypeC();
@@ -102,14 +105,16 @@ public class MultipleBatchUpdate3ServiceTest {
         submitEvents.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
         assertEquals(3, multipleObjectsFlags.size());
 
-        when(singleCasesReadingService.retrieveSingleCase(userToken,
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        ccdRequest.setCaseDetails(caseDetails);
+        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
+                anyString());
+        doReturn(submitEvents.get(0)).when(singleCasesReadingService).retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase(),
-                multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
-        CCDRequest returnedRequest = new CCDRequest();
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString()))
-                .thenReturn(returnedRequest);
+                multipleDetails.getCaseData().getMultipleSource());
         multipleBatchUpdate3Service.batchUpdate3Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
@@ -133,6 +138,8 @@ public class MultipleBatchUpdate3ServiceTest {
         multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList("JD"));
         multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil
                 .generateDynamicList("Respondent Rep"));
+        multipleDetails.setJurisdiction("Employment");
+        multipleDetails.setCaseTypeId("Leeds");
         multipleDetails.getCaseData().setBatchRemoveRespondentRep(YES);
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
         var representedTypeR = new RepresentedTypeR();
@@ -150,9 +157,12 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
-        CCDRequest returnedRequest = new CCDRequest();
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString()))
-                .thenReturn(returnedRequest);
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        ccdRequest.setCaseDetails(caseDetails);
+        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
+                anyString());
         multipleBatchUpdate3Service.batchUpdate3Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),

@@ -50,7 +50,7 @@ public class BulkUpdateBulkTask implements Runnable {
                         CCDRequest returnedRequest = ccdClient.startEventForCase(authToken,
                                 UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                                 bulkDetails.getJurisdiction(), caseId);
-                        ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+                        ccdClient.submitEventForCase(authToken, returnedRequest.getCaseDetails().getCaseData(),
                                 UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                                 bulkDetails.getJurisdiction(), returnedRequest, caseId);
                     }

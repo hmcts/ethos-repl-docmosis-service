@@ -52,9 +52,9 @@ public class BulkCreationTask implements Runnable {
                 returnedRequest = ccdClient.startEventForCase(authToken,
                         UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             }
-            submitEvent.getCaseData().setMultipleReference(multipleRef);
-            submitEvent.getCaseData().setEcmCaseType(caseType);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+            returnedRequest.getCaseDetails().getCaseData().setMultipleReference(multipleRef);
+            returnedRequest.getCaseDetails().getCaseData().setEcmCaseType(caseType);
+            ccdClient.submitEventForCase(authToken, returnedRequest.getCaseDetails().getCaseData(),
                     UtilHelper.getCaseTypeId(
                             bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
