@@ -45,14 +45,11 @@ public class ReferenceDataFixesService {
             if (CollectionUtils.isNotEmpty(submitEvents)) {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 for (SubmitEvent submitEvent : submitEvents) {
-                    CaseData caseData = submitEvent.getCaseData();
+                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
+                            adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
+                    CaseData caseData = returnedRequest.getCaseDetails().getCaseData();
                     if (setJudgeName(caseData, existingJudgeCode, requiredJudgeCode)) {
-                        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseTypeId,
-                                adminDetails.getJurisdiction(), String.valueOf(submitEvent.getCaseId()));
-
-                        CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
-
-                        ccdClient.submitEventForCase(authToken, returnedRequestCaseData, caseTypeId,
+                        ccdClient.submitEventForCase(authToken, caseData, caseTypeId,
                                 adminDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvent.getCaseId()));
                     }
                 }
