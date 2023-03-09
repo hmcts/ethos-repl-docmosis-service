@@ -101,9 +101,10 @@ public class CaseUpdateForCaseWorkerServiceTest {
 
     @Test
     public void caseCreationManchesterRequest() throws IOException {
+        manchesterCcdRequest.getCaseDetails().getCaseData().setManagingOffice("Manchester");
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(manchesterCcdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        when(defaultValuesReaderService.getDefaultValues("", manchesterCaseDetails.getCaseTypeId())).thenReturn(manchesterDefaultValues);
+        when(defaultValuesReaderService.getDefaultValues("Manchester", manchesterCaseDetails.getCaseTypeId())).thenReturn(manchesterDefaultValues);
         SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");
         assertEquals(submitEvent, submitEvent1);
     }
