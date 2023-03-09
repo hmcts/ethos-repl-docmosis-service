@@ -50,7 +50,7 @@ public class ReferenceDataFixesServiceTest {
     private List<SubmitEvent> submitEvents;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
 
         dataSource = mock(RefDataFixesCcdDataSource.class);
         adminDetails = new AdminDetails();
@@ -81,6 +81,12 @@ public class ReferenceDataFixesServiceTest {
         submitEvents = new ArrayList<>(List.of(submitEvent1));
         when(dataSource.getDataForJudges(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
         when(dataSource.getDataForInsertClaimDate(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        ccdRequest.setCaseDetails(caseDetails);
+        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
+                anyString());
 
     }
 
@@ -95,6 +101,7 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeCaseTypeIdTest() {
         adminDetails.getCaseData().setTribunalOffice("Manchester");
+
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -104,12 +111,6 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeMidlandsWestTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("Midlands West");
-        CCDRequest ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
-        ccdRequest.setCaseDetails(caseDetails);
-        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
-                anyString());
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -119,12 +120,6 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeMidlandsEastTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("Midlands East");
-        CCDRequest ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
-        ccdRequest.setCaseDetails(caseDetails);
-        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
-                anyString());
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -134,12 +129,6 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeLondonEastTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("London East");
-        CCDRequest ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
-        ccdRequest.setCaseDetails(caseDetails);
-        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
-                anyString());
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -149,12 +138,6 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeLondonSouthTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("London South");
-        CCDRequest ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
-        ccdRequest.setCaseDetails(caseDetails);
-        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
-                anyString());
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -164,12 +147,6 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeLondonCentralTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("London Central");
-        CCDRequest ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
-        ccdRequest.setCaseDetails(caseDetails);
-        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
-                anyString());
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -180,12 +157,6 @@ public class ReferenceDataFixesServiceTest {
     public void judgeCodeDateTest() throws IOException {
         adminDetails.getCaseData().setDate("2022-07-01");
         adminDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
-        CCDRequest ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
-        ccdRequest.setCaseDetails(caseDetails);
-        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
-                anyString());
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -195,7 +166,7 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void wrongJudgeCodeTest() {
         adminDetails.getCaseData().setExistingJudgeCode("WrongJudgeCode");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertNotEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
@@ -225,13 +196,6 @@ public class ReferenceDataFixesServiceTest {
         when(ccdClient.retrieveCaseEventDetails(anyString(),
                 anyString(), anyString(), anyString()))
                 .thenReturn(Arrays.asList(caseEventDetail2, caseEventDetail));
-        CCDRequest ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
-        ccdRequest.setCaseDetails(caseDetails);
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(),
-                anyString()))
-                .thenReturn(ccdRequest);
         referenceDataFixesService.insertClaimServedDate(
                 adminDetails, "authToken", dataSource, new ArrayList<>());
         assertEquals("2022-09-20",
