@@ -1120,7 +1120,7 @@ public class ListingHelperTest {
                 + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat=Telephone, hearingReadingDeliberationMembersChambers= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData,
                 hearingType, dateListedType, 1, 3).toString());
-
+        dateListedType.setHearingRoomStranraer(null);
         dateListedType.setHearingRoomCambeltown("Tribunal 5");
         dateListedType.setHearingDundee(null);
         dateListedType.setHearingVenueDay(GLASGOW_OFFICE);
@@ -1133,7 +1133,7 @@ public class ListingHelperTest {
                 + "hearingPanel= , hearingRoom=Tribunal 5, respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat=Telephone, hearingReadingDeliberationMembersChambers= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData,
                 hearingType, dateListedType, 1, 3).toString());
-
+        dateListedType.setHearingRoomCambeltown(null);
         dateListedType.setHearingRoomCambeltown("Tribunal 7");
         dateListedType.setHearingGlasgow(null);
         dateListedType.setHearingVenueDay(EDINBURGH_OFFICE);
