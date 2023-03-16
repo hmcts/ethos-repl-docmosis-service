@@ -5,9 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
@@ -27,8 +30,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
@@ -49,7 +50,7 @@ public class ReferenceDataFixesServiceTest {
     private List<SubmitEvent> submitEvents;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
 
         dataSource = mock(RefDataFixesCcdDataSource.class);
         adminDetails = new AdminDetails();
@@ -80,6 +81,12 @@ public class ReferenceDataFixesServiceTest {
         submitEvents = new ArrayList<>(List.of(submitEvent1));
         when(dataSource.getDataForJudges(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
         when(dataSource.getDataForInsertClaimDate(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        ccdRequest.setCaseDetails(caseDetails);
+        doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
+                anyString());
 
     }
 
@@ -94,6 +101,7 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void judgeCodeCaseTypeIdTest() {
         adminDetails.getCaseData().setTribunalOffice("Manchester");
+
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
@@ -101,52 +109,52 @@ public class ReferenceDataFixesServiceTest {
     }
 
     @Test
-    public void judgeCodeMidlandsWestTest() {
+    public void judgeCodeMidlandsWestTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("Midlands West");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
-    public void judgeCodeMidlandsEastTest() {
+    public void judgeCodeMidlandsEastTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("Midlands East");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
-    public void judgeCodeLondonEastTest() {
+    public void judgeCodeLondonEastTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("London East");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
-    public void judgeCodeLondonSouthTest() {
+    public void judgeCodeLondonSouthTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("London South");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
-    public void judgeCodeLondonCentralTest() {
+    public void judgeCodeLondonCentralTest() throws IOException {
         adminDetails.getCaseData().setTribunalOffice("London Central");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
     }
 
     @Test
-    public void judgeCodeDateTest() {
+    public void judgeCodeDateTest() throws IOException {
         adminDetails.getCaseData().setDate("2022-07-01");
         adminDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
         referenceDataFixesService.updateJudgesItcoReferences(
@@ -158,7 +166,7 @@ public class ReferenceDataFixesServiceTest {
     @Test
     public void wrongJudgeCodeTest() {
         adminDetails.getCaseData().setExistingJudgeCode("WrongJudgeCode");
-        AdminData caseDataResult = referenceDataFixesService.updateJudgesItcoReferences(
+        referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertNotEquals(REQUIRED_CODE_1,
                 submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());

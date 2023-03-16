@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -214,7 +215,10 @@ public class MultiplesHelper {
             submitEvents.get(0).getCaseData().setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
             CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
                     multipleDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
-            ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+
+            CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
+
+            ccdClient.submitEventForCase(userToken, returnedRequestCaseData, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
                     multipleDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
         }
     }

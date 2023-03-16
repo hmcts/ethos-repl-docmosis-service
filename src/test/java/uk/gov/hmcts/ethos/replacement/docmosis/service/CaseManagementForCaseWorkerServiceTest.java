@@ -676,17 +676,19 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void linkOriginalCaseECC() {
+    public void linkOriginalCaseECC() throws IOException {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(),anyString())).thenReturn(ccdRequest10);
         assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK).getCaseRefECC());
     }
 
     @Test
-    public void linkOriginalCaseECCCounterClaims() {
+    public void linkOriginalCaseECCCounterClaims() throws IOException {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(),anyString())).thenReturn(ccdRequest10);
         assertEquals("72632632", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getValue().getCounterClaim());
         EccCounterClaimTypeItem c1 = new EccCounterClaimTypeItem();
