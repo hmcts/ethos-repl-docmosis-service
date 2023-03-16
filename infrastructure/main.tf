@@ -33,40 +33,40 @@ data "azurerm_subnet" "postgres" {
   virtual_network_name = "core-infra-vnet-${var.env}"
 }
 
-module "repl-docmosis-backend" {
-  source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
-  product                         = "${var.product}-${local.app}"
-  location                        = var.location
-  env                             = var.env
-  ilbIp                           = var.ilbIp
-  subscription                    = var.subscription
-  capacity                        = var.capacity
-  common_tags                     = var.common_tags
-  is_frontend                     = false
-  enable_ase                      = var.enable_ase
-
-  app_settings                         = {
-    WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = var.autoheal
-    TORNADO_URL                        = var.tornado_url
-    TORNADO_ACCESS_KEY                 = data.azurerm_key_vault_secret.tornado_access_key.value
-    ETHOS_REPL_SERVICE_S2S_SECRET      = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
-    IDAM_API_URL                       = var.idam_api_url
-    IDAM_API_JWK_URL                   = "${var.idam_api_url}/jwks"
-    CCD_DATA_STORE_API_URL             = var.ccd_data_store_api_url
-    DOCUMENT_MANAGEMENT_URL            = var.dm_url
-    DOCUMENT_MANAGEMENT_CASEWORKERROLE = "caseworker-ethos"
-    SERVICE_AUTH_PROVIDER_URL          = var.s2s_url
-    MICRO_SERVICE                      = var.micro_service
-    CCD_GATEWAY_BASE_URL               = var.ccd_gateway_url
-    ETHOS_REPL_DB_HOST                 = module.db.host_name
-    ETHOS_REPL_DB_PORT                 = "5432"
-    ETHOS_REPL_DB_PASSWORD             = module.db.postgresql_password
-    ETHOS_REPL_DB_USER_NAME            = module.db.user_name
-    ETHOS_REPL_DB_NAME                 = module.db.postgresql_database
-    ETHOS_REPL_DB_CONN_OPTIONS         = local.db_connection_options
-    CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING = data.azurerm_key_vault_secret.create_updates_queue_send_conn_str.value
-  }
-}
+#module "repl-docmosis-backend" {
+#  source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
+#  product                         = "${var.product}-${local.app}"
+#  location                        = var.location
+#  env                             = var.env
+#  ilbIp                           = var.ilbIp
+#  subscription                    = var.subscription
+#  capacity                        = var.capacity
+#  common_tags                     = var.common_tags
+#  is_frontend                     = false
+#  enable_ase                      = var.enable_ase
+#
+#  app_settings                         = {
+#    WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = var.autoheal
+#    TORNADO_URL                        = var.tornado_url
+#    TORNADO_ACCESS_KEY                 = data.azurerm_key_vault_secret.tornado_access_key.value
+#    ETHOS_REPL_SERVICE_S2S_SECRET      = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
+#    IDAM_API_URL                       = var.idam_api_url
+#    IDAM_API_JWK_URL                   = "${var.idam_api_url}/jwks"
+#    CCD_DATA_STORE_API_URL             = var.ccd_data_store_api_url
+#    DOCUMENT_MANAGEMENT_URL            = var.dm_url
+#    DOCUMENT_MANAGEMENT_CASEWORKERROLE = "caseworker-ethos"
+#    SERVICE_AUTH_PROVIDER_URL          = var.s2s_url
+#    MICRO_SERVICE                      = var.micro_service
+#    CCD_GATEWAY_BASE_URL               = var.ccd_gateway_url
+#    ETHOS_REPL_DB_HOST                 = module.db.host_name
+#    ETHOS_REPL_DB_PORT                 = "5432"
+#    ETHOS_REPL_DB_PASSWORD             = module.db.postgresql_password
+#    ETHOS_REPL_DB_USER_NAME            = module.db.user_name
+#    ETHOS_REPL_DB_NAME                 = module.db.postgresql_database
+#    ETHOS_REPL_DB_CONN_OPTIONS         = local.db_connection_options
+#    CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING = data.azurerm_key_vault_secret.create_updates_queue_send_conn_str.value
+#  }
+#}
 
 resource "azurerm_key_vault_secret" "AZURE_APPINSGHTS_KEY" {
   name         = "AppInsightsInstrumentationKey"
