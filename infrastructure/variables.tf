@@ -1,9 +1,10 @@
 variable "product" {
   default = ethos
+  type = string
 }
 
 variable "location" {
-  default = 'UK South'
+  default = "UK South"
 }
 
 variable "env" {
@@ -39,6 +40,7 @@ variable "common_tags" {
 variable "autoheal" {
   description = "Enabling Proactive Auto Heal for Webapps"
   default     = "True"
+  type        = string
 }
 
 variable "idam_api_url" {
@@ -74,8 +76,8 @@ variable "location_api" {
 }
 
 variable "appinsights_location" {
-  default     = 'West Europe'
-  description = 'Location for Application Insights'
+  default     = "West Europe"
+  description = "Location for Application Insights"
 }
 
 variable "enable_ase" {
