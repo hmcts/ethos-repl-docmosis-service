@@ -3,7 +3,7 @@ variable "product" {
 }
 
 variable "location" {
-  default = UKSouth
+  default = 'UK South'
 }
 
 variable "env" {
