@@ -1,6 +1,5 @@
 variable "product" {
-  default = ethos
-  type = string
+  default = "ethos"
 }
 
 variable "location" {
@@ -44,7 +43,6 @@ variable "common_tags" {
 variable "autoheal" {
   description = "Enabling Proactive Auto Heal for Webapps"
   default     = "True"
-  type        = string
 }
 
 variable "idam_api_url" {
