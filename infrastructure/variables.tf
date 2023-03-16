@@ -1,9 +1,9 @@
 variable "product" {
-  default = ethos
+  default = "ethos"
 }
 
 variable "location" {
-  default = 'UK South'
+  default = "UK South"
 }
 
 variable "env" {
