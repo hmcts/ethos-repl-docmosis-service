@@ -16,10 +16,6 @@ variable "tornado_url" {
 variable "subscription" {
 }
 
-variable "ilbIp"{
-  default = ""
-}
-
 variable "tenant_id" {
   default = ""
 }
@@ -30,10 +26,6 @@ variable "jenkins_AAD_objectId" {
 
 variable "capacity" {
   default = "1"
-}
-
-variable "deployment_namespace" {
-  default = ""
 }
 
 variable "common_tags" {
