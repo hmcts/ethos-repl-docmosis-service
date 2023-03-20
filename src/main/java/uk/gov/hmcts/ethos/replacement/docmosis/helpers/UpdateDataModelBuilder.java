@@ -39,7 +39,7 @@ public class UpdateDataModelBuilder {
                 .receiptDate(multipleData.getReceiptDate())
                 .hearingStage(multipleData.getHearingStage())
                 .subMultiple(getSubMultipleName(caseData))
-                .conciliationTrack(multipleData.getConciliationTrack());
+                .conciliationTrack(multipleData.getConciliationTrack())
                 .isRespondentRepRemovalUpdate(multipleData.getBatchRemoveRespondentRep())
                 .isClaimantRepRemovalUpdate(multipleData.getBatchRemoveClaimantRep())
                 .representativeClaimantType(getRepresentativeClaimantType(multipleData, caseData))
