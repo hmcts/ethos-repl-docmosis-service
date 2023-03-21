@@ -245,5 +245,12 @@
         <packageUrl regex="true">^pkg:npm/%40sideway%2Fformula@.*$</packageUrl>
         <cve>1091026</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: request:2.88.2
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+        <vulnerabilityName>1091410</vulnerabilityName>
+    </suppress>
 </suppressions>
 
