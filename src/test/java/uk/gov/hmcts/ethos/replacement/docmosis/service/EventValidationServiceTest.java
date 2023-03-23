@@ -56,6 +56,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator.CLOSING_CASE_WITH_BF_OPEN_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService.RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE;
 
 @ExtendWith(SpringExtension.class)
 class EventValidationServiceTest {
@@ -138,6 +139,21 @@ class EventValidationServiceTest {
         assertEquals(caseData.getTargetHearingDate(), PAST_TARGET_HEARING_DATE.toString());
     }
 
+    @ParameterizedTest
+    @CsvSource({"2023-01-01", "2019-01-01"})
+    void shouldValidateRejectedDate(String rejectedDate) {
+        caseData.setReceiptDate("2022-01-01");
+        CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+        casePreAcceptType.setDateRejected(rejectedDate);
+        caseData.setPreAcceptCase(casePreAcceptType);
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+        if (rejectedDate.equals("2023-01-01")) {
+            assertEquals(0, errors.size());
+        }
+        if (rejectedDate.equals("2019-01-01")) {
+            assertEquals(RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE, errors.get(0));
+        }
+    }
     @Test
     void shouldValidateCurrentReceiptDate() {
         caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
