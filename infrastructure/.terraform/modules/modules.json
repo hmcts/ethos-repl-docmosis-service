@@ -1,0 +1,14 @@
+{
+  "Modules": [
+    {
+      "Key": "",
+      "Source": "",
+      "Dir": "."
+    },
+    {
+      "Key": "repl-docmosis-backend",
+      "Source": "git::ssh://git@github.com/hmcts/cnp-module-webapp?ref=master",
+      "Dir": ".terraform/modules/repl-docmosis-backend"
+    }
+  ]
+}
