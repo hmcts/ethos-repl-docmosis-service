@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -69,14 +70,30 @@ public class EventValidationService {
 
     private static final List<String> INVALID_STATES_FOR_CLOSED_CURRENT_POSITION = List.of(
             SUBMITTED_STATE, ACCEPTED_STATE, REJECTED_STATE);
+    public static final String RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE =
+            "Receipt date should not be later than rejected date";
+
+    private boolean isReceiptDateEarlier(String date, String error, List<String> errors, LocalDate dateOfReceipt) {
+        if (Strings.isNullOrEmpty(date)) {
+            return false;
+        }
+        if (dateOfReceipt.isAfter(LocalDate.parse(date))) {
+            errors.add(error);
+            return true;
+        }
+        return false;
+    }
 
     public List<String> validateReceiptDate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        var dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());
-        if (caseData.getPreAcceptCase() != null && !isNullOrEmpty(caseData.getPreAcceptCase().getDateAccepted())) {
-            var dateAccepted = LocalDate.parse(caseData.getPreAcceptCase().getDateAccepted());
-            if (dateOfReceipt.isAfter(dateAccepted)) {
-                errors.add(RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE);
+        LocalDate dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());
+        if (caseData.getPreAcceptCase() != null) {
+            if (isReceiptDateEarlier(caseData.getPreAcceptCase().getDateAccepted(),
+                    RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE, errors, dateOfReceipt)) {
+                return errors;
+            }
+            if (isReceiptDateEarlier(caseData.getPreAcceptCase().getDateRejected(),
+                    RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE, errors, dateOfReceipt)) {
                 return errors;
             }
         }
