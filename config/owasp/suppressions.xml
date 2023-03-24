@@ -252,5 +252,12 @@
         <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
         <vulnerabilityName>1091410</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: request:2.88.2
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+        <vulnerabilityName>1091459</vulnerabilityName>
+    </suppress>
 </suppressions>
 
