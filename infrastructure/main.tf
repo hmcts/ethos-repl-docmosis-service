@@ -38,7 +38,6 @@ module "repl-docmosis-backend" {
   product                         = "${var.product}-${local.app}"
   location                        = var.location
   env                             = var.env
-  ilbIp                           = var.ilbIp
   subscription                    = var.subscription
   capacity                        = var.capacity
   common_tags                     = var.common_tags
