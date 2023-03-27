@@ -16,7 +16,7 @@ variable "tornado_url" {
 variable "subscription" {
 }
 
-variable "ilbIp"{}
+variable "ilbIp" {}
 
 variable "tenant_id" {}
 
