@@ -10,7 +10,7 @@ def component = "repl-docmosis-backend"
 def branchesToSync = ['demo', 'perftest', 'ithc']
 
 def secrets = [
-        'ethos-${env}': [
+        'ethos-shared-${env}': [
                 secret('ccd-user-email', 'CCD_CASEWORKER_E2E_EMAIL'),
                 secret('ccd-user-password', 'CCD_CASEWORKER_E2E_PASSWORD'),
                 secret('ethos-repl-service-s2s-secret', 'SERVICE_SECRET'),
