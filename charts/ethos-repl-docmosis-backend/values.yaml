@@ -3,10 +3,12 @@ java:
   applicationPort: 8081
   ingressHost: ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
-    ethos:
-      resourceGroup: ethos-repl-docmosis-backend
+    ethos-shared:
+      resourceGroup: ethos
       secrets:
-        - name: AppInsightsInstrumentationKey
+        - name: create-updates-queue-send-connection-string
+          alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
+        - name: EcmAppInsightsInstrumentationKey
           alias: APP_INSIGHTS_KEY
         - name: tornado-access-key
           alias: TORNADO_ACCESS_KEY
@@ -14,11 +16,6 @@ java:
           alias: ETHOS_REPL_SERVICE_S2S_SECRET
         - name: repl-docmosis-backend-POSTGRES-PASS
           alias: ETHOS_REPL_DB_PASSWORD
-    ethos-shared:
-      resourceGroup: ethos
-      secrets:
-        - name: create-updates-queue-send-connection-string
-          alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
   aadIdentityName: ethos
   environment:
     SERVER_PORT: 8081
