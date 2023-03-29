@@ -307,7 +307,18 @@ dependencies {
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
     implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.16', ext: 'pom'
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.7.5'
-
+    // CVE-2023-20861
+    implementation 'org.springframework:spring-aop:5.3.26'
+    implementation 'org.springframework:spring-aspects:5.3.26'
+    implementation 'org.springframework:spring-beans:5.3.26'
+    implementation 'org.springframework:spring-context:5.3.26'
+    implementation 'org.springframework:spring-core:5.3.26'
+    implementation 'org.springframework:spring-expression:5.3.26'
+    implementation 'org.springframework:spring-jcl:5.3.26'
+    implementation 'org.springframework:spring-jdbc:5.3.26'
+    implementation 'org.springframework:spring-orm:5.3.26'
+    implementation 'org.springframework:spring-tx:5.3.26'
+    implementation 'org.springframework:spring-webmvc:5.3.26'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
