@@ -85,3 +85,7 @@ variable "managed_identity_rg_name" {
 
 variable "managed_identity_name" {
 }
+
+variable "ilbIp" {
+  default = ""
+}
