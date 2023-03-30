@@ -1116,7 +1116,7 @@ public class ListingHelperTest {
                 + "hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , "
                 + "respondent=Juan Pedro, respondentTown= , " +
-                "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, "
+                "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, "
                 + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat=Telephone, hearingReadingDeliberationMembersChambers= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData,
                 hearingType, dateListedType, 1, 3).toString());
