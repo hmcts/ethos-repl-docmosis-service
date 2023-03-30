@@ -34,7 +34,7 @@ data "azurerm_subnet" "postgres" {
 }
 
 module "repl-docmosis-backend" {
-  source       = "git@github.com:hmcts/cnp-module-webapp?ref=master"
+  source       = "git@github.com:hmcts/cnp-module-webapp?ref=Ethos-update"
   product      = "${var.product}-${local.app}"
   location     = var.location
   env          = var.env
