@@ -287,6 +287,7 @@ dependencies {
     implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.16', ext: 'pom'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.7'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
+    implementation 'net.minidev:accessors-smart:2.4.9'
 
     implementation('org.elasticsearch:elasticsearch') {
         version {
