@@ -84,15 +84,18 @@ public class EventValidationService {
         return false;
     }
 
-    public List<String> validateReceiptDate(CaseData caseData) {
+    public List<String> validateReceiptDate(CaseDetails caseDetails) {
         List<String> errors = new ArrayList<>();
+        CaseData caseData = caseDetails.getCaseData();
         LocalDate dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());
         if (caseData.getPreAcceptCase() != null) {
-            if (isReceiptDateEarlier(caseData.getPreAcceptCase().getDateAccepted(),
+            if (ACCEPTED_STATE.equals(caseDetails.getState())
+                    && isReceiptDateEarlier(caseData.getPreAcceptCase().getDateAccepted(),
                     RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE, errors, dateOfReceipt)) {
                 return errors;
             }
-            if (isReceiptDateEarlier(caseData.getPreAcceptCase().getDateRejected(),
+            if (REJECTED_STATE.equals(caseDetails.getState())
+                    && isReceiptDateEarlier(caseData.getPreAcceptCase().getDateRejected(),
                     RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE, errors, dateOfReceipt)) {
                 return errors;
             }
