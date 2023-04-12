@@ -246,6 +246,10 @@
         <cve>1091026</cve>
     </suppress>
     <suppress>
+        <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+        <cve>1091410</cve>
+    </suppress>
+    <suppress>
         <notes><![CDATA[
    file name: request:2.88.2
    ]]></notes>
@@ -258,7 +262,7 @@
    ]]></notes>
    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
    <cve>CVE-2023-28708</cve>
-</suppress>
+    </suppress>
     <suppress>
         <notes><![CDATA[
     file name: accessors-smart-2.4.9.jar
