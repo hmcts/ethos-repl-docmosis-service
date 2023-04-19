@@ -6,8 +6,8 @@ java:
     ethos:
       resourceGroup: ethos-repl-docmosis-backend
       secrets:
-        - name: AppInsightsInstrumentationKey
-          alias: APP_INSIGHTS_KEY
+        - name: app-insights-connection-string
+          alias: app-insights-connection-string
         - name: tornado-access-key
           alias: TORNADO_ACCESS_KEY
         - name: ethos-repl-service-s2s-secret
