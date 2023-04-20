@@ -4,7 +4,7 @@ java:
   ingressHost: ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
     ethos:
-      resourceGroup: ethos-shared
+      resourceGroup: ethos-shared:
       secrets:
         - name: create-updates-queue-send-connection-string
           alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
