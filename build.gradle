@@ -15,9 +15,10 @@ plugins {
 group = 'uk.gov.hmcts.ethos.replacement'
 version = '0.0.1'
 
-allprojects {
-    sourceCompatibility = '11.0'
-    targetCompatibility = '11.0'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 jacocoTestReport {
@@ -218,9 +219,8 @@ repositories {
 ext {
     junitJupiterVersion = '5.9.1'
     log4JVersion = '2.19.0'
-    reformLoggingVersion = '5.1.9'
     serenity = '3.3.4'
-    tomcatEmbedVersion = '9.0.70'
+    tomcatEmbedVersion = '9.0.73'
 }
 
 ext["rest-assured.version"] = '5.1.0'
@@ -271,8 +271,7 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.41'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
-    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
-    implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLoggingVersion
+    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '5.1.9'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.25.6'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
@@ -328,8 +327,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Contract Tests
-    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.3.15'
-    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'java8', version: '4.1.39'
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.5.5'
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'java8', version: '4.1.41'
     contractTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion

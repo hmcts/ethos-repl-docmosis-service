@@ -18,6 +18,9 @@
 *.ipr
 /out/
 
+applicationinsights-agent-*.jar
+ *.log
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
