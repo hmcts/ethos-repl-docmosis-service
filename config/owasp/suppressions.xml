@@ -256,5 +256,9 @@
 <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
 <cve>1091725</cve>
 </suppress>
+<suppress>
+<packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+<cve>GHSA-p8p7-x288-28g6</cve>
+</suppress>
 </suppressions>
 
