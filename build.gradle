@@ -4,7 +4,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-    id 'org.springframework.boot' version '2.7.10'
+    id 'org.springframework.boot' version '2.7.11'
     id 'org.owasp.dependencycheck' version '8.0.1'
     id 'com.github.ben-manes.versions' version '0.43.0'
     id 'org.sonarqube' version '3.4.0.2513'
@@ -267,19 +267,6 @@ dependencyManagement {
 dependencies {
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '1.0.0'
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.0.0'
-
-    implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-expression', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-jcl', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.27'
-
-    implementation group: 'org.springframework', name: 'spring-aspects', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.27'
-    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.27'
 
     implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.41'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
