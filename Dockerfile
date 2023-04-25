@@ -1,8 +1,8 @@
-ARG APP_INSIGHTS_AGENT_VERSION=2.5.1
-FROM hmctspublic.azurecr.io/base/java:11-distroless as base
+ARG APP_INSIGHTS_AGENT_VERSION=3.4.11
+FROM hmctspublic.azurecr.io/base/java:17-distroless as base
 LABEL maintainer="https://github.com/hmcts/ethos-repl-docmosis-service"
 
-COPY lib/AI-Agent.xml /opt/app/
+COPY lib/applicationinsights.json /opt/app/
 COPY build/libs/ethos-repl-docmosis-service.jar /opt/app/
 
 FROM debian:11 AS builder
