@@ -57,7 +57,7 @@ public class BfActionReport {
         bfActionReportData.setReportPeriodDescription(ReportHelper.getReportListingDate(bfActionReportData,
                 genericReportParams.getDateFrom(),
                 genericReportParams.getDateTo(),
-                listingDetails.getCaseData().getHearingDateType()));
+                listingDetails));
     }
 
     private String getReportedOnDetail(String userName) {

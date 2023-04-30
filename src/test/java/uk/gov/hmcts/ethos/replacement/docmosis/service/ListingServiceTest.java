@@ -1082,7 +1082,7 @@ public class ListingServiceTest {
         doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
                 anyString(), anyString(), anyString(), anyString());
         doReturn(bfActionReportData).when(mockedBfActionReport).runReport(ArgumentMatchers.any(ListingDetails.class),
-                Mockito.anyList());
+                Mockito.anyList(), "userName");
 
         var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
                 "authToken");

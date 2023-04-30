@@ -1,5 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.io.IOException;
+import java.util.List;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@SuppressWarnings({"PMD.LooseCoupling", "PMD.LawOfDemeter", "PMD.TooManyMethods"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ExcelCreationServiceTest {
 
@@ -58,5 +71,90 @@ public class ExcelCreationServiceTest {
                 new ArrayList<>(),
                 new ArrayList<>(),
                 leadLink));
+    }
+
+    @Test
+    public void reportTitleCellStyleTest() throws IOException {
+        try (XSSFWorkbook workbook = createWorkbook()) {
+            CellStyle actualCellStyle = excelCreationService.getReportTitleCellStyle(workbook);
+            assertEquals(IndexedColors.BLUE_GREY.getIndex(), actualCellStyle.getFillBackgroundColor());
+            assertEquals(HorizontalAlignment.CENTER, actualCellStyle.getAlignment());
+            assertEquals(FillPatternType.SOLID_FOREGROUND, actualCellStyle.getFillPattern());
+            assertEquals(VerticalAlignment.CENTER, actualCellStyle.getVerticalAlignment());
+            assertEquals(IndexedColors.LIGHT_GREEN.getIndex(), actualCellStyle.getFillForegroundColor());
+        }
+    }
+
+    @Test
+    public void headerCellStyleTest() throws IOException {
+        try (XSSFWorkbook workbook = createWorkbook()) {
+            CellStyle actualCellStyle = excelCreationService.getHeaderCellStyle(workbook);
+            assertEquals(BorderStyle.THIN, actualCellStyle.getBorderBottom());
+            assertEquals(IndexedColors.GREY_25_PERCENT.getIndex(), actualCellStyle.getBottomBorderColor());
+            assertEquals(FillPatternType.SOLID_FOREGROUND, actualCellStyle.getFillPattern());
+        }
+    }
+
+    private XSSFWorkbook createWorkbook() {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        workbook.createSheet("Sheet1");
+        return workbook;
+    }
+
+    @Test
+    public void reportSubTitleCellStyleTest() throws IOException {
+        try (XSSFWorkbook workbook = createWorkbook()) {
+            CellStyle actualCellStyle = excelCreationService.getReportSubTitleCellStyle(workbook);
+            assertEquals(IndexedColors.LIGHT_GREEN.getIndex(), actualCellStyle.getFillForegroundColor());
+            assertEquals(FillPatternType.SOLID_FOREGROUND, actualCellStyle.getFillPattern());
+            assertEquals(HorizontalAlignment.CENTER, actualCellStyle.getAlignment());
+            assertEquals(VerticalAlignment.CENTER, actualCellStyle.getVerticalAlignment());
+        }
+    }
+
+    @Test
+    public void addReportAdminDetailsTest() throws IOException {
+        try (XSSFWorkbook workbook = createWorkbook()) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            excelCreationService.addReportAdminDetails(workbook,
+                    workbook.getSheetAt(0),
+                    1,
+                    "description", 6);
+            assertEquals("description", sheet.getRow(1).getCell(0).getStringCellValue());
+        }
+
+    }
+
+    @Test
+    public void cellStyleTest() throws IOException {
+        try (XSSFWorkbook workbook = createWorkbook()) {
+            CellStyle actualCellStyle = excelCreationService.getCellStyle(workbook);
+            assertEquals(VerticalAlignment.CENTER, actualCellStyle.getVerticalAlignment());
+            assertEquals(IndexedColors.WHITE1.getIndex(), actualCellStyle.getFillForegroundColor());
+            assertEquals(FillPatternType.SOLID_FOREGROUND, actualCellStyle.getFillPattern());
+            assertEquals(HorizontalAlignment.CENTER, actualCellStyle.getAlignment());
+            assertEquals(BorderStyle.THIN, actualCellStyle.getBorderBottom());
+            assertEquals(BorderStyle.NONE, actualCellStyle.getBorderTop());
+            assertEquals(BorderStyle.NONE, actualCellStyle.getBorderLeft());
+            assertEquals(BorderStyle.NONE, actualCellStyle.getBorderRight());
+            assertEquals(IndexedColors.GREY_25_PERCENT.getIndex(), actualCellStyle.getBottomBorderColor());
+        }
+    }
+
+    @Test
+    public void initializeReportHeadersTest() throws IOException {
+        try (XSSFWorkbook workbook = createWorkbook()) {
+            Sheet sheet = workbook.getSheetAt(0);
+            excelCreationService.initializeReportHeaders("document1",
+                    "description",
+                    workbook,
+                    workbook.getSheetAt(0),
+                    List.of("header1", "header2", "header3", "header4", "header5"));
+            assertEquals("description", sheet.getRow(1).getCell(0).getStringCellValue());
+            for (int j = 0; j < 5; j++) {
+                assertEquals("header" + (j + 1), sheet.getRow(2).getCell(j).getStringCellValue());
+            }
+        }
+
     }
 }

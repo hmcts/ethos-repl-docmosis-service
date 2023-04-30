@@ -105,7 +105,7 @@ public class BfActionReportTest {
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
 
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         var actualBfDateCount  = resultListingData.getBfDateCollection().size();
         var expectedBfDateCount = 3;
         assertEquals(expectedBfDateCount, actualBfDateCount);
@@ -142,7 +142,7 @@ public class BfActionReportTest {
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
 
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(2).getValue();
         assertEquals(bFActionType.getBfDate().split("T")[0], firstBFDateTypeItem.getBroughtForwardDate());
         assertEquals(bFActionType.getCwActions(), firstBFDateTypeItem.getBroughtForwardAction());
@@ -165,7 +165,7 @@ public class BfActionReportTest {
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
 
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         var expectedBfDateCount = 2;
         assertEquals(expectedBfDateCount, resultListingData.getBfDateCollection().size());
     }
@@ -190,7 +190,7 @@ public class BfActionReportTest {
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
 
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         var expectedBfDateCount = 2;
         assertEquals(expectedBfDateCount, resultListingData.getBfDateCollection().size());
     }
@@ -217,7 +217,7 @@ public class BfActionReportTest {
         submitEvents.add(submitEvent);
 
         var bfActionReport = new BfActionReport();
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         // bFActionType3 is added last. But it has the earliest bfDate. As the returned listingData from
         // bfActionReport.runReport method call should be ordered by bfDate, bFActionType3
         // should be the first element
@@ -254,7 +254,7 @@ public class BfActionReportTest {
         submitEvents.add(submitEvent);
 
         var bfActionReport = new BfActionReport();
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         //Because the Bf entries are sorted by bf date, bfActionTypeItemFour is the first entry in the
         //result listing data
         var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(0).getValue();

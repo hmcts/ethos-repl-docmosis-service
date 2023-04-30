@@ -25,8 +25,8 @@ public final class ClaimsByHearingVenueReport {
     }
 
     public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportParams reportParams) {
-        String reportOffice = ReportHelper.getReportOffice(reportParams.getCaseTypeId(),
-                reportParams.getCaseTypeId());
+        String caseTypeId = reportParams.getCaseTypeId();
+        var reportOffice = UtilHelper.getListingCaseTypeId(caseTypeId);
         ClaimsByHearingVenueReportData claimsByHearingVenueReportData = initReport(reportOffice);
         claimsByHearingVenueReportData.setReportPrintedOnDescription(
                 getReportedOnDetail(reportParams.getUserFullName()));

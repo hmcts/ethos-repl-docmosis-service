@@ -52,7 +52,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysCc
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ClaimsByHearingVenueExcelReportDocumentInfoService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelReportDocumentInfoService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 import java.io.IOException;
@@ -311,7 +310,7 @@ public class ListingService {
                 case CLAIMS_BY_HEARING_VENUE_REPORT:
                     return getClaimsByHearingVenueReport(listingDetails, authToken);
                 default:
-                    return getDateRangeReport(listingDetails, authToken);
+                    return getDateRangeReport(listingDetails, authToken, getUserFullName(authToken));
             }
         } catch (Exception ex) {
             throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId(), ex);
