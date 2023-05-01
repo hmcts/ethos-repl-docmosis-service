@@ -21,7 +21,7 @@ async function createECMCase(dataLocation = 'ccd-case-basic-data.json', jurisdic
     const userId = await idamApi.getUserId(authToken);
     const serviceToken = await s2sService.getServiceToken();
 
-    const ccdApiUrl = `http://ccd-data-store-api-${env}.service.core-compute-${env}.internal`;
+    const ccdApiUrl = `http://ccd-data-store-api-${env}.platform.hmcts.net`;
     const ccdStartCasePath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/${jurisdiction}/event-triggers/initiateCase/token`;
     const ccdSaveCasePath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/${jurisdiction}/cases`;
 
