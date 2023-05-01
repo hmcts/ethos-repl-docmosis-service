@@ -942,7 +942,7 @@ public class ListingServiceTest {
 
     @Test
     public void processHearingDocument() throws IOException {
-        listingDetails.getCaseData().setReportType(CLAIMS_BY_HEARING_VENUE_REPORT);
+        listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
         when(tornadoService.listingGeneration(anyString(), ArgumentMatchers.any(), anyString())).thenReturn(documentInfo);
         DocumentInfo documentInfo1 = listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
         assertEquals(documentInfo, documentInfo1);
