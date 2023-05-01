@@ -79,7 +79,7 @@ class ClaimsByHearingVenueReportTest {
         var expectedReportTitle = getReportTitle(RANGE_HEARING_DATE_TYPE);
         var expectedNumberOfSubmitEventEntries = submitEvents.size();
         var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams,"Manchester");
+                .generateReport(reportParams,"Leeds");
         var actualReportTitle = reportData.getReportPeriodDescription();
 
         assertEquals(expectedReportTitle, actualReportTitle);
@@ -115,7 +115,7 @@ class ClaimsByHearingVenueReportTest {
         var singleHearingDateTypeReportParams = new ClaimsByHearingVenueReportParams(LEEDS_LISTING_CASE_TYPE_ID,
                 SINGLE_START_DATE, SINGLE_END_DATE, SINGLE_HEARING_DATE_TYPE, TEST_USERNAME);
         var reportData = claimsByHearingVenueReport
-                .generateReport(singleHearingDateTypeReportParams, "Manchester");
+                .generateReport(singleHearingDateTypeReportParams, "Leeds");
         var actualReportTitle = reportData.getReportPeriodDescription();
 
         assertEquals(expectedReportTitle, actualReportTitle);
