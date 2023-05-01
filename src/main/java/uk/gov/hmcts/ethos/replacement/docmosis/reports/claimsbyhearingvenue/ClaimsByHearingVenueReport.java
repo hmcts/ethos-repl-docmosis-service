@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
@@ -24,7 +25,8 @@ public final class ClaimsByHearingVenueReport {
         this.dataSource = dataSource;
     }
 
-    public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportParams reportParams) {
+    public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportParams reportParams,
+                                                         ListingDetails listingDetails) {
         String caseTypeId = reportParams.getCaseTypeId();
         var reportOffice = UtilHelper.getListingCaseTypeId(caseTypeId);
         ClaimsByHearingVenueReportData claimsByHearingVenueReportData = initReport(reportOffice);
@@ -36,7 +38,7 @@ public final class ClaimsByHearingVenueReport {
                 reportParams.getDateFrom(), reportParams.getDateTo());
         claimsByHearingVenueReportData.setReportPeriodDescription(ReportHelper.getReportListingDate(
                 claimsByHearingVenueReportData, reportParams.getDateFrom(),
-                reportParams.getDateTo(), reportParams.getHearingDateType()));
+                reportParams.getDateTo(), listingDetails));
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             setReportData(submitEvents, claimsByHearingVenueReportData);
         }
