@@ -327,7 +327,8 @@ public class ListingService {
                 genericReportParams.getDateTo(), listingData.getHearingDateType(), getUserFullName(authToken));
         var reportDataSource = new ClaimsByHearingVenueCcdReportDataSource(authToken, ccdClient);
         var claimsByHearingVenueReport = new ClaimsByHearingVenueReport(reportDataSource);
-        return claimsByHearingVenueReport.generateReport(claimsByHearingVenueReportParams, listingDetails);
+        return claimsByHearingVenueReport.generateReport(claimsByHearingVenueReportParams,
+                UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
     }
 
     private String getUserFullName(String userToken) {

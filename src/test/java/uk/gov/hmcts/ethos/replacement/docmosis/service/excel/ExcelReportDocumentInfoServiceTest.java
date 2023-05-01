@@ -68,7 +68,7 @@ public class ExcelReportDocumentInfoServiceTest {
                 .thenReturn(new byte[0]);
         when(excelDocManagementService
                 .uploadExcelReportDocument("dummyToken",
-                        "ECM_Listings_Hearings_By_Venue_Report.xlsx",
+                        "Manchester_Listings_Hearings_By_Venue_Report.xlsx",
                         new byte[0]))
                 .thenReturn(docInfo);
 
@@ -84,7 +84,7 @@ public class ExcelReportDocumentInfoServiceTest {
                 .thenReturn(new byte[0]);
         when(excelDocManagementService
                 .uploadExcelReportDocument("dummyToken",
-                        "ECM_Listings_Hearings_By_Venue_Report.xlsx",
+                        "Manchester_Listings_Hearings_By_Venue_Report.xlsx",
                         new byte[0]))
                 .thenReturn(docInfo);
 
@@ -96,7 +96,7 @@ public class ExcelReportDocumentInfoServiceTest {
         verifyNoMoreInteractions(claimsByHearingVenueExcelReportCreationService);
         verify(excelDocManagementService, times(1))
                 .uploadExcelReportDocument("dummyToken",
-                        "ECM_Listings_Hearings_By_Venue_Report.xlsx", new byte[0]);
+                        "Manchester_Listings_Hearings_By_Venue_Report.xlsx", new byte[0]);
         verifyNoMoreInteractions(excelDocManagementService);
     }
 
@@ -107,7 +107,7 @@ public class ExcelReportDocumentInfoServiceTest {
                 .thenReturn(new byte[0]);
         when(excelDocManagementService
                 .uploadExcelReportDocument("dummyToken",
-                        "ECM_Listings_Brought_Forward_Report.xlsx",
+                        "Manchester_Listings_Brought_Forward_Report.xlsx",
                         new byte[0]))
                 .thenReturn(docInfo);
 
@@ -118,7 +118,7 @@ public class ExcelReportDocumentInfoServiceTest {
         verifyNoMoreInteractions(bfExcelReportService);
         verify(excelDocManagementService, times(1))
                 .uploadExcelReportDocument("dummyToken",
-                        "ECM_Listings_Brought_Forward_Report.xlsx", new byte[0]);
+                        "Manchester_Listings_Brought_Forward_Report.xlsx", new byte[0]);
         verifyNoMoreInteractions(excelDocManagementService);
     }
 
@@ -129,7 +129,7 @@ public class ExcelReportDocumentInfoServiceTest {
                 .thenReturn(new byte[0]);
         when(excelDocManagementService
                 .uploadExcelReportDocument("dummyToken",
-                        "ECM_Listings_Brought_Forward_Report.xlsx",
+                        "Manchester_Listings_Brought_Forward_Report.xlsx",
                         new byte[0]))
                 .thenReturn(docInfo);
 

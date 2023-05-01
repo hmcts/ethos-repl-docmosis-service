@@ -10,7 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.et.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.List;
@@ -166,7 +166,7 @@ public class ExcelCreationService {
                         constructCaseExcelRow(workbook, sheet, rowIndex[0], (String) caseItem, leadCase, null,
                                 !subMultipleCollection.isEmpty());
                     } else {
-                        uk.gov.hmcts.et.common.model.multiples.MultipleObject multipleObject = (uk.gov.hmcts.et.common.model.multiples.MultipleObject) caseItem;
+                        MultipleObject multipleObject = (MultipleObject) caseItem;
                         constructCaseExcelRow(workbook, sheet, rowIndex[0], multipleObject.getEthosCaseRef(), leadCase,
                                 multipleObject, !subMultipleCollection.isEmpty());
                     }

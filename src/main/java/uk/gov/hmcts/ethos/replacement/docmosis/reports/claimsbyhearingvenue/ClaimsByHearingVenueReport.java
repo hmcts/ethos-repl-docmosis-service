@@ -26,7 +26,7 @@ public final class ClaimsByHearingVenueReport {
     }
 
     public ClaimsByHearingVenueReportData generateReport(ClaimsByHearingVenueReportParams reportParams,
-                                                         ListingDetails listingDetails) {
+                                                         String office) {
         String caseTypeId = reportParams.getCaseTypeId();
         var reportOffice = UtilHelper.getListingCaseTypeId(caseTypeId);
         ClaimsByHearingVenueReportData claimsByHearingVenueReportData = initReport(reportOffice);
@@ -38,8 +38,7 @@ public final class ClaimsByHearingVenueReport {
                 reportParams.getDateFrom(), reportParams.getDateTo());
         claimsByHearingVenueReportData.setReportPeriodDescription(ReportHelper.getReportListingDate(
                 claimsByHearingVenueReportData, reportParams.getDateFrom(),
-                reportParams.getDateTo(), listingDetails.getCaseData().getHearingDateType(),
-                UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId())));
+                reportParams.getDateTo(), reportParams.getHearingDateType(), office));
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             setReportData(submitEvents, claimsByHearingVenueReportData);
         }
