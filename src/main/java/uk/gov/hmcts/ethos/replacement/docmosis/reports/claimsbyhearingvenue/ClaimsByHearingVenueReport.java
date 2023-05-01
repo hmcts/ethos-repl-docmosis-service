@@ -38,7 +38,8 @@ public final class ClaimsByHearingVenueReport {
                 reportParams.getDateFrom(), reportParams.getDateTo());
         claimsByHearingVenueReportData.setReportPeriodDescription(ReportHelper.getReportListingDate(
                 claimsByHearingVenueReportData, reportParams.getDateFrom(),
-                reportParams.getDateTo(), listingDetails));
+                reportParams.getDateTo(), listingDetails.getCaseData().getHearingDateType(),
+                UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId())));
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             setReportData(submitEvents, claimsByHearingVenueReportData);
         }

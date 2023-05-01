@@ -321,8 +321,10 @@ public class ReportHelper {
     }
 
     public static String getReportListingDate(ListingData reportData,
-                                              String listingDateFrom, String listingDateTo, ListingDetails listingDetails) {
-        String hearingDateType = listingDetails.getCaseData().getHearingDateType();
+                                              String listingDateFrom,
+                                              String listingDateTo,
+                                              String hearingDateType,
+                                              String office) {
         if (Constants.SINGLE_HEARING_DATE_TYPE.equals(hearingDateType)) {
             reportData.setListingDate(ReportHelper.getFormattedLocalDate(listingDateFrom));
             reportData.setListingDateFrom(null);
@@ -330,7 +332,7 @@ public class ReportHelper {
             reportData.setHearingDateType(hearingDateType);
             String reportedOn = "On " + UtilHelper.listingFormatLocalDate(
                     ReportHelper.getFormattedLocalDate(listingDateFrom));
-            return getReportTitle(reportedOn, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
+            return getReportTitle(reportedOn, office);
         } else {
             reportData.setListingDate(null);
             reportData.setListingDateFrom(ReportHelper.getFormattedLocalDate(listingDateFrom));
@@ -338,7 +340,7 @@ public class ReportHelper {
             reportData.setHearingDateType(hearingDateType);
             String reportedBetween = "Between " + UtilHelper.listingFormatLocalDate(reportData.getListingDateFrom())
                     + " and " + UtilHelper.listingFormatLocalDate(reportData.getListingDateTo());
-            return getReportTitle(reportedBetween, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
+            return getReportTitle(reportedBetween, office);
         }
     }
 
