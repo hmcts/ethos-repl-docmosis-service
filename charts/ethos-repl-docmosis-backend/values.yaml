@@ -26,13 +26,13 @@ java:
     ROOT_LOGGING_LEVEL: INFO
     LOG_OUTPUT: single
     REPL_DOCMOSIS_BACKEND_URL: "http://ethos-repl-docmosis-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
-    TORNADO_URL: "https://docmosis.{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/rs/render"
-    IDAM_API_URL: "https://idam-api.{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
-    IDAM_API_JWK_URL: "https://idam-api.{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/jwks"
+    TORNADO_URL: "https://docmosis.{{ .Values.global.environment }}.platform.hmcts.net/rs/render"
+    IDAM_API_URL: "https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net"
+    IDAM_API_JWK_URL: "https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net/jwks"
     CCD_DATA_STORE_API_URL: "http://ccd-data-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     DOCUMENT_MANAGEMENT_URL: "http://dm-store-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     SERVICE_AUTH_PROVIDER_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
-    CCD_GATEWAY_BASE_URL: "https://manage-case.{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
+    CCD_GATEWAY_BASE_URL: "https://manage-case.{{ .Values.global.environment }}.platform.hmcts.net"
     MICRO_SERVICE: "ethos_repl_service"
     ETHOS_REPL_DB_CONN_OPTIONS: ?sslmode=require
     ETHOS_REPL_DB_HOST: ethos-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
