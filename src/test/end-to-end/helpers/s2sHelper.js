@@ -7,7 +7,7 @@ const env = testConfig.TestEnv;
 
 async function getServiceToken() {
     const serviceSecret = testConfig.TestS2SAuthSecret;
-    const s2sBaseUrl = `http://rpe-service-auth-provider-${env}.platform.hmcts.net`;
+    const s2sBaseUrl = `http://rpe-service-auth-provider-${env}.service.core-compute-${env}.internal`;
     const s2sAuthPath = '/testing-support/lease';
     const oneTimePassword = require('otp')({
         secret: serviceSecret
