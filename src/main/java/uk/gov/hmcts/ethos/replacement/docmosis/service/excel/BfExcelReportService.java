@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -12,10 +14,15 @@ import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
+import java.time.DateTimeException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+
 
 @SuppressWarnings({"PMD.LawOfDemeter", "PMD.CloseResource"})
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BfExcelReportService {
@@ -92,11 +99,25 @@ public class BfExcelReportService {
         CellStyle cellStyle = excelCreationService.getCellStyle(workbook);
         excelCreationService.createCell(row, columnIndex, bfDateType.getCaseReference(), cellStyle);
         excelCreationService.createCell(row, columnIndex + 1, bfDateType.getBroughtForwardAction(), cellStyle);
-        excelCreationService.createCell(row, columnIndex + 2, bfDateType.getBroughtForwardEnteredDate(), cellStyle);
-        excelCreationService.createCell(row, columnIndex + 3, bfDateType.getBroughtForwardDate(), cellStyle);
+        excelCreationService.createCell(row, columnIndex + 2, formatDate(bfDateType.getBroughtForwardEnteredDate()), cellStyle);
+        excelCreationService.createCell(row, columnIndex + 3, formatDate(bfDateType.getBroughtForwardDate()), cellStyle);
         if (cellStyle != null) {
             cellStyle.setWrapText(true);
         }
         excelCreationService.createCell(row, columnIndex + 4, bfDateType.getBroughtForwardDateReason(), cellStyle);
+    }
+
+    private String formatDate(String bfDate) {
+        if (StringUtils.isBlank(bfDate)) {
+            return bfDate;
+        }
+        try {
+            var date = OLD_DATE_TIME_PATTERN2.parse(bfDate);
+            var targetFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+            return targetFormatter.format(date);
+        } catch (DateTimeException e) {
+            log.warn(String.format("Unable to parse %s", bfDate), e);
+            return bfDate;
+        }
     }
 }

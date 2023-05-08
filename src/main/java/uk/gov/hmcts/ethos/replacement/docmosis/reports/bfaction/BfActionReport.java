@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -13,16 +12,14 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItemComparator;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
-import java.time.DateTimeException;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 
 @SuppressWarnings({"PMD.LawOfDemeter"})
 @Slf4j
@@ -97,20 +94,6 @@ public class BfActionReport {
         return null;
     }
 
-    private String formatDate(String bfDate) {
-        if (StringUtils.isBlank(bfDate)) {
-            return bfDate;
-        }
-        try {
-            var date = OLD_DATE_TIME_PATTERN2.parse(bfDate);
-            var targetFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
-            return targetFormatter.format(date);
-        } catch (DateTimeException e) {
-            log.warn(String.format("Unable to parse %s", bfDate), e);
-            return bfDate;
-        }
-    }
-
     private BFDateTypeItem createBFDateTypeItem(BFActionTypeItem bfActionTypeItem, String bfDate,
                                                 String ethosCaseReference) {
         BFActionType bfActionType = bfActionTypeItem.getValue();
@@ -123,8 +106,8 @@ public class BfActionReport {
             bfDateType.setBroughtForwardAction(bfActionType.getCwActions());
         }
 
-        bfDateType.setBroughtForwardEnteredDate(formatDate(bfActionType.getDateEntered()));
-        bfDateType.setBroughtForwardDate(formatDate(bfDate));
+        bfDateType.setBroughtForwardEnteredDate(ReportHelper.getFormattedLocalDate(bfActionType.getDateEntered()));
+        bfDateType.setBroughtForwardDate(ReportHelper.getFormattedLocalDate(bfDate));
 
         if (!isNullOrEmpty(bfActionType.getNotes())) {
             String bfReason = bfActionType.getNotes().replace("\n", ". ");
