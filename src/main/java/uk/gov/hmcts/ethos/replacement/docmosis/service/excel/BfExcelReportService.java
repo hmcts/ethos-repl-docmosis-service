@@ -99,8 +99,10 @@ public class BfExcelReportService {
         CellStyle cellStyle = excelCreationService.getCellStyle(workbook);
         excelCreationService.createCell(row, columnIndex, bfDateType.getCaseReference(), cellStyle);
         excelCreationService.createCell(row, columnIndex + 1, bfDateType.getBroughtForwardAction(), cellStyle);
-        excelCreationService.createCell(row, columnIndex + 2, formatDate(bfDateType.getBroughtForwardEnteredDate()), cellStyle);
-        excelCreationService.createCell(row, columnIndex + 3, formatDate(bfDateType.getBroughtForwardDate()), cellStyle);
+        excelCreationService.createCell(row, columnIndex + 2,
+                formatDate(bfDateType.getBroughtForwardEnteredDate()), cellStyle);
+        excelCreationService.createCell(row, columnIndex + 3,
+                formatDate(bfDateType.getBroughtForwardDate()), cellStyle);
         if (cellStyle != null) {
             cellStyle.setWrapText(true);
         }
