@@ -307,14 +307,14 @@ public class ExcelCreationService {
 
     public void initializeReportHeaders(String documentName, String periodDescription, XSSFWorkbook workbook,
                                         XSSFSheet sheet, List<String> headers) {
-        CellRangeAddress reportTitleCellRange = new CellRangeAddress(0, 0, 0, headers.size());
+        CellRangeAddress reportTitleCellRange = new CellRangeAddress(0, 0, 0, headers.size() - 1);
         sheet.addMergedRegion(reportTitleCellRange);
         XSSFRow rowReportTitle = sheet.createRow(0);
         rowReportTitle.setHeight((short)(rowReportTitle.getHeight() * 8));
         CellStyle styleForHeaderCell = getReportTitleCellStyle(workbook);
         createCell(rowReportTitle, 0, documentName, styleForHeaderCell);
 
-        CellRangeAddress reportPeriodCellRange = new CellRangeAddress(1, 1, 0, headers.size());
+        CellRangeAddress reportPeriodCellRange = new CellRangeAddress(1, 1, 0, headers.size() - 1);
         sheet.addMergedRegion(reportPeriodCellRange);
         XSSFRow rowReportPeriod = sheet.createRow(1);
         rowReportPeriod.setHeight((short)(rowReportPeriod.getHeight() * 6));
@@ -328,6 +328,5 @@ public class ExcelCreationService {
             rowHead.createCell(j).setCellValue(headers.get(j));
             createCell(rowHead, j, headers.get(j), styleForColHeaderCell);
         }
-        createCell(rowHead, headers.size(), "", styleForColHeaderCell);
     }
 }

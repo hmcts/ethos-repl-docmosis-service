@@ -53,9 +53,10 @@ public class BfExcelReportService {
 
     private void adjustColumnSize(XSSFSheet sheet) {
         //Adjust the column width to fit the content
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             sheet.setColumnWidth(i, 9000);
         }
+        sheet.setColumnWidth(4, 15000);
     }
 
     private void initializeReportData(XSSFWorkbook workbook, XSSFSheet sheet,
@@ -74,13 +75,13 @@ public class BfExcelReportService {
             rowIndex++;
         }
 
-        excelCreationService.addReportAdminDetails(workbook, sheet, rowIndex, reportPrintedOnDescription, 5);
+        excelCreationService.addReportAdminDetails(workbook, sheet, rowIndex, reportPrintedOnDescription, 4);
     }
 
     private void addColumnFilterCellRange(XSSFSheet sheet, int reportDetailsCount) {
         int firstRow = 2;
         int lastRow = firstRow + reportDetailsCount;
-        sheet.setAutoFilter(new CellRangeAddress(firstRow, lastRow, 0, 5));
+        sheet.setAutoFilter(new CellRangeAddress(firstRow, lastRow, 0, 4));
     }
 
     private void constructCaseExcelRow(XSSFWorkbook workbook, XSSFSheet sheet, int rowIndex,
