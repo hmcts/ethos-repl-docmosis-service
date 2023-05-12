@@ -17,5 +17,9 @@ java:
           alias: TORNADO_ACCESS_KEY
         - name: ethos-repl-service-s2s-secret
           alias: ETHOS_REPL_SERVICE_S2S_SECRET
+        - name: app-insights-connection-string
+          alias: app-insights-connection-string
+        - name: repl-docmosis-backend-POSTGRES-PASS
+          alias: ETHOS_REPL_DB_PASSWORD
   postgresql:
     enabled: true

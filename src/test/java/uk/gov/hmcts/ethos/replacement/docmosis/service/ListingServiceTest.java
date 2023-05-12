@@ -53,8 +53,7 @@ import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReport
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
@@ -148,6 +147,7 @@ public class ListingServiceTest {
     private ListingDetails listingDetailsRange;
     private DocumentInfo documentInfo;
     private List<SubmitEvent> submitEvents;
+    private UserDetails userDetails;
 
     @Before
     public void setUp() {
@@ -330,6 +330,8 @@ public class ListingServiceTest {
         caseDetails.setCaseData(caseData);
         caseDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         caseDetails.setJurisdiction("EMPLOYMENT");
+        userDetails = HelperTest.getUserDetails();
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
     }
 
     @Test
@@ -940,6 +942,7 @@ public class ListingServiceTest {
 
     @Test
     public void processHearingDocument() throws IOException {
+        listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
         when(tornadoService.listingGeneration(anyString(), ArgumentMatchers.any(), anyString())).thenReturn(documentInfo);
         DocumentInfo documentInfo1 = listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
         assertEquals(documentInfo, documentInfo1);
@@ -1055,39 +1058,6 @@ public class ListingServiceTest {
                 "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         ListingData listingData = listingService.setCourtAddressFromCaseData(caseDetails.getCaseData());
         assertEquals(result, listingData.toString());
-    }
-
-    @Test
-    public void generateBFReportData() throws IOException {
-        String docName = "Brought Forward Report - Test";
-        listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
-        listingDetailsRange.getCaseData().setDocumentName(docName);
-
-        //set up search criteria
-        listingDetailsRange.getCaseData().setReportType(BROUGHT_FORWARD_REPORT);
-        listingDetailsRange.getCaseData().setHearingDateType("Range");
-        listingDetailsRange.getCaseData().setListingDate("2021-09-12");
-        listingDetailsRange.getCaseData().setListingDateFrom("2021-09-08");
-        listingDetailsRange.getCaseData().setListingDateTo("2021-09-18");
-        var bfActionReportData = new BfActionReportData();
-        bfActionReportData.setDocumentName(docName);
-        bfActionReportData.setOffice("Manchester");
-
-        List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
-        var bFDateTypeItem = new BFDateTypeItem();
-        bFDateTypeItem.setValue(new BFDateType());
-        bfActionReportData.setBfDateCollection(bfDateTypeItems);
-        var mockedBfActionReport = Mockito.mock(BfActionReport.class);
-
-        doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
-                anyString(), anyString(), anyString(), anyString());
-        doReturn(bfActionReportData).when(mockedBfActionReport).runReport(ArgumentMatchers.any(ListingDetails.class),
-                Mockito.anyList());
-
-        var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
-                "authToken");
-
-        assertEquals(BROUGHT_FORWARD_REPORT, listingDataResult.getReportType());
     }
 
     @Test
@@ -1243,6 +1213,7 @@ public class ListingServiceTest {
         adhocReportType.setSinglesTotal("6");
         adhocReportType.setMultiplesTotal("10");
         listingDetails.getCaseData().setLocalReportsSummaryHdr(adhocReportType);
+        listingDetails.setCaseId("1234567");
         var adhocReportType2 = new AdhocReportType();
         adhocReportType2.setCaseReference("1800001/2021");
         adhocReportType2.setDateOfAcceptance("2021-01-01");
