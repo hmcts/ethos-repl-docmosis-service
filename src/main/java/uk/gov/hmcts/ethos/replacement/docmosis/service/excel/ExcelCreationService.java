@@ -1,15 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import com.google.common.base.Strings;
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Name;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,9 +25,9 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NA
 public class ExcelCreationService {
 
     public byte[] writeExcel(List<?> multipleCollection, List<String> subMultipleCollection, String leadCaseString) {
-        var workbook = new XSSFWorkbook();
-        var sheet = workbook.createSheet(SHEET_NAME);
-        var hiddenSheet = workbook.createSheet(HIDDEN_SHEET_NAME);
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(SHEET_NAME);
+        XSSFSheet hiddenSheet = workbook.createSheet(HIDDEN_SHEET_NAME);
 
         enableLocking(sheet);
         enableLocking(hiddenSheet);
@@ -94,7 +89,7 @@ public class ExcelCreationService {
         //Adjust the column width to fit the content
         sheet.autoSizeColumn(0);
         sheet.setColumnWidth(1, 8000);
-        for (var i = 2; i <= 5; i++) {
+        for (int i = 2; i <= 5; i++) {
             sheet.setColumnWidth(i, 4000);
         }
     }
@@ -102,7 +97,7 @@ public class ExcelCreationService {
     private void createHiddenSheet(XSSFWorkbook workbook, XSSFSheet hiddenSheet, List<String> subMultipleCollection) {
         if (!subMultipleCollection.isEmpty()) {
             CellStyle styleForLocking = getStyleForLocking(workbook, false);
-            for (var i = 0; i < subMultipleCollection.size(); i++) {
+            for (int i = 0; i < subMultipleCollection.size(); i++) {
                 XSSFRow row = hiddenSheet.createRow(i);
                 createCell(row, 0, subMultipleCollection.get(i), styleForLocking);
             }
@@ -116,11 +111,11 @@ public class ExcelCreationService {
             namedCell.setNameName(HIDDEN_SHEET_NAME);
             namedCell.setRefersToFormula(HIDDEN_SHEET_NAME + "!$A$1:$A$" + subMultipleCollection.size());
 
-            var cellRangeAddressList =
+            CellRangeAddressList cellRangeAddressList =
                     new CellRangeAddressList(1, multipleCollection.size(), 1, 1);
-            var helper = sheet.getDataValidationHelper();
+            DataValidationHelper helper = sheet.getDataValidationHelper();
             DataValidationConstraint constraint = helper.createFormulaListConstraint(HIDDEN_SHEET_NAME);
-            var dataValidation = helper.createValidation(constraint, cellRangeAddressList);
+            DataValidation dataValidation = helper.createValidation(constraint, cellRangeAddressList);
             dataValidation.setSuppressDropDownArrow(true);
             dataValidation.setShowErrorBox(true);
 
@@ -133,13 +128,13 @@ public class ExcelCreationService {
         XSSFRow rowHead = sheet.createRow(0);
         CellStyle styleForLocking = getStyleForLocking(workbook, false);
 
-        for (var j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
+        for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
             rowHead.createCell(j).setCellValue(MultiplesHelper.HEADERS.get(j));
             createCell(rowHead, j, MultiplesHelper.HEADERS.get(j), styleForLocking);
         }
     }
 
-    private void createCell(XSSFRow row, int cellIndex, String value, CellStyle style) {
+    public void createCell(XSSFRow row, int cellIndex, String value, CellStyle style) {
         Cell cell = row.createCell(cellIndex);
         cell.setCellStyle(style);
 
@@ -155,27 +150,28 @@ public class ExcelCreationService {
             return;
         }
 
-        var isStringRefsList = multipleCollection.get(0) instanceof String;
+        boolean isStringRefsList = multipleCollection.get(0) instanceof String;
         log.info(isStringRefsList ? "Initializing multipleRefs" : "Initializing data");
 
-        var orderedAllCasesList = MultiplesHelper.createCollectionOrderedByCaseRef(multipleCollection);
+        SortedMap<String, SortedMap<String, Object>> orderedAllCasesList =
+                MultiplesHelper.createCollectionOrderedByCaseRef(multipleCollection);
         if (orderedAllCasesList.isEmpty()) {
             return;
         }
         String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
         final int[] rowIndex = {1};
         orderedAllCasesList.forEach((String caseYear, Map<String, Object> caseYearList) ->
-            caseYearList.forEach((String caseNum, Object caseItem) -> {
-                if (isStringRefsList) {
-                    constructCaseExcelRow(workbook, sheet, rowIndex[0], (String) caseItem, leadCase, null,
-                            !subMultipleCollection.isEmpty());
-                } else {
-                    var multipleObject = (MultipleObject) caseItem;
-                    constructCaseExcelRow(workbook, sheet, rowIndex[0], multipleObject.getEthosCaseRef(), leadCase,
-                            multipleObject, !subMultipleCollection.isEmpty());
-                }
-                rowIndex[0]++;
-            })
+                caseYearList.forEach((String caseNum, Object caseItem) -> {
+                    if (isStringRefsList) {
+                        constructCaseExcelRow(workbook, sheet, rowIndex[0], (String) caseItem, leadCase, null,
+                                !subMultipleCollection.isEmpty());
+                    } else {
+                        MultipleObject multipleObject = (MultipleObject) caseItem;
+                        constructCaseExcelRow(workbook, sheet, rowIndex[0], multipleObject.getEthosCaseRef(), leadCase,
+                                multipleObject, !subMultipleCollection.isEmpty());
+                    }
+                    rowIndex[0]++;
+                })
         );
     }
 
@@ -195,7 +191,7 @@ public class ExcelCreationService {
         }
 
         if (multipleObject == null) {
-            for (var k = 0; k < MultiplesHelper.HEADERS.size() - 1; k++) {
+            for (int k = 0; k < MultiplesHelper.HEADERS.size() - 1; k++) {
                 if (k == 0 && !hasSubMultiples) {
                     columnIndex++;
                     createCell(row, columnIndex, "", styleForLocking);
@@ -222,6 +218,115 @@ public class ExcelCreationService {
             createCell(row, columnIndex, multipleObject.getFlag3(), styleForUnLocking);
             columnIndex++;
             createCell(row, columnIndex, multipleObject.getFlag4(), styleForUnLocking);
+        }
+    }
+
+    public CellStyle getReportTitleCellStyle(XSSFWorkbook workbook) {
+        Font font = getFont(workbook);
+        font.setColor(IndexedColors.GREY_50_PERCENT.getIndex());
+        font.setFontHeightInPoints((short)25);
+        CellStyle cellStyle = getHeadersCellStyle(workbook);
+        cellStyle.setFont(font);
+        cellStyle.setFillBackgroundColor(IndexedColors.BLUE_GREY.getIndex());
+        return cellStyle;
+    }
+
+    public CellStyle getHeaderCellStyle(XSSFWorkbook workbook) {
+        Font font = getFont(workbook);
+        font.setColor(IndexedColors.GREY_50_PERCENT.getIndex());
+        CellStyle cellStyle = getHeadersCellStyle(workbook);
+        cellStyle.setFont(font);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBottomBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        return cellStyle;
+    }
+
+    private CellStyle getHeadersCellStyle(XSSFWorkbook workbook) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        return cellStyle;
+    }
+
+    private Font getFont(XSSFWorkbook workbook) {
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setFontName("Calibre");
+        font.setColor(IndexedColors.DARK_GREEN.getIndex());
+        font.setFontHeightInPoints((short)16);
+        return font;
+    }
+
+    public CellStyle getReportSubTitleCellStyle(XSSFWorkbook workbook) {
+        Font font = getFont(workbook);
+        font.setColor(IndexedColors.GREY_50_PERCENT.getIndex());
+        font.setFontHeightInPoints((short)20);
+        CellStyle cellStyle = getHeadersCellStyle(workbook);
+        cellStyle.setFont(font);
+        return cellStyle;
+    }
+
+    public void addReportAdminDetails(XSSFWorkbook workbook, XSSFSheet sheet, int rowIndex,
+                                      String reportPrintedOnDescription, int lastCol) {
+        CellRangeAddress reportTitleCellRange = new CellRangeAddress(rowIndex, rowIndex, 0, lastCol);
+        sheet.addMergedRegion(reportTitleCellRange);
+        XSSFRow rowReportTitle = sheet.createRow(rowIndex);
+        rowReportTitle.setHeight((short)(rowReportTitle.getHeight() * 8));
+        CellStyle styleForHeaderCell = getCellStyle(workbook);
+        styleForHeaderCell.setAlignment(HorizontalAlignment.CENTER);
+        styleForHeaderCell.setBorderTop(BorderStyle.THIN);
+        styleForHeaderCell.setBorderLeft(BorderStyle.THIN);
+        styleForHeaderCell.setBorderRight(BorderStyle.THIN);
+        styleForHeaderCell.setBorderBottom(BorderStyle.THIN);
+        styleForHeaderCell.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+        styleForHeaderCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        styleForHeaderCell.setFont(getFont(workbook));
+        createCell(rowReportTitle, 0, reportPrintedOnDescription, styleForHeaderCell);
+    }
+
+    public CellStyle getCellStyle(XSSFWorkbook workbook) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        Font font = getFont(workbook);
+        font.setColor(IndexedColors.BLACK1.getIndex());
+        font.setFontHeightInPoints((short)14);
+        font.setBold(false);
+        cellStyle.setFont(font);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE1.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setBorderTop(BorderStyle.NONE);
+        cellStyle.setBorderLeft(BorderStyle.NONE);
+        cellStyle.setBorderRight(BorderStyle.NONE);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBottomBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        return cellStyle;
+    }
+
+    public void initializeReportHeaders(String documentName, String periodDescription, XSSFWorkbook workbook,
+                                        XSSFSheet sheet, List<String> headers) {
+        CellRangeAddress reportTitleCellRange = new CellRangeAddress(0, 0, 0, headers.size() - 1);
+        sheet.addMergedRegion(reportTitleCellRange);
+        XSSFRow rowReportTitle = sheet.createRow(0);
+        rowReportTitle.setHeight((short)(rowReportTitle.getHeight() * 8));
+        CellStyle styleForHeaderCell = getReportTitleCellStyle(workbook);
+        createCell(rowReportTitle, 0, documentName, styleForHeaderCell);
+
+        CellRangeAddress reportPeriodCellRange = new CellRangeAddress(1, 1, 0, headers.size() - 1);
+        sheet.addMergedRegion(reportPeriodCellRange);
+        XSSFRow rowReportPeriod = sheet.createRow(1);
+        rowReportPeriod.setHeight((short)(rowReportPeriod.getHeight() * 6));
+        CellStyle styleForSubTitleCell = getReportSubTitleCellStyle(workbook);
+        createCell(rowReportPeriod, 0, periodDescription, styleForSubTitleCell);
+
+        XSSFRow rowHead = sheet.createRow(2);
+        rowHead.setHeight((short)(rowHead.getHeight() * 4));
+        CellStyle styleForColHeaderCell = getHeaderCellStyle(workbook);
+        for (int j = 0; j < headers.size(); j++) {
+            rowHead.createCell(j).setCellValue(headers.get(j));
+            createCell(rowHead, j, headers.get(j), styleForColHeaderCell);
         }
     }
 }

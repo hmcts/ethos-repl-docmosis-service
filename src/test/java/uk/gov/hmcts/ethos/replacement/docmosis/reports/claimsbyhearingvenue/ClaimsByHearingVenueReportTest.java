@@ -79,7 +79,7 @@ class ClaimsByHearingVenueReportTest {
         var expectedReportTitle = getReportTitle(RANGE_HEARING_DATE_TYPE);
         var expectedNumberOfSubmitEventEntries = submitEvents.size();
         var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams);
+                .generateReport(reportParams,"Leeds");
         var actualReportTitle = reportData.getReportPeriodDescription();
 
         assertEquals(expectedReportTitle, actualReportTitle);
@@ -115,7 +115,7 @@ class ClaimsByHearingVenueReportTest {
         var singleHearingDateTypeReportParams = new ClaimsByHearingVenueReportParams(LEEDS_LISTING_CASE_TYPE_ID,
                 SINGLE_START_DATE, SINGLE_END_DATE, SINGLE_HEARING_DATE_TYPE, TEST_USERNAME);
         var reportData = claimsByHearingVenueReport
-                .generateReport(singleHearingDateTypeReportParams);
+                .generateReport(singleHearingDateTypeReportParams, "Leeds");
         var actualReportTitle = reportData.getReportPeriodDescription();
 
         assertEquals(expectedReportTitle, actualReportTitle);
@@ -149,7 +149,7 @@ class ClaimsByHearingVenueReportTest {
         var expectedRespondentPostcode = "Null";
         var expectedRespondentET3Postcode = "Null";
         var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams);
+                .generateReport(reportParams, "Manchester");
         var actualClaimantAddressUKPostcode = reportData.getReportDetails().get(0).getClaimantPostcode();
         var actualClaimantWorkPostcode = reportData.getReportDetails().get(0).getClaimantWorkPostcode();
         var actualRespondentPostcode = reportData.getReportDetails().get(0).getRespondentPostcode();
@@ -194,7 +194,7 @@ class ClaimsByHearingVenueReportTest {
         var expectedRespondentPostcode = "Null";
         var expectedRespondentET3Postcode = "Null";
         var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams);
+                .generateReport(reportParams, "Manchester");
 
         var actualClaimantAddressUKPostcode = reportData.getReportDetails().get(0).getClaimantPostcode();
         var actualClaimantWorkPostcode = reportData.getReportDetails().get(0).getClaimantWorkPostcode();
@@ -256,7 +256,7 @@ class ClaimsByHearingVenueReportTest {
         var expectedRespondentPostCode = firstRespondentAddress.getPostCode();
         var expectedFirstRespondentET3AddressPostCode = firstRespondentET3Address.getPostCode();
         var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams);
+                .generateReport(reportParams, "Manchester");
         var actualRespondentPostCode = reportData.getReportDetails().get(0).getRespondentPostcode();
         var actualRespondentET3PostCode = reportData.getReportDetails().get(0).getRespondentET3Postcode();
 
@@ -308,7 +308,7 @@ class ClaimsByHearingVenueReportTest {
         var expectedSecondCaseReference = submitEvents.get(2).getCaseData().getEthosCaseReference();
         var expectedThirdFirstCaseReference = submitEvents.get(0).getCaseData().getEthosCaseReference();
         var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams);
+                .generateReport(reportParams, "Manchester");
 
         assertEquals(expectedNumberOfSubmitEventEntries, reportData.getReportDetails().size());
         assertEquals(expectedFirstCaseReference, reportData.getReportDetails().get(0).getCaseReference());
@@ -343,7 +343,7 @@ class ClaimsByHearingVenueReportTest {
 
         var expectedReportPrintedOnDescription = getTestReportPrintedDescription();
         var reportData = claimsByHearingVenueReport
-                .generateReport(singleHearingDateTypeReportParams);
+                .generateReport(singleHearingDateTypeReportParams, "Manchester");
         var actualReportTitle = reportData.getReportPrintedOnDescription();
 
         assertEquals(expectedReportPrintedOnDescription, actualReportTitle);

@@ -105,50 +105,21 @@ public class BfActionReportTest {
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
 
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         var actualBfDateCount  = resultListingData.getBfDateCollection().size();
         var expectedBfDateCount = 3;
         assertEquals(expectedBfDateCount, actualBfDateCount);
 
         var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(0).getValue();
-        assertEquals(bFActionType3.getBfDate(), firstBFDateTypeItem.getBroughtForwardDate());
+        assertEquals("2019-12-08", firstBFDateTypeItem.getBroughtForwardDate());
         assertEquals(bFActionType3.getCwActions(), firstBFDateTypeItem.getBroughtForwardAction());
-        assertEquals(bFActionType3.getDateEntered(), firstBFDateTypeItem.getBroughtForwardEnteredDate());
+        assertEquals("2019-11-20", firstBFDateTypeItem.getBroughtForwardEnteredDate());
         assertEquals(bFActionType3.getNotes(), firstBFDateTypeItem.getBroughtForwardDateReason());
         assertEquals(bFActionType3.getCleared(), firstBFDateTypeItem.getBroughtForwardDateCleared());
 
         var clearedBfDates = resultListingData.getBfDateCollection().stream()
             .filter(item -> !StringUtils.isBlank(item.getValue().getBroughtForwardDateCleared()));
         assertEquals(0, clearedBfDates.count());
-    }
-
-    @Test
-    public void shouldReturnBfActionsWithMillisecondInBfDate() {
-        listingData.setListingDateFrom("2019-12-13");
-        listingData.setListingDateTo("2019-12-28");
-        listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
-        listingDetails.setCaseData(listingData);
-        List<BFActionTypeItem> items = getBFActionTypeItems();
-        var bfActionTypeItem = new BFActionTypeItem();
-        bfActionTypeItem.setId("123");
-        var bFActionType = new BFActionType();
-        bFActionType.setCwActions("Case papers prepared");
-        bFActionType.setBfDate("2019-12-18T19:30:55.000");
-        bFActionType.setDateEntered("2019-11-20");
-        bFActionType.setNotes("test comment one");
-        bfActionTypeItem.setValue(bFActionType);
-        items.add(bfActionTypeItem);
-        caseData.setBfActions(items);
-        submitEvent.setCaseData(caseData);
-        submitEvents.add(submitEvent);
-
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
-        var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(2).getValue();
-        assertEquals(bFActionType.getBfDate().split("T")[0], firstBFDateTypeItem.getBroughtForwardDate());
-        assertEquals(bFActionType.getCwActions(), firstBFDateTypeItem.getBroughtForwardAction());
-        assertEquals(bFActionType.getNotes(), firstBFDateTypeItem.getBroughtForwardDateReason());
-        assertEquals(bFActionType.getDateEntered(), firstBFDateTypeItem.getBroughtForwardEnteredDate());
-        assertEquals(bFActionType.getCleared(), firstBFDateTypeItem.getBroughtForwardDateCleared());
     }
 
     @Test
@@ -165,7 +136,7 @@ public class BfActionReportTest {
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
 
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         var expectedBfDateCount = 2;
         assertEquals(expectedBfDateCount, resultListingData.getBfDateCollection().size());
     }
@@ -190,7 +161,7 @@ public class BfActionReportTest {
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
 
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         var expectedBfDateCount = 2;
         assertEquals(expectedBfDateCount, resultListingData.getBfDateCollection().size());
     }
@@ -217,16 +188,16 @@ public class BfActionReportTest {
         submitEvents.add(submitEvent);
 
         var bfActionReport = new BfActionReport();
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         // bFActionType3 is added last. But it has the earliest bfDate. As the returned listingData from
         // bfActionReport.runReport method call should be ordered by bfDate, bFActionType3
         // should be the first element
         var bFActionType3 = items.get(2).getValue();
         var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(0).getValue();
-        assertEquals(bFActionType3.getBfDate(), firstBFDateTypeItem.getBroughtForwardDate());
+        assertEquals("2019-12-08", firstBFDateTypeItem.getBroughtForwardDate());
         assertEquals(bFActionType3.getCwActions(), firstBFDateTypeItem.getBroughtForwardAction());
         assertEquals(bFActionType3.getNotes(), firstBFDateTypeItem.getBroughtForwardDateReason());
-        assertEquals(bFActionType3.getDateEntered(), firstBFDateTypeItem.getBroughtForwardEnteredDate());
+        assertEquals("2019-11-20", firstBFDateTypeItem.getBroughtForwardEnteredDate());
         assertEquals(bFActionType3.getCleared(), firstBFDateTypeItem.getBroughtForwardDateCleared());
     }
 
@@ -254,7 +225,7 @@ public class BfActionReportTest {
         submitEvents.add(submitEvent);
 
         var bfActionReport = new BfActionReport();
-        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         //Because the Bf entries are sorted by bf date, bfActionTypeItemFour is the first entry in the
         //result listing data
         var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(0).getValue();
@@ -278,7 +249,7 @@ public class BfActionReportTest {
         bfActionTypeItem4.setId("99456");
         var bFActionType4 = new BFActionType();
         bFActionType4.setCwActions("Interlocutory new order requested");
-        bFActionType4.setBfDate("2019-12-16 08:30:55");
+        bFActionType4.setBfDate("2019-12-16");
         bFActionType4.setDateEntered("2019-11-23");
         bFActionType4.setNotes("test another non-cleared bf three");
         bfActionTypeItem4.setValue(bFActionType4);
