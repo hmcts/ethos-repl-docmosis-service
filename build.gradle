@@ -220,7 +220,7 @@ ext {
     junitJupiterVersion = '5.9.1'
     log4JVersion = '2.19.0'
     serenity = '3.3.4'
-    tomcatEmbedVersion = '9.0.73'
+    tomcatEmbedVersion = '9.0.75'
 }
 
 ext["rest-assured.version"] = '5.1.0'
@@ -305,7 +305,7 @@ dependencies {
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.3'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
     implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.16', ext: 'pom'
-    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.7.8'
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.3'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
