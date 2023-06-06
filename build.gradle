@@ -220,7 +220,7 @@ ext {
     junitJupiterVersion = '5.9.1'
     log4JVersion = '2.19.0'
     serenity = '3.3.4'
-    tomcatEmbedVersion = '9.0.75'
+    tomcatEmbedVersion = '10.1.9'
 }
 
 ext["rest-assured.version"] = '5.1.0'
@@ -265,7 +265,7 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '1.0.1'
+    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '1.0.2'
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.0.1'
 
     implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.41'
