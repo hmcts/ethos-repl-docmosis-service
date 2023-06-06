@@ -9,5 +9,5 @@ module.exports = async function (clerkResponsible, physicalLocation) {
     await I.selectOption('#clerkResponsible', clerkResponsible);
     I.waitForText(physicalLocation, testConfig.TestTimeToWaitForText);
     await I.fillField('#fileLocation', physicalLocation);
-    await I.click(commonConfig.submit);
+    await I.click(commonConfig.continue);
 };
