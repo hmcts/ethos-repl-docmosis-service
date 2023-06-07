@@ -32,6 +32,7 @@ You can run the application by executing following command:
     ./gradlew bootRun
 ```
 
+
 The application will start locally on `http://localhost:8081`
 
 ### API documentation
