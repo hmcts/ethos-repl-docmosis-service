@@ -272,7 +272,7 @@
 <cve>1091725</cve>
 </suppress>
     <suppress>
-        <cve>CVE-2021-37533</cve>
+        <cve>CVE-2023-20883</cve>
     </suppress>
 </suppressions>
 
