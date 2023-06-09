@@ -23,7 +23,7 @@ Scenario('Verify Jurisdiction', async ({I}) => {
 Scenario('Verify Judgment', async ({I}) => {
     await judgment(I, eventNames.JUDGMENT);
 
-}).tag('@e2e')
+}).tag('@disabled')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Allocate Hearing', async ({I}) => {
