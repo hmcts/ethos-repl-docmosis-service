@@ -9,7 +9,6 @@ module.exports = async function () {
     await I.attachFile('#documentCollection_0_uploadedDocument', 'data/fileUpload.txt');
     await I.wait(5);
     await I.fillField('#documentCollection_0_shortDescription', commonConfig.shortDescription);
-    await I.click(commonConfig.continue);
     await I.click(commonConfig.submit);
     await I.wait(5);
     await I.click("//div[text()='Documents']");

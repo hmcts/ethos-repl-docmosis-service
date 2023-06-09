@@ -16,7 +16,6 @@ module.exports = async function (jurisdiction) {
         I.selectOption('#hearingCollection_0_hearingDateCollection_0_Hearing_room_M', 'Manchester');
     }
     I.selectOption('#hearingCollection_0_hearingDateCollection_0_Hearing_clerk', 'A Clerk');
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit);
     await I.waitForEnabled({css: '#next-step'}, testConfig.TestTimeToWaitForText || 5);
 };

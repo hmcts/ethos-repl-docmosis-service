@@ -17,7 +17,6 @@ module.exports = async function () {
     await I.fillField('#date_judgment_sent-day', commonConfig.judgmentSentDate);
     await I.fillField('#date_judgment_sent-month', commonConfig.judgmentSentMonth);
     await I.fillField('#date_judgment_sent-year', commonConfig.judgmentSentYear);
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit);
     await I.waitForText('has been updated with event: Judgment', testConfig.TestTimeToWaitForText);
 

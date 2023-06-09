@@ -11,7 +11,6 @@ module.exports = async function (ecmCase) {
     await I.click(commonConfig.addNewBtn);
     await I.wait(testConfig.TestTimeToWait);
     await I.retry(5).fillField('#caseIdCollection_0_ethos_CaseReference', ecmCase);
-    await I.navByClick(commonConfig.continue);
     await I.navByClick(commonConfig.submit);
     await I.wait(testConfig.TestTimeToWait);
 };
