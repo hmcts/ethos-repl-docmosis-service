@@ -271,5 +271,8 @@
 <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
 <cve>1091725</cve>
 </suppress>
+    <suppress>
+        <cve>CVE-2021-37533</cve>
+    </suppress>
 </suppressions>
 
