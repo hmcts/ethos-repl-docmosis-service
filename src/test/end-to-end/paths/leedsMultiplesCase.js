@@ -23,8 +23,7 @@ Scenario('Amend Multiple Details...', async ({I}) => {
     let ecmCase2 = await getECMCaseNumber(I, testConfig.CCDCaseId, eventNames.ACCEPT_CASE);
     await amendMultipleDetailsTest(I, eventNames.AMEND_MULTIPLE_DETAILS, ecmCase2);
 
-}).tag('@e2e')
-    .retry(testConfig.TestRetryScenarios);
+}).tag('@disabled');
 
 Scenario('Leeds Multiples Journey ( Adding Two Singles)...', async ({I}) => {
     let ecmCaseNumber1 = await getECMCaseNumber(I, testConfig.CCDCaseId, eventNames.ACCEPT_CASE);

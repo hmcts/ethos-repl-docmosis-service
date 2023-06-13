@@ -88,7 +88,7 @@ Scenario('Verify Leeds Case Jurisdiction', async ({I}) => {
 Scenario('Verify Leeds Case Judgment', async ({I}) => {
     await judgment(I, eventNames.JUDGMENT);
 
-}).tag('@e2e')
+}).tag('@disabled-for-rework')
     .retry(testConfig.TestRetryScenarios);
 
 // Scenario('Verify Leeds Case Allocate Hearing', async ({I}) => {

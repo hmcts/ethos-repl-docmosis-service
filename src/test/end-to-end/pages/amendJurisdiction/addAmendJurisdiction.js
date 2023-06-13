@@ -10,6 +10,5 @@ module.exports = async function () {
     await I.selectOption('#jurCodesCollection_0_juridictionCodesList', commonConfig.jurisdictionCode);
     I.waitForText(commonConfig.jurisdictionRule, testConfig.TestTimeToWaitForText);
     await I.selectOption('#jurCodesCollection_0_judgmentOutcome', commonConfig.jurisdictionRule);
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit);
 };

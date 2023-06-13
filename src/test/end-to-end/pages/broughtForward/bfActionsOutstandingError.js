@@ -15,7 +15,6 @@ module.exports = async function () {
     await I.fillField('#bfDate-day', currentDate.split('-')[2]);
     await I.fillField('#bfDate-month', currentDate.split('-')[1]);
     await I.fillField('#bfDate-year', currentDate.split('-')[0]);
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit);
     let caseID = await I.grabTextFrom('//*[@id=\'undefined\']//*[contains(@class, \'markdown\')]/h1');
     await I.chooseNextStep(eventNames.CLOSE_CASE, 3);

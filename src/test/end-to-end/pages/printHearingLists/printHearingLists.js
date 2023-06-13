@@ -17,7 +17,6 @@ module.exports = async function (jurisdiction) {
     await I.navByClick(commonConfig.continue);
     await I.waitForText(commonConfig.dailyCauseList, testConfig.TestTimeToWaitForText);
     await I.waitForText(jurisdiction, testConfig.TestTimeToWaitForText);
-    await I.navByClick(commonConfig.continue);
     await I.click('Print List');
     await I.wait(2);
     await I.click('Close and Return to case details');

@@ -14,6 +14,5 @@ module.exports = async function () {
     await I.wait(2);
     I.waitForText(commonConfig.respondentAddress, testConfig.TestTimeToWaitForText);
     await I.selectOption('#respondentCollection_0_responseRespondentAddress_responseRespondentAddress_addressList', commonConfig.respondentAddress);
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit)
 };

@@ -12,6 +12,5 @@ module.exports = async function () {
     await I.fillField('#bfDate-day', commonConfig.bfDateDay);
     await I.fillField('#bfDate-month', commonConfig.bfDateMonth);
     await I.fillField('#bfDate-year', commonConfig.bfDateYear);
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit)
 };

@@ -15,6 +15,5 @@ module.exports = async function () {
     I.waitForText(commonConfig.excludedFromRegister, testConfig.TestTimeToWaitForText);
     await I.selectOption('#restrictedReporting_excludedRegister', commonConfig.excludedFromRegister);
     await I.click('#restrictedReporting_deletedPhyRegister_Yes');
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit)
 };

@@ -12,6 +12,5 @@ module.exports = async function () {
     await I.wait(3);
     I.waitForText(commonConfig.claimantRepresentativeAddress, testConfig.TestTimeToWaitForText);
     await I.selectOption('#representativeClaimantType_representative_address_representative_address_addressList', commonConfig.claimantRepresentativeAddress);
-    await I.navByClick(commonConfig.continue);
     await I.click(commonConfig.submit)
 };
