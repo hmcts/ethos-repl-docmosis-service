@@ -14,5 +14,9 @@
         <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/adal4j@.*$</packageUrl>
         <cve>CVE-2021-42306</cve>
     </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+        <cve>1091725</cve>
+    </suppress>
 </suppressions>
 
