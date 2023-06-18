@@ -304,7 +304,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.7'
     implementation 'org.springframework.retry:spring-retry'
-    implementation group: 'org.webjars.npm', name: 'minimatch', version: '5.1.6'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.3'
     implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.16', ext: 'pom'
