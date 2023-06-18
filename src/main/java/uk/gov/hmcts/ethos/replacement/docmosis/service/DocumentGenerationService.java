@@ -193,7 +193,7 @@ public class DocumentGenerationService {
 
     public boolean areBfActionsForScotlandToBeUpdated(CaseData caseData, String sectionName) {
         if (caseData.getCorrespondenceScotType() != null) {
-            var values = new String[]{"3", "7", "72", "75", "76"};
+            var values = new String[]{"3", "7", "72", "75", "76", "77.2"};
             return Arrays.asList(values).contains(sectionName);
         }
         return false;
