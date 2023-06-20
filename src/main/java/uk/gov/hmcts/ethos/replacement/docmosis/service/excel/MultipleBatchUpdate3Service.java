@@ -72,6 +72,7 @@ public class MultipleBatchUpdate3Service {
 
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
+
             if (YES.equals(multipleData.getBatchRemoveClaimantRep())) {
                 removeClaimantRep(caseSearched, multipleData);
             }
