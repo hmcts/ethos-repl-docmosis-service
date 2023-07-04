@@ -69,7 +69,8 @@
     "ua-parser-js": "^1.0.33",
     "got": "^12.5.3",
     "flat": "5.0.2",
-    "cacheable-request" : "^10.2.7"
+    "cacheable-request" : "^10.2.7",
+    "semver": "^7.5.2"
   }
 }
 
