@@ -191,6 +191,8 @@ public class DocumentManagementService {
                     mapLegacyDocTypeToNewDocType(documentType);
                 }
             }
+        } else {
+            caseData.setDocumentCollection(new ArrayList<>());
         }
 
     }
