@@ -72,5 +72,12 @@
         <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
         <cve>1092502</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: vm2:3.9.19
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <vulnerabilityName>1092538</vulnerabilityName>
+    </suppress>
 </suppressions>
 
