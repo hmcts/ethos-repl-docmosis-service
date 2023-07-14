@@ -265,7 +265,7 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '2.0.1'
+    implementation group: 'com.github.hmcts', name: 'ecm-common', version: '2.0.2'
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.0.1'
 
     implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.41'
