@@ -64,5 +64,13 @@
         <packageUrl regex="true">^pkg:npm/word-wrap@.*$</packageUrl>
         <cve>1092330</cve>
     </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <cve>1092501</cve>
+    </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <cve>1092502</cve>
+    </suppress>
 </suppressions>
 
