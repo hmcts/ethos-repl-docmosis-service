@@ -315,6 +315,27 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void amendRespondentRepNames() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+        representedTypeRItem.setId(UUID.randomUUID().toString());
+        RepresentedTypeR representedTypeR = new RepresentedTypeR();
+        representedTypeR.setNameOfRepresentative("rep1");
+        representedTypeR.setRespondentId("respId1");
+        representedTypeR.setRespRepName("resp1");
+        representedTypeRItem.setValue(representedTypeR);
+        caseData.setRepCollection(List.of(representedTypeRItem));
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setId("respId1");
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName("resp2");
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(List.of(respondentSumTypeItem));
+        caseManagementForCaseWorkerService.amendRespondentNameRepresentativeNames(caseData);
+        assertEquals("resp2", caseData.getRepCollection().get(0).getValue().getRespRepName());
+    }
+
+    @Test
     public void dateToCurrentPositionUnChanged() {
         CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
