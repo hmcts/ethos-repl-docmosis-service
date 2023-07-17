@@ -162,7 +162,7 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    public void amendRespondentNameRepresentativeNames(uk.gov.hmcts.ecm.common.model.ccd.CaseData caseData) {
+    public void amendRespondentNameRepresentativeNames(CaseData caseData) {
         List<RepresentedTypeRItem> repCollection = new ArrayList<>();
         for (RepresentedTypeRItem respondentRep : emptyIfNull(caseData.getRepCollection())) {
             final List<RespondentSumTypeItem> respondentCollection = caseData.getRespondentCollection();
@@ -179,9 +179,9 @@ public class CaseManagementForCaseWorkerService {
         caseData.setRepCollection(repCollection);
     }
 
-    private void updateRepWithRespondentDetails(uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem respondent,
-                                                uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem respondentRep,
-                                               List<uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem> respondents) {
+    private void updateRepWithRespondentDetails(RespondentSumTypeItem respondent,
+                                                RepresentedTypeRItem respondentRep,
+                                               List<RespondentSumTypeItem> respondents) {
         List<DynamicValueType> respondentNameList = DynamicListHelper.createDynamicRespondentName(
                 respondents);
 
