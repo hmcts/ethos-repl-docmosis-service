@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -361,6 +362,24 @@ public class CaseManagementForCaseWorkerServiceTest {
         caseData.setRespondentCollection(List.of(respondentSumTypeItem));
         caseManagementForCaseWorkerService.updateWithRespondentIds(caseData);
         assertEquals("respId1", caseData.getRepCollection().get(0).getValue().getRespondentId());
+    }
+
+    @Test
+    void setNextListedDate() {
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        dateListedTypeItem.setId(UUID.randomUUID().toString());
+        DateListedType dateListedType = new DateListedType();
+        dateListedType.setListedDate(LocalDateTime.now().plusDays(2).toString());
+        dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+        dateListedTypeItem.setValue(dateListedType);
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        List<DateListedTypeItem> dateListedTypeItems =
+                caseData.getHearingCollection().get(0).getValue().getHearingDateCollection();
+        dateListedTypeItems.add(dateListedTypeItem);
+        caseData.getHearingCollection().get(0).getValue().setHearingDateCollection(dateListedTypeItems);
+        String expectedNextListedDate = LocalDate.now().plusDays(2).toString();
+        caseManagementForCaseWorkerService.setNextListedDate(caseData);
+        assertEquals(expectedNextListedDate, caseData.getNextListedDate());
     }
 
     @Test
