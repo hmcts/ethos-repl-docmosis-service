@@ -373,11 +373,9 @@ public class CaseActionsForCaseWorkerController {
             }
         }
         log.info(EVENT_FIELDS_VALIDATION + errors);
-        if (errors.isEmpty()) {
+        if (errors.isEmpty() && !isEmpty(caseData.getRepCollection())) {
             //Needed to keep the respondent names in the rep collection sync
-            if (!isEmpty(caseData.getRepCollection())) {
                 caseManagementForCaseWorkerService.amendRespondentNameRepresentativeNames(caseData);
-            }
         }
         return getCallbackRespEntityErrors(errors, caseData);
     }
