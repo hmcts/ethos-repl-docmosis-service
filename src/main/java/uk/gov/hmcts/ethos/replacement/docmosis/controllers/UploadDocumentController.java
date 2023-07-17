@@ -26,7 +26,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 @RequestMapping("/uploadDocument")
 @RestController
 public class UploadDocumentController {
-    private static final String INVALID_TOKEN = "Invalid Token {}";
     private final DocumentManagementService documentManagementService;
     private final VerifyTokenService verifyTokenService;
 
@@ -52,7 +51,6 @@ public class UploadDocumentController {
             @RequestHeader(value = "Authorization") String userToken) {
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -78,7 +76,6 @@ public class UploadDocumentController {
             @RequestHeader(value = "Authorization") String userToken) {
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 

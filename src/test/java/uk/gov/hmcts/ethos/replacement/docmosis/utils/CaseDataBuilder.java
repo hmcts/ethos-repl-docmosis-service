@@ -1,17 +1,24 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.utils;
 
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
+import java.util.List;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
@@ -116,6 +123,34 @@ public class CaseDataBuilder {
         submitEvent.setState(state);
 
         return submitEvent;
+    }
+
+    public CCDRequest buildAsCcdRequest(String token) {
+        CCDRequest ccdRequest = new CCDRequest();
+        ccdRequest.setToken(token);
+        ccdRequest.setCaseDetails(buildAsCaseDetails(ACCEPTED_STATE));
+        return ccdRequest;
+    }
+
+    public CaseDetails buildAsCaseDetails(String state) {
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(caseData);
+        caseDetails.setCaseId("1234567890123456");
+        caseDetails.setState(state);
+        return caseDetails;
+    }
+
+    public CaseDataBuilder withDocumentCollection () {
+        UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
+        uploadedDocumentType.setDocumentFilename("test.pdf");
+        uploadedDocumentType.setDocumentBinaryUrl("http://dummy.link");
+        DocumentType documentType = new DocumentType();
+        documentType.setDocumentType("ET1");
+        documentType.setUploadedDocument(uploadedDocumentType);
+        DocumentTypeItem documentTypeItem = new DocumentTypeItem();
+        documentTypeItem.setValue(documentType);
+        caseData.setDocumentCollection(List.of(documentTypeItem));
+        return this;
     }
 }
 
