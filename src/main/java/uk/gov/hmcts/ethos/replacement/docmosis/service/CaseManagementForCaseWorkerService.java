@@ -179,7 +179,7 @@ public class CaseManagementForCaseWorkerService {
         caseData.setRepCollection(repCollection);
     }
 
-    public List<RepresentedTypeRItem> updateWithRespondentIds(CaseData caseData) {
+    public void updateWithRespondentIds(CaseData caseData) {
         List<RepresentedTypeRItem> repList = new ArrayList<>();
         for (RepresentedTypeRItem respondentRep : caseData.getRepCollection()) {
             getRespondentSumTypeItem(caseData, respondentRep)
@@ -187,7 +187,7 @@ public class CaseManagementForCaseWorkerService {
                             respondentRep.getValue().setRespondentId(respondent.getId()));
             repList.add(respondentRep);
         }
-        return repList;
+        caseData.setRepCollection(repList);
     }
 
     public Optional<RespondentSumTypeItem> getRespondentSumTypeItem(CaseData caseData,
