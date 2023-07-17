@@ -403,6 +403,9 @@ public class CaseActionsForCaseWorkerController {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
+        if (errors.isEmpty()) {
+            caseData.setRepCollection(caseManagementForCaseWorkerService.updateWithRespondentIds(caseData));
+        }
         log.info(EVENT_FIELDS_VALIDATION + errors);
 
         return getCallbackRespEntityErrors(errors, caseData);

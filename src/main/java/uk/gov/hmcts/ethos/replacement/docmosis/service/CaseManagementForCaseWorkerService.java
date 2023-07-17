@@ -179,6 +179,26 @@ public class CaseManagementForCaseWorkerService {
         caseData.setRepCollection(repCollection);
     }
 
+    public List<RepresentedTypeRItem> updateWithRespondentIds(CaseData caseData) {
+        List<RepresentedTypeRItem> repList = new ArrayList<>();
+        for (RepresentedTypeRItem respondentRep : caseData.getRepCollection()) {
+            getRespondentSumTypeItem(caseData, respondentRep)
+                    .ifPresent(respondent ->
+                            respondentRep.getValue().setRespondentId(respondent.getId()));
+            repList.add(respondentRep);
+        }
+        return repList;
+    }
+
+    public Optional<RespondentSumTypeItem> getRespondentSumTypeItem(CaseData caseData,
+                                                                    RepresentedTypeRItem respondentRep) {
+        final List<RespondentSumTypeItem> respondentCollection = caseData.getRespondentCollection();
+        return respondentCollection.stream()
+                .filter(resp ->
+                        resp.getValue().getRespondentName()
+                                .equals(respondentRep.getValue().getRespRepName())).findFirst();
+    }
+
     private void updateRepWithRespondentDetails(RespondentSumTypeItem respondent,
                                                 RepresentedTypeRItem respondentRep,
                                                List<RespondentSumTypeItem> respondents) {
