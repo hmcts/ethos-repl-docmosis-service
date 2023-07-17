@@ -344,6 +344,26 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void updateWithRespondentIds() {
+        CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
+        RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+        representedTypeRItem.setId(UUID.randomUUID().toString());
+        RepresentedTypeR representedTypeR = new RepresentedTypeR();
+        representedTypeR.setNameOfRepresentative("rep1");
+        representedTypeR.setRespRepName("resp1");
+        representedTypeRItem.setValue(representedTypeR);
+        caseData.setRepCollection(List.of(representedTypeRItem));
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setId("respId1");
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName("resp1");
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(List.of(respondentSumTypeItem));
+        caseManagementForCaseWorkerService.updateWithRespondentIds(caseData);
+        assertEquals("respId1", caseData.getRepCollection().get(0).getValue().getRespondentId());
+    }
+
+    @Test
     public void dateToCurrentPositionNullPositionType() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
         caseData.setPositionType(null);

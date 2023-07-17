@@ -404,7 +404,7 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
         if (errors.isEmpty()) {
-            caseData.setRepCollection(caseManagementForCaseWorkerService.updateWithRespondentIds(caseData));
+            caseManagementForCaseWorkerService.updateWithRespondentIds(caseData);
         }
         log.info(EVENT_FIELDS_VALIDATION + errors);
 
