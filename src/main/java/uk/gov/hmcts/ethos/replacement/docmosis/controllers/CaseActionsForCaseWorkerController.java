@@ -5,8 +5,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +21,12 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -364,9 +372,13 @@ public class CaseActionsForCaseWorkerController {
                 caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
             }
         }
-
         log.info(EVENT_FIELDS_VALIDATION + errors);
-
+        if (errors.isEmpty()) {
+            //Needed to keep the respondent names in the rep collection sync
+            if (!isEmpty(caseData.getRepCollection())) {
+                caseManagementForCaseWorkerService.amendRespondentNameRepresentativeNames(caseData);
+            }
+        }
         return getCallbackRespEntityErrors(errors, caseData);
     }
 
