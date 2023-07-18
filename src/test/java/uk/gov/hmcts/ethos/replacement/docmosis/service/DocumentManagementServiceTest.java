@@ -54,9 +54,11 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET3;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET3_ATTACHMENT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.HEARINGS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.LEGACY_DOCUMENT_NAMES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_A_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_HEARING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.REJECTION_OF_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.RESPONSE_TO_A_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.STARTING_A_CLAIM;
@@ -212,7 +214,8 @@ class DocumentManagementServiceTest {
                 Arguments.of(REJECTION_OF_CLAIM, STARTING_A_CLAIM),
                 Arguments.of(ET3, RESPONSE_TO_A_CLAIM),
                 Arguments.of(ET3_ATTACHMENT, RESPONSE_TO_A_CLAIM),
-                Arguments.of(NOTICE_OF_HEARING, HEARINGS)
+                Arguments.of(NOTICE_OF_HEARING, HEARINGS),
+                Arguments.of(OTHER, LEGACY_DOCUMENT_NAMES)
         );
     }
 
@@ -238,7 +241,9 @@ class DocumentManagementServiceTest {
                 Arguments.of(REJECTION_OF_CLAIM, CLAIM_REJECTED),
                 Arguments.of(ET3, ET3),
                 Arguments.of(ET3_ATTACHMENT, ET3_ATTACHMENT),
-                Arguments.of(NOTICE_OF_HEARING, NOTICE_OF_HEARING)
+                Arguments.of(NOTICE_OF_HEARING, NOTICE_OF_HEARING),
+                Arguments.of(OTHER, OTHER)
+
         );
     }
 
