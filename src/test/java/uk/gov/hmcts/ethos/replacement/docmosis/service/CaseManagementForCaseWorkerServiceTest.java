@@ -365,7 +365,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    void setNextListedDate() {
+    public void setNextListedDate() {
         DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         dateListedTypeItem.setId(UUID.randomUUID().toString());
         DateListedType dateListedType = new DateListedType();
