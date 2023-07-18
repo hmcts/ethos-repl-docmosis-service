@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -37,9 +37,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -146,13 +146,15 @@ class DocumentManagementServiceTest {
         assertEquals("xslx", uploadedDocument.getContentType());
     }
 
-//    @Test(expected = IllegalStateException.class)
-//    void downloadFileException() {
-//        when(documentDownloadClientApi.downloadBinary(anyString(), anyString(), anyString(), anyString(), anyString()))
-//                .thenReturn(new ResponseEntity<>(HttpStatus.BAD_GATEWAY));
-//        documentManagementService.downloadFile("authString",
-//                "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
-//    }
+    @Test
+    void downloadFileException() {
+        when(documentDownloadClientApi.downloadBinary(anyString(), anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(new ResponseEntity<>(HttpStatus.BAD_GATEWAY));
+        assertThrows(IllegalStateException.class, () ->
+                documentManagementService.downloadFile("authString",
+                        "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary")
+        );
+    }
 
     @Test
     void getDocumentUUID() {
@@ -196,8 +198,8 @@ class DocumentManagementServiceTest {
                 .withDocumentCollection(docType)
                 .build();
         documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
-        Assertions.assertNotNull(caseData.getDocumentCollection());
-        Assertions.assertEquals(topLevel, caseData.getDocumentCollection().get(0).getValue().getTopLevelDocuments());
+        assertNotNull(caseData.getDocumentCollection());
+        assertEquals(topLevel, caseData.getDocumentCollection().get(0).getValue().getTopLevelDocuments());
     }
 
     private static Stream<Arguments> convertLegacyDocsToNewDocNaming() {
@@ -222,8 +224,8 @@ class DocumentManagementServiceTest {
                 .build();
         documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
         documentManagementService.setDocumentTypeForDocumentCollection(caseData);
-        Assertions.assertNotNull(caseData.getDocumentCollection());
-        Assertions.assertEquals(documentType, caseData.getDocumentCollection().get(0).getValue().getDocumentType());
+        assertNotNull(caseData.getDocumentCollection());
+        assertEquals(documentType, caseData.getDocumentCollection().get(0).getValue().getDocumentType());
     }
 
     private static Stream<Arguments> setDocumentTypeForDocumentCollection() {
