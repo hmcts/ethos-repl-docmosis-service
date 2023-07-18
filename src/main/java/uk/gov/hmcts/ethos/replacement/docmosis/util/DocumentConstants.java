@@ -78,6 +78,7 @@ public final class DocumentConstants {
     public static final String CERTIFICATE_OF_CORRECTION = "Certificate of Correction";
     public static final String TRIBUNAL_CASE_FILE = "Tribunal Case file";
     public static final String OTHER = "Other";
-
-
+    public static final String NOTICE_OF_A_CLAIM = "Notice of a claim";
+    public static final String TRIBUNAL_CORRESPONDENCE = "Tribunal Correspondence";
+    public static final String REJECTION_OF_CLAIM = "Rejection of claim";
 }

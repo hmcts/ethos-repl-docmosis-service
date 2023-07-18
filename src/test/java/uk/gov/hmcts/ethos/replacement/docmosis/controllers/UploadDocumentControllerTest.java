@@ -16,13 +16,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.JsonMapper;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest({UploadDocumentController.class, JsonMapper.class})
@@ -46,7 +46,7 @@ class UploadDocumentControllerTest {
     void setUp() {
         ccdRequest = new CaseDataBuilder()
                 .withEthosCaseReference("1800001/2023")
-                .withDocumentCollection()
+                .withDocumentCollection(ET1)
                 .buildAsCcdRequest(AUTH_TOKEN);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
 

@@ -14,9 +14,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
@@ -140,16 +139,20 @@ public class CaseDataBuilder {
         return caseDetails;
     }
 
-    public CaseDataBuilder withDocumentCollection () {
+    public CaseDataBuilder withDocumentCollection (String docType) {
+        if (caseData.getDocumentCollection() == null) {
+            caseData.setDocumentCollection(new ArrayList<>());
+        }
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
         uploadedDocumentType.setDocumentFilename("test.pdf");
         uploadedDocumentType.setDocumentBinaryUrl("http://dummy.link");
         DocumentType documentType = new DocumentType();
-        documentType.setDocumentType("ET1");
+        documentType.setTypeOfDocument(docType);
         documentType.setUploadedDocument(uploadedDocumentType);
         DocumentTypeItem documentTypeItem = new DocumentTypeItem();
         documentTypeItem.setValue(documentType);
-        caseData.setDocumentCollection(List.of(documentTypeItem));
+        documentTypeItem.setId(UUID.randomUUID().toString());
+        caseData.getDocumentCollection().add(documentTypeItem);
         return this;
     }
 }

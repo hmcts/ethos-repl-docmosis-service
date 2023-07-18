@@ -53,7 +53,6 @@ public class UploadDocumentController {
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
         documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
@@ -78,7 +77,6 @@ public class UploadDocumentController {
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
         documentManagementService.setDocumentTypeForDocumentCollection(caseData);

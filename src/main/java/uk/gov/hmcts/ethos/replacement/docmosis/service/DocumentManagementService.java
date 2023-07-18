@@ -18,6 +18,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
+import uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
 import uk.gov.hmcts.reform.ccd.document.am.model.Classification;
@@ -194,7 +195,6 @@ public class DocumentManagementService {
         } else {
             caseData.setDocumentCollection(new ArrayList<>());
         }
-
     }
 
     private static void mapLegacyDocTypeToNewDocType(DocumentType documentType) {
@@ -210,17 +210,16 @@ public class DocumentManagementService {
             case ACAS_CERTIFICATE -> {
                 documentType.setTopLevelDocuments(STARTING_A_CLAIM);
                 documentType.setStartingClaimDocuments(ACAS_CERTIFICATE);
-
             }
-            case "Notice of a claim" -> {
+            case DocumentConstants.NOTICE_OF_A_CLAIM -> {
                 documentType.setTopLevelDocuments(STARTING_A_CLAIM);
                 documentType.setStartingClaimDocuments(NOTICE_OF_CLAIM);
             }
-            case "Tribunal Correspondence" -> {
+            case DocumentConstants.TRIBUNAL_CORRESPONDENCE -> {
                 documentType.setTopLevelDocuments(STARTING_A_CLAIM);
                 documentType.setStartingClaimDocuments(CLAIM_ACCEPTED);
             }
-            case "Rejection of claim" -> {
+            case DocumentConstants.REJECTION_OF_CLAIM -> {
                 documentType.setTopLevelDocuments(STARTING_A_CLAIM);
                 documentType.setStartingClaimDocuments(CLAIM_REJECTED);
             }
@@ -245,7 +244,6 @@ public class DocumentManagementService {
             caseData.getDocumentCollection().stream().map(DocumentTypeItem::getValue)
                     .forEach(this::setDocumentTypeForDocument);
         }
-
     }
 
     private void setDocumentTypeForDocument(DocumentType documentType) {
@@ -272,6 +270,5 @@ public class DocumentManagementService {
                 documentType.setDocumentType(documentType.getTypeOfDocument());
             }
         }
-
     }
 }
