@@ -306,6 +306,7 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+            caseManagementForCaseWorkerService.setNextListedDate(caseData);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
 
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
