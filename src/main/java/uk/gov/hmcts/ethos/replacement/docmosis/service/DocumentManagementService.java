@@ -191,10 +191,11 @@ public class DocumentManagementService {
                 if (isNullOrEmpty(documentType.getTopLevelDocuments())
                         && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
                     mapLegacyDocTypeToNewDocType(documentType);
-                    if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
-                        documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
-                                .toString());
-                    }
+
+                }
+                if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
+                    documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
+                            .toString());
                 }
             }
         } else {
@@ -274,6 +275,10 @@ public class DocumentManagementService {
             } else {
                 documentType.setDocumentType(documentType.getTypeOfDocument());
             }
+        }
+        if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
+            documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
+                    .toString());
         }
     }
 }
