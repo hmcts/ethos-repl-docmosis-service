@@ -79,5 +79,12 @@
         <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
         <vulnerabilityName>1092538</vulnerabilityName>
     </suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: word-wrap:1.2.3
+   ]]></notes>
+   <packageUrl regex="true">^pkg:npm/word\-wrap@.*$</packageUrl>
+   <vulnerabilityName>1092593</vulnerabilityName>
+</suppress>
 </suppressions>
 
