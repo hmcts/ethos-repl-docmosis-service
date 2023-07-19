@@ -27,6 +27,7 @@ import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -190,6 +191,10 @@ public class DocumentManagementService {
                 if (isNullOrEmpty(documentType.getTopLevelDocuments())
                         && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
                     mapLegacyDocTypeToNewDocType(documentType);
+                    if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
+                        documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
+                                .toString());
+                    }
                 }
             }
         } else {
