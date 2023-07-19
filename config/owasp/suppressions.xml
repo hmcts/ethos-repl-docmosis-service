@@ -64,5 +64,27 @@
         <packageUrl regex="true">^pkg:npm/word-wrap@.*$</packageUrl>
         <cve>1092330</cve>
     </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <cve>1092501</cve>
+    </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <cve>1092502</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: vm2:3.9.19
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <vulnerabilityName>1092538</vulnerabilityName>
+    </suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: word-wrap:1.2.3
+   ]]></notes>
+   <packageUrl regex="true">^pkg:npm/word\-wrap@.*$</packageUrl>
+   <vulnerabilityName>1092593</vulnerabilityName>
+</suppress>
 </suppressions>
 
