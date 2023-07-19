@@ -7,7 +7,7 @@ public final class DocumentConstants {
     public static final String RESPONSE_TO_A_CLAIM = "Response to a Claim";
     public static final String INITIAL_CONSIDERATION = "Initial Consideration";
     public static final String CASE_MANAGEMENT = "Case Management";
-    public static final String WITHDRAWA_SETTLED = "Withdrawal/Settled";
+    public static final String WITHDRAWAL_SETTLED = "Withdrawal/Settled";
     public static final String HEARINGS = "Hearings";
     public static final String JUDGMENT_AND_REASONS = "Judgment and Reasons";
     public static final String RECONSIDERATION = "Reconsideration";
