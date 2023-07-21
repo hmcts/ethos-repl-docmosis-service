@@ -141,7 +141,7 @@ public class ReferenceServiceTest {
                 + "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, "
                 + "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, "
                 + "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, "
-                + "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
+                + "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
                 + "allocatedOffice=null, caseSource=null, conciliationTrack=null, counterClaim=null, "
                 + "eccCases=null, restrictedReporting=null, printHearingDetails=null, "
                 + "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, "
@@ -186,7 +186,7 @@ public class ReferenceServiceTest {
                 "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, " +
                 "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, " +
                 "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
+                "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
                 + "allocatedOffice=null, caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, "
                 + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
                 + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
@@ -224,7 +224,7 @@ public class ReferenceServiceTest {
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
+                "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
                 "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
                 "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
@@ -262,7 +262,7 @@ public class ReferenceServiceTest {
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
+                "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
                 "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
                 "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
@@ -300,7 +300,7 @@ public class ReferenceServiceTest {
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
+                "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
                 "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
                 "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
@@ -336,7 +336,7 @@ public class ReferenceServiceTest {
                 + "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, "
                 + "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, "
                 + "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, "
-                + "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
+                + "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
                 + "allocatedOffice=null, caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, "
                 + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
                 + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
@@ -377,7 +377,7 @@ public class ReferenceServiceTest {
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, "
                 + "addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
+                "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
                 "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
                 "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
@@ -414,7 +414,7 @@ public class ReferenceServiceTest {
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
+                "caseNotes=null, nextListedDate=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
                 "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
                 "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +

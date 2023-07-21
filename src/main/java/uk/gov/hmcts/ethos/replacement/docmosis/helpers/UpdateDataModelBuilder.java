@@ -41,6 +41,7 @@ public class UpdateDataModelBuilder {
                 .subMultiple(getSubMultipleName(caseData))
                 .conciliationTrack(multipleData.getConciliationTrack())
                 .isRespondentRepRemovalUpdate(multipleData.getBatchRemoveRespondentRep())
+                .batchRespondentUpdateType(multipleData.getBatchRespondentUpdateType())
                 .isClaimantRepRemovalUpdate(multipleData.getBatchRemoveClaimantRep())
                 .representativeClaimantType(getRepresentativeClaimantType(multipleData, caseData))
                 .jurCodesType(getJurCodesType(multipleData, caseData))

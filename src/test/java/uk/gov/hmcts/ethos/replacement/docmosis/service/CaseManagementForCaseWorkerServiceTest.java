@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -315,11 +316,70 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void amendRespondentRepNames() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+        representedTypeRItem.setId(UUID.randomUUID().toString());
+        RepresentedTypeR representedTypeR = new RepresentedTypeR();
+        representedTypeR.setNameOfRepresentative("rep1");
+        representedTypeR.setRespondentId("respId1");
+        representedTypeR.setRespRepName("resp1");
+        representedTypeRItem.setValue(representedTypeR);
+        caseData.setRepCollection(List.of(representedTypeRItem));
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setId("respId1");
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName("resp2");
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(List.of(respondentSumTypeItem));
+        caseManagementForCaseWorkerService.amendRespondentNameRepresentativeNames(caseData);
+        assertEquals("resp2", caseData.getRepCollection().get(0).getValue().getRespRepName());
+    }
+
+    @Test
     public void dateToCurrentPositionUnChanged() {
         CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
         assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
         assertEquals("2019-11-15", caseData.getDateToPosition());
+    }
+
+    @Test
+    public void updateWithRespondentIds() {
+        CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
+        RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+        representedTypeRItem.setId(UUID.randomUUID().toString());
+        RepresentedTypeR representedTypeR = new RepresentedTypeR();
+        representedTypeR.setNameOfRepresentative("rep1");
+        representedTypeR.setRespRepName("resp1");
+        representedTypeRItem.setValue(representedTypeR);
+        caseData.setRepCollection(List.of(representedTypeRItem));
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setId("respId1");
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName("resp1");
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(List.of(respondentSumTypeItem));
+        caseManagementForCaseWorkerService.updateWithRespondentIds(caseData);
+        assertEquals("respId1", caseData.getRepCollection().get(0).getValue().getRespondentId());
+    }
+
+    @Test
+    public void setNextListedDate() {
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        dateListedTypeItem.setId(UUID.randomUUID().toString());
+        DateListedType dateListedType = new DateListedType();
+        dateListedType.setListedDate(LocalDateTime.now().plusDays(2).toString());
+        dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+        dateListedTypeItem.setValue(dateListedType);
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        List<DateListedTypeItem> dateListedTypeItems =
+                caseData.getHearingCollection().get(0).getValue().getHearingDateCollection();
+        dateListedTypeItems.add(dateListedTypeItem);
+        caseData.getHearingCollection().get(0).getValue().setHearingDateCollection(dateListedTypeItems);
+        String expectedNextListedDate = LocalDate.now().plusDays(2).toString();
+        caseManagementForCaseWorkerService.setNextListedDate(caseData);
+        assertEquals(expectedNextListedDate, caseData.getNextListedDate());
     }
 
     @Test

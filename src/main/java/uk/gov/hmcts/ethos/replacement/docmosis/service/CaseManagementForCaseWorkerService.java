@@ -1,23 +1,25 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.google.common.base.Strings;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.*;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -25,10 +27,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -162,6 +160,96 @@ public class CaseManagementForCaseWorkerService {
             caseData.setDateToPosition(LocalDate.now().toString());
             caseData.setCurrentPosition(caseData.getPositionType());
         }
+    }
+
+    public void setNextListedDate(CaseData caseData) {
+        List<String> dates = new ArrayList<>();
+        String nextListedDate = "";
+
+        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                dates.addAll(getListedDates(hearingTypeItem));
+            }
+            for (String date : dates) {
+                LocalDateTime parsedDate = LocalDateTime.parse(date);
+                if (nextListedDate.equals("") && parsedDate.isAfter(LocalDateTime.now())
+                        || parsedDate.isAfter(LocalDateTime.now())
+                        && parsedDate.isBefore(LocalDateTime.parse(nextListedDate))) {
+                    nextListedDate = date;
+                }
+            }
+                caseData.setNextListedDate(nextListedDate.split("T")[0]);
+        }
+    }
+
+    private List<String> getListedDates(HearingTypeItem hearingTypeItem) {
+        HearingType hearingType = hearingTypeItem.getValue();
+        List<String> dates = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(hearingType.getHearingDateCollection())) {
+            for (DateListedTypeItem dateListedTypeItem : hearingType.getHearingDateCollection()) {
+                DateListedType dateListedType = dateListedTypeItem.getValue();
+                if (HEARING_STATUS_LISTED.equals(dateListedType.getHearingStatus())
+                        && !Strings.isNullOrEmpty(dateListedType.getListedDate())) {
+                    dates.add(dateListedType.getListedDate());
+                }
+            }
+        }
+        return dates;
+    }
+
+    public void amendRespondentNameRepresentativeNames(CaseData caseData) {
+        List<RepresentedTypeRItem> repCollection = new ArrayList<>();
+        for (RepresentedTypeRItem respondentRep : emptyIfNull(caseData.getRepCollection())) {
+            final List<RespondentSumTypeItem> respondentCollection = caseData.getRespondentCollection();
+            Optional<RespondentSumTypeItem> matchedRespondent = respondentCollection.stream()
+                    .filter(resp ->
+                            resp.getId().equals(respondentRep.getValue().getRespondentId())).findFirst();
+
+            matchedRespondent.ifPresent(respondent ->
+                    updateRepWithRespondentDetails(respondent, respondentRep, respondentCollection));
+
+            repCollection.add(respondentRep);
+        }
+
+        caseData.setRepCollection(repCollection);
+    }
+
+    public void updateWithRespondentIds(CaseData caseData) {
+        List<RepresentedTypeRItem> repList = new ArrayList<>();
+        for (RepresentedTypeRItem respondentRep : caseData.getRepCollection()) {
+            getRespondentSumTypeItem(caseData, respondentRep)
+                    .ifPresent(respondent ->
+                            respondentRep.getValue().setRespondentId(respondent.getId()));
+            repList.add(respondentRep);
+        }
+        caseData.setRepCollection(repList);
+    }
+
+    public Optional<RespondentSumTypeItem> getRespondentSumTypeItem(CaseData caseData,
+                                                                    RepresentedTypeRItem respondentRep) {
+        final List<RespondentSumTypeItem> respondentCollection = caseData.getRespondentCollection();
+        return respondentCollection.stream()
+                .filter(resp ->
+                        resp.getValue().getRespondentName()
+                                .equals(respondentRep.getValue().getRespRepName())).findFirst();
+    }
+
+    private void updateRepWithRespondentDetails(RespondentSumTypeItem respondent,
+                                                RepresentedTypeRItem respondentRep,
+                                               List<RespondentSumTypeItem> respondents) {
+        List<DynamicValueType> respondentNameList = DynamicListHelper.createDynamicRespondentName(
+                respondents);
+
+        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        dynamicFixedListType.setListItems(respondentNameList);
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode("R: " + respondent.getValue().getRespondentName());
+        dynamicValueType.setLabel(respondent.getValue().getRespondentName());
+        dynamicFixedListType.setValue(dynamicValueType);
+
+        respondentRep.getValue().setDynamicRespRepName(dynamicFixedListType);
+        respondentRep.getValue().setRespondentId(respondent.getId());
+        respondentRep.getValue().setRespRepName(respondent.getValue().getRespondentName());
     }
 
     public CaseData struckOutRespondents(CCDRequest ccdRequest) {

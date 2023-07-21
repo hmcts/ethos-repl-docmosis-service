@@ -5,8 +5,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +21,12 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -298,6 +306,7 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+            caseManagementForCaseWorkerService.setNextListedDate(caseData);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
 
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
@@ -364,9 +373,11 @@ public class CaseActionsForCaseWorkerController {
                 caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
             }
         }
-
         log.info(EVENT_FIELDS_VALIDATION + errors);
-
+        if (errors.isEmpty() && !isEmpty(caseData.getRepCollection())) {
+            //Needed to keep the respondent names in the rep collection sync
+                caseManagementForCaseWorkerService.amendRespondentNameRepresentativeNames(caseData);
+        }
         return getCallbackRespEntityErrors(errors, caseData);
     }
 
@@ -393,6 +404,9 @@ public class CaseActionsForCaseWorkerController {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
+        if (errors.isEmpty()) {
+            caseManagementForCaseWorkerService.updateWithRespondentIds(caseData);
+        }
         log.info(EVENT_FIELDS_VALIDATION + errors);
 
         return getCallbackRespEntityErrors(errors, caseData);
@@ -446,7 +460,7 @@ public class CaseActionsForCaseWorkerController {
 
         var caseDetails = ccdRequest.getCaseDetails();
         FlagsImageHelper.buildFlagsImageFileName(caseDetails.getCaseData());
-
+        caseManagementForCaseWorkerService.setNextListedDate(caseDetails.getCaseData());
         return getCallbackRespEntityNoErrors(caseDetails.getCaseData());
     }
 
@@ -472,6 +486,7 @@ public class CaseActionsForCaseWorkerController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         HearingsHelper.updatePostponedDate(caseData);
+        caseManagementForCaseWorkerService.setNextListedDate(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -551,7 +566,7 @@ public class CaseActionsForCaseWorkerController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.amendHearing(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
-
+        caseManagementForCaseWorkerService.setNextListedDate(caseData);
         return getCallbackRespEntityNoErrors(caseData);
     }
 
