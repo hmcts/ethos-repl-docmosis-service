@@ -85,6 +85,55 @@
    ]]></notes>
    <packageUrl regex="true">^pkg:npm/word\-wrap@.*$</packageUrl>
    <vulnerabilityName>1092593</vulnerabilityName>
-</suppress>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: logging-interceptor-4.9.3.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com.squareup.okhttp3/logging-interceptor@.*$</packageUrl>
+        <cve>CVE-2023-3782</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: okhttp-4.9.3.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.squareup\.okhttp3/okhttp@.*$</packageUrl>
+        <cve>CVE-2023-3782</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: okhttp-urlconnection-4.9.3.jar
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.squareup\.okhttp3/okhttp\-urlconnection@.*$</packageUrl>
+        <cve>CVE-2023-3782</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: request:2.88.2
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+        <vulnerabilityName>1092779</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: request:2.88.2
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+        <vulnerabilityName>1092826</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: vm2:3.9.19
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <vulnerabilityName>1092665</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: vm2:3.9.19
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
+        <vulnerabilityName>1092666</vulnerabilityName>
+    </suppress>
 </suppressions>
 
