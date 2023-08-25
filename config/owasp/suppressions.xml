@@ -135,5 +135,15 @@
         <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
         <vulnerabilityName>1092666</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: vm2:3.9.19
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
+        <vulnerabilityName>1092972</vulnerabilityName>
+    </suppress>
+
+
+    pkg:npm/request
 </suppressions>
 
