@@ -142,8 +142,5 @@
         <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
         <vulnerabilityName>1092972</vulnerabilityName>
     </suppress>
-
-
-    pkg:npm/request
 </suppressions>
 
