@@ -8,6 +8,10 @@ java:
     ETHOS_REPL_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     ETHOS_REPL_DB_CONN_OPTIONS: ""
   keyVaults:
+    et-sya-api:
+      secrets:
+        - name: Ocp-Apim-Subscription-Key
+          alias: ACAS_KEY
     ethos-shared:
       resourceGroup: ethos
       secrets:

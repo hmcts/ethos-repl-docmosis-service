@@ -3,6 +3,10 @@ java:
   applicationPort: 8081
   ingressHost: ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
+    et-sya-api:
+      secrets:
+        - name: Ocp-Apim-Subscription-Key
+          alias: ACAS_KEY
     ethos-shared:
       resourceGroup: ethos
       secrets:
@@ -41,3 +45,4 @@ java:
     ETHOS_REPL_DB_USER_NAME: ethos@ethos-postgres-db-{{ .Values.global.environment }}
     CASE_DOCUMENT_AM_URL: http://ccd-case-document-am-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     SECURE_DOC_STORE_FEATURE: false
+    ACAS_BASE_URL: "https://api-dev-acas-01.azure-api.net/ECCLUAT"
