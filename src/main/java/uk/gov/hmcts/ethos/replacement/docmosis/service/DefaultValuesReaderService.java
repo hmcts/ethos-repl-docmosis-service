@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
@@ -13,6 +14,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.tribunaloffice.ContactDeta
 
 import java.util.Optional;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -118,5 +120,11 @@ public class DefaultValuesReaderService {
         address.setPostCode(
                 Optional.ofNullable(defaultValues.getTribunalCorrespondencePostCode()).orElse(""));
         return address;
+    }
+
+    public void setSubmissionReference(CaseDetails caseDetails) {
+        if (isNullOrEmpty(caseDetails.getCaseData().getFeeGroupReference())) {
+            caseDetails.getCaseData().setFeeGroupReference(caseDetails.getCaseId());
+        }
     }
 }
