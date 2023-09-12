@@ -11,6 +11,8 @@ java:
     ethos-shared:
       resourceGroup: ethos
       secrets:
+        - name: Ocp-Apim-Subscription-Key
+          alias: ACAS_KEY
         - name: create-updates-queue-send-connection-string
           alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
         - name: tornado-access-key
