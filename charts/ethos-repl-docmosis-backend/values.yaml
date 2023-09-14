@@ -6,6 +6,8 @@ java:
     ethos-shared:
       resourceGroup: ethos
       secrets:
+        - name: Ocp-Apim-Subscription-Key
+          alias: ACAS_KEY
         - name: create-updates-queue-send-connection-string
           alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
         - name: app-insights-connection-string
@@ -41,3 +43,4 @@ java:
     ETHOS_REPL_DB_USER_NAME: ethos@ethos-postgres-db-{{ .Values.global.environment }}
     CASE_DOCUMENT_AM_URL: http://ccd-case-document-am-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     SECURE_DOC_STORE_FEATURE: false
+    ACAS_BASE_URL: "https://api-dev-acas-01.azure-api.net/ECCLUAT"

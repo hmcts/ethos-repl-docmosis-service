@@ -2,6 +2,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.config.TribunalOfficesConfigurati
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
@@ -436,7 +441,8 @@ public class DefaultValuesReaderServiceTest {
                 + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
-                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null, "
+                + "acasCertificate=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -517,7 +523,8 @@ public class DefaultValuesReaderServiceTest {
                 + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
-                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null, "
+                + "acasCertificate=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -563,5 +570,26 @@ public class DefaultValuesReaderServiceTest {
                 + "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
                 + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData, postDefaultValuesGlasgow).toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void setSubmissionReference(String submissionReference, String caseId) {
+        CaseData caseData = new CaseData();
+        caseData.setFeeGroupReference(submissionReference);
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId(caseId);
+        caseDetails.setCaseData(caseData);
+
+        defaultValuesReaderService.setSubmissionReference(caseDetails);
+        Assertions.assertEquals(caseData.getFeeGroupReference(), caseId);
+    }
+
+    public static Stream<Arguments> setSubmissionReference() {
+        return Stream.of(
+                Arguments.of(null, "1234567890123456"),
+                Arguments.of("", "1234567890123456"),
+                Arguments.of("1111222233334444", "1111222233334444")
+        );
     }
 }
