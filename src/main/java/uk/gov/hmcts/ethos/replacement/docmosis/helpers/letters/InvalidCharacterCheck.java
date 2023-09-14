@@ -16,9 +16,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class InvalidCharacterCheck {
 
     public static final String NEW_LINE_ERROR = "%s is split over 2 lines for case %s. Please correct this before "
-            + "generating a %s";
+            + "for the %s";
     public static final String DOUBLE_SPACE_ERROR = "%s contains a double space for case %s. Please correct this before"
-            + " generating a %s";
+            + " for the %s";
 
     private InvalidCharacterCheck() {
     }
