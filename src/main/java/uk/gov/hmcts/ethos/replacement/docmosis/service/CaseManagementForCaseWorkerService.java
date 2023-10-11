@@ -4,9 +4,10 @@ import com.google.common.base.Strings;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
@@ -325,17 +326,35 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    public void midEventAmendHearing(CaseData caseData, List<String> errors) {
-        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                    for (DateListedTypeItem dateListedTypeItem
-                            : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        addHearingsOnWeekendError(dateListedTypeItem, errors,
-                                hearingTypeItem.getValue().getHearingNumber());
-                    }
+    public void midEventAmendHearing(CaseData caseData, List<String> errors, List<String> warnings) {
+        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            return;
+        }
+
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                for (DateListedTypeItem dateListedTypeItm : hearingTypeItem.getValue().getHearingDateCollection()) {
+                    processHearingDates(errors, warnings, hearingTypeItem, dateListedTypeItm);
                 }
             }
+        }
+    }
+
+    private void processHearingDates(List<String> errors, List<String> warnings, HearingTypeItem hearingTypeItem,
+                                     DateListedTypeItem dateListedTypeItm) {
+        addHearingsOnWeekendError(dateListedTypeItm, errors,
+                hearingTypeItem.getValue().getHearingNumber());
+        addHearingsInPastWarning(dateListedTypeItm, warnings);
+    }
+
+    private void addHearingsInPastWarning(DateListedTypeItem dateListedTypeItem, List<String> warnings) {
+        LocalDate date = LocalDateTime.parse(
+                dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
+        if ((Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingStatus())
+                || HEARING_STATUS_LISTED.equals(dateListedTypeItem.getValue().getHearingStatus()))
+                && date.isBefore(LocalDate.now())) {
+            warnings.add("One of the listed dates are in the past. If you want to change it please click Previous "
+                    + "and enter a date after today otherwise click Continue.");
         }
     }
 

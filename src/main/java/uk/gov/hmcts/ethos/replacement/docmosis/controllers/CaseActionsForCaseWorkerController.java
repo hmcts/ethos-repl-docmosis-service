@@ -62,6 +62,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntity;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrorsAndWarnings;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
@@ -588,11 +589,11 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = new ArrayList<>();
-        caseManagementForCaseWorkerService.midEventAmendHearing(
-                caseData, errors);
-        return getCallbackRespEntityErrors(errors, caseData);
+        List<String> warnings = new ArrayList<>();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors, warnings);
+        return getCallbackRespEntityErrorsAndWarnings(warnings, errors, caseData);
     }
 
     @PostMapping(value = "/amendCaseState", consumes = APPLICATION_JSON_VALUE)
