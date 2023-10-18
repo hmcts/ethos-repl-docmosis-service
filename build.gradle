@@ -220,7 +220,7 @@ ext {
     junitJupiterVersion = '5.9.3'
     log4JVersion = '2.20.0'
     serenity = '3.7.1'
-    tomcatEmbedVersion = '9.0.80'
+    tomcatEmbedVersion = '9.0.82'
 }
 
 ext["rest-assured.version"] = '5.1.0'
@@ -230,7 +230,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '32.0.1-jre') {
             entry 'guava'
         }
-        dependencySet(group: 'io.netty', version: '4.1.94.Final') {
+        dependencySet(group: 'io.netty', version: '4.1.100.Final') {
             entry 'netty-all'
             entry 'netty-buffer'
             entry 'netty-codec'
