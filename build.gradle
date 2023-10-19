@@ -311,7 +311,7 @@ dependencies {
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.8'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.5.1'
-    implementation group: 'com.squareup.okio', name: 'okio', version: '3.4.0'
+    implementation group: 'com.squareup.okio', name: 'okio', version: '3.6.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
