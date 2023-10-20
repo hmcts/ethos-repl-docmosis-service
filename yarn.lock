@@ -3702,13 +3702,13 @@ mkdirp@1.0.4, mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mocha-jenkins-reporter@0.4.7:
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/mocha-jenkins-reporter/-/mocha-jenkins-reporter-0.4.7.tgz#59505d59a9fdeb64ee8270f13d8ca6c48c1dfad7"
-  integrity sha512-ek05WBoGX9G5B29QmFw67H92ZcvZcp62RASaHWqiZOWjc/G2YlKBeu7t60J5wpaQP1rFS8T9S85ed/3iDdf/2A==
+mocha-jenkins-reporter@0.4.8:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/mocha-jenkins-reporter/-/mocha-jenkins-reporter-0.4.8.tgz#e602a7d655abaafdb0a4e02fdb9c320e2236aabe"
+  integrity sha512-1nz1Q+YgREUlh2kgFR+lrp+ufEFbdhCdtlEVEJR/5LhgqNLIg52+KG3X94hHpwWnf5SwYLS7udxgBbkWOUbyeQ==
   dependencies:
     diff "4.0.1"
-    mkdirp "^0.5.4"
+    mkdirp "^1.0.4"
     xml "^1.0.1"
 
 mocha-junit-reporter@2.0.2:
