@@ -250,7 +250,7 @@
     "@types/minimatch" "^5.1.2"
     "@types/node" "*"
 
-"@types/http-cache-semantics@^4.0.1":
+"@types/http-cache-semantics@^4.0.2":
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.3.tgz#a3ff232bf7d5c55f38e4e45693eda2ebb545794d"
   integrity sha512-V46MYLFp08Wf2mmaBhvgjStM3tPa+2GAdy/iqoX+noX1//zje2x4XmrIU0cAwyClATsTmahbtoQ2EwP7I5WSiA==
@@ -859,14 +859,14 @@ cacheable-lookup@^7.0.0:
   integrity sha512-+qJyx4xiKra8mZrcwhjMRMUhD5NR1R8esPkzIYxX96JiecFoxAXFuz/GpR3+ev4PE1WamHip78wV0vcmPQtp8w==
 
 cacheable-request@^10.2.7, cacheable-request@^10.2.8:
-  version "10.2.10"
-  resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-10.2.10.tgz#1785984a9a4ddec8dd01792232cca474be49a8af"
-  integrity sha512-v6WB+Epm/qO4Hdlio/sfUn69r5Shgh39SsE9DSd4bIezP0mblOlObI+I0kUEM7J0JFc+I7pSeMeYaOYtX1N/VQ==
+  version "10.2.14"
+  resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-10.2.14.tgz#eb915b665fda41b79652782df3f553449c406b9d"
+  integrity sha512-zkDT5WAF4hSSoUgyfg5tFIxz8XQK+25W/TLVojJTMKBaxevLBBtLxgqguAuVQB8PVW79FVjHcU+GJ9tVbDZ9mQ==
   dependencies:
-    "@types/http-cache-semantics" "^4.0.1"
+    "@types/http-cache-semantics" "^4.0.2"
     get-stream "^6.0.1"
     http-cache-semantics "^4.1.1"
-    keyv "^4.5.2"
+    keyv "^4.5.3"
     mimic-response "^4.0.0"
     normalize-url "^8.0.0"
     responselike "^3.0.0"
@@ -3305,7 +3305,7 @@ kew@^0.7.0:
   resolved "https://registry.yarnpkg.com/kew/-/kew-0.7.0.tgz#79d93d2d33363d6fdd2970b335d9141ad591d79b"
   integrity sha512-IG6nm0+QtAMdXt9KvbgbGdvY50RSrw+U4sGZg+KlrSKPJEwVE5JVoI3d7RWfSMdBQneRheeAOj3lIjX5VL/9RQ==
 
-keyv@^4.5.2:
+keyv@^4.5.3:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"
   integrity sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==
