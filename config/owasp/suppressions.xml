@@ -178,5 +178,8 @@
         <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-core@.*$</packageUrl>
         <cve>CVE-2023-5072</cve>
     </suppress>
+    <suppress>
+       <cve>CVE-2023-4586</cve>
+    </suppress>
 </suppressions>
 
