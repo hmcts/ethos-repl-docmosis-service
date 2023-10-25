@@ -166,7 +166,7 @@ public class DefaultValuesReaderServiceTest {
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("6 Westgate")
-                .tribunalCorrespondenceAddressLine2("Grace St")
+                .tribunalCorrespondenceAddressLine2("Grace Street")
                 .tribunalCorrespondenceTown("Leeds")
                 .tribunalCorrespondencePostCode("LS1 2RP")
                 .tribunalCorrespondenceTelephone("0113 245 9741")
