@@ -1,0 +1,24 @@
+on:
+  pull_request:
+    branches:
+      - master
+
+name: Sonar Workflow
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.number }}
+            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.sha }}
+            -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.sha }}
+            -Dsonar.pullrequest.provider=github
