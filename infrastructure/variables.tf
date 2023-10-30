@@ -85,3 +85,6 @@ variable "managed_identity_rg_name" {
 
 variable "managed_identity_name" {
 }
+
+variable "aks_subscription_id" {
+}
