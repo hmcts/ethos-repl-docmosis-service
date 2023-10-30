@@ -35,6 +35,17 @@ locals {
   localEnv = var.env == "preview" ? "aat" : var.env
   s2sRG    = "rpe-service-auth-provider-${local.localEnv}"
 
+  tags = merge(var.common_tags,
+    tomap({
+      "environment"  = local.localEnv,
+      "managedBy"    = var.team_name,
+      "Team Contact" = var.team_contact
+      "application"  = "employment-tribunals",
+      "businessArea" = var.businessArea,
+      "builtFrom"    = "ethos-repl-service",
+
+    })
+  )
 }
 
 data "azurerm_subnet" "postgres" {

@@ -9,7 +9,7 @@ module "postgres" {
   product       = var.product
   component     = var.component
   business_area = var.businessArea
-  common_tags   = local.common_tags
+  common_tags   = local.tags
   pgsql_databases = [
     {
       name : "ethos"
