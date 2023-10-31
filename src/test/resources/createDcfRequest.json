@@ -1,0 +1,42 @@
+{
+  "data" : {
+    "bundleConfiguration" : "et-dcf-2.yaml",
+    "id" : null,
+    "data" : null,
+    "caseBundles" : [ {
+      "value" : {
+        "id" : "5d163dde-d5ac-45eb-aa53-2cff0fbf3aaf",
+        "title" : "ET DCF",
+        "description" : null,
+        "eligibleForStitching" : "Yes",
+        "eligibleForCloning" : "no",
+        "documents" : [ {
+          "value" : {
+            "name" : "test.pdf",
+            "description" : null,
+            "sortIndex" : 0,
+            "sourceDocument" : {
+              "document_url" : "http://dummy.link/documents/11111111-1111-1111-1111-111111111111",
+              "document_filename" : "test.pdf",
+              "document_binary_url" : "http://dummy.link/documents/11111111-1111-1111-1111-111111111111/binary"
+            }
+          }
+        }],
+        "folders" : [ ],
+        "stitchStatus" : "NEW",
+        "stitchedDocument" : null,
+        "hasCoversheets" : "No",
+        "hasTableOfContents" : "Yes",
+        "hasFolderCoversheets" : "No",
+        "stitchingFailureMessage" : null,
+        "fileName" : "1800001-2023-DCF",
+        "paginationStyle" : null,
+        "coverpageTemplate" : "",
+        "pageNumberFormat" : "numberOfPages"
+      }
+    } ]
+  },
+  "errors" : null,
+  "warnings" : null,
+  "documentTaskId" : 5105
+}

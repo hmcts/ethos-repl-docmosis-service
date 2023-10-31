@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
@@ -127,15 +128,16 @@ public class CaseDataBuilder {
     public CCDRequest buildAsCcdRequest(String token) {
         CCDRequest ccdRequest = new CCDRequest();
         ccdRequest.setToken(token);
-        ccdRequest.setCaseDetails(buildAsCaseDetails(ACCEPTED_STATE));
+        ccdRequest.setCaseDetails(buildAsCaseDetails(ACCEPTED_STATE, LEEDS_CASE_TYPE_ID));
         return ccdRequest;
     }
 
-    public CaseDetails buildAsCaseDetails(String state) {
+    public CaseDetails buildAsCaseDetails(String state, String caseTypeId) {
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseData(caseData);
         caseDetails.setCaseId("1234567890123456");
         caseDetails.setState(state);
+        caseDetails.setCaseTypeId(caseTypeId);
         return caseDetails;
     }
 
