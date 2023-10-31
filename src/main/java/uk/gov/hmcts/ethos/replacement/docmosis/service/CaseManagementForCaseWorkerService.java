@@ -1,12 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.google.common.base.Strings;
-import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
@@ -15,7 +13,11 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
@@ -27,12 +29,18 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
@@ -61,6 +69,8 @@ public class CaseManagementForCaseWorkerService {
     private static final String MISSING_RESPONDENT = "Missing respondent";
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
     private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
+    private static final String PAST_LISTED_DATE = "Hearing %s is listed in the past. If you want to change it, "
+            + "please enter a date after today otherwise click Ignore and Continue.";
     public static final String LISTED_DATE_ON_WEEKEND_MESSAGE = "A hearing date you have entered "
             + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing ";
 
@@ -325,17 +335,36 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    public void midEventAmendHearing(CaseData caseData, List<String> errors) {
-        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                    for (DateListedTypeItem dateListedTypeItem
-                            : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        addHearingsOnWeekendError(dateListedTypeItem, errors,
-                                hearingTypeItem.getValue().getHearingNumber());
-                    }
+    public void midEventAmendHearing(CaseData caseData, List<String> errors, List<String> warnings) {
+        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            return;
+        }
+
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                for (DateListedTypeItem dateListedTypeItm : hearingTypeItem.getValue().getHearingDateCollection()) {
+                    processHearingDates(errors, warnings, hearingTypeItem, dateListedTypeItm);
                 }
             }
+        }
+    }
+
+    private void processHearingDates(List<String> errors, List<String> warnings, HearingTypeItem hearingTypeItem,
+                                     DateListedTypeItem dateListedTypeItm) {
+        addHearingsOnWeekendError(dateListedTypeItm, errors,
+                hearingTypeItem.getValue().getHearingNumber());
+        addHearingsInPastWarning(dateListedTypeItm, warnings, hearingTypeItem.getValue().getHearingNumber());
+    }
+
+    private void addHearingsInPastWarning(DateListedTypeItem dateListedTypeItem, List<String> warnings,
+                                          String hearingNumber) {
+        LocalDate date = LocalDateTime.parse(
+                dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
+        if ((Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingStatus())
+                || HEARING_STATUS_LISTED.equals(dateListedTypeItem.getValue().getHearingStatus()))
+                && date.isBefore(LocalDate.now())) {
+            warnings.add(PAST_LISTED_DATE.formatted(hearingNumber));
+
         }
     }
 

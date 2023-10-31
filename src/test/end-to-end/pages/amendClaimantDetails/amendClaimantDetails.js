@@ -7,6 +7,6 @@ module.exports = async function () {
     await I.navByClick(commonConfig.continue);
     await I.navByClick(commonConfig.continue);
     await I.navByClick(commonConfig.continue);
-    await I.click(commonConfig.continue)
+    await I.click(commonConfig.submit)
     await I.wait(15);
 };

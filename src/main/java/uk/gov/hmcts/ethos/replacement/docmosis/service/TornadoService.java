@@ -28,6 +28,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LETTER_ADDRESS_ALLOCATED_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
@@ -44,6 +45,7 @@ public class TornadoService {
     private final DocumentManagementService documentManagementService;
     private final UserService userService;
     private final DefaultValuesReaderService defaultValuesReaderService;
+    private static final String OUTPUT_FILE_NAME_PDF = "document.pdf";
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
@@ -193,8 +195,20 @@ public class TornadoService {
             bytes = getBytesFromInputStream(os, is);
         }
 
-        var documentSelfPath = documentManagementService.uploadDocument(authToken, bytes, OUTPUT_FILE_NAME,
-                APPLICATION_DOCX_VALUE, caseTypeId);
+        return createDocumentInfoFromBytes(authToken, documentName, caseTypeId, bytes);
+    }
+
+    public DocumentInfo createDocumentInfoFromBytes(String authToken, String documentName, String caseTypeId,
+                                                byte[] bytes) {
+        URI documentSelfPath;
+        if (documentName.endsWith(".pdf")) {
+            String pdfFileName = documentName.contains("ACAS Certificate") ? documentName : OUTPUT_FILE_NAME_PDF;
+            documentSelfPath = documentManagementService.uploadDocument(authToken, bytes, pdfFileName,
+                    APPLICATION_PDF_VALUE, caseTypeId);
+        } else {
+            documentSelfPath = documentManagementService.uploadDocument(authToken, bytes, OUTPUT_FILE_NAME,
+                    APPLICATION_DOCX_VALUE, caseTypeId);
+        }
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         var downloadUrl = documentManagementService.generateDownloadableURL(documentSelfPath);
         var markup = documentManagementService.generateMarkupDocument(downloadUrl);

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.sun.istack.NotNull;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -11,8 +10,10 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
+
+import java.util.List;
 
 public class CallbackRespHelper {
 
@@ -34,6 +35,17 @@ public class CallbackRespHelper {
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
+                .build());
+    }
+
+    @NotNull
+    public static ResponseEntity<CCDCallbackResponse> getCallbackRespEntityErrorsAndWarnings(
+            List<String> warnings, List<String> errors, CaseData caseData) {
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .warnings(warnings)
                 .build());
     }
 

@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -73,7 +76,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForC
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CaseManagementForCaseWorkerServiceTest {
+class CaseManagementForCaseWorkerServiceTest {
 
     @InjectMocks
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
@@ -95,7 +98,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @MockBean
     private CcdClient ccdClient;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         scotlandCcdRequest1 = new CCDRequest();
         CaseDetails caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
@@ -148,7 +151,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         eccCounterClaimTypeItem.setValue(counterClaimType);
 
 
-        caseData.setEccCases(Arrays.asList(eccCounterClaimTypeItem));
+        caseData.setEccCases(List.of(eccCounterClaimTypeItem));
         caseData.setRespondentECC(createRespondentECC());
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
@@ -540,10 +543,12 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void midEventAmendHearingDateOnWeekend() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
-        var errors = new ArrayList<String>();
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection().get(0).getValue().setListedDate("2022-03-19T12:11:00.000");
-        var hearingNumber = caseData.getHearingCollection().get(0).getValue().getHearingNumber();
-        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
+        List<String> errors = new ArrayList<>();
+        List<String> warnings = new ArrayList<>();
+        caseData.getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setListedDate("2022-03-19T12:11:00.000");
+        String hearingNumber = caseData.getHearingCollection().get(0).getValue().getHearingNumber();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors, warnings);
         assertFalse(errors.isEmpty());
         assertEquals(LISTED_DATE_ON_WEEKEND_MESSAGE + hearingNumber, errors.get(0));
     }
@@ -551,17 +556,34 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void amendMidEventHearingDateFridayNight() {
         CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
-        var errors = new ArrayList<String>();
-        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
+        List<String> errors = new ArrayList<>();
+        List<String> warnings = new ArrayList<>();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors, warnings);
         assertTrue(errors.isEmpty());
     }
 
     @Test
     public void amendMidEventHearingDateMondayMorning() {
         CaseData caseData = createCaseWithHearingDate("2022-03-21T00:00:00.000");
-        var errors = new ArrayList<String>();
-        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
+        List<String> errors = new ArrayList<>();
+        List<String> warnings = new ArrayList<>();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors, warnings);
         assertTrue(errors.isEmpty());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"Listed, 1", " , 1", "Heard, 0"})
+    void midEventAmendHearingDateInPast(String hearingStatus, int warning) {
+        CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
+        List<String> errors = new ArrayList<>();
+        List<String> warnings = new ArrayList<>();
+        DateListedType dateListedType = caseData.getHearingCollection().get(0)
+                .getValue().getHearingDateCollection()
+                .get(0).getValue();
+        dateListedType.setListedDate("2022-03-19T12:11:00.000");
+        dateListedType.setHearingStatus(hearingStatus);
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors, warnings);
+        assertEquals(warning, warnings.size());
     }
 
     private CaseData createCaseWithHearingDate(String date) {
