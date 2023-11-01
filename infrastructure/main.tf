@@ -6,6 +6,13 @@ provider "azurerm" {
   }
 }
 
+provider "azurerm" {
+  features {}
+  skip_provider_registration = true
+  alias                      = "private_endpoint"
+  subscription_id            = var.aks_subscription_id
+}
+
 locals {
   db_connection_options = "?sslmode=require"
   app                   = "repl-docmosis-backend"
@@ -27,7 +34,18 @@ locals {
 
   localEnv = var.env == "preview" ? "aat" : var.env
   s2sRG    = "rpe-service-auth-provider-${local.localEnv}"
+  tagEnv = var.env == "aat" ? "staging" : var.env == "perftest" ? "testing" : var.env
+  tags = merge(var.common_tags,
+    tomap({
+      "environment"  = local.tagEnv,
+      "managedBy"    = var.team_name,
+      "Team Contact" = var.team_contact
+      "application"  = "employment-tribunals",
+      "businessArea" = var.businessArea,
+      "builtFrom"    = "ethos-repl-service",
 
+    })
+  )
 }
 
 data "azurerm_subnet" "postgres" {
