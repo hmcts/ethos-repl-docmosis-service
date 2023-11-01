@@ -34,10 +34,10 @@ locals {
 
   localEnv = var.env == "preview" ? "aat" : var.env
   s2sRG    = "rpe-service-auth-provider-${local.localEnv}"
-
+  tagEnv = var.env == "aat" ? "staging" : var.env == "perftest" ? "testing" : var.env
   tags = merge(var.common_tags,
     tomap({
-      "environment"  = local.localEnv,
+      "environment"  = local.tagEnv,
       "managedBy"    = var.team_name,
       "Team Contact" = var.team_contact
       "application"  = "employment-tribunals",
