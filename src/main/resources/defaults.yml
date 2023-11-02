@@ -62,13 +62,11 @@ tribunal-offices:
       dx: DX 742940 Leeds 75
       email: LeedsET@justice.gov.uk
     london_central:
-      address1: Ground Floor
-      address2: Victory House
-      address3: 30-34 Kingsway
+      address1: Victory House
+      address2: 30-34 Kingsway
       town: London
       postcode: WC2B 6EX
       telephone: 0207 273 8603
-      fax: 01264 785 100
       dx: DX 141420 Bloomsbury
       email: londoncentralet@justice.gov.uk
     london_east:
