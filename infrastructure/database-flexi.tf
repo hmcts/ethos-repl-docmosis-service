@@ -10,6 +10,7 @@ module "postgres" {
   component     = var.component
   business_area = var.businessArea
   common_tags   = local.tags
+  subnet_suffix = "expanded"
   pgsql_databases = [
     {
       name : "ethos"
