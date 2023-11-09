@@ -52,11 +52,10 @@ tribunal-offices:
       email: glasgowet@justice.gov.uk
       managing-office: Glasgow
     leeds:
-      address1: 4th Floor
-      address2: City Exchange
-      address3: 11 Albion Street
+      address1: 6 Westgate
+      address2: Grace Street
       town: Leeds
-      postcode: LS1 5ES
+      postcode: LS1 2RP
       telephone: 0113 245 9741
       fax: 01264 785136
       dx: DX 742940 Leeds 75
