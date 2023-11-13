@@ -245,10 +245,18 @@ public class DocumentManagementService {
         }
     }
 
+    /**
+     * Sets the document type for the document collection.
+     * @param caseData where the data is stored
+     */
     public void setDocumentTypeForDocumentCollection(CaseData caseData) {
         if (CollectionUtils.isNotEmpty(caseData.getDocumentCollection())) {
-            caseData.getDocumentCollection().stream().map(DocumentTypeItem::getValue)
+            caseData.getDocumentCollection().stream()
+                    .map(DocumentTypeItem::getValue)
                     .forEach(this::setDocumentTypeForDocument);
+            caseData.getDocumentCollection()
+                    .forEach(documentTypeItem -> documentTypeItem.getValue().setDocumentNumber(
+                            String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
         }
     }
 

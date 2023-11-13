@@ -17,6 +17,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DigitalCaseFileService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
@@ -29,6 +30,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 public class DigitalCaseFileController {
     private final VerifyTokenService verifyTokenService;
     private final DigitalCaseFileService digitalCaseFileService;
+    private final DocumentManagementService documentManagementService;
     private static final String INVALID_TOKEN = "Invalid Token {}";
 
     @PostMapping(path = "/aboutToStart", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
@@ -51,6 +53,11 @@ public class DigitalCaseFileController {
         }
 
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
+
+        // Convert legacy docs to new doc naming system
+        documentManagementService.convertLegacyDocsToNewDocNaming(caseDetails.getCaseData());
+        documentManagementService.setDocumentTypeForDocumentCollection(caseDetails.getCaseData());
+
         caseDetails.getCaseData().setCaseBundles(null);
         caseDetails.getCaseData().setCaseBundles(digitalCaseFileService.createDigitalCaseFile(caseDetails, userToken));
 

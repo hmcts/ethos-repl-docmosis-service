@@ -13,6 +13,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.BundleApiClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DigitalCaseFileService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.JsonMapper;
@@ -36,6 +37,8 @@ class DigitalCaseFileControllerTest {
     private DigitalCaseFileService digitalCaseFileService;
     @MockBean
     private VerifyTokenService verifyTokenService;
+    @MockBean
+    private DocumentManagementService documentManagementService;
     @MockBean
     private BundleApiClient bundleApiClient;
     @Autowired
