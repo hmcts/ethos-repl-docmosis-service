@@ -195,5 +195,12 @@
         <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
         <vulnerabilityName>1094744</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: axios:0.26.1
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/axios@.*$</packageUrl>
+        <vulnerabilityName>1094762</vulnerabilityName>
+    </suppress>
 </suppressions>
 
