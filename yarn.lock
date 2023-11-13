@@ -275,7 +275,7 @@
 "@types/superagent@4.1.13":
   version "4.1.13"
   resolved "https://registry.yarnpkg.com/@types/superagent/-/superagent-4.1.13.tgz#0aaa3f4ff9404b94932d1dcdfb7f3d39d23997a0"
-  integrity sha512-YIGelp3ZyMiH0/A09PMAORO0EBGlF5xIKfDpK74wdYvWUs2o96b5CItJcWPdH409b7SAXIIG6p8NdU/4U2Maww==
+  integrity "sha1-Cqo/T/lAS5STLR3N+389OdI5l6A= sha512-YIGelp3ZyMiH0/A09PMAORO0EBGlF5xIKfDpK74wdYvWUs2o96b5CItJcWPdH409b7SAXIIG6p8NdU/4U2Maww=="
   dependencies:
     "@types/cookiejar" "*"
     "@types/node" "*"
@@ -614,7 +614,7 @@ async@1.x, async@^2.1.4, async@^2.6.4, async@^3.2.4, async@~0.9.0:
 async@^3.2.3:
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/async/-/async-3.2.5.tgz#ebd52a8fdaf7a2289a24df399f8d8485c8a46b66"
-  integrity sha512-baNZyqaaLhyLVKm/DlvdW051MSgO6b8eVfIezl9E5PqWxFgzLm/wQntEW4zOytVburDEr0JlALEpdOFwvErLsg==
+  integrity "sha1-69Uqj9r3oiiaJN85n42Ehcika2Y= sha512-baNZyqaaLhyLVKm/DlvdW051MSgO6b8eVfIezl9E5PqWxFgzLm/wQntEW4zOytVburDEr0JlALEpdOFwvErLsg=="
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -866,7 +866,7 @@ cacheable-lookup@^7.0.0:
 cacheable-request@^10.2.7, cacheable-request@^10.2.8:
   version "10.2.14"
   resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-10.2.14.tgz#eb915b665fda41b79652782df3f553449c406b9d"
-  integrity sha512-zkDT5WAF4hSSoUgyfg5tFIxz8XQK+25W/TLVojJTMKBaxevLBBtLxgqguAuVQB8PVW79FVjHcU+GJ9tVbDZ9mQ==
+  integrity "sha1-65FbZl/aQbeWUngt8/VTRJxAa50= sha512-zkDT5WAF4hSSoUgyfg5tFIxz8XQK+25W/TLVojJTMKBaxevLBBtLxgqguAuVQB8PVW79FVjHcU+GJ9tVbDZ9mQ=="
   dependencies:
     "@types/http-cache-semantics" "^4.0.2"
     get-stream "^6.0.1"
@@ -941,7 +941,7 @@ chai-deep-match@1.2.1:
 chai-http@4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/chai-http/-/chai-http-4.4.0.tgz#bb8c346caa25b3c76118c68f7a7cecc0493669b8"
-  integrity sha512-uswN3rZpawlRaa5NiDUHcDZ3v2dw5QgLyAwnQ2tnVNuP7CwIsOFuYJ0xR1WiR7ymD4roBnJIzOUep7w9jQMFJA==
+  integrity "sha1-u4w0bKols8dhGMaPenzswEk2abg= sha512-uswN3rZpawlRaa5NiDUHcDZ3v2dw5QgLyAwnQ2tnVNuP7CwIsOFuYJ0xR1WiR7ymD4roBnJIzOUep7w9jQMFJA=="
   dependencies:
     "@types/chai" "4"
     "@types/superagent" "4.1.13"
@@ -955,7 +955,7 @@ chai-http@4.4.0:
 chai@4.3.10:
   version "4.3.10"
   resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.10.tgz#d784cec635e3b7e2ffb66446a63b4e33bd390384"
-  integrity sha512-0UXG04VuVbruMUYbJ6JctvH0YnC/4q3/AkT18q4NaITo91CUm0liMS9VqzT9vZhVQ/1eqPanMWjBM+Juhfb/9g==
+  integrity "sha1-14TOxjXjt+L/tmRGpjtOM705A4Q= sha512-0UXG04VuVbruMUYbJ6JctvH0YnC/4q3/AkT18q4NaITo91CUm0liMS9VqzT9vZhVQ/1eqPanMWjBM+Juhfb/9g=="
   dependencies:
     assertion-error "^1.1.0"
     check-error "^1.0.3"
@@ -1024,7 +1024,7 @@ charenc@0.0.2:
 charset@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/charset/-/charset-1.0.1.tgz#8d59546c355be61049a8fa9164747793319852bd"
-  integrity sha512-6dVyOOYjpfFcL1Y4qChrAoQLRHvj2ziyhcm0QJlhOcAhykL/k1kTUPbeo+87MNRTRdk2OIIsIXbuF3x2wi5EXg==
+  integrity "sha1-jVlUbDVb5hBJqPqRZHR3kzGYUr0= sha512-6dVyOOYjpfFcL1Y4qChrAoQLRHvj2ziyhcm0QJlhOcAhykL/k1kTUPbeo+87MNRTRdk2OIIsIXbuF3x2wi5EXg=="
 
 check-error@^1.0.2, check-error@^1.0.3:
   version "1.0.3"
@@ -3697,7 +3697,7 @@ mkdirp@1.0.4, mkdirp@^1.0.3, mkdirp@^1.0.4:
 mocha-jenkins-reporter@0.4.8:
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/mocha-jenkins-reporter/-/mocha-jenkins-reporter-0.4.8.tgz#e602a7d655abaafdb0a4e02fdb9c320e2236aabe"
-  integrity sha512-1nz1Q+YgREUlh2kgFR+lrp+ufEFbdhCdtlEVEJR/5LhgqNLIg52+KG3X94hHpwWnf5SwYLS7udxgBbkWOUbyeQ==
+  integrity "sha1-5gKn1lWrqv2wpOAv25wyDiI2qr4= sha512-1nz1Q+YgREUlh2kgFR+lrp+ufEFbdhCdtlEVEJR/5LhgqNLIg52+KG3X94hHpwWnf5SwYLS7udxgBbkWOUbyeQ=="
   dependencies:
     diff "4.0.1"
     mkdirp "^1.0.4"
@@ -3717,7 +3717,7 @@ mocha-junit-reporter@2.0.2:
 mocha-multi@1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/mocha-multi/-/mocha-multi-1.1.7.tgz#0f94d00c22ae39d20c253545d8eee0d2c4420205"
-  integrity sha512-SXZRgHy0XiRTASyOp0p6fjOkdj+R62L6cqutnYyQOvIjNznJuUwzykxctypeRiOwPd+gfn4yt3NRulMQyI8Tzg==
+  integrity "sha1-D5TQDCKuOdIMJTVF2O7g0sRCAgU= sha512-SXZRgHy0XiRTASyOp0p6fjOkdj+R62L6cqutnYyQOvIjNznJuUwzykxctypeRiOwPd+gfn4yt3NRulMQyI8Tzg=="
   dependencies:
     debug "^4.1.1"
     is-string "^1.0.4"
@@ -3929,7 +3929,7 @@ node.extend@~2.0.2:
 nodemon@2.0.22:
   version "2.0.22"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.22.tgz#182c45c3a78da486f673d6c1702e00728daf5258"
-  integrity sha512-B8YqaKMmyuCO7BowF1Z1/mkPqLk6cs/l63Ojtd6otKjMx47Dq1utxfRxcavH1I7VSaL8n5BUaoutadnsX3AAVQ==
+  integrity "sha1-GCxFw6eNpIb2c9bBcC4Aco2vUlg= sha512-B8YqaKMmyuCO7BowF1Z1/mkPqLk6cs/l63Ojtd6otKjMx47Dq1utxfRxcavH1I7VSaL8n5BUaoutadnsX3AAVQ=="
   dependencies:
     chokidar "^3.5.2"
     debug "^3.2.7"
@@ -4989,7 +4989,7 @@ selenium-standalone@8.0.10:
 "semver@2 || 3 || 4 || 5", semver@^5.3.0, semver@^5.4.1, semver@^5.7.1, semver@^7.2.1, semver@^7.3.7, semver@^7.3.8, semver@^7.5.2, semver@^7.5.3, semver@~7.0.0, semver@~7.3.5:
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
-  integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
+  integrity "sha1-SDmG7E7TjhxsSMNIlKkYLb/2im4= sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA=="
   dependencies:
     lru-cache "^6.0.0"
 
@@ -5058,7 +5058,7 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
 simple-update-notifier@^1.0.7:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/simple-update-notifier/-/simple-update-notifier-1.1.0.tgz#67694c121de354af592b347cdba798463ed49c82"
-  integrity sha512-VpsrsJSUcJEseSbMHkrsrAVSdvVS5I96Qo1QAQ4FxQ9wXFcB+pjj7FB7/us9+GcgfW4ziHtYMc1J0PLczb55mg==
+  integrity "sha1-Z2lMEh3jVK9ZKzR826eYRj7UnII= sha512-VpsrsJSUcJEseSbMHkrsrAVSdvVS5I96Qo1QAQ4FxQ9wXFcB+pjj7FB7/us9+GcgfW4ziHtYMc1J0PLczb55mg=="
   dependencies:
     semver "~7.0.0"
 
@@ -5070,7 +5070,7 @@ sinon-chai@3.7.0:
 sinon@13.0.2:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-13.0.2.tgz#c6a8ddd655dc1415bbdc5ebf0e5b287806850c3a"
-  integrity sha512-KvOrztAVqzSJWMDoxM4vM+GPys1df2VBoXm+YciyB/OLMamfS3VXh3oGh5WtrAGSzrgczNWFFY22oKb7Fi5eeA==
+  integrity "sha1-xqjd1lXcFBW73F6/DlsoeAaFDDo= sha512-KvOrztAVqzSJWMDoxM4vM+GPys1df2VBoXm+YciyB/OLMamfS3VXh3oGh5WtrAGSzrgczNWFFY22oKb7Fi5eeA=="
   dependencies:
     "@sinonjs/commons" "^1.8.3"
     "@sinonjs/fake-timers" "^9.1.2"
@@ -5362,7 +5362,7 @@ superagent@^7.1.0:
 superagent@^8.0.9:
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/superagent/-/superagent-8.1.2.tgz#03cb7da3ec8b32472c9d20f6c2a57c7f3765f30b"
-  integrity sha512-6WTxW1EB6yCxV5VFOIPQruWGHqc3yI7hEmZK6h+pyk69Lk/Ut7rLUY6W/ONF2MjBuGjvmMiIpsrVJ2vjrHlslA==
+  integrity "sha1-A8t9o+yLMkcsnSD2wqV8fzdl8ws= sha512-6WTxW1EB6yCxV5VFOIPQruWGHqc3yI7hEmZK6h+pyk69Lk/Ut7rLUY6W/ONF2MjBuGjvmMiIpsrVJ2vjrHlslA=="
   dependencies:
     component-emitter "^1.3.0"
     cookiejar "^2.1.4"
@@ -5632,7 +5632,7 @@ typedarray@^0.0.6:
 ua-parser-js@^1.0.1, ua-parser-js@^1.0.33:
   version "1.0.37"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.37.tgz#b5dc7b163a5c1f0c510b08446aed4da92c46373f"
-  integrity sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==
+  integrity "sha1-tdx7FjpcHwxRCwhEau1NqSxGNz8= sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ=="
 
 uglify-js@^3.1.4, uglify-js@^3.5.1:
   version "3.17.4"
