@@ -85,3 +85,20 @@ variable "managed_identity_rg_name" {
 
 variable "managed_identity_name" {
 }
+
+variable "aks_subscription_id" {
+}
+
+variable "team_name" {
+  description = "Team name"
+  default     = "ECM Project"
+}
+
+variable "team_contact" {
+  description = "Team contact"
+  default     = "#ethos-repl-service"
+}
+
+variable "businessArea" {
+  default = "CFT"
+}

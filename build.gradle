@@ -3,7 +3,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'jacoco'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'io.spring.dependency-management' version '1.1.4'
     id 'org.springframework.boot' version '2.7.17'
     id 'org.owasp.dependencycheck' version '8.0.1'
     id 'com.github.ben-manes.versions' version '0.49.0'
@@ -218,7 +218,7 @@ repositories {
 
 ext {
     junitJupiterVersion = '5.9.3'
-    log4JVersion = '2.21.0'
+    log4JVersion = '2.21.1'
     serenity = '3.7.1'
     tomcatEmbedVersion = '9.0.82'
 }
@@ -268,7 +268,7 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '2.0.2'
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.1.7'
 
-    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.0.41'
+    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '1.19.0.1'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
@@ -280,7 +280,7 @@ dependencies {
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
-    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.29'
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.30'
     implementation group: 'org.apache.santuario', name: 'xmlsec', version: '3.0.3'
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatEmbedVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatEmbedVersion
@@ -303,7 +303,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.7'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.8'
     implementation 'org.springframework.retry:spring-retry'
     implementation group: 'org.webjars.npm', name: 'minimatch', version: '5.1.6'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
@@ -332,14 +332,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Contract Tests
-    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.5.6'
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.6.3'
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'java8', version: '4.1.42'
     contractTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     contractTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.9.3'
-    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.2'
+    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.4'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.10.RELEASE'
     contractTestImplementation sourceSets.main.runtimeClasspath
     contractTestImplementation sourceSets.test.runtimeClasspath
