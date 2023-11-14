@@ -70,7 +70,6 @@ class DigitalCaseFileServiceTest {
     void stitchDcf() {
         digitalCaseFileService.stitchDigitalCaseFile(caseDetails, authToken);
         assertNotNull(caseData.getCaseBundles());
-        assertEquals(1, caseDetails.getCaseData().getDigitalCaseFile().size());
     }
 
     @ParameterizedTest

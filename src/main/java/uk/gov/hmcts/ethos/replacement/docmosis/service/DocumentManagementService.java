@@ -185,21 +185,18 @@ public class DocumentManagementService {
      * @param caseData where the data is stored
      */
     public void convertLegacyDocsToNewDocNaming(CaseData caseData) {
-        if (CollectionUtils.isNotEmpty(caseData.getDocumentCollection())) {
-            for (DocumentTypeItem documentTypeItem : caseData.getDocumentCollection()) {
-                DocumentType documentType = documentTypeItem.getValue();
-                if (isNullOrEmpty(documentType.getTopLevelDocuments())
-                        && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
-                    mapLegacyDocTypeToNewDocType(documentType);
+        if (CollectionUtils.isEmpty(caseData.getDocumentCollection())) {
+            return;
+        }
+        for (DocumentTypeItem documentTypeItem : caseData.getDocumentCollection()) {
+            DocumentType documentType = documentTypeItem.getValue();
+            if (isNullOrEmpty(documentType.getTopLevelDocuments()) && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
+                mapLegacyDocTypeToNewDocType(documentType);
 
-                }
-                if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
-                    documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
-                            .toString());
-                }
             }
-        } else {
-            caseData.setDocumentCollection(new ArrayList<>());
+            if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
+                documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence()).toString());
+            }
         }
     }
 
@@ -250,14 +247,15 @@ public class DocumentManagementService {
      * @param caseData where the data is stored
      */
     public void setDocumentTypeForDocumentCollection(CaseData caseData) {
-        if (CollectionUtils.isNotEmpty(caseData.getDocumentCollection())) {
-            caseData.getDocumentCollection().stream()
-                    .map(DocumentTypeItem::getValue)
-                    .forEach(this::setDocumentTypeForDocument);
-            caseData.getDocumentCollection()
-                    .forEach(documentTypeItem -> documentTypeItem.getValue().setDocumentNumber(
-                            String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
+        if (CollectionUtils.isEmpty(caseData.getDocumentCollection())) {
+            return;
         }
+        caseData.getDocumentCollection().stream()
+                .map(DocumentTypeItem::getValue)
+                .forEach(this::setDocumentTypeForDocument);
+        caseData.getDocumentCollection()
+                .forEach(documentTypeItem -> documentTypeItem.getValue().setDocumentNumber(
+                        String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
     }
 
     private void setDocumentTypeForDocument(DocumentType documentType) {
@@ -284,9 +282,10 @@ public class DocumentManagementService {
                 documentType.setDocumentType(documentType.getTypeOfDocument());
             }
         }
-        if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
-            documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
-                    .toString());
+        if (isNullOrEmpty(documentType.getDateOfCorrespondence())) {
+            return;
         }
+        documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
+                .toString());
     }
 }

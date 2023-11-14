@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DigitalCaseFileType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.BundleApiClient;
@@ -70,23 +71,20 @@ public class DigitalCaseFileService {
         }
 
         DocumentLink documentLink = stitchedFile.get().value().getStitchedDocument();
-        caseData.setDigitalCaseFile(List.of(createTribunalCaseFile(documentLink)));
+        caseData.setDigitalCaseFile(createTribunalCaseFile(documentLink));
     }
 
-    private DocumentTypeItem createTribunalCaseFile(DocumentLink documentLink) {
+    private DigitalCaseFileType createTribunalCaseFile(DocumentLink documentLink) {
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
         uploadedDocumentType.setDocumentFilename(documentLink.documentFilename);
         uploadedDocumentType.setDocumentUrl(documentLink.documentUrl);
         uploadedDocumentType.setDocumentBinaryUrl(documentLink.documentBinaryUrl);
 
-        DocumentType documentType = new DocumentType();
-        documentType.setUploadedDocument(uploadedDocumentType);
-        documentType.setDateOfCorrespondence(String.valueOf(java.time.LocalDate.now()));
+        DigitalCaseFileType digitalCaseFile = new DigitalCaseFileType();
+        digitalCaseFile.setUploadedDocument(uploadedDocumentType);
+        digitalCaseFile.setDateGenerated(String.valueOf(java.time.LocalDate.now()));
 
-        DocumentTypeItem documentTypeItem = new DocumentTypeItem();
-        documentTypeItem.setId(UUID.randomUUID().toString());
-        documentTypeItem.setValue(documentType);
-        return documentTypeItem;
+        return digitalCaseFile;
     }
 
     private void setCustomBundleValues(CaseDetails caseDetails, BundleCreateResponse bundleCreateResponse) {
