@@ -202,5 +202,15 @@
         <packageUrl regex="true">^pkg:npm/axios@.*$</packageUrl>
         <vulnerabilityName>1094762</vulnerabilityName>
     </suppress>
+       <!--Below suppressed as library no longer getting updates. Need to migrate over to com.azure:azure-messaging-servicebus in et-common -->
+     <suppress>
+         <packageUrl regex="true">^pkg:maven/com\.microsoft.*$</packageUrl>
+         <cve>CVE-2023-36052</cve>
+    </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/com\.azure.*$</packageUrl>
+        <cve>CVE-2023-36052</cve>
+    </suppress>
+     <!-- Above to be removed when migrated to com.azure:azure-messaging-servicebus -->
 </suppressions>
 
