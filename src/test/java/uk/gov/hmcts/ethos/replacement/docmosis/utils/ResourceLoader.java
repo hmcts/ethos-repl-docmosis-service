@@ -35,15 +35,4 @@ public class ResourceLoader {
         return jsonMapper.fromJson(response, uk.gov.hmcts.reform.ccd.document.am.model.UploadResponse.class);
     }
 
-    public static BundleCreateResponse createDcfRequest() throws URISyntaxException, IOException {
-        String response = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(ResourceLoader.class.getClassLoader()
-                .getResource("createDcfRequest.json")).toURI())));
-        return jsonMapper.fromJson(response, BundleCreateResponse.class);
-    }
-
-    public static BundleCreateResponse stitchDcfRequest() throws URISyntaxException, IOException {
-        String response = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(ResourceLoader.class.getClassLoader()
-                .getResource("stitchDcfRequest.json")).toURI())));
-        return jsonMapper.fromJson(response, BundleCreateResponse.class);
-    }
 }
