@@ -55,13 +55,12 @@ public class ReferenceDataFixesController {
     @PostMapping(value = "/initAdminData", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "Initialise judge codes data to null values")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDAdminCallbackResponse> initAdminData(
             @RequestHeader("Authorization") String userToken,
@@ -79,12 +78,12 @@ public class ReferenceDataFixesController {
     @PostMapping(value = "/updateJudgesItcoReferences", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "update the judges' ITCO references")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDAdminCallbackResponse> updateJudgesItcoReferences(
             @RequestBody CCDAdminRequest ccdAdminRequest,
@@ -105,12 +104,12 @@ public class ReferenceDataFixesController {
     @PostMapping(value = "/insertClaimServedDate", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "Insert the claim served date for existing cases")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDAdminCallbackResponse> insertClaimServedDate(
             @RequestBody CCDAdminRequest ccdAdminRequest,
@@ -122,9 +121,9 @@ public class ReferenceDataFixesController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
         List<String> errors = new ArrayList<>();
-            RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(userToken);
-           AdminData caseData = referenceDataFixesService.insertClaimServedDate(
-                   ccdAdminRequest.getCaseDetails(), userToken, dataSource, errors);
+        RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(userToken);
+        AdminData caseData = referenceDataFixesService.insertClaimServedDate(
+            ccdAdminRequest.getCaseDetails(), userToken, dataSource, errors);
 
         return getCallbackRespEntityErrorsAdmin(errors, caseData);
     }
