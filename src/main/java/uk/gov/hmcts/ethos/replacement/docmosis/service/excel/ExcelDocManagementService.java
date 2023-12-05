@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
@@ -39,7 +40,6 @@ public class ExcelDocManagementService {
 
     @Value("${document_management.ccdCaseDocument.url}")
     private String ccdCaseDocumentUrl;
-
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
     private final UserService userService;
@@ -54,11 +54,8 @@ public class ExcelDocManagementService {
                 multipleDetails.getCaseTypeId());
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
-
         log.info("Add document to multiple with reference:" + multipleData.getMultipleReference());
-
         addDocumentToMultiple(userToken, multipleData, documentSelfPath);
-
     }
 
     public InputStream downloadExcelDocument(String userToken, String binaryUrl) throws IOException {
@@ -103,9 +100,9 @@ public class ExcelDocManagementService {
 
     public CaseImporterFile populateCaseImporterFile(String userToken, UploadedDocumentType uploadedDocumentType) {
 
-        var caseImporterFile = new CaseImporterFile();
-        var dateTime = LocalDateTime.now(ZoneId.of("Europe/London"));
-        var userDetails = userService.getUserDetails(userToken);
+        CaseImporterFile caseImporterFile = new CaseImporterFile();
+        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Europe/London"));
+        UserDetails userDetails = userService.getUserDetails(userToken);
 
         caseImporterFile.setUploadedDocument(uploadedDocumentType);
         caseImporterFile.setUploadedDateTime(dateTime.format(DATE_TIME_USER_FRIENDLY_PATTERN));
