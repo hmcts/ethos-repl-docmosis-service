@@ -30,6 +30,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingListingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
@@ -83,9 +84,6 @@ class CaseManagementForCaseWorkerServiceTest {
     @InjectMocks
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
-    private final String HEARING_NUMBER = "Hearing number";
-    private final String CUSTOM_FILTER = "Custom filter";
-    private final String SINGLE = "Single";
     private CCDRequest scotlandCcdRequest1;
     private CCDRequest scotlandCcdRequest2;
     private CCDRequest scotlandCcdRequest3;
@@ -550,10 +548,19 @@ class CaseManagementForCaseWorkerServiceTest {
                 .getHearingDateCollection().get(0).getValue().getHearingTimingFinish());
     }
 
-    @Test
-    public void processHearingsForUpdateRequestWhenSingleHearingUpdate() {
+    @ParameterizedTest
+    @CsvSource({"Hearing number"})
+    public void processHearingsForUpdateRequestByHearingNumber(String hearingsFilterType) {
         CaseDetails caseDetails = ccdRequest16.getCaseDetails();
-        caseDetails.getCaseData().setHearingUpdateFilterType(HEARING_NUMBER);
+
+        DynamicFixedListType updateFilterTypeFL = new DynamicFixedListType();
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode("1");
+        dynamicValueType.setLabel("1");
+        updateFilterTypeFL.setValue(dynamicValueType);
+        updateFilterTypeFL.setListItems(List.of(dynamicValueType));
+        caseDetails.getCaseData().setSelectedHearingNumberForUpdate(updateFilterTypeFL);
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
 
         caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
 
@@ -561,23 +568,40 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals(1, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
     }
 
-    @Test
-    public void testProcessHearingsForUpdateRequestWhenCustomFilter() {
-        CaseDetails caseDetails = createCaseDetailsForCustomFilter();
+    @ParameterizedTest
+    @CsvSource({"Custom filter, Single"})
+    public void processHearingsForUpdateRequestWithCustomFilterSingleDate(String hearingsFilterType,
+                                                                          String hearingDateType) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+        HearingListingType hearingListingType = new HearingListingType();
+        hearingListingType.setHearingDate("2019-11-01");
+        hearingListingType.setHearingDateType(hearingDateType);
+        caseDetails.getCaseData().setUpdateHearingDetails(hearingListingType);
 
         caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
 
-        verify(caseDetails.getCaseData(), times(1)).getHearingCollection();
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(3, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
     }
 
-    private CaseDetails createCaseDetailsForCustomFilter() {
+    @ParameterizedTest
+    @CsvSource({"Custom filter, Range"})
+    public void processHearingsForUpdateRequestWithCustomFilterDateRange(String hearingsFilterType,
+                                                                          String hearingDateType) {
         CaseDetails caseDetails = ccdRequest16.getCaseDetails();
-        caseDetails.getCaseData().setHearingUpdateFilterType(CUSTOM_FILTER);
-        caseDetails.getCaseData().getUpdateHearingDetails().setHearingDateType(SINGLE);
-        caseDetails.getCaseData().getUpdateHearingDetails().setHearingDate("2019 11 25");
-        return caseDetails;
-    }
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+        HearingListingType hearingListingType = new HearingListingType();
+        hearingListingType.setHearingDateFrom("2019-10-01");
+        hearingListingType.setHearingDateTo("2019-11-01");
+        hearingListingType.setHearingDateType(hearingDateType);
+        caseDetails.getCaseData().setUpdateHearingDetails(hearingListingType);
 
+        caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
+
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(4, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+    }
 
     @Test
     public void midEventAmendHearingDateOnWeekend() {

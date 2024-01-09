@@ -178,7 +178,6 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-
     public void processHearingsForUpdateRequest(CaseDetails caseDetails) {
         CaseData caseData = caseDetails.getCaseData();
         // check if update is only on one hearing
@@ -221,8 +220,7 @@ public class CaseManagementForCaseWorkerService {
                         .getHearingDateCollection().stream()
                         .filter(d -> isInRangeHearingDate(d.getValue().getListedDate(),
                                 caseData.getUpdateHearingDetails().getHearingDateFrom(),
-                                caseData.getUpdateHearingDetails().getHearingDateTo()))
-                        .collect(Collectors.toList());
+                                caseData.getUpdateHearingDetails().getHearingDateTo())).toList();
 
                 // hearing/s with only needed date entries and exclude the ones out of the filter/search criteria
                 if(!validHearingDates.isEmpty()) {
@@ -346,10 +344,8 @@ public class CaseManagementForCaseWorkerService {
             Optional<RespondentSumTypeItem> matchedRespondent = respondentCollection.stream()
                     .filter(resp ->
                             resp.getId().equals(respondentRep.getValue().getRespondentId())).findFirst();
-
-            matchedRespondent.ifPresent(respondent ->
-                    updateRepWithRespondentDetails(respondent, respondentRep, respondentCollection));
-
+            matchedRespondent.ifPresent(respondent -> updateRepWithRespondentDetails(respondent,
+                    respondentRep, respondentCollection));
             repCollection.add(respondentRep);
         }
 
