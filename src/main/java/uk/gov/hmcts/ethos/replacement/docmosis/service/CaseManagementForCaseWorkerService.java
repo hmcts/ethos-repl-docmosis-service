@@ -77,8 +77,8 @@ public class CaseManagementForCaseWorkerService {
     public static final String LISTED_DATE_ON_WEEKEND_MESSAGE = "A hearing date you have entered "
             + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing ";
     private static final String FULL_PANEL = "Full Panel";
-    private final String HEARING_NUMBER = "Hearing number";
-    private final String SINGLE = "Single";
+    private static final String HEARING_NUMBER = "Hearing number";
+    private static final String SINGLE = "Single";
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
