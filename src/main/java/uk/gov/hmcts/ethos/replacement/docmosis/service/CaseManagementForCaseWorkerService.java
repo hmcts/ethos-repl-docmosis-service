@@ -208,12 +208,14 @@ public class CaseManagementForCaseWorkerService {
                         .filter(d -> ReportHelper.getFormattedLocalDate(d.getValue().getListedDate()).equals(
                                 caseData.getUpdateHearingDetails().getHearingDate())).collect(Collectors.toList());
 
-                // hearing/s with only needed date entries and exclude the ones out of the filter/search criteria
+                //prepare hearing with only needed date entries and exclude the ones out of the filter/search criteria
                 if(!validHearingDates.isEmpty()) {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
+
         } else {  // for Range of hearing dates
+
             for (var hearingTypeItem : caseData.getHearingCollection()) {
                 List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
                         .getHearingDateCollection().stream()
