@@ -78,6 +78,7 @@ public class CaseManagementForCaseWorkerService {
             + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing ";
     private static final String FULL_PANEL = "Full Panel";
     private final String HEARING_NUMBER = "Hearing number";
+    private final String SINGLE = "Single";
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -187,36 +188,32 @@ public class CaseManagementForCaseWorkerService {
                             .equals(caseData.getSelectedHearingNumberForUpdate()
                                     .getValue().getCode())).findFirst();
             if(hearingForUpdate.isPresent()) {
-                if(caseData.getHearingsCollectionForUpdate() == null) {
-
-                    caseData.setHearingsCollectionForUpdate(new ArrayList<>());
-                } else {
-                    caseData.getHearingsCollectionForUpdate().clear();
-                }
+                caseData.setHearingsCollectionForUpdate(new ArrayList<>());
                 caseData.getHearingsCollectionForUpdate().add(hearingForUpdate.get());
             }
-        } else { // when update request is on hearings from more than one hearing, i.e. custom filter
-            // for filter by hearing date
+        } else {
+            // when update request is on hearings from more than one hearing, i.e.
+            // custom filter for filtering by hearing date
             filterValidHearingDates(caseData);
         }
     }
 
     private void filterValidHearingDates(CaseData caseData) {
         //For Single hearing date
-        if ("Single".equals(caseData.getUpdateHearingDetails().getHearingDateType())) {
+        if (SINGLE.equals(caseData.getUpdateHearingDetails().getHearingDateType())) {
             for (var hearingTypeItem : caseData.getHearingCollection()) {
                 //get hearings with one or more valid(on the date for Single, within bounds for Range) hearing dates
                 List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
                         .getHearingDateCollection().stream()
-                        .filter(d -> getLocalDate(d.getValue().getListedDate()).equals(
+                        .filter(d -> ReportHelper.getFormattedLocalDate(d.getValue().getListedDate()).equals(
                                 caseData.getUpdateHearingDetails().getHearingDate())).collect(Collectors.toList());
 
-                //prepare hearing with only needed date entries and exclude the ones out of the filter/search criteria
+                // hearing/s with only needed date entries and exclude the ones out of the filter/search criteria
                 if(!validHearingDates.isEmpty()) {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
-        } else {  //For Range of hearing dates
+        } else {  // for Range of hearing dates
             for (var hearingTypeItem : caseData.getHearingCollection()) {
                 List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
                         .getHearingDateCollection().stream()
@@ -225,17 +222,12 @@ public class CaseManagementForCaseWorkerService {
                                 caseData.getUpdateHearingDetails().getHearingDateTo()))
                         .collect(Collectors.toList());
 
-                //prepare hearing with only needed date entries and exclude the ones out of the filter/search criteria
+                // hearing/s with only needed date entries and exclude the ones out of the filter/search criteria
                 if(!validHearingDates.isEmpty()) {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
         }
-    }
-
-    private String getLocalDate(String dateListed) {
-        var convertedDate = ReportHelper.getFormattedLocalDate(dateListed);
-        return convertedDate;
     }
 
     private boolean isInRangeHearingDate(String dateListed, String from, String to) {
@@ -261,7 +253,6 @@ public class CaseManagementForCaseWorkerService {
         hearingType.setHearingStage(hearingTypeItem.getValue().getHearingStage());
         hearingType.setJudge(hearingTypeItem.getValue().getJudge());
 
-        // Add hearing dates
         filteredHearingDates.forEach(hd -> hearingType.getHearingDateCollection().add(hd));
         currentHearingTypeItem.setValue(hearingType);
         caseData.getHearingsCollectionForUpdate().add(currentHearingTypeItem);
@@ -278,7 +269,7 @@ public class CaseManagementForCaseWorkerService {
                     HearingType sourceHearingType = updatedHearing.getValue();
                     HearingType targetHearingType = matchingHearing.get().getValue();
 
-                    //update  fields shared at hearing level like Sit Alone or Full Panel
+                    // update  fields shared at hearing level like Sit Alone or Full Panel
                     targetHearingType.setHearingSitAlone(sourceHearingType.getHearingSitAlone());
                     targetHearingType.setJudge(sourceHearingType.getJudge());
 
@@ -287,7 +278,7 @@ public class CaseManagementForCaseWorkerService {
                         targetHearingType.setHearingERMember(sourceHearingType.getHearingERMember());
                     }
 
-                    //update hearing dates for the selected hearing dates collection entries
+                    // update hearing dates for the selected hearing dates collection entries
                     updateHearingDates(matchingHearing.get(), sourceHearingType);
                 }
             }
@@ -298,7 +289,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private void updateHearingDates(HearingTypeItem matchingHearing, HearingType updatedHearing) {
-        //update hearing dates for the selected hearing dates collection entries
+        // update hearing dates for the selected hearing dates collection entries
         for (var hearingDate : updatedHearing.getHearingDateCollection()) {
             Optional<DateListedTypeItem> hdToUpdate = matchingHearing.getValue().getHearingDateCollection()
                     .stream().filter(uhd -> String.valueOf(uhd.getId())
