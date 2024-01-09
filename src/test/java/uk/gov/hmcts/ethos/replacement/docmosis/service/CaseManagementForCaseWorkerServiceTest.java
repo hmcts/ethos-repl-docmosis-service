@@ -56,6 +56,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
@@ -81,6 +83,9 @@ class CaseManagementForCaseWorkerServiceTest {
     @InjectMocks
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
+    private final String HEARING_NUMBER = "Hearing number";
+    private final String CUSTOM_FILTER = "Custom filter";
+    private final String SINGLE = "Single";
     private CCDRequest scotlandCcdRequest1;
     private CCDRequest scotlandCcdRequest2;
     private CCDRequest scotlandCcdRequest3;
@@ -90,6 +95,7 @@ class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest ccdRequest13;
     private CCDRequest ccdRequest14;
     private CCDRequest ccdRequest15;
+    private CCDRequest ccdRequest16;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
 
@@ -135,6 +141,10 @@ class CaseManagementForCaseWorkerServiceTest {
         ccdRequest15 = new CCDRequest();
         CaseDetails caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
         ccdRequest15.setCaseDetails(caseDetails15);
+
+        ccdRequest16 = new CCDRequest();
+        CaseDetails caseDetails16 = generateCaseDetails("caseDetailsScotTestHearingUpdates.json");
+        ccdRequest16.setCaseDetails(caseDetails16);
 
         manchesterCcdRequest = new CCDRequest();
         CaseDetails manchesterCaseDetails = new CaseDetails();
@@ -539,6 +549,35 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals("2019-11-01T12:11:00.000", caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingTimingFinish());
     }
+
+    @Test
+    public void processHearingsForUpdateRequestWhenSingleHearingUpdate() {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        caseDetails.getCaseData().setHearingUpdateFilterType(HEARING_NUMBER);
+
+        caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
+
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(1, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+    }
+
+    @Test
+    public void testProcessHearingsForUpdateRequestWhenCustomFilter() {
+        CaseDetails caseDetails = createCaseDetailsForCustomFilter();
+
+        caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
+
+        verify(caseDetails.getCaseData(), times(1)).getHearingCollection();
+    }
+
+    private CaseDetails createCaseDetailsForCustomFilter() {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        caseDetails.getCaseData().setHearingUpdateFilterType(CUSTOM_FILTER);
+        caseDetails.getCaseData().getUpdateHearingDetails().setHearingDateType(SINGLE);
+        caseDetails.getCaseData().getUpdateHearingDetails().setHearingDate("2019 11 25");
+        return caseDetails;
+    }
+
 
     @Test
     public void midEventAmendHearingDateOnWeekend() {
