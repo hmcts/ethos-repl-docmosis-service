@@ -205,7 +205,7 @@ public class CaseManagementForCaseWorkerService {
                 List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
                         .getHearingDateCollection().stream()
                         .filter(d -> ReportHelper.getFormattedLocalDate(d.getValue().getListedDate()).equals(
-                                caseData.getUpdateHearingDetails().getHearingDate())).collect(Collectors.toList());
+                                caseData.getUpdateHearingDetails().getHearingDate())).toList();
 
                 //prepare hearing with only needed date entries and exclude the ones out of the filter/search criteria
                 if(!validHearingDates.isEmpty()) {
