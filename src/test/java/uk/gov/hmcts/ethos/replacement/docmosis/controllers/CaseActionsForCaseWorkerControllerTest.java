@@ -20,6 +20,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
@@ -56,6 +57,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -331,6 +333,8 @@ public class CaseActionsForCaseWorkerControllerTest {
                 isA(String.class))).thenReturn(defaultValues);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
+        when(eventValidationService.validateCurrentPosition(isA(CaseDetails.class))).thenReturn(true);
+
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -339,6 +343,9 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
+        verify(defaultValuesReaderService, atLeastOnce()).getCaseData(any(), any());
+        verify(caseManagementForCaseWorkerService, atLeastOnce()).setDateToCurrentPosition(any());
+        verify(caseManagementForCaseWorkerService, atLeastOnce()).setNextListedDate(any());
     }
 
     @Test
@@ -355,6 +362,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors[0]", is("null Case has not been Accepted.")))
                 .andExpect(jsonPath("$.warnings", nullValue()));
+        verify(eventValidationService).validateReceiptDate(any());
     }
 
     @Test
@@ -408,6 +416,11 @@ public class CaseActionsForCaseWorkerControllerTest {
         when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class)))
                 .thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateActiveRespondents(isA(CaseData.class)))
+                .thenReturn(new ArrayList<>());
+        when(eventValidationService.validateET3ResponseFields(isA(CaseData.class)))
+                .thenReturn(new ArrayList<>());
+
         mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -416,6 +429,8 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
+
+        verify(eventValidationService, atLeastOnce()).validateET3ResponseFields(any());
     }
 
     @Test
