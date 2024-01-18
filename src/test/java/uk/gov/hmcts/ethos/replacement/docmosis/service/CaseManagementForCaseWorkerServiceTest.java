@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -313,7 +312,7 @@ class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void dateToCurrentPositionChanged() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        caseManagementForCaseWorkerService.setDateToCurrentPosition(caseData);
         assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
         assertEquals(caseData.getDateToPosition(), LocalDate.now().toString());
     }
@@ -342,7 +341,7 @@ class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void dateToCurrentPositionUnChanged() {
         CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        caseManagementForCaseWorkerService.setDateToCurrentPosition(caseData);
         assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
         assertEquals("2019-11-15", caseData.getDateToPosition());
     }
@@ -389,7 +388,7 @@ class CaseManagementForCaseWorkerServiceTest {
     public void dateToCurrentPositionNullPositionType() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
         caseData.setPositionType(null);
-        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        caseManagementForCaseWorkerService.setDateToCurrentPosition(caseData);
         assertNull(caseData.getPositionType());
         assertNull(caseData.getDateToPosition());
     }
@@ -397,7 +396,7 @@ class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void dateToCurrentPositionNullCurrentPosition() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        caseManagementForCaseWorkerService.setDateToCurrentPosition(caseData);
         assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
         assertEquals(caseData.getDateToPosition(), LocalDate.now().toString());
     }

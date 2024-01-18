@@ -284,8 +284,36 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        var caseDetails = ccdRequest.getCaseDetails();
-        var caseData = caseDetails.getCaseData();
+        List<String> errors = runAmendCaseDetailsSteps(userToken, ccdRequest.getCaseDetails());
+        return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
+    }
+
+    @PostMapping(value = "/migrateCaseLinkDetails", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "amends the case link details of a transferred single case.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> migrateCaseLinkDetails(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MIGRATE CASE LINK DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = runAmendCaseDetailsSteps(userToken, ccdRequest.getCaseDetails());
+        return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
+    }
+
+    private List<String> runAmendCaseDetailsSteps(String userToken, CaseDetails caseDetails) {
+        CaseData caseData = caseDetails.getCaseData();
         List<String> errors = eventValidationService.validateReceiptDate(caseDetails);
 
         if (!eventValidationService.validateCaseState(caseDetails)) {
@@ -301,7 +329,7 @@ public class CaseActionsForCaseWorkerController {
             var defaultValues = getPostDefaultValues(caseDetails);
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
-            caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+            caseManagementForCaseWorkerService.setDateToCurrentPosition(caseData);
             caseManagementForCaseWorkerService.setNextListedDate(caseData);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
 
@@ -311,7 +339,7 @@ public class CaseActionsForCaseWorkerController {
                     caseDetails.getCaseId(), errors);
         }
 
-        return getCallbackRespEntityErrors(errors, caseData);
+        return errors;
     }
 
     @PostMapping(value = "/amendClaimantDetails", consumes = APPLICATION_JSON_VALUE)
@@ -1229,5 +1257,6 @@ public class CaseActionsForCaseWorkerController {
             caseData.setEthosCaseReference(reference);
         }
     }
+
 
 }

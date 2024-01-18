@@ -82,6 +82,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String PRE_DEFAULT_VALUES_URL = "/preDefaultValues";
     private static final String POST_DEFAULT_VALUES_URL = "/postDefaultValues";
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
+    private static final String MIGRATE_CASE_LINK_DETAILS_URL = "/migrateCaseLinkDetails";
     private static final String AMEND_CLAIMANT_DETAILS_URL = "/amendClaimantDetails";
     private static final String AMEND_RESPONDENT_DETAILS_URL = "/amendRespondentDetails";
     private static final String AMEND_RESPONDENT_REPRESENTATIVE_URL = "/amendRespondentRepresentative";
@@ -355,6 +356,39 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(jsonPath("$.errors[0]", is("null Case has not been Accepted.")))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
+
+    @Test
+    public void migrateCaseLinkDetails() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class),
+                isA(String.class))).thenReturn(defaultValues);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
+        mvc.perform(post(MIGRATE_CASE_LINK_DETAILS_URL)
+                        .content(requestContent2.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void migrateCaseLinkDetailsWithErrors() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class),
+                isA(String.class))).thenReturn(defaultValues);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(false);
+        mvc.perform(post(MIGRATE_CASE_LINK_DETAILS_URL)
+                        .content(requestContent.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors[0]", is("null Case has not been Accepted.")))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
 
     @Test
     public void amendClaimantDetails() throws Exception {
