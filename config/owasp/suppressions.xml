@@ -182,20 +182,6 @@
        <cve>CVE-2023-4586</cve>
     </suppress>
     <suppress>
-       <notes><![CDATA[
-       file name: vm2:3.9.19
-       ]]></notes>
-       <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
-       <vulnerabilityName>1094550</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: vm2:3.9.19
-   ]]></notes>
-        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
-        <vulnerabilityName>1094744</vulnerabilityName>
-    </suppress>
-    <suppress>
         <notes><![CDATA[
    file name: axios:0.26.1
    ]]></notes>
