@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.utils;
 
-import uk.gov.hmcts.ecm.common.model.bundle.BundleCreateResponse;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 
 import java.io.IOException;
