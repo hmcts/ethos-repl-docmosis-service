@@ -182,27 +182,13 @@
        <cve>CVE-2023-4586</cve>
     </suppress>
     <suppress>
-       <notes><![CDATA[
-       file name: vm2:3.9.19
-       ]]></notes>
-       <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
-       <vulnerabilityName>1094550</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: vm2:3.9.19
-   ]]></notes>
-        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
-        <vulnerabilityName>1094744</vulnerabilityName>
-    </suppress>
-    <suppress>
         <notes><![CDATA[
    file name: axios:0.26.1
    ]]></notes>
         <packageUrl regex="true">^pkg:npm/axios@.*$</packageUrl>
         <vulnerabilityName>1094762</vulnerabilityName>
     </suppress>
-       <!--Below suppressed as library no longer getting updates. Need to migrate over to com.azure:azure-messaging-servicebus in et-common -->
+     <!--Below suppressed as library no longer getting updates. Need to migrate over to com.azure:azure-messaging-servicebus in et-common -->
      <suppress>
          <packageUrl regex="true">^pkg:maven/com\.microsoft.*$</packageUrl>
          <cve>CVE-2023-36052</cve>
@@ -212,5 +198,12 @@
         <cve>CVE-2023-36052</cve>
     </suppress>
      <!-- Above to be removed when migrated to com.azure:azure-messaging-servicebus -->
+    <suppress>
+        <notes><![CDATA[
+        file name: bcprov-jdk15on-1.69.jar
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
+        <cve>CVE-2023-33202</cve>
+    </suppress>
 </suppressions>
 
