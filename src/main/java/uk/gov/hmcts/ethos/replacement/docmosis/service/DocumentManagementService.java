@@ -253,9 +253,6 @@ public class DocumentManagementService {
         caseData.getDocumentCollection().stream()
                 .map(DocumentTypeItem::getValue)
                 .forEach(this::setDocumentTypeForDocument);
-        caseData.getDocumentCollection()
-                .forEach(documentTypeItem -> documentTypeItem.getValue().setDocumentNumber(
-                        String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
     }
 
     private void setDocumentTypeForDocument(DocumentType documentType) {
