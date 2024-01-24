@@ -193,12 +193,17 @@ public class CaseManagementForCaseWorkerService {
         } else {
             // when update request is on hearings from more than one hearing, i.e.
             // custom filter for filtering by hearing date
-            filterValidHearingDates(caseData);
+            if(caseData.getHearingCollection() != null) {
+                filterValidHearingDates(caseData);
+            }
         }
     }
 
     private void filterValidHearingDates(CaseData caseData) {
-        
+        if(caseData.getUpdateHearingDetails() == null) {
+            return;
+        }
+
         //For Single hearing date
         if (SINGLE.equals(caseData.getUpdateHearingDetails().getHearingDateType())) {
             for (var hearingTypeItem : caseData.getHearingCollection()) {
