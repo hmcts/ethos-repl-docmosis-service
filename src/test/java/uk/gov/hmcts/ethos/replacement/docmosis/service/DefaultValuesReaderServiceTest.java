@@ -419,7 +419,9 @@ public class DefaultValuesReaderServiceTest {
                 + "representativeClaimantType=null, respondentCollection=null, repCollection=null, "
                 + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
                 + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
-                + "fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, judgementCollection=null, "
+                + "fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, "
+                + "hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, "
+                + "hearingUpdateFilterType=null, depositCollection=null, judgementCollection=null, "
                 + "jurCodesCollection=null, bfActions=null, clerkResponsible=null, userLocation=null, "
                 + "documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, "
                 + "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, "
@@ -440,9 +442,7 @@ public class DefaultValuesReaderServiceTest {
                 + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
-                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, "
-                + "transferredCaseLink=null, stateAPI=null, "
-                + "acasCertificate=null)";
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -501,7 +501,7 @@ public class DefaultValuesReaderServiceTest {
                 + "responseCounterClaim=null, responseReference=null))], repCollection=null, "
                 + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
                 + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
-                + "fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, "
+                + "fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, depositCollection=null, "
                 + "judgementCollection=null, jurCodesCollection=null, bfActions=null, clerkResponsible=null, "
                 + "userLocation=null, documentCollection=null, additionalCaseInfoType=null, "
                 + "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, "
@@ -523,9 +523,7 @@ public class DefaultValuesReaderServiceTest {
                 + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
-                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, "
-                + "transferredCaseLink=null, stateAPI=null, "
-                + "acasCertificate=null)";
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }

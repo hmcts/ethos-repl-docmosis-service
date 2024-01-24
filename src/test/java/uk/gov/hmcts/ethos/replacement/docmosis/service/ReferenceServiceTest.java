@@ -137,7 +137,7 @@ public class ReferenceServiceTest {
                 + "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=null, "
                 + "dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, "
                 + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
-                + "hearingCollection=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
+                + "updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
                 + "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, "
                 + "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, "
                 + "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, "
@@ -181,7 +181,7 @@ public class ReferenceServiceTest {
                 + "claimantWorkAddressQRespondent=null, representativeClaimantType=null, "
                 + "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, "
                 + "currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, " +
                 "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, " +
@@ -219,7 +219,7 @@ public class ReferenceServiceTest {
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
@@ -234,7 +234,8 @@ public class ReferenceServiceTest {
                 "Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, " +
                 "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
                 "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         referenceSubmitEvents.clear();
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEvents);
         CaseData caseDataResult = referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
@@ -257,7 +258,7 @@ public class ReferenceServiceTest {
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
@@ -279,7 +280,8 @@ public class ReferenceServiceTest {
                 "hearingCaseDisposed=null, hearingPartHeard=null, " +
                 "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
                 "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEvents);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
@@ -295,7 +297,7 @@ public class ReferenceServiceTest {
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
@@ -314,7 +316,8 @@ public class ReferenceServiceTest {
                 "hearingCaseDisposed=null, hearingPartHeard=null, " +
                 "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
                 "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEventsNoVenues);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
@@ -332,7 +335,7 @@ public class ReferenceServiceTest {
                 + "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=null, "
                 + "dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, "
                 + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
-                + "hearingCollection=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
+                + "updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
                 + "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, "
                 + "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, "
                 + "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, "
@@ -354,8 +357,8 @@ public class ReferenceServiceTest {
                 "hearingCaseDisposed=null, hearingPartHeard=null, " +
                 "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
                 "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, "
-                + "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEventsNoClerks);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
@@ -372,7 +375,7 @@ public class ReferenceServiceTest {
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, "
                 + "currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
@@ -394,7 +397,8 @@ public class ReferenceServiceTest {
                 "hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, " +
                 "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
                 "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEventsNoJudges);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
@@ -410,7 +414,7 @@ public class ReferenceServiceTest {
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
@@ -426,8 +430,8 @@ public class ReferenceServiceTest {
                 "hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, " +
                 "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
                 "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, "
-                + "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, stateAPI=null, acasCertificate=null)";
         referenceSubmitEvents.clear();
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEvents);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
