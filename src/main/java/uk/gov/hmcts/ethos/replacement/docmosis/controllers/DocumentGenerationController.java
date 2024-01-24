@@ -21,6 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicLette
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
@@ -42,6 +43,7 @@ public class DocumentGenerationController {
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
     private static final String INVALID_TOKEN = "Invalid Token {}";
     private final DocumentGenerationService documentGenerationService;
+    private final DocumentManagementService documentManagementService;
     private final DefaultValuesReaderService defaultValuesReaderService;
     private final VerifyTokenService verifyTokenService;
     private final EventValidationService eventValidationService;
@@ -166,7 +168,8 @@ public class DocumentGenerationController {
             documentGenerationService.updateBfActions(documentInfo, caseDetails.getCaseData());
             caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
             documentGenerationService.clearUserChoices(caseDetails);
-
+            documentManagementService.convertLegacyDocsToNewDocNaming(caseDetails.getCaseData());
+            documentManagementService.setDocumentTypeForDocumentCollection(caseDetails.getCaseData());
             var significantItem = Helper.generateSignificantItem(documentInfo, errors);
 
             if (errors.isEmpty()) {
