@@ -8,8 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import static com.google.common.io.Resources.getResource;
-
 public class ResourceLoader {
     private static final JsonMapper jsonMapper = JsonMapperFactory.create();
 
