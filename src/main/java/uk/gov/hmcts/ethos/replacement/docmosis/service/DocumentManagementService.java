@@ -18,6 +18,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
@@ -253,6 +254,9 @@ public class DocumentManagementService {
         caseData.getDocumentCollection().stream()
                 .map(DocumentTypeItem::getValue)
                 .forEach(this::setDocumentTypeForDocument);
+        caseData.getDocumentCollection()
+                .forEach(documentTypeItem -> documentTypeItem.getValue().setDocNumber(
+                        String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
     }
 
     private void setDocumentTypeForDocument(DocumentType documentType) {

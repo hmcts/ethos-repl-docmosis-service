@@ -31,6 +31,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerSe
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ConciliationTrackService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.FixCaseApiService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.JudgmentValidationService;
@@ -170,6 +171,8 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @MockBean
     private FixCaseApiService fixCaseApiService;
+    @MockBean
+    private DocumentManagementService documentManagementService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
