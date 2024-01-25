@@ -283,40 +283,25 @@ public class CaseActionsForCaseWorkerController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
+        return runAmendCaseDetailsSteps(userToken, ccdRequest.getCaseDetails());
+    }
 
-        var caseDetails = ccdRequest.getCaseDetails();
-        var caseData = caseDetails.getCaseData();
-        List<String> errors = eventValidationService.validateReceiptDate(caseDetails);
+    @PostMapping(value = "/migrateCaseLinkDetails", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "amends the case link details of a transferred single case.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> migrateCaseLinkDetails(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MIGRATE CASE LINK DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
-        if (!eventValidationService.validateCaseState(caseDetails)) {
-            errors.add(caseData.getEthosCaseReference() + " Case has not been Accepted.");
-        }
-
-        if (!eventValidationService.validateCurrentPosition(caseDetails)) {
-            errors.add("To set the current position to 'Case closed' "
-                    + "and to close the case, please take the Close Case action.");
-        }
-
-        if (errors.isEmpty()) {
-            var defaultValues = getPostDefaultValues(caseDetails);
-            log.info("Post Default values loaded: " + defaultValues);
-            defaultValuesReaderService.getCaseData(caseData, defaultValues);
-            caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
-            caseManagementForCaseWorkerService.setNextListedDate(caseData);
-            FlagsImageHelper.buildFlagsImageFileName(caseData);
-            documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
-            documentManagementService.setDocumentTypeForDocumentCollection(caseData);
-            addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
-                    userToken, caseData, caseDetails.getCaseTypeId(),
-                    caseDetails.getJurisdiction(),
-                    caseDetails.getCaseId(), errors);
-        }
-
-        return getCallbackRespEntityErrors(errors, caseData);
+        return runAmendCaseDetailsSteps(userToken, ccdRequest.getCaseDetails());
     }
 
     @PostMapping(value = "/amendClaimantDetails", consumes = APPLICATION_JSON_VALUE)
@@ -1235,4 +1220,38 @@ public class CaseActionsForCaseWorkerController {
         }
     }
 
+    private ResponseEntity<CCDCallbackResponse> runAmendCaseDetailsSteps(String userToken, CaseDetails caseDetails) {
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = caseDetails.getCaseData();
+        List<String> errors = eventValidationService.validateReceiptDate(caseDetails);
+
+        if (!eventValidationService.validateCaseState(caseDetails)) {
+            errors.add(caseData.getEthosCaseReference() + " Case has not been Accepted.");
+        }
+
+        if (!eventValidationService.validateCurrentPosition(caseDetails)) {
+            errors.add("To set the current position to 'Case closed' "
+                    + "and to close the case, please take the Close Case action.");
+        }
+
+        if (errors.isEmpty()) {
+            DefaultValues defaultValues = getPostDefaultValues(caseDetails);
+            defaultValuesReaderService.getCaseData(caseData, defaultValues);
+            caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+            caseManagementForCaseWorkerService.setNextListedDate(caseData);
+            FlagsImageHelper.buildFlagsImageFileName(caseData);
+
+            addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
+                    userToken, caseData, caseDetails.getCaseTypeId(),
+                    caseDetails.getJurisdiction(),
+                    caseDetails.getCaseId(), errors);
+        }
+
+        return getCallbackRespEntityErrors(errors, caseDetails.getCaseData());
+    }
 }
