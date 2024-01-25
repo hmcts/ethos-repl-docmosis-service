@@ -38,6 +38,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerSe
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ConciliationTrackService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.FixCaseApiService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.JudgmentValidationService;
@@ -90,6 +91,7 @@ public class CaseActionsForCaseWorkerController {
     private final DepositOrderValidationService depositOrderValidationService;
     private final JudgmentValidationService judgmentValidationService;
     private final CaseTransferToReformECM caseTransferToReformECM;
+    private final DocumentManagementService documentManagementService;
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "create a case for a caseWorker.")
@@ -257,6 +259,8 @@ public class CaseActionsForCaseWorkerController {
             FlagsImageHelper.buildFlagsImageFileName(caseData);
             caseData.setMultipleFlag(caseData.getEcmCaseType() != null
                     && caseData.getEcmCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
+            documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
+            documentManagementService.setDocumentTypeForDocumentCollection(caseData);
         }
 
         log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());
@@ -304,7 +308,8 @@ public class CaseActionsForCaseWorkerController {
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
             caseManagementForCaseWorkerService.setNextListedDate(caseData);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
-
+            documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
+            documentManagementService.setDocumentTypeForDocumentCollection(caseData);
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
                     userToken, caseData, caseDetails.getCaseTypeId(),
                     caseDetails.getJurisdiction(),
