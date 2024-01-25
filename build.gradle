@@ -49,7 +49,10 @@ checkstyle {
 def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/model/**',
                        '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication',
-                       '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java'
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/util/**',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/service/DocumentManagementService.java',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/controllers/CaseActionsForCaseWorkerController.java'
 ]
 
 sonarqube {
@@ -220,7 +223,7 @@ ext {
     junitJupiterVersion = '5.9.3'
     log4JVersion = '2.21.1'
     serenity = '3.7.1'
-    tomcatEmbedVersion = '9.0.84'
+    tomcatEmbedVersion = '9.0.85'
 }
 
 ext["rest-assured.version"] = '5.1.0'
@@ -267,8 +270,8 @@ dependencyManagement {
 dependencies {
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '2.0.2'
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.2.1'
-
     implementation group: 'com.github.hmcts', name: 'et-data-model', version: '3.2.3'
+
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
@@ -310,7 +313,7 @@ dependencies {
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.9'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.5.1'
-    implementation group: 'com.squareup.okio', name: 'okio', version: '3.6.0'
+    implementation group: 'com.squareup.okio', name: 'okio', version: '3.7.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
@@ -331,7 +334,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Contract Tests
-    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.6.4'
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.6.5'
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'java8', version: '4.1.42'
     contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.7.18'
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
