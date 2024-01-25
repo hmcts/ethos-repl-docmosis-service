@@ -545,7 +545,7 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"Hearing number, 1", "Hearing number, 3"})
+    @CsvSource({"Hearing Number, 1", "Hearing Number, 3"})
     public void processHearingsForUpdateRequestByHearingNumber(String hearingsFilterType, String hearingNumber) {
         CaseDetails caseDetails = ccdRequest16.getCaseDetails();
         DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType(hearingNumber);
