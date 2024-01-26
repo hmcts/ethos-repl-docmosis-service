@@ -218,7 +218,7 @@ public class CaseManagementForCaseWorkerService {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
-        } else {  // for Range of hearing dates
+        } else { // for Range of hearing dates
 
             for (var hearingTypeItem : caseData.getHearingCollection()) {
                 List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
@@ -253,10 +253,17 @@ public class CaseManagementForCaseWorkerService {
         HearingType hearingType = new HearingType();
         hearingType.setHearingVenue(hearingTypeItem.getValue().getHearingVenue());
         hearingType.setHearingType(hearingTypeItem.getValue().getHearingType());
-        hearingType.setHearingSitAlone(hearingTypeItem.getValue().getHearingSitAlone());
+
+        hearingType.setHearingFormat(hearingTypeItem.getValue().getHearingFormat());
         hearingType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
-        hearingType.setHearingStage(hearingTypeItem.getValue().getHearingStage());
+        hearingType.setHearingEstLengthNum(hearingTypeItem.getValue().getHearingEstLengthNum());
+        hearingType.setHearingEstLengthNumType(hearingTypeItem.getValue().getHearingEstLengthNumType());
+        hearingType.setHearingSitAlone(hearingTypeItem.getValue().getHearingSitAlone());
         hearingType.setJudge(hearingTypeItem.getValue().getJudge());
+        hearingType.setHearingEEMember(hearingTypeItem.getValue().getHearingEEMember());
+        hearingType.setHearingERMember(hearingTypeItem.getValue().getHearingERMember());
+        hearingType.setHearingStage(hearingTypeItem.getValue().getHearingStage());
+        hearingType.setHearingNotes(hearingTypeItem.getValue().getHearingNotes());
 
         filteredHearingDates.forEach(hd -> hearingType.getHearingDateCollection().add(hd));
         currentHearingTypeItem.setValue(hearingType);

@@ -548,6 +548,13 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateHearingsForAllocationOrUpdate(caseData, errors);
+        if(!errors.isEmpty()) {
+            log.info(EVENT_FIELDS_VALIDATION + errors);
+            return getCallbackRespEntityErrors(errors, caseData);
+        }
+
         List<DynamicValueType> items = DynamicListHelper.createDynamicHearingList(caseData);
         DynamicFixedListType flt = new DynamicFixedListType();
         flt.setListItems(items);
