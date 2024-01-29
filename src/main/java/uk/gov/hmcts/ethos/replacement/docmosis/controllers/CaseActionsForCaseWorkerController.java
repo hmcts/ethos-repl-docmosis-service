@@ -548,8 +548,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = new ArrayList<>();
-        eventValidationService.validateHearingsForAllocationOrUpdate(caseData, errors);
+        List<String> errors = eventValidationService.validateHearingsForAllocationOrUpdate(caseData);
         if(!errors.isEmpty()) {
             log.info(EVENT_FIELDS_VALIDATION + errors);
             return getCallbackRespEntityErrors(errors, caseData);
@@ -559,6 +558,37 @@ public class CaseActionsForCaseWorkerController {
         DynamicFixedListType flt = new DynamicFixedListType();
         flt.setListItems(items);
         caseData.setSelectedHearingNumberForUpdate(flt);
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(value = "/validateHearingAllocation", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "populates the dynamic lists for hearing numbers in case data")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Accessed successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CCDCallbackResponse.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> validateHearingAllocation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("ALLOCATE HEARING VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateHearingsForAllocationOrUpdate(caseData);
+        if(!errors.isEmpty()) {
+            log.info(EVENT_FIELDS_VALIDATION + errors);
+            return getCallbackRespEntityErrors(errors, caseData);
+        }
+
         return getCallbackRespEntityNoErrors(caseData);
     }
 

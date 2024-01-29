@@ -457,11 +457,16 @@ public class EventValidationService {
 
     }
 
-    public void validateHearingsForAllocationOrUpdate(CaseData caseData, List<String> errors) {
-         if(caseData != null &&
-                 (caseData.getHearingCollection() == null || caseData.getHearingCollection().isEmpty())) {
+    public List<String> validateHearingsForAllocationOrUpdate(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+
+        if(caseData == null && (caseData.getHearingCollection() == null
+                || caseData.getHearingCollection().isEmpty())) {
              errors.add(NO_HEARINGS_LISTED_ERROR_MESSAGE);
+             return errors;
          }
+
+        return errors;
     }
 
     public void validateHearingJudgeAllocationForCaseCloseEvent(CaseData caseData, List<String> errors) {
