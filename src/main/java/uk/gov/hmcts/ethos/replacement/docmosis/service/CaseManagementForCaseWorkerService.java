@@ -25,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -41,6 +42,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
@@ -56,6 +58,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -73,6 +76,9 @@ public class CaseManagementForCaseWorkerService {
             + "please enter a date after today otherwise click Ignore and Continue.";
     public static final String LISTED_DATE_ON_WEEKEND_MESSAGE = "A hearing date you have entered "
             + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing ";
+    private static final String FULL_PANEL = "Full Panel";
+    private static final String HEARING_NUMBER = "Hearing Number";
+    private static final String SINGLE = "Single";
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -172,6 +178,140 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
+    public void processHearingsForUpdateRequest(CaseDetails caseDetails) {
+        CaseData caseData = caseDetails.getCaseData();
+        // check if update is only on one hearing
+        if(caseData.getHearingCollection() != null && HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType())) {
+            Optional<HearingTypeItem> hearingForUpdate = caseData.getHearingCollection().stream()
+                    .filter(h->h.getValue().getHearingNumber()
+                            .equals(caseData.getSelectedHearingNumberForUpdate()
+                                    .getValue().getCode())).findFirst();
+            if(hearingForUpdate.isPresent()) {
+                caseData.setHearingsCollectionForUpdate(new ArrayList<>());
+                caseData.getHearingsCollectionForUpdate().add(hearingForUpdate.get());
+            }
+        } else {
+            // when update request is on hearings from more than one hearing, i.e.
+            // custom filter for filtering by hearing date
+            if(caseData.getHearingCollection() != null) {
+                filterValidHearingDates(caseData);
+            }
+        }
+    }
+
+    private void filterValidHearingDates(CaseData caseData) {
+        if(caseData.getUpdateHearingDetails() == null) {
+            return;
+        }
+
+        //For Single hearing date
+        if (SINGLE.equals(caseData.getUpdateHearingDetails().getHearingDateType())) {
+            for (var hearingTypeItem : caseData.getHearingCollection()) {
+                //get hearings with one or more valid(on the date for Single, within bounds for Range) hearing dates
+                List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
+                        .getHearingDateCollection().stream()
+                        .filter(d -> ReportHelper.getFormattedLocalDate(d.getValue().getListedDate()).equals(
+                                caseData.getUpdateHearingDetails().getHearingDate())).toList();
+
+                //prepare hearing with only needed date entries and exclude the ones out of the filter/search criteria
+                if(!validHearingDates.isEmpty()) {
+                    addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
+                }
+            }
+        } else { // for Range of hearing dates
+
+            for (var hearingTypeItem : caseData.getHearingCollection()) {
+                List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
+                        .getHearingDateCollection().stream()
+                        .filter(d -> isInRangeHearingDate(d.getValue().getListedDate(),
+                                caseData.getUpdateHearingDetails().getHearingDateFrom(),
+                                caseData.getUpdateHearingDetails().getHearingDateTo())).toList();
+
+                // hearing/s with only needed date entries and exclude the ones out of the filter/search criteria
+                if(!validHearingDates.isEmpty()) {
+                    addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
+                }
+            }
+        }
+    }
+
+    private boolean isInRangeHearingDate(String dateListed, String from, String to) {
+        LocalDate listedLocalDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateListed),
+                OLD_DATE_TIME_PATTERN2);
+        LocalDate fromLocalDate = LocalDate.parse(from, OLD_DATE_TIME_PATTERN2);
+        LocalDate toLocalDate = LocalDate.parse(to, OLD_DATE_TIME_PATTERN2);
+
+        return (listedLocalDate.compareTo(fromLocalDate) >= 0)
+                && (listedLocalDate.compareTo(toLocalDate) <= 0);
+    }
+
+    private void addFilteredHearingDates(CaseData caseData, HearingTypeItem hearingTypeItem,
+                                         List<DateListedTypeItem> filteredHearingDates) {
+        HearingTypeItem currentHearingTypeItem = new HearingTypeItem();
+        currentHearingTypeItem.setId(hearingTypeItem.getId());
+
+        HearingType hearingType = new HearingType();
+        hearingType.setHearingVenue(hearingTypeItem.getValue().getHearingVenue());
+        hearingType.setHearingType(hearingTypeItem.getValue().getHearingType());
+
+        hearingType.setHearingFormat(hearingTypeItem.getValue().getHearingFormat());
+        hearingType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
+        hearingType.setHearingEstLengthNum(hearingTypeItem.getValue().getHearingEstLengthNum());
+        hearingType.setHearingEstLengthNumType(hearingTypeItem.getValue().getHearingEstLengthNumType());
+        hearingType.setHearingSitAlone(hearingTypeItem.getValue().getHearingSitAlone());
+        hearingType.setJudge(hearingTypeItem.getValue().getJudge());
+        hearingType.setHearingEEMember(hearingTypeItem.getValue().getHearingEEMember());
+        hearingType.setHearingERMember(hearingTypeItem.getValue().getHearingERMember());
+        hearingType.setHearingStage(hearingTypeItem.getValue().getHearingStage());
+        hearingType.setHearingNotes(hearingTypeItem.getValue().getHearingNotes());
+
+        filteredHearingDates.forEach(hd -> hearingType.getHearingDateCollection().add(hd));
+        currentHearingTypeItem.setValue(hearingType);
+        caseData.getHearingsCollectionForUpdate().add(currentHearingTypeItem);
+    }
+
+    public void updateSelectedHearing(CaseData caseData) {
+        if(caseData.getHearingsCollectionForUpdate() != null) {
+
+            for (var updatedHearing :caseData.getHearingsCollectionForUpdate()) {
+                Optional<HearingTypeItem> matchingHearing = caseData.getHearingCollection().stream()
+                        .filter(h -> h.getId().equals(updatedHearing.getId())).findFirst();
+
+                if (matchingHearing.isPresent()) {
+                    HearingType sourceHearingType = updatedHearing.getValue();
+                    HearingType targetHearingType = matchingHearing.get().getValue();
+
+                    // update  fields shared at hearing level like Sit Alone or Full Panel
+                    targetHearingType.setHearingSitAlone(sourceHearingType.getHearingSitAlone());
+                    targetHearingType.setJudge(sourceHearingType.getJudge());
+
+                    if(FULL_PANEL.equals(sourceHearingType.getHearingSitAlone())) {
+                        targetHearingType.setHearingEEMember(sourceHearingType.getHearingEEMember());
+                        targetHearingType.setHearingERMember(sourceHearingType.getHearingERMember());
+                    }
+
+                    // update hearing dates for the selected hearing dates collection entries
+                    updateHearingDates(matchingHearing.get(), sourceHearingType);
+                }
+            }
+
+            caseData.getHearingsCollectionForUpdate().clear();
+            caseData.setHearingUpdateFilterType(null);
+        }
+    }
+
+    private void updateHearingDates(HearingTypeItem matchingHearing, HearingType updatedHearing) {
+        // update hearing dates for the selected hearing dates collection entries
+        for (var hearingDate : updatedHearing.getHearingDateCollection()) {
+            Optional<DateListedTypeItem> hdToUpdate = matchingHearing.getValue().getHearingDateCollection()
+                    .stream().filter(uhd -> String.valueOf(uhd.getId())
+                            .equals(hearingDate.getId())).findFirst();
+            if(hdToUpdate.isPresent()) {
+                hdToUpdate.get().setValue(hearingDate.getValue());
+            }
+        }
+    }
+
     public void setNextListedDate(CaseData caseData) {
         List<String> dates = new ArrayList<>();
         String nextListedDate = "";
@@ -180,6 +320,7 @@ public class CaseManagementForCaseWorkerService {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 dates.addAll(getListedDates(hearingTypeItem));
             }
+
             for (String date : dates) {
                 LocalDateTime parsedDate = LocalDateTime.parse(date);
                 if (nextListedDate.equals("") && parsedDate.isAfter(LocalDateTime.now())
@@ -188,7 +329,8 @@ public class CaseManagementForCaseWorkerService {
                     nextListedDate = date;
                 }
             }
-                caseData.setNextListedDate(nextListedDate.split("T")[0]);
+
+            caseData.setNextListedDate(nextListedDate.split("T")[0]);
         }
     }
 
@@ -214,10 +356,8 @@ public class CaseManagementForCaseWorkerService {
             Optional<RespondentSumTypeItem> matchedRespondent = respondentCollection.stream()
                     .filter(resp ->
                             resp.getId().equals(respondentRep.getValue().getRespondentId())).findFirst();
-
-            matchedRespondent.ifPresent(respondent ->
-                    updateRepWithRespondentDetails(respondent, respondentRep, respondentCollection));
-
+            matchedRespondent.ifPresent(respondent -> updateRepWithRespondentDetails(respondent,
+                    respondentRep, respondentCollection));
             repCollection.add(respondentRep);
         }
 

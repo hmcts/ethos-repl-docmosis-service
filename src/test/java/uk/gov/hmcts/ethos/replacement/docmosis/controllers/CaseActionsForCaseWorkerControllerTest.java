@@ -88,6 +88,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String AMEND_RESPONDENT_REPRESENTATIVE_URL = "/amendRespondentRepresentative";
     private static final String UPDATE_HEARING_URL = "/updateHearing";
     private static final String ALLOCATE_HEARING_URL = "/allocateHearing";
+    private static final String LISTING_HEARINGS_FOR_UPDATE = "/listingHearingsForUpdate";
+    private static final String DYNAMIC_HEARING_NUMBERS = "/dynamicHearingNumbers";
+    private static final String VALIDATE_HEARING_ALLOCATION = "/validateHearingAllocation";
     private static final String RESTRICTED_CASES_URL = "/restrictedCases";
     private static final String AMEND_HEARING_URL = "/amendHearing";
     private static final String MID_EVENT_AMEND_HEARING_URL = "/midEventAmendHearing";
@@ -176,6 +179,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private JsonNode requestContent;
     private JsonNode requestContent2;
     private JsonNode requestContent3;
+    private JsonNode requestContentWithNoHearings;
     private JsonNode validHearingStatusCaseDetails;
     private SubmitEvent submitEvent;
     private DefaultValues defaultValues;
@@ -188,7 +192,8 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .getResource("/exampleV2.json")).toURI()));
         requestContent3 = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
                 .getResource("/exampleV3.json")).toURI()));
-
+        requestContentWithNoHearings = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
+                .getResource("/exampleV4.json")).toURI()));
         validHearingStatusCaseDetails = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
                 .getResource("/CaseCloseEvent_ValidHearingStatusCaseDetails.json")).toURI()));
     }
@@ -438,6 +443,59 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void listingHearingsForUpdate() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(LISTING_HEARINGS_FOR_UPDATE)
+                        .content(requestContent2.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void dynamicHearingNumbers() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(DYNAMIC_HEARING_NUMBERS)
+                        .content(requestContent2.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void validateHearingAllocation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(VALIDATE_HEARING_ALLOCATION)
+                        .content(requestContent2.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void validateHearingAllocationNoHearingsError() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateHearingsForAllocationOrUpdate(any())).thenReturn(List.of("Test error"));
+        mvc.perform(post(VALIDATE_HEARING_ALLOCATION)
+                        .content(requestContentWithNoHearings.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
