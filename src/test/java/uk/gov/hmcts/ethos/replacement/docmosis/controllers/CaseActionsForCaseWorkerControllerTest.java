@@ -20,6 +20,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseValidator;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
@@ -57,6 +58,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -83,6 +85,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String PRE_DEFAULT_VALUES_URL = "/preDefaultValues";
     private static final String POST_DEFAULT_VALUES_URL = "/postDefaultValues";
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
+    private static final String MIGRATE_CASE_LINK_DETAILS_URL = "/migrateCaseLinkDetails";
     private static final String AMEND_CLAIMANT_DETAILS_URL = "/amendClaimantDetails";
     private static final String AMEND_RESPONDENT_DETAILS_URL = "/amendRespondentDetails";
     private static final String AMEND_RESPONDENT_REPRESENTATIVE_URL = "/amendRespondentRepresentative";
@@ -338,6 +341,8 @@ public class CaseActionsForCaseWorkerControllerTest {
                 isA(String.class))).thenReturn(defaultValues);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
+        when(eventValidationService.validateCurrentPosition(isA(CaseDetails.class))).thenReturn(true);
+
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -346,6 +351,9 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
+        verify(defaultValuesReaderService, atLeastOnce()).getCaseData(any(), any());
+        verify(caseManagementForCaseWorkerService, atLeastOnce()).dateToCurrentPosition(any());
+        verify(caseManagementForCaseWorkerService, atLeastOnce()).setNextListedDate(any());
     }
 
     @Test
@@ -358,6 +366,39 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors[0]", is("null Case has not been Accepted.")))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+        verify(eventValidationService).validateReceiptDate(any());
+    }
+
+    @Test
+    public void migrateCaseLinkDetails() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class),
+                isA(String.class))).thenReturn(defaultValues);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
+        mvc.perform(post(MIGRATE_CASE_LINK_DETAILS_URL)
+                        .content(requestContent2.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void migrateCaseLinkDetailsWithErrors() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class),
+                isA(String.class))).thenReturn(defaultValues);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(false);
+        mvc.perform(post(MIGRATE_CASE_LINK_DETAILS_URL)
+                        .content(requestContent.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors[0]", is("null Case has not been Accepted.")))
@@ -382,6 +423,10 @@ public class CaseActionsForCaseWorkerControllerTest {
         when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class)))
                 .thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateActiveRespondents(isA(CaseData.class)))
+                .thenReturn(new ArrayList<>());
+        when(eventValidationService.validateET3ResponseFields(isA(CaseData.class)))
+                .thenReturn(new ArrayList<>());
         mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -390,6 +435,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
+        verify(eventValidationService, atLeastOnce()).validateET3ResponseFields(any());
     }
 
     @Test
