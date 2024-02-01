@@ -30,6 +30,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingListingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
@@ -56,6 +57,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
@@ -90,6 +93,7 @@ class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest ccdRequest13;
     private CCDRequest ccdRequest14;
     private CCDRequest ccdRequest15;
+    private CCDRequest ccdRequest16;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
 
@@ -135,6 +139,10 @@ class CaseManagementForCaseWorkerServiceTest {
         ccdRequest15 = new CCDRequest();
         CaseDetails caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
         ccdRequest15.setCaseDetails(caseDetails15);
+
+        ccdRequest16 = new CCDRequest();
+        CaseDetails caseDetails16 = generateCaseDetails("caseDetailsScotTestHearingUpdates.json");
+        ccdRequest16.setCaseDetails(caseDetails16);
 
         manchesterCcdRequest = new CCDRequest();
         CaseDetails manchesterCaseDetails = new CaseDetails();
@@ -269,11 +277,9 @@ class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void caseDataDefaultsStruckOutYESandNulltoNO() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
-
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
 
         assertEquals(3, caseData.getRespondentCollection().size());
-
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
         assertEquals(NO, caseData.getRespondentCollection().get(0).getValue().getResponseStruckOut());
         assertEquals("Juan Garcia", caseData.getRespondentCollection().get(1).getValue().getRespondentName());
@@ -285,11 +291,9 @@ class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void caseDataDefaultsStruckOutUnchanged() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
-
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
 
         assertEquals(1, caseData.getRespondentCollection().size());
-
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
         assertEquals(NO, caseData.getRespondentCollection().get(0).getValue().getResponseStruckOut());
     }
@@ -538,6 +542,137 @@ class CaseManagementForCaseWorkerServiceTest {
                 .getHearingDateCollection().get(0).getValue().getHearingTimingStart());
         assertEquals("2019-11-01T12:11:00.000", caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingTimingFinish());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"Hearing Number, 1", "Hearing Number, 3"})
+    public void processHearingsForUpdateRequestByHearingNumber(String hearingsFilterType, String hearingNumber) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType(hearingNumber);
+        caseDetails.getCaseData().setSelectedHearingNumberForUpdate(updateFilterTypeFL);
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+
+        caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
+
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(1, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+    }
+
+    private DynamicFixedListType getDynamicFixedListType(String hearingNumber) {
+        DynamicFixedListType updateFilterTypeFL = new DynamicFixedListType();
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(hearingNumber);
+        dynamicValueType.setLabel(hearingNumber);
+        updateFilterTypeFL.setValue(dynamicValueType);
+        updateFilterTypeFL.setListItems(List.of(dynamicValueType));
+        return updateFilterTypeFL;
+    }
+
+    @ParameterizedTest
+    @CsvSource({"Custom filter, Single"})
+    public void processHearingsForUpdateRequestWithCustomFilterSingleDate(String hearingsFilterType,
+                                                                          String hearingDateType) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+        HearingListingType hearingListingType = new HearingListingType();
+        hearingListingType.setHearingDate("2019-11-01");
+        hearingListingType.setHearingDateType(hearingDateType);
+        caseDetails.getCaseData().setUpdateHearingDetails(hearingListingType);
+
+        caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
+
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(2, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"Custom filter, Range, 2019-10-01, 2019-11-01",
+            "Custom filter, Range, 2019-10-01, 2019-11-02"})
+    public void processHearingsForUpdateRequestWithCustomFilterDateRange(String hearingsFilterType,
+                                                                         String hearingDateType,
+                                                                         String from, String to) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+        HearingListingType hearingListingType = new HearingListingType();
+        hearingListingType.setHearingDateFrom(from);
+        hearingListingType.setHearingDateTo(to);
+        hearingListingType.setHearingDateType(hearingDateType);
+        caseDetails.getCaseData().setUpdateHearingDetails(hearingListingType);
+
+        caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
+
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(4, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"Hearing number, 1, 0", "Hearing number, 2, 1"})
+    public void updateSelectedHearingMatchingHearingFound(String hearingsFilterType,
+                                                          String hearingNumber,
+                                                          int index) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType(hearingNumber);
+        caseDetails.getCaseData().setSelectedHearingNumberForUpdate(updateFilterTypeFL);
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+        var updatedHearing = caseDetails.getCaseData().getHearingCollection().get(index);
+        updatedHearing.getValue().setHearingSitAlone("Sit Alone");
+        caseDetails.getCaseData().getHearingsCollectionForUpdate()
+                .add(updatedHearing);
+
+        caseManagementForCaseWorkerService.updateSelectedHearing(caseDetails.getCaseData());
+
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(0, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+        assertNull(caseDetails.getCaseData().getHearingUpdateFilterType());
+        assertEquals(updatedHearing.getValue().getHearingSitAlone(),
+                caseDetails.getCaseData().getHearingCollection().get(index).getValue().getHearingSitAlone());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"Hearing number, 1, 0", "Hearing number, 2, 1"})
+    public void updateSelectedHearingWithEmptyHearingsCollectionForUpdate(String hearingsFilterType,
+                                                          String hearingNumber, int index) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType(hearingNumber);
+        caseDetails.getCaseData().setSelectedHearingNumberForUpdate(updateFilterTypeFL);
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+        var updatedHearing = caseDetails.getCaseData().getHearingCollection().get(index);
+        updatedHearing.getValue().setHearingSitAlone("Sit Alone");
+        caseDetails.getCaseData().setHearingsCollectionForUpdate(null);
+        
+        caseManagementForCaseWorkerService.updateSelectedHearing(caseDetails.getCaseData());
+
+        assertNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(caseDetails.getCaseData().getHearingUpdateFilterType(), hearingsFilterType);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"Hearing number, 1, Full Panel, EEMember, , 0",
+            "Hearing number, 3, Full Panel, EEMember, ERMember, 2",
+            "Hearing number, 4, Sit Alone, , , 3"})
+    public void updateSelectedHearingMatchingHearingByPanelType(String hearingsFilterType, String hearingNumber,
+                                                                  String panelType, String eEMember,
+                                                                  String eRMember, int index) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType(hearingNumber);
+        caseDetails.getCaseData().setSelectedHearingNumberForUpdate(updateFilterTypeFL);
+        caseDetails.getCaseData().setHearingUpdateFilterType(hearingsFilterType);
+        HearingTypeItem selectedHearing = caseDetails.getCaseData().getHearingCollection().get(index);
+        selectedHearing.getValue().setHearingSitAlone(panelType);
+        selectedHearing.getValue().setHearingEEMember(eEMember);
+        selectedHearing.getValue().setHearingERMember(eRMember);
+        caseDetails.getCaseData().getHearingsCollectionForUpdate().add(selectedHearing);
+
+        caseManagementForCaseWorkerService.updateSelectedHearing(caseDetails.getCaseData());
+
+        assertNotNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
+        assertEquals(0, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+        assertEquals(caseDetails.getCaseData().getHearingCollection().get(index)
+                        .getValue().getHearingSitAlone(), panelType);
+        assertEquals(caseDetails.getCaseData().getHearingCollection().get(index)
+                .getValue().getHearingEEMember(), eEMember);
+        assertEquals(caseDetails.getCaseData().getHearingCollection().get(index)
+                .getValue().getHearingERMember(), eRMember);
     }
 
     @Test

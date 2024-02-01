@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
@@ -100,7 +99,8 @@ public final class ClaimsByHearingVenueReport {
 
         return CollectionUtils.isNotEmpty(respondentItems)
                 && respondentItems.get(0).getValue().getResponseRespondentAddress() != null
-                && StringUtils.isNotBlank(respondentItems.get(0).getValue().getResponseRespondentAddress().getPostCode())
+                && StringUtils.isNotBlank(respondentItems.get(0).getValue()
+                .getResponseRespondentAddress().getPostCode())
                 ? respondentItems.get(0).getValue().getResponseRespondentAddress().getPostCode() : NULL_STRING_VALUE;
     }
 }
