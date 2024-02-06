@@ -168,7 +168,7 @@ public class EventValidationService {
             //reverse update it - from the last to the first element by removing repetition
             for (int index = repCollectionSize - 1;  index > -1; index--) {
                 String tempCollCurrentName = repCollection.get(index).getValue()
-                    .getDynamicRespRepName().getValue().getLabel();
+                        .getDynamicRespRepName().getValue().getLabel();
                 if (isValidRespondentName(caseData, tempCollCurrentName)) {
                     if (!repCollection.isEmpty()
                         && updatedRepList.stream()
@@ -204,7 +204,7 @@ public class EventValidationService {
             var respRepNames = caseData.getRespondentCollection()
                 .stream()
                 .map(e -> e.getValue().getRespondentName())
-                .collect(Collectors.toList());
+                .toList();
 
             if (!respRepNames.isEmpty()) {
                 isValidName = respRepNames.contains(tempCollCurrentName);

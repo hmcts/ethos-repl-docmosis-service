@@ -1,0 +1,46 @@
+{
+  "data" : {
+    "bundleConfiguration" : "et-dcf-2.yaml",
+    "id" : null,
+    "data" : null,
+    "caseBundles" : [ {
+      "value" : {
+        "id" : "5d163dde-d5ac-45eb-aa53-2cff0fbf3aaf",
+        "title" : "ET DCF",
+        "description" : null,
+        "eligibleForStitching" : "no",
+        "eligibleForCloning" : "no",
+        "documents" : [ {
+          "value" : {
+            "name" : "test.pdf",
+            "description" : null,
+            "sortIndex" : 0,
+            "sourceDocument" : {
+              "document_url" : "http://dummy.link/documents/11111111-1111-1111-1111-111111111111",
+              "document_filename" : "test.pdf",
+              "document_binary_url" : "http://dummy.link/documents/11111111-1111-1111-1111-111111111111/binary"
+            }
+          }
+        }],
+        "folders" : [ ],
+        "stitchStatus" : "NEW",
+        "stitchedDocument" : {
+          "document_url" : "http://localhost:5005/documents/0eb5dd14-18be-45ef-b530-260f905f6d38",
+          "document_filename" : "123456-2021-DCF.pdf",
+          "document_binary_url" : "http://localhost:5005/documents/0eb5dd14-18be-45ef-b530-260f905f6d38/binary"
+        },
+        "hasCoversheets" : "No",
+        "hasTableOfContents" : "No",
+        "hasFolderCoversheets" : "No",
+        "stitchingFailureMessage" : null,
+        "fileName" : "123456-2021-DCF",
+        "paginationStyle" : "off",
+        "coverpageTemplate" : null,
+        "pageNumberFormat" : "numberOfPages"
+      }
+    } ]
+  },
+  "errors" : null,
+  "warnings" : null,
+  "documentTaskId" : 0
+}
