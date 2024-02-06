@@ -258,7 +258,8 @@ public class ReferenceServiceTest {
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, " +
+                "updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
@@ -334,8 +335,8 @@ public class ReferenceServiceTest {
                 + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
                 + "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=null, "
                 + "dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, "
-                + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
-                + "updateHearingDetails=null, hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
+                + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, updateHearingDetails=null, "
+                + "hearingCollection=null, hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
                 + "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, "
                 + "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, "
                 + "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, "
