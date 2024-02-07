@@ -36,7 +36,7 @@ public class HearingsHelperTest {
 
     @Before
     public void setUp() throws Exception {
-        caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
+        caseDetails1 = generateCaseDetails("caseDetailsTestHearingDetailsUpdate.json");
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -45,6 +45,7 @@ public class HearingsHelperTest {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, CaseDetails.class);
     }
+
 
     @Test
     public void hearingMidEventValidationNumberError() {
@@ -134,13 +135,13 @@ public class HearingsHelperTest {
     @Test
     public void validateBreakResumeTime_invalidBreak () {
         setValidHearingStartFinishTimes();
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingBreak("2019-11-01T00:00:00.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
 
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
-        var hearingNumber = caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingNumber();
+        var hearingNumber = caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingNumber();
         assertEquals(1, errors.size());
         assertEquals(String.format(HEARING_BREAK_RESUME_INVALID, hearingNumber), errors.get(0));
     }
@@ -148,11 +149,11 @@ public class HearingsHelperTest {
     @Test
     public void validateBreakResumeTime_invalidResume () {
         setValidHearingStartFinishTimes();
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingResume("2019-11-01T00:00:00.000");
 
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
-        var hearingNumber = caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingNumber();
+        var hearingNumber = caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingNumber();
         assertEquals(1, errors.size());
         assertEquals(String.format(HEARING_BREAK_RESUME_INVALID, hearingNumber), errors.get(0));
     }
@@ -160,9 +161,9 @@ public class HearingsHelperTest {
     @Test
     public void validateBreakResumeTime_nullBreakResume () {
         setValidHearingStartFinishTimes();
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingBreak(null);
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingResume(null);
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
         assertEquals(0, errors.size());
@@ -170,13 +171,13 @@ public class HearingsHelperTest {
 
     @Test
     public void validateStartFinishTime_sameTime () {
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2019-11-01T12:11:00.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2019-11-01T12:11:00.000"); // Same time as start time
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
-        var hearingNumber = caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingNumber();
+        var hearingNumber = caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingNumber();
 
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
         assertEquals(1, errors.size());
@@ -185,13 +186,13 @@ public class HearingsHelperTest {
 
     @Test
     public void validateStartFinishTime_finishTimeBeforeStart () {
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2019-11-01T12:11:00.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2019-11-01T12:10:00.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
-        var hearingNumber = caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingNumber();
+        var hearingNumber = caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingNumber();
 
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
         assertEquals(1, errors.size());
@@ -200,15 +201,15 @@ public class HearingsHelperTest {
 
     @Test
     public void validateHearingDatesInPastTest() {
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingDateCollection()
                 .get(0).getValue().setHearingTimingBreak("2021-12-19T10:00:00");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingDateCollection()
                 .get(0).getValue().setHearingTimingResume("2021-12-19T10:00:00");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingDateCollection()
                 .get(0).getValue().setHearingTimingFinish("2021-12-19T10:10:00");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue().getHearingDateCollection()
                 .get(0).getValue().setHearingTimingStart("2021-12-19T10:00:00");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
         assertEquals(0, errors.size());
@@ -224,15 +225,15 @@ public class HearingsHelperTest {
 
     @Test
     public void invalidateHearingDatesInFutureTest() {
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2222-11-01T12:11:00.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2222-11-01T12:11:20.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingResume("2222-11-01T12:11:20.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingBreak("2222-11-01T12:11:20.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
         assertEquals(4, errors.size());
@@ -244,15 +245,15 @@ public class HearingsHelperTest {
 
     @Test
     public void invalidateHearingDatesInFutureTestNullCheck() {
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2222-11-01T12:11:00.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2222-11-01T12:11:20.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingResume(null);
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingBreak(null);
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
         List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
         assertEquals(2, errors.size());
@@ -263,11 +264,11 @@ public class HearingsHelperTest {
     }
 
     private void setValidHearingStartFinishTimes() {
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2019-11-01T12:11:00.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2019-11-01T12:11:20.000");
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+        caseDetails1.getCaseData().getHearingsCollectionForUpdate().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
     }
 }

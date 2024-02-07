@@ -273,7 +273,7 @@ public class CaseManagementForCaseWorkerService {
     public void updateSelectedHearing(CaseData caseData) {
         if(caseData.getHearingsCollectionForUpdate() != null) {
 
-            for (var updatedHearing :caseData.getHearingsCollectionForUpdate()) {
+            for (HearingTypeItem updatedHearing : caseData.getHearingsCollectionForUpdate()) {
                 Optional<HearingTypeItem> matchingHearing = caseData.getHearingCollection().stream()
                         .filter(h -> h.getId().equals(updatedHearing.getId())).findFirst();
 
