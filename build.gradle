@@ -222,7 +222,7 @@ repositories {
 ext {
     junitJupiterVersion = '5.10.2'
     log4JVersion = '2.22.1'
-    serenity = '3.7.1'
+    serenity = '3.9.8'
     tomcatEmbedVersion = '9.0.85'
 }
 
