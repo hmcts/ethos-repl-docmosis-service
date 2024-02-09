@@ -180,6 +180,9 @@ public class CaseManagementForCaseWorkerService {
 
     public void processHearingsForUpdateRequest(CaseDetails caseDetails) {
         CaseData caseData = caseDetails.getCaseData();
+        //clear pre-existing values
+        caseData.getHearingsCollectionForUpdate().clear();
+
         // check if update is only on one hearing
         if(caseData.getHearingCollection() != null && HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType())) {
             Optional<HearingTypeItem> hearingForUpdate = caseData.getHearingCollection().stream()
@@ -273,7 +276,7 @@ public class CaseManagementForCaseWorkerService {
     public void updateSelectedHearing(CaseData caseData) {
         if(caseData.getHearingsCollectionForUpdate() != null) {
 
-            for (var updatedHearing :caseData.getHearingsCollectionForUpdate()) {
+            for (HearingTypeItem updatedHearing : caseData.getHearingsCollectionForUpdate()) {
                 Optional<HearingTypeItem> matchingHearing = caseData.getHearingCollection().stream()
                         .filter(h -> h.getId().equals(updatedHearing.getId())).findFirst();
 
