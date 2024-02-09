@@ -205,5 +205,12 @@
         <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
         <cve>CVE-2023-33202</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: hoek@4.2.1
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/hoek@.*$</packageUrl>
+        <vulnerabilityName>1096410</vulnerabilityName>
+    </suppress>
 </suppressions>
 
