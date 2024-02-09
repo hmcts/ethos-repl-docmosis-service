@@ -546,13 +546,18 @@ public class CaseActionsForCaseWorkerController {
             log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-
+        
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateHearingsForAllocationOrUpdate(caseData);
         if(!errors.isEmpty()) {
             log.info(EVENT_FIELDS_VALIDATION + errors);
             return getCallbackRespEntityErrors(errors, caseData);
         }
+
+        //clear pre-existing values
+        caseData.setUpdateHearingDetails(null);
+        caseData.setSelectedHearingNumberForUpdate(null);
+        caseData.setHearingsCollectionForUpdate(null);
 
         List<DynamicValueType> items = DynamicListHelper.createDynamicHearingList(caseData);
         DynamicFixedListType flt = new DynamicFixedListType();
