@@ -181,7 +181,9 @@ public class CaseManagementForCaseWorkerService {
     public void processHearingsForUpdateRequest(CaseDetails caseDetails) {
         CaseData caseData = caseDetails.getCaseData();
         // check if update is only on one hearing
-        if(caseData.getHearingCollection() != null && HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType())) {
+        if(caseData.getHearingCollection() != null &&
+                HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType()) &&
+                caseData.getSelectedHearingNumberForUpdate() != null) {
             Optional<HearingTypeItem> hearingForUpdate = caseData.getHearingCollection().stream()
                     .filter(h->h.getValue().getHearingNumber()
                             .equals(caseData.getSelectedHearingNumberForUpdate()
@@ -205,7 +207,8 @@ public class CaseManagementForCaseWorkerService {
         }
 
         //For Single hearing date
-        if (SINGLE.equals(caseData.getUpdateHearingDetails().getHearingDateType())) {
+        if (SINGLE.equals(caseData.getUpdateHearingDetails().getHearingDateType()) &&
+                caseData.getUpdateHearingDetails() != null) {
             for (var hearingTypeItem : caseData.getHearingCollection()) {
                 //get hearings with one or more valid(on the date for Single, within bounds for Range) hearing dates
                 List<DateListedTypeItem> validHearingDates = hearingTypeItem.getValue()
