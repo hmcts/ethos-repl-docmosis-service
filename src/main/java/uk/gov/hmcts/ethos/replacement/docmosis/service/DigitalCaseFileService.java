@@ -129,9 +129,9 @@ public class DigitalCaseFileService {
     }
 
     private static String getDocumentName(DocumentType doc) {
-        String docType = isNullOrEmpty(doc.getTypeOfDocument())
+        String docType = isNullOrEmpty(doc.getDocumentType())
                 ? ""
-                : " - " + doc.getTypeOfDocument();
+                : " - " + doc.getDocumentType();
         String docFileName = isNullOrEmpty(doc.getUploadedDocument().getDocumentFilename())
                 ? ""
                 : " - " + doc.getUploadedDocument().getDocumentFilename();
