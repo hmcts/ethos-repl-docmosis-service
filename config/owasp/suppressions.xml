@@ -213,5 +213,19 @@
         <vulnerabilityName>1096432</vulnerabilityName>
         <vulnerabilityName>1096460</vulnerabilityName>
     </suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: ip:1.1.8
+   ]]></notes>
+   <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
+   <vulnerabilityName>1096518</vulnerabilityName>
+</suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: ip:2.0.0
+   ]]></notes>
+   <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
+   <vulnerabilityName>1096519</vulnerabilityName>
+</suppress>
 </suppressions>
 
