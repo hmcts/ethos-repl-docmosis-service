@@ -57,8 +57,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
@@ -558,7 +556,24 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals(1, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
     }
 
+    @ParameterizedTest
+    @CsvSource({",", ","})
+    public void processHearingsForUpdateRequestByHearingNumberWithNullHearingNumber(String hearingsFilterType, String hearingNumber) {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType(hearingNumber);
+        caseDetails.getCaseData().setSelectedHearingNumberForUpdate(updateFilterTypeFL);
+        caseDetails.getCaseData().setHearingUpdateFilterType("Hearing Number");
+
+        caseManagementForCaseWorkerService.processHearingsForUpdateRequest(caseDetails);
+
+        assertEquals(0, caseDetails.getCaseData().getHearingsCollectionForUpdate().size());
+    }
+
     private DynamicFixedListType getDynamicFixedListType(String hearingNumber) {
+        if(hearingNumber == null) {
+            return null;
+        }
+
         DynamicFixedListType updateFilterTypeFL = new DynamicFixedListType();
         DynamicValueType dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode(hearingNumber);
@@ -566,6 +581,7 @@ class CaseManagementForCaseWorkerServiceTest {
         updateFilterTypeFL.setValue(dynamicValueType);
         updateFilterTypeFL.setListItems(List.of(dynamicValueType));
         return updateFilterTypeFL;
+
     }
 
     @ParameterizedTest

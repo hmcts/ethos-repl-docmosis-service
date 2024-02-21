@@ -184,26 +184,29 @@ public class CaseManagementForCaseWorkerService {
         caseData.getHearingsCollectionForUpdate().clear();
 
         // check if update is only on one hearing
-        if(caseData.getHearingCollection() != null && HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType())) {
-            Optional<HearingTypeItem> hearingForUpdate = caseData.getHearingCollection().stream()
-                    .filter(h->h.getValue().getHearingNumber()
-                            .equals(caseData.getSelectedHearingNumberForUpdate()
-                                    .getValue().getCode())).findFirst();
-            if(hearingForUpdate.isPresent()) {
-                caseData.setHearingsCollectionForUpdate(new ArrayList<>());
-                caseData.getHearingsCollectionForUpdate().add(hearingForUpdate.get());
+        if (HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType()) &&
+                caseData.getHearingCollection() != null) {
+            if (caseData.getSelectedHearingNumberForUpdate() != null) {
+                Optional<HearingTypeItem> hearingForUpdate = caseData.getHearingCollection().stream()
+                        .filter(h->h.getValue().getHearingNumber()
+                                .equals(caseData.getSelectedHearingNumberForUpdate()
+                                        .getValue().getCode())).findFirst();
+                if (hearingForUpdate.isPresent()) {
+                    caseData.setHearingsCollectionForUpdate(new ArrayList<>());
+                    caseData.getHearingsCollectionForUpdate().add(hearingForUpdate.get());
+                }
             }
         } else {
             // when update request is on hearings from more than one hearing, i.e.
             // custom filter for filtering by hearing date
-            if(caseData.getHearingCollection() != null) {
+            if (caseData.getHearingCollection() != null) {
                 filterValidHearingDates(caseData);
             }
         }
     }
 
     private void filterValidHearingDates(CaseData caseData) {
-        if(caseData.getUpdateHearingDetails() == null) {
+        if (caseData.getUpdateHearingDetails() == null) {
             return;
         }
 
