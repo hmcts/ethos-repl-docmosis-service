@@ -205,5 +205,13 @@
         <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
         <cve>CVE-2023-33202</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: yarn.lock
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
+        <vulnerabilityName>1096432</vulnerabilityName>
+        <vulnerabilityName>1096460</vulnerabilityName>
+    </suppress>
 </suppressions>
 

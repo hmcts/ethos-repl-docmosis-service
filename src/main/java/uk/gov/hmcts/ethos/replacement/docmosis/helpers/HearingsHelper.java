@@ -104,10 +104,10 @@ public class HearingsHelper {
 
     public static List<String> hearingTimeValidation(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+        if (CollectionUtils.isEmpty(caseData.getHearingsCollectionForUpdate())) {
             return errors;
         }
-        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingsCollectionForUpdate()) {
             if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                 continue;
             }

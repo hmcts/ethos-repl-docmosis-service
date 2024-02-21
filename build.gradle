@@ -9,7 +9,7 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.51.0'
     id 'org.sonarqube' version '4.4.1.3373'
     id 'au.com.dius.pact' version '4.3.15'
-    id 'io.freefair.lombok' version '8.0.1'
+    id 'io.freefair.lombok' version '8.4'
 }
 
 group = 'uk.gov.hmcts.ethos.replacement'
@@ -222,7 +222,7 @@ repositories {
 ext {
     junitJupiterVersion = '5.10.2'
     log4JVersion = '2.22.1'
-    serenity = '3.7.1'
+    serenity = '3.9.8'
     tomcatEmbedVersion = '9.0.85'
 }
 
@@ -233,7 +233,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '32.1.3-jre') {
             entry 'guava'
         }
-        dependencySet(group: 'io.netty', version: '4.1.106.Final') {
+        dependencySet(group: 'io.netty', version: '4.1.107.Final') {
             entry 'netty-all'
             entry 'netty-buffer'
             entry 'netty-codec'
@@ -270,12 +270,12 @@ dependencyManagement {
 dependencies {
 
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '2.0.2'
-    implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: 'c927090415'
-    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '3.3.2'
+    implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.3.0'
+    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '3.3.5'
 
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
-    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.3'
+    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.4'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.37.3'
     implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.25.0'
@@ -300,13 +300,13 @@ dependencies {
         }
     }
     implementation 'org.postgresql:postgresql:42.7.1'
-    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.11'
+    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.12'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.8'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.9'
     implementation 'org.springframework.retry:spring-retry'
     implementation group: 'org.webjars.npm', name: 'minimatch', version: '5.1.6'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
@@ -319,7 +319,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation group: 'com.auth0', name: 'java-jwt', version: '4.4.0'
-    testImplementation 'com.github.hmcts:fortify-client:1.4.0:all'
+    testImplementation 'com.github.hmcts:fortify-client:1.4.1:all'
     testImplementation group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
     testImplementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     testImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: serenity
@@ -342,7 +342,7 @@ dependencies {
     contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     contractTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.10.2'
-    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.4'
+    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.1.0'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.10.RELEASE'
     contractTestImplementation sourceSets.main.runtimeClasspath
     contractTestImplementation sourceSets.test.runtimeClasspath
