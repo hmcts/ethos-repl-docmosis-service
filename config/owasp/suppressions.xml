@@ -182,20 +182,6 @@
        <cve>CVE-2023-4586</cve>
     </suppress>
     <suppress>
-       <notes><![CDATA[
-       file name: vm2:3.9.19
-       ]]></notes>
-       <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
-       <vulnerabilityName>1094550</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: vm2:3.9.19
-   ]]></notes>
-        <packageUrl regex="true">^pkg:npm/vm2@.*$</packageUrl>
-        <vulnerabilityName>1094744</vulnerabilityName>
-    </suppress>
-    <suppress>
         <notes><![CDATA[
    file name: axios:0.26.1
    ]]></notes>
@@ -219,5 +205,27 @@
         <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
         <cve>CVE-2023-33202</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: yarn.lock
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
+        <vulnerabilityName>1096432</vulnerabilityName>
+        <vulnerabilityName>1096460</vulnerabilityName>
+    </suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: ip:1.1.8
+   ]]></notes>
+   <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
+   <vulnerabilityName>1096518</vulnerabilityName>
+</suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: ip:2.0.0
+   ]]></notes>
+   <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
+   <vulnerabilityName>1096519</vulnerabilityName>
+</suppress>
 </suppressions>
 

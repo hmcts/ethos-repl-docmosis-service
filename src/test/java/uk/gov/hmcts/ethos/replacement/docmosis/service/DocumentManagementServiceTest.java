@@ -1,22 +1,27 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
@@ -30,21 +35,40 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ACAS_CERTIFICATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.CLAIM_ACCEPTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.CLAIM_REJECTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1_ATTACHMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET3;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET3_ATTACHMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.HEARINGS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.LEGACY_DOCUMENT_NAMES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_HEARING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.REJECTION_OF_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.RESPONSE_TO_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.STARTING_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.TRIBUNAL_CORRESPONDENCE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.successfulDocStoreUpload;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.successfulDocumentManagementUploadResponse;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.unsuccessfulDocumentManagementUploadResponse;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-public class DocumentManagementServiceTest {
+@ExtendWith(SpringExtension.class)
+class DocumentManagementServiceTest {
 
     @Mock
     private DocumentUploadClientApi documentUploadClient;
@@ -65,7 +89,7 @@ public class DocumentManagementServiceTest {
     private String markup;
     private ResponseEntity<Resource> responseEntity;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         file = createTestFile();
         markup = "<a target=\"_blank\" href=\"null/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
@@ -78,7 +102,7 @@ public class DocumentManagementServiceTest {
     }
 
     @Test
-    public void shouldUploadToDocumentManagement() throws IOException, URISyntaxException {
+    void shouldUploadToDocumentManagement() throws IOException, URISyntaxException {
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList(), any(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
         URI documentSelfPath = documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()),
@@ -90,13 +114,12 @@ public class DocumentManagementServiceTest {
     }
 
     @Test
-    public void uploadDocumentToDocumentManagementThrowsException() throws IOException, URISyntaxException {
-        expectedException.expect(DocumentManagementException.class);
-        expectedException.expectMessage("Unable to upload document document.docx to document management");
+    void uploadDocumentToDocumentManagementThrowsException() throws IOException, URISyntaxException {
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(unsuccessfulDocumentManagementUploadResponse());
-        documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()),
-                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE, anyString());
+        assertThrows(DocumentManagementException.class, () ->
+                documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()),
+                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE, anyString()));
     }
 
     private File createTestFile() {
@@ -110,7 +133,7 @@ public class DocumentManagementServiceTest {
     }
 
     @Test
-    public void downloadFile() {
+    void downloadFile() {
         when(documentDownloadClientApi.downloadBinary(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(responseEntity);
 
@@ -125,22 +148,24 @@ public class DocumentManagementServiceTest {
         assertEquals("xslx", uploadedDocument.getContentType());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void downloadFileException() {
+    @Test
+    void downloadFileException() {
         when(documentDownloadClientApi.downloadBinary(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(new ResponseEntity<>(HttpStatus.BAD_GATEWAY));
-        documentManagementService.downloadFile("authString",
-                "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
+        assertThrows(IllegalStateException.class, () ->
+                documentManagementService.downloadFile("authString",
+                        "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary")
+        );
     }
 
     @Test
-    public void getDocumentUUID() {
+    void getDocumentUUID() {
         var urlString = "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary";
         assertEquals("85d97996-22a5-40d7-882e-3a382c8ae1b4", documentManagementService.getDocumentUUID(urlString));
     }
 
     @Test
-    public void downloadFileSecureDocStoreTrue() {
+    void downloadFileSecureDocStoreTrue() {
         ReflectionTestUtils.setField(documentManagementService, "secureDocStoreEnabled", true);
         when(documentDownloadClientApi.downloadBinary(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(responseEntity);
@@ -156,7 +181,7 @@ public class DocumentManagementServiceTest {
     }
 
     @Test
-    public void uploadFileSecureDocStoreTrue() throws URISyntaxException, IOException {
+    void uploadFileSecureDocStoreTrue() throws URISyntaxException, IOException {
         ReflectionTestUtils.setField(documentManagementService, "secureDocStoreEnabled", true);
         when(caseDocumentClient.uploadDocuments(anyString(), anyString(), anyString(), anyString(), anyList(), any()))
                 .thenReturn(successfulDocStoreUpload());
@@ -167,4 +192,59 @@ public class DocumentManagementServiceTest {
         assertNotNull(documentSelfPath);
         assertEquals("/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4", documentSelfPath.getPath());
     }
+
+    @ParameterizedTest
+    @MethodSource
+    void convertLegacyDocsToNewDocNaming(String docType, String topLevel) {
+        CaseData caseData = new CaseDataBuilder()
+                .withDocumentCollection(docType)
+                .build();
+        documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
+        assertNotNull(caseData.getDocumentCollection());
+        assertEquals(topLevel, caseData.getDocumentCollection().get(0).getValue().getTopLevelDocuments());
+    }
+
+    private static Stream<Arguments> convertLegacyDocsToNewDocNaming() {
+        return Stream.of(
+                Arguments.of(ET1, STARTING_A_CLAIM),
+                Arguments.of(ET1_ATTACHMENT, STARTING_A_CLAIM),
+                Arguments.of(ACAS_CERTIFICATE, STARTING_A_CLAIM),
+                Arguments.of(NOTICE_OF_A_CLAIM, STARTING_A_CLAIM),
+                Arguments.of(TRIBUNAL_CORRESPONDENCE, STARTING_A_CLAIM),
+                Arguments.of(REJECTION_OF_CLAIM, STARTING_A_CLAIM),
+                Arguments.of(ET3, RESPONSE_TO_A_CLAIM),
+                Arguments.of(ET3_ATTACHMENT, RESPONSE_TO_A_CLAIM),
+                Arguments.of(NOTICE_OF_HEARING, HEARINGS),
+                Arguments.of(OTHER, LEGACY_DOCUMENT_NAMES)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void setDocumentTypeForDocumentCollection(String typeOfDocument, String documentType) {
+        CaseData caseData = new CaseDataBuilder()
+                .withDocumentCollection(typeOfDocument)
+                .build();
+        documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
+        documentManagementService.setDocumentTypeForDocumentCollection(caseData);
+        assertNotNull(caseData.getDocumentCollection());
+        assertEquals(documentType, caseData.getDocumentCollection().get(0).getValue().getDocumentType());
+    }
+
+    private static Stream<Arguments> setDocumentTypeForDocumentCollection() {
+        return Stream.of(
+                Arguments.of(ET1, ET1),
+                Arguments.of(ET1_ATTACHMENT, ET1_ATTACHMENT),
+                Arguments.of(ACAS_CERTIFICATE, ACAS_CERTIFICATE),
+                Arguments.of(NOTICE_OF_A_CLAIM, NOTICE_OF_CLAIM),
+                Arguments.of(TRIBUNAL_CORRESPONDENCE, CLAIM_ACCEPTED),
+                Arguments.of(REJECTION_OF_CLAIM, CLAIM_REJECTED),
+                Arguments.of(ET3, ET3),
+                Arguments.of(ET3_ATTACHMENT, ET3_ATTACHMENT),
+                Arguments.of(NOTICE_OF_HEARING, NOTICE_OF_HEARING),
+                Arguments.of(OTHER, OTHER)
+
+        );
+    }
+
 }

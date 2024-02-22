@@ -72,6 +72,9 @@ public class EventValidationService {
             SUBMITTED_STATE, ACCEPTED_STATE, REJECTED_STATE);
     public static final String RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE =
             "Receipt date should not be later than rejected date";
+    public static final String NO_HEARINGS_LISTED_ERROR_MESSAGE =
+            "You can not Allocate/Update Hearings as there are no hearings listed. "
+                    + "Use the 'List hearing' event to add new ones.";
 
     private boolean isReceiptDateEarlier(String date, String error, List<String> errors, LocalDate dateOfReceipt) {
         if (Strings.isNullOrEmpty(date)) {
@@ -168,7 +171,7 @@ public class EventValidationService {
             //reverse update it - from the last to the first element by removing repetition
             for (int index = repCollectionSize - 1;  index > -1; index--) {
                 String tempCollCurrentName = repCollection.get(index).getValue()
-                    .getDynamicRespRepName().getValue().getLabel();
+                        .getDynamicRespRepName().getValue().getLabel();
                 if (isValidRespondentName(caseData, tempCollCurrentName)) {
                     if (!repCollection.isEmpty()
                         && updatedRepList.stream()
@@ -204,7 +207,7 @@ public class EventValidationService {
             var respRepNames = caseData.getRespondentCollection()
                 .stream()
                 .map(e -> e.getValue().getRespondentName())
-                .collect(Collectors.toList());
+                .toList();
 
             if (!respRepNames.isEmpty()) {
                 isValidName = respRepNames.contains(tempCollCurrentName);
@@ -451,7 +454,15 @@ public class EventValidationService {
                 }
             }
         }
+    }
 
+    public List<String> validateHearingsForAllocationOrUpdate(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        if(caseData != null && (caseData.getHearingCollection() == null || caseData.getHearingCollection().isEmpty())) {
+             errors.add(NO_HEARINGS_LISTED_ERROR_MESSAGE);
+             return errors;
+         }
+        return errors;
     }
 
     public void validateHearingJudgeAllocationForCaseCloseEvent(CaseData caseData, List<String> errors) {
@@ -469,7 +480,6 @@ public class EventValidationService {
                 }
             }
         }
-
     }
 
     public List<String> validateCaseBeforeCloseEvent(CaseData caseData, boolean isRejected, boolean partOfMultiple,
@@ -513,8 +523,6 @@ public class EventValidationService {
             } else {
                 restrictedReportingType.setRequestedBy(dynamicListCode);
             }
-
         }
     }
-
 }
