@@ -13,7 +13,9 @@ public class JsonMapper {
 
     private static final String SERIALISATION_ERROR_MESSAGE = "Failed to serialize '%s' to JSON";
     private static final String DESERIALIZATION_ERROR_MESSAGE = "Failed to deserialize '%s' from JSON";
-
+    public static final String DATA = "$.data";
+    public static final String ERRORS = "$.errors";
+    public static final String WARNINGS = "$.warnings";
     private final ObjectMapper objectMapper;
 
     public JsonMapper(ObjectMapper objectMapper) {
