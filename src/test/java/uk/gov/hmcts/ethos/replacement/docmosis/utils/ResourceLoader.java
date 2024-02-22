@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.utils;
 
+import uk.gov.hmcts.ecm.common.model.bundle.BundleCreateResponse;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 
 import java.io.IOException;
@@ -12,6 +13,12 @@ public class ResourceLoader {
     private static final JsonMapper jsonMapper = JsonMapperFactory.create();
 
     private ResourceLoader() {
+    }
+
+    public static BundleCreateResponse stitchBundleRequest() throws URISyntaxException, IOException {
+        String response = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(ResourceLoader.class.getClassLoader()
+                .getResource("stitchBundleRequest.json")).toURI())));
+        return jsonMapper.fromJson(response, BundleCreateResponse.class);
     }
 
     public static UploadResponse successfulDocumentManagementUploadResponse() throws URISyntaxException, IOException {
