@@ -223,7 +223,7 @@ ext {
     junitJupiterVersion = '5.10.2'
     log4JVersion = '2.22.1'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '9.0.85'
+    tomcatEmbedVersion = '9.0.86'
 }
 
 ext["rest-assured.version"] = '5.1.0'
@@ -312,7 +312,7 @@ dependencies {
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.3'
 
-    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.9'
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.10'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.0'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.8.0'
     compileOnly 'org.projectlombok:lombok'
