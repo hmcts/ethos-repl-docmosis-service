@@ -1113,39 +1113,6 @@ public class DocumentHelper {
 
     }
 
-    //New document hierarchical categories
-    public static String getTopLevelDocument(String typeOfDocument) {
-        return switch (typeOfDocument) {
-            case ET1, ET1_ATTACHMENT, ACAS_CERTIFICATE, NOTICE_OF_CLAIM, CLAIM_ACCEPTED, CLAIM_REJECTED,
-                    CLAIM_PART_REJECTED, ET1_VETTING -> STARTING_A_CLAIM;
-            case ET3, ET3_ATTACHMENT, RESPONSE_ACCEPTED, RESPONSE_REJECTED, APP_TO_EXTEND_TIME_TO_PRESENT_A_RESPONSE,
-                    ET3_PROCESSING
-                    -> RESPONSE_TO_A_CLAIM;
-            case INITIAL_CONSIDERATION, RULE_27_NOTICE, RULE_28_NOTICE -> INITIAL_CONSIDERATION;
-            case TRIBUNAL_ORDER, DEPOSIT_ORDER, UNLESS_ORDER, TRIBUNAL_NOTICE, APP_TO_VARY_AN_ORDER_C,
-                    APP_TO_VARY_AN_ORDER_R, APP_TO_REVOKE_AN_ORDER_C, APP_TO_REVOKE_AN_ORDER_R,
-                    APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_C,
-                    APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_R, APP_TO_ORDER_THE_R_TO_DO_SOMETHING,
-                    APP_TO_ORDER_THE_C_TO_DO_SOMETHING, APP_TO_AMEND_CLAIM, APP_TO_AMEND_RESPONSE,
-                    APP_FOR_A_WITNESS_ORDER_C, DISABILITY_IMPACT_STATEMENT, R_HAS_NOT_COMPLIED_WITH_AN_ORDER_C,
-                    C_HAS_NOT_COMPLIED_WITH_AN_ORDER_R, APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_CLAIM,
-                    APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_RESPONSE, REFERRAL_JUDICIAL_DIRECTION,
-                    CHANGE_OF_PARTYS_DETAILS, APP_TO_VARY_OR_REVOKE_AN_ORDER_R, APP_TO_VARY_OR_REVOKE_AN_ORDER_C,
-                    CONTACT_THE_TRIBUNAL_C, CONTACT_THE_TRIBUNAL_R, APP_FOR_A_WITNESS_ORDER_R -> CASE_MANAGEMENT;
-            case WITHDRAWAL_OF_ENTIRE_CLAIM, WITHDRAWAL_OF_PART_OF_CLAIM, COT3, WITHDRAWAL_OF_ALL_OR_PART_CLAIM
-                    -> WITHDRAWAL_SETTLED;
-            case APP_TO_RESTRICT_PUBLICITY_C, APP_TO_RESTRICT_PUBLICITY_R, ANONYMITY_ORDER, NOTICE_OF_HEARING,
-                    APP_TO_POSTPONE_C, APP_TO_POSTPONE_R, HEARING_BUNDLE, SCHEDULE_OF_LOSS, COUNTER_SCHEDULE_OF_LOSS
-                    -> HEARINGS;
-            case JUDGMENT, JUDGMENT_WITH_REASONS, REASONS, EXTRACT_OF_JUDGMENT -> JUDGMENT_AND_REASONS;
-            case APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_C,
-                    APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_R, APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_C,
-                    APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R -> RECONSIDERATION;
-            case CERTIFICATE_OF_CORRECTION, TRIBUNAL_CASE_FILE, OTHER -> MISC;
-            default -> LEGACY_DOCUMENT_NAMES;
-        };
-    }
-
     public static void setSecondLevelDocumentFromType(DocumentType documentType, String typeOfDocument) {
         switch (typeOfDocument) {
             case ET1, ET1_ATTACHMENT, ACAS_CERTIFICATE, NOTICE_OF_CLAIM, CLAIM_ACCEPTED, CLAIM_REJECTED,
@@ -1204,43 +1171,6 @@ public class DocumentHelper {
                 documentType.setDocumentType(documentType.getTypeOfDocument());
             }
         }
-    }
-
-    public static String respondentApplicationToDocType(String applicationType) {
-        return switch (applicationType) {
-            case "Amend response" -> APP_TO_AMEND_RESPONSE;
-            case "Change personal details" -> CHANGE_OF_PARTYS_DETAILS;
-            case "Claimant not complied" -> C_HAS_NOT_COMPLIED_WITH_AN_ORDER_R;
-            case "Consider a decision afresh" -> APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_R;
-            case "Contact the tribunal" -> CONTACT_THE_TRIBUNAL_R;
-            case "Order other party" -> APP_TO_ORDER_THE_C_TO_DO_SOMETHING;
-            case "Order a witness to attend to give evidence" -> APP_FOR_A_WITNESS_ORDER_R;
-            case "Postpone a hearing" -> APP_TO_POSTPONE_R;
-            case "Reconsider judgement" -> APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R;
-            case "Restrict publicity" -> APP_TO_RESTRICT_PUBLICITY_R;
-            case "Strike out all or part of a claim" -> APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_CLAIM;
-            case "Vary or revoke an order" -> APP_TO_VARY_OR_REVOKE_AN_ORDER_R;
-            default -> throw new IllegalStateException("Unexpected value: " + applicationType);
-        };
-    }
-
-    public static String claimantApplicationTypeToDocType(String applicationType) {
-        return switch (applicationType) {
-            case "withdraw" -> WITHDRAWAL_OF_ALL_OR_PART_CLAIM;
-            case "change-details" -> CHANGE_OF_PARTYS_DETAILS;
-            case "postpone" -> APP_TO_POSTPONE_C;
-            case "vary" -> APP_TO_VARY_OR_REVOKE_AN_ORDER_C;
-            case "reconsider-decision" -> APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_C;
-            case "amend" -> APP_TO_AMEND_CLAIM;
-            case "respondent" -> APP_TO_ORDER_THE_R_TO_DO_SOMETHING;
-            case "witness" -> APP_FOR_A_WITNESS_ORDER_C;
-            case "non-compliance" -> R_HAS_NOT_COMPLIED_WITH_AN_ORDER_C;
-            case "publicity" -> APP_TO_RESTRICT_PUBLICITY_C;
-            case "strike" -> APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_RESPONSE;
-            case "reconsider-judgement" -> APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_C;
-            case "other" -> CONTACT_THE_TRIBUNAL_C;
-            default -> throw new IllegalStateException("Unexpected value: " + applicationType);
-        };
     }
 
     /**
