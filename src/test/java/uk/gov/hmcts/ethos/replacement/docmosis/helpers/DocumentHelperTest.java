@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
@@ -30,6 +32,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 public class DocumentHelperTest {
 
     private static final String DUMMY_CASE_TYPE_ID = "dummy case type id";
+    public static final String ET1 = "ET1";
+    public static final String ET1_ATTACHMENT = "ET1 Attachment";
+    public static final String ACAS_CERTIFICATE  = "ACAS Certificate";
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
@@ -2087,6 +2092,17 @@ public class DocumentHelperTest {
                 UtilHelper.formatCurrentDate(currentLocalDate))
             .replace("current-date-plus28-placeholder",
                 UtilHelper.formatCurrentDate(currentLocalDatePlus28Days));
+    }
+
+    @Test
+    public void setDocumentNumbers() {
+        CaseData caseData = CaseDataBuilder.builder()
+                .withDocumentCollection(ET1)
+                .withDocumentCollection(ET1_ATTACHMENT)
+                .withDocumentCollection(ACAS_CERTIFICATE)
+                .build();
+        DocumentHelper.setDocumentNumbers(caseData);
+        caseData.getDocumentCollection().forEach(d -> assertThat(d.getValue().getDocNumber()).isNotNull());
     }
 
 }
