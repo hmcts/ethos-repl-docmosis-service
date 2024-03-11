@@ -1286,5 +1286,4 @@ public class DocumentHelper {
         docTypeItem.setValue(docType);
         return docTypeItem;
     }
-
 }
