@@ -282,6 +282,7 @@ public class DocumentManagementService {
                                             uploadedDocType.getDocumentType(),
                                             String.format("%s : %s", uploadedDocType.getShortDescription(),
                                                     uploadedDocType.getTopLevelDocuments()));
+                    setDocumentTypeForDocument(docTypeItem.getValue());
                     docTypeItem.getValue().setDateOfCorrespondence(uploadDoc.getValue().getDateOfCorrespondence());
                     caseData.getDocumentCollection().add(docTypeItem);
                     DocumentHelper.setDocumentNumbers(caseData);

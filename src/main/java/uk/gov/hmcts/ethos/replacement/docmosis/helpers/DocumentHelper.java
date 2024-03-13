@@ -1147,32 +1147,6 @@ public class DocumentHelper {
         }
     }
 
-    public static void setDocumentTypeForDocument(DocumentType documentType) {
-        if (!isNullOrEmpty(documentType.getTopLevelDocuments()) || !isNullOrEmpty(documentType.getTypeOfDocument())) {
-            if (!isNullOrEmpty(documentType.getStartingClaimDocuments())) {
-                documentType.setDocumentType(documentType.getStartingClaimDocuments());
-            } else if (!isNullOrEmpty(documentType.getResponseClaimDocuments())) {
-                documentType.setDocumentType(documentType.getResponseClaimDocuments());
-            } else if (!isNullOrEmpty(documentType.getInitialConsiderationDocuments())) {
-                documentType.setDocumentType(documentType.getInitialConsiderationDocuments());
-            } else if (!isNullOrEmpty(documentType.getCaseManagementDocuments())) {
-                documentType.setDocumentType(documentType.getCaseManagementDocuments());
-            } else if (!isNullOrEmpty(documentType.getWithdrawalSettledDocuments())) {
-                documentType.setDocumentType(documentType.getWithdrawalSettledDocuments());
-            } else if (!isNullOrEmpty(documentType.getHearingsDocuments())) {
-                documentType.setDocumentType(documentType.getHearingsDocuments());
-            } else if (!isNullOrEmpty(documentType.getJudgmentAndReasonsDocuments())) {
-                documentType.setDocumentType(documentType.getJudgmentAndReasonsDocuments());
-            } else if (!isNullOrEmpty(documentType.getReconsiderationDocuments())) {
-                documentType.setDocumentType(documentType.getReconsiderationDocuments());
-            } else if (!isNullOrEmpty(documentType.getMiscDocuments())) {
-                documentType.setDocumentType(documentType.getMiscDocuments());
-            } else {
-                documentType.setDocumentType(documentType.getTypeOfDocument());
-            }
-        }
-    }
-
     /**
      * Add document numbers to each of the docs in the case.
      * @param caseData CaseData
@@ -1205,7 +1179,6 @@ public class DocumentHelper {
         documentType.setDateOfCorrespondence(LocalDate.now().toString());
         documentType.setTopLevelDocuments(topLevel);
         setSecondLevelDocumentFromType(documentType, secondLevel);
-        setDocumentTypeForDocument(documentType);
         return documentTypeItem;
     }
 
