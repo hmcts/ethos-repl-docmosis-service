@@ -56,7 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     private WebApplicationContext applicationContext;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
         CaseDetails caseDetails = new CaseDetails();
@@ -66,7 +66,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     }
 
     @Test
-    public void aboutToSubmitWithValidToken() throws Exception {
+    void aboutToSubmitWithValidToken() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(ABOUT_TO_SUBMIT_URL)
                         .content(requestContent.toString())
@@ -80,7 +80,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     }
 
     @Test
-    public void testAboutToSubmitWithInvalidToken() throws Exception {
+    void testAboutToSubmitWithInvalidToken() throws Exception {
         when(verifyTokenService.verifyTokenSignature("invalidToken")).thenReturn(false);
         mvc.perform(post(ABOUT_TO_SUBMIT_URL)
                         .contentType(APPLICATION_JSON)
