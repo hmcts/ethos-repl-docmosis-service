@@ -10,8 +10,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +23,9 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
@@ -30,6 +34,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 public class DocumentHelperTest {
 
     private static final String DUMMY_CASE_TYPE_ID = "dummy case type id";
+    public static final String ET1 = "ET1";
+    public static final String ET1_ATTACHMENT = "ET1 Attachment";
+    public static final String ACAS_CERTIFICATE  = "ACAS Certificate";
+    public static final String ET3_ATTACHMENT = "ET3 Attachment";
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
@@ -2087,6 +2095,89 @@ public class DocumentHelperTest {
                 UtilHelper.formatCurrentDate(currentLocalDate))
             .replace("current-date-plus28-placeholder",
                 UtilHelper.formatCurrentDate(currentLocalDatePlus28Days));
+    }
+
+    @Test
+    public void setDocumentNumbers() {
+        CaseData caseData = CaseDataBuilder.builder()
+                .withDocumentCollection(ET1)
+                .withDocumentCollection(ET1_ATTACHMENT)
+                .withDocumentCollection(ACAS_CERTIFICATE)
+                .build();
+        DocumentHelper.setDocumentNumbers(caseData);
+        caseData.getDocumentCollection().forEach(d -> assertThat(d.getValue().getDocNumber()).isNotNull());
+    }
+
+
+    @Test
+    public void setSecondLevelDocumentFromType_StartClaim() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
+        assertNotNull(documentType.getStartingClaimDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_ResponseClaimDoc() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET3_ATTACHMENT);
+        assertNotNull(documentType.getResponseClaimDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_InitialConsiderationDoc() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Rule 27 Notice");
+        assertNotNull(documentType.getInitialConsiderationDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_CaseManagementDocuments() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Tribunal Order");
+        assertNotNull(documentType.getCaseManagementDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_WithdrawalSettledDocuments() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Withdrawal of entire claim");
+        assertNotNull(documentType.getWithdrawalSettledDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_HearingsDocuments() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Notice of Hearing");
+        assertNotNull(documentType.getHearingsDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_JudgmentAndReasonsDocuments() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Judgment with Reasons");
+        assertNotNull(documentType.getJudgmentAndReasonsDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_ReconsiderationDocuments() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType,
+                "App to have a Legal Officer decision considered afresh - R");
+        assertNotNull(documentType.getReconsiderationDocuments());
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_MiscDocuments() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType,"Certificate of Correction");
+        assertNotNull(documentType.getMiscDocuments());
+    }
+
+    @Test
+    public void createDocumentTypeItemFromTopLevel() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
+        assertEquals(ET1_ATTACHMENT, documentType.getStartingClaimDocuments());
     }
 
 }
