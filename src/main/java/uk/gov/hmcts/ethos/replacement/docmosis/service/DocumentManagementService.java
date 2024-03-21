@@ -285,8 +285,8 @@ public class DocumentManagementService {
                     setDocumentTypeForDocument(docTypeItem.getValue());
                     docTypeItem.getValue().setDateOfCorrespondence(uploadDoc.getValue().getDateOfCorrespondence());
                     caseData.getDocumentCollection().add(docTypeItem);
-                    DocumentHelper.setDocumentNumbers(caseData);
                 });
+        DocumentHelper.setDocumentNumbers(caseData);
     }
 
     private void setDocumentTypeForDocument(DocumentType documentType) {
