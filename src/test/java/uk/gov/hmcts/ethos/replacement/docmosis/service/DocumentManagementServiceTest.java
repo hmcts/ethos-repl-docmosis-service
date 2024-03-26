@@ -280,7 +280,7 @@ class DocumentManagementServiceTest {
         documentManagementService.addUploadedDocsToCaseDocCollection(caseData);
 
         assertEquals(2, caseData.getDocumentCollection().size());
-        assertNull(caseData.getDocumentCollection().get(1).getValue().getDateOfCorrespondence());
+        assertNull(caseData.getDocumentCollection().get(0).getValue().getDateOfCorrespondence());
     }
 
     @Test
