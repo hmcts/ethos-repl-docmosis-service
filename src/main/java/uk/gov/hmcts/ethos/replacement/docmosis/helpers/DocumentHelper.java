@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
@@ -22,8 +23,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
@@ -55,6 +58,83 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ACAS_CERTIFICATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ANONYMITY_ORDER;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_FOR_A_WITNESS_ORDER_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_FOR_A_WITNESS_ORDER_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_AMEND_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_AMEND_RESPONSE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_EXTEND_TIME_TO_PRESENT_A_RESPONSE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_ORDER_THE_C_TO_DO_SOMETHING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_ORDER_THE_R_TO_DO_SOMETHING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_POSTPONE_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_POSTPONE_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_RESTRICT_PUBLICITY_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_RESTRICT_PUBLICITY_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_REVOKE_AN_ORDER_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_REVOKE_AN_ORDER_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_RESPONSE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_VARY_AN_ORDER_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_VARY_AN_ORDER_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_VARY_OR_REVOKE_AN_ORDER_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_VARY_OR_REVOKE_AN_ORDER_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CASE_MANAGEMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CERTIFICATE_OF_CORRECTION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CHANGE_OF_PARTYS_DETAILS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CLAIM_ACCEPTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CLAIM_PART_REJECTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CLAIM_REJECTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CONTACT_THE_TRIBUNAL_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CONTACT_THE_TRIBUNAL_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.COT3;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.COUNTER_SCHEDULE_OF_LOSS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.C_HAS_NOT_COMPLIED_WITH_AN_ORDER_R;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.DEPOSIT_ORDER;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.DISABILITY_IMPACT_STATEMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET1;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET1_ATTACHMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET1_VETTING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET3;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET3_ATTACHMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET3_PROCESSING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.EXTRACT_OF_JUDGMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.HEARINGS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.HEARING_BUNDLE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.INITIAL_CONSIDERATION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.JUDGMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.JUDGMENT_AND_REASONS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.JUDGMENT_WITH_REASONS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.LEGACY_DOCUMENT_NAMES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.MISC;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.NOTICE_OF_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.NOTICE_OF_HEARING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.OTHER;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.REASONS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RECONSIDERATION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.REFERRAL_JUDICIAL_DIRECTION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RESPONSE_ACCEPTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RESPONSE_REJECTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RESPONSE_TO_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RULE_27_NOTICE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RULE_28_NOTICE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.R_HAS_NOT_COMPLIED_WITH_AN_ORDER_C;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.SCHEDULE_OF_LOSS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.STARTING_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.TRIBUNAL_CASE_FILE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.TRIBUNAL_NOTICE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.TRIBUNAL_ORDER;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.UNLESS_ORDER;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_OF_ALL_OR_PART_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_OF_ENTIRE_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_OF_PART_OF_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_SETTLED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -1033,4 +1113,80 @@ public class DocumentHelper {
 
     }
 
+    public static void setSecondLevelDocumentFromType(DocumentType documentType, String typeOfDocument) {
+        switch (typeOfDocument) {
+            case ET1, ET1_ATTACHMENT, ACAS_CERTIFICATE, NOTICE_OF_CLAIM, CLAIM_ACCEPTED, CLAIM_REJECTED,
+                    CLAIM_PART_REJECTED, ET1_VETTING -> documentType.setStartingClaimDocuments(typeOfDocument);
+            case ET3, ET3_ATTACHMENT, RESPONSE_ACCEPTED, RESPONSE_REJECTED, APP_TO_EXTEND_TIME_TO_PRESENT_A_RESPONSE,
+                    ET3_PROCESSING -> documentType.setResponseClaimDocuments(typeOfDocument);
+            case INITIAL_CONSIDERATION, RULE_27_NOTICE, RULE_28_NOTICE
+                    -> documentType.setInitialConsiderationDocuments(typeOfDocument);
+            case TRIBUNAL_ORDER, DEPOSIT_ORDER, UNLESS_ORDER, TRIBUNAL_NOTICE, APP_TO_VARY_AN_ORDER_C,
+                    APP_TO_VARY_AN_ORDER_R, APP_TO_REVOKE_AN_ORDER_C, APP_TO_REVOKE_AN_ORDER_R,
+                    APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_C,
+                    APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_R, APP_TO_ORDER_THE_R_TO_DO_SOMETHING,
+                    APP_TO_ORDER_THE_C_TO_DO_SOMETHING, APP_TO_AMEND_CLAIM, APP_TO_AMEND_RESPONSE,
+                    APP_FOR_A_WITNESS_ORDER_C, DISABILITY_IMPACT_STATEMENT, R_HAS_NOT_COMPLIED_WITH_AN_ORDER_C,
+                    C_HAS_NOT_COMPLIED_WITH_AN_ORDER_R, APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_CLAIM,
+                    APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_RESPONSE, REFERRAL_JUDICIAL_DIRECTION,
+                    CHANGE_OF_PARTYS_DETAILS, APP_TO_VARY_OR_REVOKE_AN_ORDER_R, APP_TO_VARY_OR_REVOKE_AN_ORDER_C,
+                    CONTACT_THE_TRIBUNAL_C, CONTACT_THE_TRIBUNAL_R, APP_FOR_A_WITNESS_ORDER_R
+                    -> documentType.setCaseManagementDocuments(typeOfDocument);
+            case WITHDRAWAL_OF_ENTIRE_CLAIM, WITHDRAWAL_OF_PART_OF_CLAIM, COT3, WITHDRAWAL_OF_ALL_OR_PART_CLAIM
+                    -> documentType.setWithdrawalSettledDocuments(typeOfDocument);
+            case APP_TO_RESTRICT_PUBLICITY_C, APP_TO_RESTRICT_PUBLICITY_R, ANONYMITY_ORDER, NOTICE_OF_HEARING,
+                    APP_TO_POSTPONE_C, APP_TO_POSTPONE_R, HEARING_BUNDLE, SCHEDULE_OF_LOSS, COUNTER_SCHEDULE_OF_LOSS
+                    -> documentType.setHearingsDocuments(typeOfDocument);
+            case JUDGMENT, JUDGMENT_WITH_REASONS, REASONS, EXTRACT_OF_JUDGMENT
+                    -> documentType.setJudgmentAndReasonsDocuments(typeOfDocument);
+            case APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_C,
+                    APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_R, APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_C,
+                    APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R -> documentType.setReconsiderationDocuments(typeOfDocument);
+            case CERTIFICATE_OF_CORRECTION, TRIBUNAL_CASE_FILE, OTHER -> documentType.setMiscDocuments(typeOfDocument);
+            default -> documentType.setTypeOfDocument(typeOfDocument);
+        }
+    }
+
+    /**
+     * Add document numbers to each of the docs in the case.
+     * @param caseData CaseData
+     */
+    public static void setDocumentNumbers(uk.gov.hmcts.ecm.common.model.ccd.CaseData caseData) {
+        if (CollectionUtils.isEmpty(caseData.getDocumentCollection())) {
+            return;
+        }
+        caseData.getDocumentCollection().forEach(documentTypeItem -> {
+            DocumentType documentType = documentTypeItem.getValue();
+            documentType.setDocNumber(String.valueOf(caseData.getDocumentCollection()
+                    .indexOf(documentTypeItem) + 1));
+        });
+    }
+
+    /**
+     * Create a new DocumentTypeItem, copy from uploadedDocumentType and update TypeOfDocument.
+     * @param uploadedDocumentType UploadedDocumentType to be added
+     * @param topLevel top level document
+     * @param secondLevel second level document
+     * @return DocumentTypeItem
+     */
+    public static DocumentTypeItem createDocumentTypeItemFromTopLevel(UploadedDocumentType uploadedDocumentType,
+                                                                      String topLevel,
+                                                                      String secondLevel,
+                                                                      String shortDescription) {
+        DocumentTypeItem documentTypeItem = fromUploadedDocument(uploadedDocumentType);
+        DocumentType documentType = documentTypeItem.getValue();
+        documentType.setShortDescription(shortDescription);
+        documentType.setDateOfCorrespondence(LocalDate.now().toString());
+        documentType.setTopLevelDocuments(topLevel);
+        setSecondLevelDocumentFromType(documentType, secondLevel);
+        return documentTypeItem;
+    }
+
+    public static DocumentTypeItem fromUploadedDocument(UploadedDocumentType uploadedDocumentType) {
+        DocumentType docType = new DocumentType();
+        docType.setUploadedDocument(uploadedDocumentType);
+        DocumentTypeItem docTypeItem = new DocumentTypeItem();
+        docTypeItem.setValue(docType);
+        return docTypeItem;
+    }
 }

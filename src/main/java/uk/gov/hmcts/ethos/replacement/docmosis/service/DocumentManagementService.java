@@ -259,6 +259,36 @@ public class DocumentManagementService {
                         String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
     }
 
+    /**
+     * Adds all uploaded documents to the case's document collection.
+     * @param caseData case that provides both document collections(uploaded and case doc collections)
+     */
+    public void addUploadedDocsToCaseDocCollection(CaseData caseData) {
+
+        //If doc collection is empty, initialise it
+        if (caseData.getDocumentCollection() == null) {
+            caseData.setDocumentCollection(new ArrayList<>());
+        }
+
+        caseData.getAddDocumentCollection().forEach(
+                uploadDoc -> {
+                    DocumentType uploadedDocType = uploadDoc.getValue();
+                    setDocumentTypeForDocument(uploadedDocType);
+                    DocumentHelper.setSecondLevelDocumentFromType(uploadedDocType,
+                            uploadedDocType.getDocumentType());
+                    DocumentTypeItem docTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
+                                            uploadedDocType.getUploadedDocument(),
+                                            uploadedDocType.getTopLevelDocuments(),
+                                            uploadedDocType.getDocumentType(),
+                                            String.format("%s : %s", uploadedDocType.getShortDescription(),
+                                                    uploadedDocType.getTopLevelDocuments()));
+                    setDocumentTypeForDocument(docTypeItem.getValue());
+                    docTypeItem.getValue().setDateOfCorrespondence(uploadDoc.getValue().getDateOfCorrespondence());
+                    caseData.getDocumentCollection().add(docTypeItem);
+                });
+        DocumentHelper.setDocumentNumbers(caseData);
+    }
+
     private void setDocumentTypeForDocument(DocumentType documentType) {
         if (!isNullOrEmpty(documentType.getTopLevelDocuments()) || !isNullOrEmpty(documentType.getTypeOfDocument())) {
             if (!isNullOrEmpty(documentType.getStartingClaimDocuments())) {

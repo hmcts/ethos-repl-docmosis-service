@@ -212,6 +212,19 @@
           }
         }
       ],
+      "addDocumentCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "typeOfDocument": "Doc",
+            "ownerDocument": "Juan Francisco",
+            "uploadedDocument": {
+              "document_binary_url": "http:google.com",
+              "document_filename": "Filename"
+            }
+          }
+        }
+      ],
       "broughtForwardCollection": [
         {
           "id": "12121",

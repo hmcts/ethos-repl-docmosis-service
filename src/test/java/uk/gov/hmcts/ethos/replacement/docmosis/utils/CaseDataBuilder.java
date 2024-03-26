@@ -113,6 +113,9 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public static CaseDataBuilder builder() {
+        return new CaseDataBuilder();
+    }
     public CaseData build() {
         return caseData;
     }
