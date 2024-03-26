@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.exceptions.CaseRetrievalException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -17,6 +19,10 @@ public class CaseRetrievalForCaseWorkerService {
     private static final String MESSAGE = "Failed to retrieve case for : ";
     private final CcdClient ccdClient;
 
+    private final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
+            "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
+            "MidlandsEast", "MidlandsWest", "Newcastle", "Scotland",
+            "Wales", "Watford");
     @Autowired
     public CaseRetrievalForCaseWorkerService(CcdClient ccdClient) {
         this.ccdClient = ccdClient;
@@ -49,4 +55,19 @@ public class CaseRetrievalForCaseWorkerService {
         }
     }
 
+    public List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken) {
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        try {
+            for(String targetOffice : caseTypeIdsToCheck) {
+                submitEvents = ccdClient.retrieveTransferredCaseElasticSearch(authToken, targetOffice, currentCaseId);
+                if(!submitEvents.isEmpty()) {
+                    return submitEvents;
+                }
+            }
+
+            return null;
+        } catch (Exception ex) {
+            throw new CaseRetrievalException(MESSAGE + currentCaseId + ex.getMessage());
+        }
+    }
 }
