@@ -212,6 +212,7 @@
         <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
         <vulnerabilityName>1096432</vulnerabilityName>
         <vulnerabilityName>1096460</vulnerabilityName>
+        <vulnerabilityName>1096727</vulnerabilityName>
     </suppress>
     <suppress>
    <notes><![CDATA[
