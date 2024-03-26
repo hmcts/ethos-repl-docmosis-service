@@ -1114,7 +1114,8 @@ public class DocumentHelper {
     }
 
     public static void setSecondLevelDocumentFromType(DocumentType documentType, String typeOfDocument) {
-        switch (typeOfDocument) {
+        if(typeOfDocument != null && documentType != null) {
+            switch (typeOfDocument) {
             case ET1, ET1_ATTACHMENT, ACAS_CERTIFICATE, NOTICE_OF_CLAIM, CLAIM_ACCEPTED, CLAIM_REJECTED,
                     CLAIM_PART_REJECTED, ET1_VETTING -> documentType.setStartingClaimDocuments(typeOfDocument);
             case ET3, ET3_ATTACHMENT, RESPONSE_ACCEPTED, RESPONSE_REJECTED, APP_TO_EXTEND_TIME_TO_PRESENT_A_RESPONSE,
@@ -1144,6 +1145,7 @@ public class DocumentHelper {
                     APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R -> documentType.setReconsiderationDocuments(typeOfDocument);
             case CERTIFICATE_OF_CORRECTION, TRIBUNAL_CASE_FILE, OTHER -> documentType.setMiscDocuments(typeOfDocument);
             default -> documentType.setTypeOfDocument(typeOfDocument);
+            }
         }
     }
 
@@ -1175,9 +1177,15 @@ public class DocumentHelper {
                                                                       String shortDescription) {
         DocumentTypeItem documentTypeItem = fromUploadedDocument(uploadedDocumentType);
         DocumentType documentType = documentTypeItem.getValue();
-        documentType.setShortDescription(shortDescription);
         documentType.setDateOfCorrespondence(LocalDate.now().toString());
-        documentType.setTopLevelDocuments(topLevel);
+
+        if(!isNullOrEmpty(shortDescription)) {
+            documentType.setShortDescription(shortDescription);
+        }
+        if(!isNullOrEmpty(topLevel)) {
+            documentType.setTopLevelDocuments(topLevel);
+        }
+
         setSecondLevelDocumentFromType(documentType, secondLevel);
         return documentTypeItem;
     }

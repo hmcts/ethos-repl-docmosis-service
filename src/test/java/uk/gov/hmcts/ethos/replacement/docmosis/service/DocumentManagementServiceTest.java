@@ -361,6 +361,51 @@ class DocumentManagementServiceTest {
         assertNotNull(caseData.getDocumentCollection());
         assertNull(caseData.getDocumentCollection().get(0).getValue().getDateOfCorrespondence());
     }
+    @Test
+    void addUploadedDocsToCaseDocCollection_AddDocumentCollection_Null() {
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(null);
+        documentManagementService.addUploadedDocsToCaseDocCollection(caseData);
+        assertNull(caseData.getDocumentCollection());
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_UploadedDocumentType_Null() {
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(null);
+        DocumentTypeItem documentTypeItem = getDocumentTypeItem();
+        documentTypeItem.getValue().setDocumentType(null);
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(documentTypeItem);
+        documentManagementService.addUploadedDocsToCaseDocCollection(caseData);
+        assertEquals(1, caseData.getDocumentCollection().size());
+        assertEquals(null, caseData.getDocumentCollection().get(0).getValue().getDocumentType());
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_ShortDescription_Null() {
+        CaseData caseData = new CaseData();
+        DocumentTypeItem documentTypeItem = getDocumentTypeItem();
+        documentTypeItem.getValue().setShortDescription(null);
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(documentTypeItem);
+        documentManagementService.addUploadedDocsToCaseDocCollection(caseData);
+        assertEquals(1, caseData.getDocumentCollection().size());
+        assertEquals(null, caseData.getDocumentCollection().get(0).getValue().getShortDescription());
+    }
+
+    private DocumentTypeItem getDocumentTypeItem() {
+        UploadedDocumentType uploadedDocType1 = new UploadedDocumentType();
+        uploadedDocType1.setDocumentUrl("test doc url");
+        uploadedDocType1.setDocumentFilename("test file name");
+        uploadedDocType1.setDocumentBinaryUrl("test binary doc url");
+        DocumentTypeItem doc1 = new DocumentTypeItem();
+        DocumentType dt = new DocumentType();
+        dt.setTopLevelDocuments("ET1 Vetting");
+        doc1.setValue(dt);
+        doc1.getValue().setUploadedDocument(uploadedDocType1);
+        return doc1;
+    }
 
     private static Stream<Arguments> setDocumentTypeForDocumentCollection() {
         return Stream.of(
