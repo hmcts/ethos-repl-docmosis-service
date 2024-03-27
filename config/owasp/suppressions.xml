@@ -234,12 +234,5 @@
    <packageUrl regex="true">^pkg:maven/org\.apache\.commons/commons\-compress@.*$</packageUrl>
    <cpe>cpe:/a:apache:commons_compress</cpe>
 </suppress>
-<suppress>
-    <notes><![CDATA[
-       file name: yarn.lock?request
-   ]]></notes>
-    <packageUrl regex="true">^pkg:npm/request@.*$</packageUrl>
-    <vulnerabilityName>1096727</vulnerabilityName>
-</suppress>
 </suppressions>
 
