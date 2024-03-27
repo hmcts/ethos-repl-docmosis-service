@@ -1,6 +1,5 @@
 const {Logger} = require('@hmcts/nodejs-logging');
-const requestModule = require('request-promise-native');
-const request = requestModule.defaults();
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const fs = require('fs');
 const testConfig = require('../../config.js');
 const idamApi = require('./idamApi');
@@ -12,8 +11,7 @@ async function createCaseInCcd(dataLocation = 'ccd-case-basic-data.json', jurisd
     const saveCaseResponse = await createECMCase(dataLocation, jurisdiction).catch(error => {
         console.log(error);
     });
-    const caseId = JSON.parse(saveCaseResponse).id;
-    return caseId;
+    return saveCaseResponse.id;
 }
 
 async function createECMCase(dataLocation = 'ccd-case-basic-data.json', jurisdiction = 'Leeds') {
@@ -24,19 +22,18 @@ async function createECMCase(dataLocation = 'ccd-case-basic-data.json', jurisdic
     const ccdApiUrl = `http://ccd-data-store-api-${env}.service.core-compute-${env}.internal`;
     const ccdStartCasePath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/${jurisdiction}/event-triggers/initiateCase/token`;
     const ccdSaveCasePath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/${jurisdiction}/cases`;
-
-    const startCaseOptions = {
+    const startCaseOption = await fetch(ccdApiUrl + ccdStartCasePath, {
         method: 'GET',
-        uri: ccdApiUrl + ccdStartCasePath,
         headers: {
             'Authorization': `Bearer ${authToken}`,
             'ServiceAuthorization': `Bearer ${serviceToken}`,
             'Content-Type': 'application/json'
         }
-    };
+    });
 
-    const startCaseResponse = await request(startCaseOptions);
-    const eventToken = JSON.parse(startCaseResponse).token;
+    const startCaseResponse = await startCaseOption.json();
+
+    const eventToken = startCaseResponse.token;
 
     const data = fs.readFileSync(dataLocation);
     const saveBody = {
@@ -49,19 +46,17 @@ async function createECMCase(dataLocation = 'ccd-case-basic-data.json', jurisdic
         'event_token': eventToken
     };
 
-    const saveCaseOptions = {
+    const saveCaseOptions = await fetch(ccdApiUrl + ccdSaveCasePath, {
         method: 'POST',
-        uri: ccdApiUrl + ccdSaveCasePath,
         headers: {
             'Authorization': `Bearer ${authToken}`,
             'ServiceAuthorization': `Bearer ${serviceToken}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(saveBody)
-    };
+    });
 
-    const saveCaseResponse = await request(saveCaseOptions);
-    return saveCaseResponse;
+    return await saveCaseOptions.json();
 }
 
 async function updateECMCaseInCcd(caseId, eventId, dataLocation = 'ccd-accept-case.json', jurisdiction = 'Leeds') {
@@ -75,21 +70,20 @@ async function updateECMCaseInCcd(caseId, eventId, dataLocation = 'ccd-accept-ca
     const ccdStartEventPath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/${jurisdiction}/cases/${caseId}/event-triggers/${eventId}/token`;
     const ccdSaveEventPath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/${jurisdiction}/cases/${caseId}/events`;
 
-    const startEventOptions = {
+    const startEventOptions = await fetch(ccdApiUrl + ccdStartEventPath, {
         method: 'GET',
-        uri: ccdApiUrl + ccdStartEventPath,
         headers: {
             'Authorization': `Bearer ${authToken}`,
             'ServiceAuthorization': `Bearer ${serviceToken}`,
             'Content-Type': 'application/json'
         }
-    };
+    });
 
-    const startEventResponse = await request(startEventOptions);
-    const eventToken = JSON.parse(startEventResponse).token;
+    const startEventResponse = await startEventOptions.json();
+    const eventToken = startEventResponse.token;
 
-    var data = fs.readFileSync(dataLocation);
-    var saveBody = {
+    let data = fs.readFileSync(dataLocation);
+    let saveBody = {
         data: JSON.parse(data),
         event: {
             id: eventId,
@@ -99,19 +93,17 @@ async function updateECMCaseInCcd(caseId, eventId, dataLocation = 'ccd-accept-ca
         'event_token': eventToken
     };
 
-    const saveEventOptions = {
+    const saveEventOptions = await fetch(ccdApiUrl + ccdSaveEventPath, {
         method: 'POST',
-        uri: ccdApiUrl + ccdSaveEventPath,
         headers: {
             'Authorization': `Bearer ${authToken}`,
             'ServiceAuthorization': `Bearer ${serviceToken}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(saveBody)
-    };
+    });
 
-    const saveEventResponse = await request(saveEventOptions);
-    return saveEventResponse;
+    return await saveEventOptions.json();
 }
 
 module.exports = {

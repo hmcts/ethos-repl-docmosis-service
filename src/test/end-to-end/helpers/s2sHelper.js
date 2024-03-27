@@ -1,8 +1,6 @@
 const {Logger} = require('@hmcts/nodejs-logging');
-const requestModule = require('request-promise-native');
-const request = requestModule.defaults();
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const testConfig = require('../../config.js');
-const logger = Logger.getLogger('helpers/s2sHelper.js');
 const env = testConfig.TestEnv;
 
 async function getServiceToken() {
@@ -13,17 +11,14 @@ async function getServiceToken() {
         secret: serviceSecret
     }).totp();
 
-    const serviceToken = await request({
+    const serviceTokenRequest = await fetch(s2sBaseUrl + s2sAuthPath, {
         method: 'POST',
-        uri: s2sBaseUrl + s2sAuthPath,
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({microservice: 'ethos_repl_service', oneTimePassword})
     });
-
-    logger.debug(serviceToken);
-    return serviceToken;
+    return await serviceTokenRequest.text();
 }
 
 module.exports = {
