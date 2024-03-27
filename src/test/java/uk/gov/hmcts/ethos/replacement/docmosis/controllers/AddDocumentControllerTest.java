@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -88,6 +89,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                         .content(requestContent.toString()))
                 .andExpect(status().isForbidden());
         verify(documentManagementService, never()).addUploadedDocsToCaseDocCollection(any());
+    }
+
+    @Test
+    void testAboutToSubmitWithInvalidDocumentIndex() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        doThrow(new RuntimeException("Invalid document index"))
+                .when(documentManagementService).addUploadedDocsToCaseDocCollection(any());
+
+        mvc.perform(post(ABOUT_TO_SUBMIT_URL)
+                        .content(requestContent.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(JsonMapper.ERRORS, notNullValue()));
+        verify(documentManagementService, times(1)).addUploadedDocsToCaseDocCollection(any());
     }
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
