@@ -18,8 +18,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 /**
@@ -55,12 +58,16 @@ public class AddDocumentController {
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        documentManagementService.setDocumentTypeForDocumentCollection(caseData);
-        documentManagementService.addUploadedDocsToCaseDocCollection(caseData);
-        caseData.getAddDocumentCollection().clear();
-        return getCallbackRespEntityNoErrors(caseData);
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        try {
+            documentManagementService.addUploadedDocsToCaseDocCollection(caseData);
+            caseData.getAddDocumentCollection().clear();
+            return getCallbackRespEntityNoErrors(caseData);
+        } catch (Exception e) {
+            log.error("Error adding uploaded docs to case doc collection", e);
+            return getCallbackRespEntityErrors(List.of(e.getMessage()), caseData);
+        }
     }
 }
 

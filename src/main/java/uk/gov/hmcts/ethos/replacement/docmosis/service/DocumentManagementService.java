@@ -284,7 +284,8 @@ public class DocumentManagementService {
                                                     uploadedDocType.getTopLevelDocuments()));
                     setDocumentTypeForDocument(docTypeItem.getValue());
                     docTypeItem.getValue().setDateOfCorrespondence(uploadDoc.getValue().getDateOfCorrespondence());
-                    caseData.getDocumentCollection().add(docTypeItem);
+                    DocumentHelper.addDocumentToCollectionAtIndex(caseData.getDocumentCollection(), docTypeItem,
+                            uploadedDocType.getDocumentIndex());
                 });
         DocumentHelper.setDocumentNumbers(caseData);
     }
