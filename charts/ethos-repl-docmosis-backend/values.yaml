@@ -16,10 +16,6 @@ java:
           alias: TORNADO_ACCESS_KEY
         - name: ethos-repl-service-s2s-secret
           alias: ETHOS_REPL_SERVICE_S2S_SECRET
-        # TO BE REMOVED ONCE DATA HAS BEEN MIGRATED TO V15 DB
-        # - name: repl-docmosis-backend-POSTGRES-PASS
-        #   alias: ETHOS_REPL_DB_PASSWORD
-        # TO BE ACTIVATED ONCE DATA HAS BEEN MIGRATED TO V15 DB
         - name: ethos-postgres-user-v15
           alias: ETHOS_REPL_DB_USER_NAME
         - name: ethos-postgres-password-v15
@@ -47,12 +43,7 @@ java:
     CCD_GATEWAY_BASE_URL: "https://manage-case.{{ .Values.global.environment }}.platform.hmcts.net"
     MICRO_SERVICE: "ethos_repl_service"
     ETHOS_REPL_DB_CONN_OPTIONS: ?sslmode=require
-    # TO BE REMOVED ONCE DATA HAS BEEN MIGRATED TO V15 DB
-    # ETHOS_REPL_DB_HOST: ethos-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
     ETHOS_REPL_DB_NAME: ethos
-    # ETHOS_REPL_DB_PORT: '5432'
-    # ETHOS_REPL_DB_USER_NAME: ethos@ethos-postgres-db-{{ .Values.global.environment }}
-    # ABOVE TO BE REMOVED ONCE DATA HAS BEEN MIGRATED TO V15 DB
     CASE_DOCUMENT_AM_URL: http://ccd-case-document-am-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     SECURE_DOC_STORE_FEATURE: false
     ACAS_BASE_URL: "https://api-dev-acas-01.azure-api.net/ECCLUAT"
