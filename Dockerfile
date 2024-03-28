@@ -5,7 +5,7 @@ LABEL maintainer="https://github.com/hmcts/ethos-repl-docmosis-service"
 COPY lib/applicationinsights.json /opt/app/
 COPY build/libs/ethos-repl-docmosis-service.jar /opt/app/
 
-FROM debian:11 AS builder
+FROM debian:12 AS builder
 
 USER root
 RUN apt update
