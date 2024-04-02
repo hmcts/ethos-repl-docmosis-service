@@ -311,7 +311,7 @@ dependencies {
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.3'
 
-    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.10'
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.11'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.2'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.7.0'
     compileOnly 'org.projectlombok:lombok'
