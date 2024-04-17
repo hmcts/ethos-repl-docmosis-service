@@ -265,7 +265,10 @@ public class DocumentManagementService {
      */
     public void addUploadedDocsToCaseDocCollection(CaseData caseData) {
 
-        //If doc collection is empty, initialise it
+        if(caseData.getAddDocumentCollection() == null) {
+            return;
+        }
+
         if (caseData.getDocumentCollection() == null) {
             caseData.setDocumentCollection(new ArrayList<>());
         }
@@ -274,23 +277,35 @@ public class DocumentManagementService {
                 uploadDoc -> {
                     DocumentType uploadedDocType = uploadDoc.getValue();
                     setDocumentTypeForDocument(uploadedDocType);
-                    DocumentHelper.setSecondLevelDocumentFromType(uploadedDocType,
-                            uploadedDocType.getDocumentType());
+
+                    if(!isNullOrEmpty(uploadedDocType.getDocumentType())) {
+                        DocumentHelper.setSecondLevelDocumentFromType(
+                                uploadedDocType, uploadedDocType.getDocumentType());
+                    }
+
+                    String shortDescription = "";
+                    if(!isNullOrEmpty(uploadedDocType.getShortDescription())) {
+                        shortDescription = uploadedDocType.getShortDescription();
+                    }
+
                     DocumentTypeItem docTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
-                                            uploadedDocType.getUploadedDocument(),
-                                            uploadedDocType.getTopLevelDocuments(),
-                                            uploadedDocType.getDocumentType(),
-                                            String.format("%s : %s", uploadedDocType.getShortDescription(),
-                                                    uploadedDocType.getTopLevelDocuments()));
+                            uploadedDocType.getUploadedDocument(), uploadedDocType.getTopLevelDocuments(),
+                            uploadedDocType.getDocumentType(), shortDescription);
                     setDocumentTypeForDocument(docTypeItem.getValue());
                     docTypeItem.getValue().setDateOfCorrespondence(uploadDoc.getValue().getDateOfCorrespondence());
-                    caseData.getDocumentCollection().add(docTypeItem);
+                    DocumentHelper.addDocumentToCollectionAtIndex(caseData.getDocumentCollection(), docTypeItem,
+                            uploadedDocType.getDocumentIndex());
                 });
         DocumentHelper.setDocumentNumbers(caseData);
     }
 
     private void setDocumentTypeForDocument(DocumentType documentType) {
-        if (!isNullOrEmpty(documentType.getTopLevelDocuments()) || !isNullOrEmpty(documentType.getTypeOfDocument())) {
+        if(documentType == null ) {
+            return;
+        }
+
+        if (!isNullOrEmpty(documentType.getTopLevelDocuments()) ||
+                !isNullOrEmpty(documentType.getTypeOfDocument())) {
             if (!isNullOrEmpty(documentType.getStartingClaimDocuments())) {
                 documentType.setDocumentType(documentType.getStartingClaimDocuments());
             } else if (!isNullOrEmpty(documentType.getResponseClaimDocuments())) {

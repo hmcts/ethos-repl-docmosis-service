@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -1114,7 +1115,8 @@ public class DocumentHelper {
     }
 
     public static void setSecondLevelDocumentFromType(DocumentType documentType, String typeOfDocument) {
-        switch (typeOfDocument) {
+        if(typeOfDocument != null && documentType != null) {
+            switch (typeOfDocument) {
             case ET1, ET1_ATTACHMENT, ACAS_CERTIFICATE, NOTICE_OF_CLAIM, CLAIM_ACCEPTED, CLAIM_REJECTED,
                     CLAIM_PART_REJECTED, ET1_VETTING -> documentType.setStartingClaimDocuments(typeOfDocument);
             case ET3, ET3_ATTACHMENT, RESPONSE_ACCEPTED, RESPONSE_REJECTED, APP_TO_EXTEND_TIME_TO_PRESENT_A_RESPONSE,
@@ -1144,6 +1146,7 @@ public class DocumentHelper {
                     APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R -> documentType.setReconsiderationDocuments(typeOfDocument);
             case CERTIFICATE_OF_CORRECTION, TRIBUNAL_CASE_FILE, OTHER -> documentType.setMiscDocuments(typeOfDocument);
             default -> documentType.setTypeOfDocument(typeOfDocument);
+            }
         }
     }
 
@@ -1163,6 +1166,25 @@ public class DocumentHelper {
     }
 
     /**
+     * Add document to the document collection based on the provided index.
+     * @param docTypeItem document type item
+     * @param indexToAddString index of the document to be added
+     */
+    public static void addDocumentToCollectionAtIndex(List<DocumentTypeItem> documentCollection,
+                                                      DocumentTypeItem docTypeItem, String indexToAddString) {
+        if (StringUtils.isNotEmpty(indexToAddString)) {
+            int indexToAdd = Integer.parseInt(indexToAddString);
+            if (indexToAdd > 0 && indexToAdd <= documentCollection.size() + 1) {
+                documentCollection.add(indexToAdd - 1, docTypeItem);
+            } else {
+                throw new IllegalArgumentException("The document number is invalid");
+            }
+        } else {
+            documentCollection.add(docTypeItem);
+        }
+    }
+
+    /**
      * Create a new DocumentTypeItem, copy from uploadedDocumentType and update TypeOfDocument.
      * @param uploadedDocumentType UploadedDocumentType to be added
      * @param topLevel top level document
@@ -1175,9 +1197,15 @@ public class DocumentHelper {
                                                                       String shortDescription) {
         DocumentTypeItem documentTypeItem = fromUploadedDocument(uploadedDocumentType);
         DocumentType documentType = documentTypeItem.getValue();
-        documentType.setShortDescription(shortDescription);
         documentType.setDateOfCorrespondence(LocalDate.now().toString());
-        documentType.setTopLevelDocuments(topLevel);
+
+        if(!isNullOrEmpty(shortDescription)) {
+            documentType.setShortDescription(shortDescription);
+        }
+        if(!isNullOrEmpty(topLevel)) {
+            documentType.setTopLevelDocuments(topLevel);
+        }
+
         setSecondLevelDocumentFromType(documentType, secondLevel);
         return documentTypeItem;
     }

@@ -7,10 +7,12 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
@@ -26,6 +28,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
@@ -2108,6 +2111,19 @@ public class DocumentHelperTest {
         caseData.getDocumentCollection().forEach(d -> assertThat(d.getValue().getDocNumber()).isNotNull());
     }
 
+    @Test
+    public void setSecondLevelDocumentFromType_StartClaim_DocumentType_Null() {
+        DocumentType documentType = null;
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
+        assertNull(documentType);
+    }
+
+    @Test
+    public void setSecondLevelDocumentFromType_StartClaim_TypeOfDocument_Null() {
+        DocumentType documentType = new DocumentType();
+        DocumentHelper.setSecondLevelDocumentFromType(documentType, null);
+        assertNull(documentType.getStartingClaimDocuments());
+    }
 
     @Test
     public void setSecondLevelDocumentFromType_StartClaim() {
@@ -2175,9 +2191,25 @@ public class DocumentHelperTest {
 
     @Test
     public void createDocumentTypeItemFromTopLevel() {
+        UploadedDocumentType uploadedDocType = new UploadedDocumentType();
+        DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(uploadedDocType,
+                "Top Level", ET1_ATTACHMENT, "test Short description");
+        assertEquals(ET1_ATTACHMENT, documentTypeItem.getValue().getStartingClaimDocuments());
+    }
+
+    @Test
+    public void createDocumentTypeItemFromTopLevel_ShortDescription_Null() {
+        DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
+                new UploadedDocumentType(),"Top Level", ET1_ATTACHMENT, null);
+        assertEquals(null, documentTypeItem.getValue().getShortDescription());
+    }
+
+    @Test
+    public void createDocumentTypeItemFromTopLevel_TopLevelDocumentsCategory_Null() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
-        assertEquals(ET1_ATTACHMENT, documentType.getStartingClaimDocuments());
+        DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
+                new UploadedDocumentType(),null, ET1_ATTACHMENT, "short description");
+        assertEquals(null, documentTypeItem.getValue().getTopLevelDocuments());
     }
 
 }

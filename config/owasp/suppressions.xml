@@ -219,20 +219,20 @@
    ]]></notes>
    <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
    <vulnerabilityName>1096518</vulnerabilityName>
-</suppress>
+    </suppress>
     <suppress>
    <notes><![CDATA[
    file name: ip:2.0.0
    ]]></notes>
    <packageUrl regex="true">^pkg:npm/ip@.*$</packageUrl>
    <vulnerabilityName>1096519</vulnerabilityName>
-</suppress>
+    </suppress>
     <suppress>
    <notes><![CDATA[
    file name: commons-compress-1.25.0.jar
    ]]></notes>
    <packageUrl regex="true">^pkg:maven/org\.apache\.commons/commons\-compress@.*$</packageUrl>
    <cpe>cpe:/a:apache:commons_compress</cpe>
-</suppress>
+    </suppress>
 </suppressions>
 
