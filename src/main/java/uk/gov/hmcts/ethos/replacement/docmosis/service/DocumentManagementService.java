@@ -292,7 +292,8 @@ public class DocumentManagementService {
                             uploadedDocType.getUploadedDocument(), uploadedDocType.getTopLevelDocuments(),
                             uploadedDocType.getDocumentType(), shortDescription);
                     setDocumentTypeForDocument(docTypeItem.getValue());
-                    docTypeItem.getValue().setDateOfCorrespondence(uploadDoc.getValue().getDateOfCorrespondence());
+                    docTypeItem.getValue().setDateOfCorrespondence(uploadedDocType.getDateOfCorrespondence());
+                    docTypeItem.getValue().setExcludeFromDcf(uploadedDocType.getExcludeFromDcf());
                     DocumentHelper.addDocumentToCollectionAtIndex(caseData.getDocumentCollection(), docTypeItem,
                             uploadedDocType.getDocumentIndex());
                 });

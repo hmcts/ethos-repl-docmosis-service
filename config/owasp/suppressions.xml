@@ -234,5 +234,19 @@
    <packageUrl regex="true">^pkg:maven/org\.apache\.commons/commons\-compress@.*$</packageUrl>
    <cpe>cpe:/a:apache:commons_compress</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: ip:2.0.0
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/phin@.*$</packageUrl>
+        <vulnerabilityName>GHSA-x565-32qp-m3vf</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: ip:2.0.0
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/babel-traverse@.*$</packageUrl>
+        <vulnerabilityName>GHSA-67hx-6x53-jw92</vulnerabilityName>
+    </suppress>
 </suppressions>
 
