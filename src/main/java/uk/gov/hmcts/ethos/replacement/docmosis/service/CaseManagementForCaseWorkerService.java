@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -79,6 +80,8 @@ public class CaseManagementForCaseWorkerService {
     private static final String FULL_PANEL = "Full Panel";
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -353,6 +356,30 @@ public class CaseManagementForCaseWorkerService {
             }
         }
         return dates;
+    }
+
+    public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
+        String currentCaseId = caseDetails.getCaseId();
+        String caseTypeId = caseDetails.getCaseTypeId();
+        CaseData caseData = caseDetails.getCaseData();
+        // get a target case data using the source case data
+        // using elastic search query
+        List<SubmitEvent> submitEvent = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                currentCaseId, authToken);
+
+        if (submitEvent != null) {
+            String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
+
+            var fullSourceCase = caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken,
+                    caseTypeId, "EMPLOYMENT", sourceCaseId);
+            String sourceCaseEthosReference = fullSourceCase.getCaseData().getEthosCaseReference();
+            if (sourceCaseEthosReference != null) {
+                String url = String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId);
+                String transferredCaseLink = "<a target=\"_blank\" href=\"" + url + "\">"
+                        + sourceCaseEthosReference + "</a>";
+                caseData.setTransferredCaseLink(transferredCaseLink);
+            }
+        }
     }
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {
