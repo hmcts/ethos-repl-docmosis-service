@@ -248,5 +248,12 @@
         <packageUrl regex="true">^pkg:npm/babel-traverse@.*$</packageUrl>
         <vulnerabilityName>GHSA-67hx-6x53-jw92</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: yarn.lock?formidable
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/formidable@.*$</packageUrl>
+        <vulnerabilityName>GHSA-8cp3-66vr-3r4c</vulnerabilityName>
+    </suppress>
 </suppressions>
 
