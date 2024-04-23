@@ -63,7 +63,7 @@ public class CaseRetrievalForCaseWorkerService {
                 }
             }
 
-            return null;
+            return new ArrayList<>();
         } catch (Exception ex) {
             throw new CaseRetrievalException(MESSAGE + currentCaseId + ex.getMessage());
         }

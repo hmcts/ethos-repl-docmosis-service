@@ -367,7 +367,7 @@ public class CaseManagementForCaseWorkerService {
         List<SubmitEvent> submitEvent = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                 currentCaseId, authToken);
 
-        if (submitEvent != null) {
+        if (submitEvent != null && !submitEvent.isEmpty()) {
             String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
 
             var fullSourceCase = caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken,
