@@ -18,10 +18,7 @@ public class CaseRetrievalForCaseWorkerService {
 
     private static final String MESSAGE = "Failed to retrieve case for : ";
     private final CcdClient ccdClient;
-    private final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
-            "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
-            "MidlandsEast", "MidlandsWest", "Newcastle", "Scotland",
-            "Wales", "Watford");
+
     @Autowired
     public CaseRetrievalForCaseWorkerService(CcdClient ccdClient) {
         this.ccdClient = ccdClient;
@@ -53,7 +50,8 @@ public class CaseRetrievalForCaseWorkerService {
             throw new CaseCreationException(MESSAGE + currentCaseId + ex.getMessage());
         }
     }
-    public List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken) {
+    public List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken,
+                                                                  List<String> caseTypeIdsToCheck) {
         List<SubmitEvent> submitEvents = new ArrayList<>();
         try {
             for(String targetOffice : caseTypeIdsToCheck) {

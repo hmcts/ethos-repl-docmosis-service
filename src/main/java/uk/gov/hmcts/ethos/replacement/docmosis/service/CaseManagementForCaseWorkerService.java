@@ -82,6 +82,10 @@ public class CaseManagementForCaseWorkerService {
     private static final String SINGLE = "Single";
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
+    private final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
+            "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
+            "MidlandsEast", "MidlandsWest", "Newcastle", "Scotland",
+            "Wales", "Watford");
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -358,6 +362,7 @@ public class CaseManagementForCaseWorkerService {
         return dates;
     }
 
+    /*
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         String currentCaseId = caseDetails.getCaseId();
         String caseTypeId = caseDetails.getCaseTypeId();
@@ -381,6 +386,34 @@ public class CaseManagementForCaseWorkerService {
             }
         }
     }
+    */
+
+    public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
+        // get a target case data using the source case data
+        // using elastic search query
+        List<SubmitEvent> submitEvent = transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(), authToken);
+
+        if (submitEvent != null && !submitEvent.isEmpty()) {
+            String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
+            SubmitEvent fullSourceCase = caseRetrievalRequest(authToken, caseDetails.getCaseTypeId(),
+                    "EMPLOYMENT", sourceCaseId);
+            if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
+                caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
+                        + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
+                        + fullSourceCase.getCaseData().getEthosCaseReference() + "</a>");
+            }
+        }
+    }
+
+    protected List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken) {
+        return caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId, authToken,
+                caseTypeIdsToCheck);
+    }
+
+    protected SubmitEvent caseRetrievalRequest(String authToken, String caseTypeId, String employment, String sourceCaseId) {
+        return caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken, caseTypeId, employment, sourceCaseId);
+    }
+
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {
         List<RepresentedTypeRItem> repCollection = new ArrayList<>();

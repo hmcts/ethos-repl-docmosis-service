@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
@@ -20,6 +21,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
@@ -90,4 +92,22 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         assertEquals(submitEventList, submitEventList1);
     }
 
+    @Test
+    public void testTransferSourceCaseRetrievalESRequest() throws IOException {
+        String currentCaseId = "123456";
+        String authToken = "authToken";
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        CaseData linkedCaseData = new CaseData();
+        linkedCaseData.setEthosCaseReference("R5000656");
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(123456);
+        submitEvent.setCaseData(linkedCaseData);
+        submitEvents.add(submitEvent);
+        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(submitEvents);
+
+        List<SubmitEvent> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
+                authToken, List.of("Leeds"));
+
+        assertEquals(submitEvents, result);
+    }
 }

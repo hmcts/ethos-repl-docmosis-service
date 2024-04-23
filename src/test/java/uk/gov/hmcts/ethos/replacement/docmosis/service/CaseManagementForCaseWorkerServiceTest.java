@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -964,6 +963,32 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals(2, errors.size());
         submitEvent.setState("Accepted");
         submitEvent.getCaseData().getRespondentCollection().get(0).getValue().setResponseReceived(YES);
+    }
+
+    @Test
+    public void testSetMigratedCaseLinkDetails() {
+        String authToken = "authToken";
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("currentCaseId");
+        caseDetails.setCaseTypeId("caseTypeId");
+        CaseData caseData = new CaseData();
+        caseDetails.setCaseData(caseData);
+
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(any(), any(), any()))
+                .thenReturn(List.of(new SubmitEvent()));
+
+        CaseData linkedCaseData = new CaseData();
+        linkedCaseData.setEthosCaseReference("R5000656");
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(123456);
+        submitEvent.setCaseData(linkedCaseData);
+        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(any(), any(), any(), any()))
+                .thenReturn(submitEvent);
+
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
+
+        assertEquals("<a target=\"_blank\" href=\"https://example.com/cases/case-details/123456\">"
+                + "R5000656</a>", caseData.getTransferredCaseLink());
     }
 
     private List<RespondentSumTypeItem> createRespondentCollection(boolean single) {
