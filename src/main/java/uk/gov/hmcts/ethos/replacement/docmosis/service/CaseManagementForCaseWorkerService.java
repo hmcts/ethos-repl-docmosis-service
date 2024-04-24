@@ -361,33 +361,7 @@ public class CaseManagementForCaseWorkerService {
         }
         return dates;
     }
-
-    /*
-    public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
-        String currentCaseId = caseDetails.getCaseId();
-        String caseTypeId = caseDetails.getCaseTypeId();
-        CaseData caseData = caseDetails.getCaseData();
-        // get a target case data using the source case data
-        // using elastic search query
-        List<SubmitEvent> submitEvent = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                currentCaseId, authToken);
-
-        if (submitEvent != null && !submitEvent.isEmpty()) {
-            String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
-
-            var fullSourceCase = caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken,
-                    caseTypeId, "EMPLOYMENT", sourceCaseId);
-            String sourceCaseEthosReference = fullSourceCase.getCaseData().getEthosCaseReference();
-            if (sourceCaseEthosReference != null) {
-                String url = String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId);
-                String transferredCaseLink = "<a target=\"_blank\" href=\"" + url + "\">"
-                        + sourceCaseEthosReference + "</a>";
-                caseData.setTransferredCaseLink(transferredCaseLink);
-            }
-        }
-    }
-    */
-
+    
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data
         // using elastic search query
