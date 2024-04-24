@@ -967,30 +967,57 @@ class CaseManagementForCaseWorkerServiceTest {
 
     @Test
     public void testSetMigratedCaseLinkDetails() {
-        String authToken = "authToken";
+        String authToken = "authtoken";
+        CaseDetails caseDetails = getCaseDetails();
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(any(), any(), any()))
+                .thenReturn(List.of(new SubmitEvent()));
+        SubmitEvent submitEvent = getSubmitEventWithLinkedCaseData();
+        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(any(), any(), any(), any()))
+                .thenReturn(submitEvent);
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
+        assertEquals("<a target=\"_blank\" href=\"https://example.com/cases/case-details/123456\">"
+                + "R5000656</a>", caseDetails.getCaseData().getTransferredCaseLink());
+    }
+
+    @Test
+    public void testSetMigratedCaseLinkDetailsEmptyESResult() {
+        CaseDetails caseDetails = getCaseDetails();
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(any(), any(), any()))
+                .thenReturn(null);
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(AUTH_TOKEN, caseDetails);
+        assertNull(caseDetails.getCaseData().getTransferredCaseLink());
+    }
+
+    @Test
+    public void testSetMigratedCaseLinkDetailsEmptySourceCase() {
+        CaseDetails caseDetails = getCaseDetails();
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(any(), any(), any()))
+                .thenReturn(List.of(new SubmitEvent()));
+        SubmitEvent submitEvent = getSubmitEventWithLinkedCaseData();
+        submitEvent.getCaseData().setEthosCaseReference(null);
+        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(any(), any(), any(), any()))
+                .thenReturn(submitEvent);
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(AUTH_TOKEN, caseDetails);
+        assertNull(caseDetails.getCaseData().getTransferredCaseLink());
+    }
+
+    private CaseDetails getCaseDetails() {
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseId("currentCaseId");
         caseDetails.setCaseTypeId("caseTypeId");
         CaseData caseData = new CaseData();
         caseDetails.setCaseData(caseData);
+        return caseDetails;
+    }
 
-        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(any(), any(), any()))
-                .thenReturn(List.of(new SubmitEvent()));
-
+    private SubmitEvent getSubmitEventWithLinkedCaseData() {
         CaseData linkedCaseData = new CaseData();
         linkedCaseData.setEthosCaseReference("R5000656");
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(123456);
         submitEvent.setCaseData(linkedCaseData);
-        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(any(), any(), any(), any()))
-                .thenReturn(submitEvent);
-
-        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
-
-        assertEquals("<a target=\"_blank\" href=\"https://example.com/cases/case-details/123456\">"
-                + "R5000656</a>", caseData.getTransferredCaseLink());
+        return submitEvent;
     }
-
     private List<RespondentSumTypeItem> createRespondentCollection(boolean single) {
         RespondentSumTypeItem respondentSumTypeItem1 = createRespondentSumType("RespondentName1", false);
         RespondentSumTypeItem respondentSumTypeItem2 = createRespondentSumType("RespondentName2", false);

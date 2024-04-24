@@ -361,7 +361,7 @@ public class CaseManagementForCaseWorkerService {
         }
         return dates;
     }
-    
+
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data
         // using elastic search query
