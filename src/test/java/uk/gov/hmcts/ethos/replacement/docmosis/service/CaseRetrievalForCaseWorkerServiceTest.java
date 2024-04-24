@@ -106,9 +106,8 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         assertEquals(submitEvents, result);
     }
 
-    //test when no office to check is supplied
     @Test
-    public void testTransferSourceCaseRetrievalESRequestNullOfficeToChcekList() throws IOException {
+    public void testTransferSourceCaseRetrievalESRequest_When_CaseTypeIdsToCheck_Null() throws IOException {
         String currentCaseId = "123456";
         String authToken = "authToken";
         List<SubmitEvent> submitEvents = getSubmitEvent();
