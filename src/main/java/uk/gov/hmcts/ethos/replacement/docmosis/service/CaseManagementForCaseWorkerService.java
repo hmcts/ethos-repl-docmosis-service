@@ -365,19 +365,20 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
-        // get a target case data using the source case data
-        // using elastic search query
+        // get a target case data using the source case data and
+        // elastic search query
         List<SubmitEvent> submitEvent = transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(), authToken);
+        if(submitEvent == null || submitEvent.isEmpty()) {
+            return;
+        }
 
-        if (submitEvent != null && !submitEvent.isEmpty()) {
-            String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
-            SubmitEvent fullSourceCase = caseRetrievalRequest(authToken, caseDetails.getCaseTypeId(),
-                    "EMPLOYMENT", sourceCaseId);
-            if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
-                caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
-                        + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
-                        + fullSourceCase.getCaseData().getEthosCaseReference() + "</a>");
-            }
+        String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
+        SubmitEvent fullSourceCase = caseRetrievalRequest(authToken, caseDetails.getCaseTypeId(),
+                "EMPLOYMENT", sourceCaseId);
+        if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
+            caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
+                    + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
+                    + fullSourceCase.getCaseData().getEthosCaseReference() + "</a>");
         }
     }
 
