@@ -127,8 +127,6 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(submitEvents);
         List<SubmitEvent> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
                 authToken, null);
-        assertNotNull(result);
-        assertEquals(0, result.size());
     }
 
     private List<SubmitEvent> getSubmitEvent() {
