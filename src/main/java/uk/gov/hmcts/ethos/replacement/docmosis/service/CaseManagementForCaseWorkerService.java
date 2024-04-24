@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.google.common.base.Strings;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,7 @@ public class CaseManagementForCaseWorkerService {
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
     @Value("${ccd_gateway_base_url}")
+    @Getter
     private String ccdGatewayBaseUrl;
     private final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
             "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
@@ -379,15 +381,14 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    protected List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken) {
+    private List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken) {
         return caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId, authToken,
                 caseTypeIdsToCheck);
     }
 
-    protected SubmitEvent caseRetrievalRequest(String authToken, String caseTypeId, String employment, String sourceCaseId) {
+    private SubmitEvent caseRetrievalRequest(String authToken, String caseTypeId, String employment, String sourceCaseId) {
         return caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken, caseTypeId, employment, sourceCaseId);
     }
-
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {
         List<RepresentedTypeRItem> repCollection = new ArrayList<>();
