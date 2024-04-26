@@ -65,7 +65,7 @@
     "qs": ">=6.10.3",
     "cookiejar": "^2.1.4",
     "ua-parser-js": "^1.0.33",
-    "got": "^12.5.3",
+    "got": "^14.0.0",
     "flat": "5.0.2",
     "cacheable-request": "^12.0.0",
     "semver": "^7.5.2",
