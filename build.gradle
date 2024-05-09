@@ -51,7 +51,8 @@ def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
                        '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/util/**',
-                       '**/uk/gov/hmcts/ethos/replacement/docmosis/service/DocumentManagementService.java'
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/service/DocumentManagementService.java',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/service/CaseManagementForCaseWorkerService.java'
 ]
 
 sonarqube {
