@@ -110,6 +110,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_LIST_BF_ACTIONS_URL = "/dynamicListBfActions";
     private static final String DYNAMIC_LIST_OFFICES_URL = "/dynamicListOffices";
     private static final String CREATE_CASE_TRANSFER_URL = "/createCaseTransfer";
+    private static final String MIGRATE_CASE_LINK_DETAILS = "/migrateCaseLinkDetails";
     private static final String ABOUT_TO_START_DISPOSAL_URL = "/aboutToStartDisposal";
     private static final String DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL = "/dynamicRespondentRepresentativeNames";
     private static final String DYNAMIC_RESTRICTED_REPORTING_URL = "/dynamicRestrictedReporting";
@@ -1688,6 +1689,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void migrateCaseLinkDetails() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(MIGRATE_CASE_LINK_DETAILS)
+                        .content(requestContent2.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void createCaseTransferToReformECMForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(CASE_TRANSFER_TO_REFORM_ECM_URL)
@@ -1780,5 +1791,6 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(status().isForbidden());
         verify(caseCloseValidator, never()).validateReinstateClosedCaseMidEvent(caseData);
     }
+
 
 }

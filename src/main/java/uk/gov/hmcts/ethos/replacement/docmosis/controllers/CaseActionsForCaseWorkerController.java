@@ -132,7 +132,8 @@ public class CaseActionsForCaseWorkerController {
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @Deprecated public ResponseEntity<CCDCallbackResponse> retrieveCase(
+    @Deprecated(forRemoval = true) 
+    public ResponseEntity<CCDCallbackResponse> retrieveCase(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("RETRIEVE CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
