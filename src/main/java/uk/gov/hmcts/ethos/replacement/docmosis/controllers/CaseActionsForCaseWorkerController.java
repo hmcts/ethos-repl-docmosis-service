@@ -132,7 +132,13 @@ public class CaseActionsForCaseWorkerController {
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @Deprecated(forRemoval = true) 
+
+    /**
+     * This is a deprecated method.
+     *
+     * @deprecated This is a deprecated method and for removal because of a reason tbc.
+     */
+    @Deprecated
     public ResponseEntity<CCDCallbackResponse> retrieveCase(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
