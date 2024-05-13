@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
@@ -98,6 +99,8 @@ class CaseManagementForCaseWorkerServiceTest {
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @MockBean
     private CcdClient ccdClient;
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -185,7 +188,8 @@ class CaseManagementForCaseWorkerServiceTest {
         submitEvent.setCaseId(123);
         submitEvent.setCaseData(submitCaseData);
 
-        caseManagementForCaseWorkerService = new CaseManagementForCaseWorkerService(caseRetrievalForCaseWorkerService, ccdClient);
+        caseManagementForCaseWorkerService = new CaseManagementForCaseWorkerService(caseRetrievalForCaseWorkerService,
+                ccdClient, ccdGatewayBaseUrl);
     }
 
     @Test
@@ -966,7 +970,7 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void testSetMigratedCaseLinkDetails() {
+    public void testSetMigratedCaseLinkDetails_Success() {
         String authToken = "authToken";
         String caseId = "caseId";
         String ccdGatewayBaseUrl = "http://ecmtest.com";
@@ -990,7 +994,6 @@ class CaseManagementForCaseWorkerServiceTest {
                 .thenReturn(submitEventList);
         when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken, "caseTypeId",
                 "EMPLOYMENT", "12345")).thenReturn(fullSourceCase);
-        when(caseManagementForCaseWorkerService.getCcdGatewayBaseUrl()).thenReturn(ccdGatewayBaseUrl);
 
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
 

@@ -81,9 +81,7 @@ public class CaseManagementForCaseWorkerService {
     private static final String FULL_PANEL = "Full Panel";
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
-    @Value("${ccd_gateway_base_url}")
-    @Getter
-    private String ccdGatewayBaseUrl;
+    private final String ccdGatewayBaseUrl;
     private final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
             "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
             "MidlandsEast", "MidlandsWest", "Newcastle", "Scotland",
@@ -91,9 +89,12 @@ public class CaseManagementForCaseWorkerService {
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
-                                              CcdClient ccdClient) {
+                                              CcdClient ccdClient,
+                                              @Value("${ccd_gateway_base_url}")
+                                                  String ccdGatewayBaseUrl) {
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.ccdClient = ccdClient;
+        this.ccdGatewayBaseUrl = ccdGatewayBaseUrl;
     }
 
     public void caseDataDefaults(CaseData caseData) {
@@ -368,10 +369,9 @@ public class CaseManagementForCaseWorkerService {
         // get a target case data using the source case data and
         // elastic search query
         List<SubmitEvent> submitEvent = transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(), authToken);
-        if(submitEvent == null || submitEvent.isEmpty()) {
+        if (CollectionUtils.isEmpty(submitEvent)) {
             return;
         }
-
         String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
         SubmitEvent fullSourceCase = caseRetrievalRequest(authToken, caseDetails.getCaseTypeId(),
                 "EMPLOYMENT", sourceCaseId);
