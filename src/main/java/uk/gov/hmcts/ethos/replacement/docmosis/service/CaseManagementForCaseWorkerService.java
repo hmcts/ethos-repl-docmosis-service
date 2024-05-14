@@ -1,9 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.google.common.base.Strings;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -79,12 +81,19 @@ public class CaseManagementForCaseWorkerService {
     private static final String FULL_PANEL = "Full Panel";
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
+    private final String ccdGatewayBaseUrl;
+    private static final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
+            "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
+            "MidlandsEast", "MidlandsWest", "Newcastle", "Scotland",
+            "Wales", "Watford");
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
-                                              CcdClient ccdClient) {
+                                              CcdClient ccdClient,
+                                              @Value("${ccd_gateway_base_url}")String ccdGatewayBaseUrl) {
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.ccdClient = ccdClient;
+        this.ccdGatewayBaseUrl = ccdGatewayBaseUrl;
     }
 
     public void caseDataDefaults(CaseData caseData) {
@@ -353,6 +362,32 @@ public class CaseManagementForCaseWorkerService {
             }
         }
         return dates;
+    }
+
+    public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
+        // get a target case data using the source case data and
+        // elastic search query
+        List<SubmitEvent> submitEvent = transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(), authToken);
+        if (CollectionUtils.isEmpty(submitEvent)) {
+            return;
+        }
+        String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
+        SubmitEvent fullSourceCase = caseRetrievalRequest(authToken, caseDetails.getCaseTypeId(),
+                "EMPLOYMENT", sourceCaseId);
+        if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
+            caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
+                    + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
+                    + fullSourceCase.getCaseData().getEthosCaseReference() + "</a>");
+        }
+    }
+
+    private List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken) {
+        return caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId, authToken,
+                caseTypeIdsToCheck);
+    }
+
+    private SubmitEvent caseRetrievalRequest(String authToken, String caseTypeId, String employment, String sourceCaseId) {
+        return caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken, caseTypeId, employment, sourceCaseId);
     }
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {
