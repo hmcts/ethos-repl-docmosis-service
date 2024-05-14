@@ -70,6 +70,7 @@ public class CaseManagementForCaseWorkerService {
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CcdClient ccdClient;
 
+    private static final String EMPLOYMENT_JURISDICTION = "EMPLOYMENT";
     private static final String MISSING_CLAIMANT = "Missing claimant";
     private static final String MISSING_RESPONDENT = "Missing respondent";
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
@@ -367,27 +368,21 @@ public class CaseManagementForCaseWorkerService {
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data and
         // elastic search query
-        List<SubmitEvent> submitEvent = transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(), authToken);
+        List<SubmitEvent> submitEvent = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                caseDetails.getCaseId(), authToken, caseTypeIdsToCheck);
         if (CollectionUtils.isEmpty(submitEvent)) {
             return;
         }
+
         String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
-        SubmitEvent fullSourceCase = caseRetrievalRequest(authToken, caseDetails.getCaseTypeId(),
-                "EMPLOYMENT", sourceCaseId);
+        SubmitEvent fullSourceCase = caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken,
+                caseDetails.getCaseTypeId(), EMPLOYMENT_JURISDICTION, sourceCaseId);
+
         if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
             caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
                     + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
                     + fullSourceCase.getCaseData().getEthosCaseReference() + "</a>");
         }
-    }
-
-    private List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken) {
-        return caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId, authToken,
-                caseTypeIdsToCheck);
-    }
-
-    private SubmitEvent caseRetrievalRequest(String authToken, String caseTypeId, String employment, String sourceCaseId) {
-        return caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken, caseTypeId, employment, sourceCaseId);
     }
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {

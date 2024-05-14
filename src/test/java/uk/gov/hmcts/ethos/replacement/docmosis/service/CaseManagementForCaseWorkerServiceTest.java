@@ -81,6 +81,7 @@ class CaseManagementForCaseWorkerServiceTest {
     @InjectMocks
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
+    private static final String EMPLOYMENT_JURISDICTION = "EMPLOYMENT";
     private CCDRequest scotlandCcdRequest1;
     private CCDRequest scotlandCcdRequest2;
     private CCDRequest scotlandCcdRequest3;
@@ -991,7 +992,7 @@ class CaseManagementForCaseWorkerServiceTest {
                 caseId, authToken, List.of("Leeds")))
                 .thenReturn(submitEventList);
         when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken, "caseTypeId",
-                "EMPLOYMENT", "12345")).thenReturn(fullSourceCase);
+                EMPLOYMENT_JURISDICTION, "12345")).thenReturn(fullSourceCase);
 
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
 
@@ -1045,9 +1046,9 @@ class CaseManagementForCaseWorkerServiceTest {
         caseDetails.setCaseData(caseData);
 
         List<SubmitEvent> submitEventList = new ArrayList<>();
-        SubmitEvent submitEvent = new SubmitEvent();
-        submitEvent.setCaseId(12345);
-        submitEventList.add(submitEvent);
+        SubmitEvent submitEventThree = new SubmitEvent();
+        submitEventThree.setCaseId(12345);
+        submitEventList.add(submitEventThree);
 
         SubmitEvent fullSourceCase = new SubmitEvent();
         CaseData sourceCaseData = new CaseData();
@@ -1057,7 +1058,7 @@ class CaseManagementForCaseWorkerServiceTest {
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                 caseId, authToken, List.of("Leeds"))).thenReturn(submitEventList);
         when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(
-                authToken, "caseTypeId", "EMPLOYMENT", "12345"))
+                authToken, "caseTypeId", EMPLOYMENT_JURISDICTION, "12345"))
                 .thenReturn(fullSourceCase);
 
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
