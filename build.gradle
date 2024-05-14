@@ -96,7 +96,6 @@ configurations {
 }
 
 test {
-    exclude '**/*ComponentTest*'
     useJUnitPlatform()
 }
 

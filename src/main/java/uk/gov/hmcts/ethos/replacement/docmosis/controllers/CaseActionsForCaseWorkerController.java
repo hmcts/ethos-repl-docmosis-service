@@ -142,7 +142,7 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        var submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(userToken,
+        SubmitEvent submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(userToken,
                 ccdRequest.getCaseDetails().getCaseTypeId(),
                 ccdRequest.getCaseDetails().getJurisdiction(), "1550576532211563");
         log.info("Case received correctly with id: " + submitEvent.getCaseId());
