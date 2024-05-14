@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.google.common.base.Strings;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -370,13 +369,17 @@ public class CaseManagementForCaseWorkerService {
         // elastic search query
         List<SubmitEvent> submitEvent = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                 caseDetails.getCaseId(), authToken, caseTypeIdsToCheck);
-        if (CollectionUtils.isEmpty(submitEvent)) {
+        if (CollectionUtils.isEmpty(submitEvent) || submitEvent.get(0) == null) {
             return;
         }
 
         String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
         SubmitEvent fullSourceCase = caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken,
                 caseDetails.getCaseTypeId(), EMPLOYMENT_JURISDICTION, sourceCaseId);
+
+        if (fullSourceCase == null || fullSourceCase.getCaseData() == null) {
+            return;
+        }
 
         if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
             caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
