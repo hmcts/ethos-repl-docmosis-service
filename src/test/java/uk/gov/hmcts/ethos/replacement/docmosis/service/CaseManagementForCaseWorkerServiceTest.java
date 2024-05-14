@@ -978,9 +978,9 @@ class CaseManagementForCaseWorkerServiceTest {
         caseDetails.setCaseData(caseData);
 
         List<SubmitEvent> submitEventList = new ArrayList<>();
-        SubmitEvent submitEvent = new SubmitEvent();
-        submitEvent.setCaseId(12345);
-        submitEventList.add(submitEvent);
+        SubmitEvent submitEventLocal = new SubmitEvent();
+        submitEventLocal.setCaseId(12345);
+        submitEventList.add(submitEventLocal);
 
         SubmitEvent fullSourceCase = new SubmitEvent();
         CaseData sourceCaseData = new CaseData();

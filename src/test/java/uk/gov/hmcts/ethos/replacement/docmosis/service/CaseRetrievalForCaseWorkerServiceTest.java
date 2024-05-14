@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
@@ -124,7 +123,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         String authToken = "authToken";
         List<SubmitEvent> submitEvents = getSubmitEvent();
         when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(submitEvents);
-        List<SubmitEvent> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
+        caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
                 authToken, null);
     }
 
@@ -132,10 +131,10 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         List<SubmitEvent> submitEvents = new ArrayList<>();
         CaseData linkedCaseData = new CaseData();
         linkedCaseData.setEthosCaseReference("R5000656");
-        SubmitEvent submitEvent = new SubmitEvent();
-        submitEvent.setCaseId(123456);
-        submitEvent.setCaseData(linkedCaseData);
-        submitEvents.add(submitEvent);
+        SubmitEvent submitEventTwo = new SubmitEvent();
+        submitEventTwo.setCaseId(123456);
+        submitEventTwo.setCaseData(linkedCaseData);
+        submitEvents.add(submitEventTwo);
         return submitEvents;
     }
 }
