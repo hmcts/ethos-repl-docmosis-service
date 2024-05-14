@@ -1061,10 +1061,10 @@ class CaseManagementForCaseWorkerServiceTest {
 
     @Test
     void testSetMigratedCaseLinkDetails_NullCaseData() {
-        SubmitEvent submitEvent = new SubmitEvent();
-        submitEvent.setCaseData(null);
+        SubmitEvent submitEventFour = new SubmitEvent();
+        submitEventFour.setCaseData(null);
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        submitEvents.add(submitEvent);
+        submitEvents.add(submitEventFour);
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(), anyList()))
                 .thenReturn(submitEvents);
 
