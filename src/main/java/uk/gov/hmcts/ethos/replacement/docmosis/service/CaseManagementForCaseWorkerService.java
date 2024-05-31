@@ -369,7 +369,7 @@ public class CaseManagementForCaseWorkerService {
         // elastic search query
         List<SubmitEvent> submitEvent = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                 caseDetails.getCaseId(), authToken, caseTypeIdsToCheck);
-        log.info("SubmitEvent is retrieved from ES for the update target case: {}.");
+        log.info("SubmitEvent is retrieved from ES for the update target case: {}.", submitEvent.get(0).getCaseId());
         if (CollectionUtils.isEmpty(submitEvent) || submitEvent.get(0) == null) {
             return;
         }
