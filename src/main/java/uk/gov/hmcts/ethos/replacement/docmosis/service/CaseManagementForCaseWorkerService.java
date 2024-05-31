@@ -369,12 +369,15 @@ public class CaseManagementForCaseWorkerService {
         // get a target case data using the source case data and
         // elastic search query
         List<SubmitEvent> submitEvent = transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(), authToken);
+        log.info("SubmitEvent is retrieved from ES for the update target case {} "
+                        + "in case management for caseworker service.", submitEvent.get(0).getCaseId());
         if (CollectionUtils.isEmpty(submitEvent)) {
             return;
         }
         String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
         SubmitEvent fullSourceCase = caseRetrievalRequest(authToken, caseDetails.getCaseTypeId(),
                 "EMPLOYMENT", sourceCaseId);
+        log.info("Full Source Case with data is retrieved via caseRetrievalRequest {}.", fullSourceCase.getCaseId());
         if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
             caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
                     + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
