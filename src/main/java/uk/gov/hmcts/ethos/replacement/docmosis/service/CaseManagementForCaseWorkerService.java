@@ -372,14 +372,15 @@ public class CaseManagementForCaseWorkerService {
         if (CollectionUtils.isEmpty(submitEvent) || submitEvent.get(0) == null) {
             return;
         }
+        log.info("SubmitEvent is retrieved from ES for the update target case: {}.", submitEvent.get(0).getCaseId());
 
         String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
         SubmitEvent fullSourceCase = caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken,
                 caseDetails.getCaseTypeId(), EMPLOYMENT_JURISDICTION, sourceCaseId);
-
         if (fullSourceCase == null || fullSourceCase.getCaseData() == null) {
             return;
         }
+        log.info("Full Source Case with data is retrieved via caseRetrievalRequest: {}.", fullSourceCase.getCaseId());
 
         if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
             caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
