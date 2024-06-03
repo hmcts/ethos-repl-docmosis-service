@@ -52,8 +52,8 @@ tribunal-offices:
       email: glasgowet@justice.gov.uk
       managing-office: Glasgow
     leeds:
-      address1: 6 Westgate
-      address2: Grace Street
+      address1: Westgate
+      address2: 6 Grace Street
       town: Leeds
       postcode: LS1 2RP
       telephone: 0113 245 9741
