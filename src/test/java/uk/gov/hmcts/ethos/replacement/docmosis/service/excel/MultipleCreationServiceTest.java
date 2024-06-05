@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleCreationServiceTest {
@@ -89,6 +89,36 @@ public class MultipleCreationServiceTest {
     }
 
     @Test
+    public void bulkCreationLogicETOnlinePreAcceptDone() {
+        multipleDetails.getCaseData().setMultipleSource(ET1_ONLINE_CASE_SOURCE);
+        multipleDetails.getCaseData().setPreAcceptDone(YES);
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).writeAndUploadExcelDocument(ethosCaseRefCollection,
+                userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verifyNoMoreInteractions(excelDocManagementService);
+        assertEquals(YES, multipleDetails.getCaseData().getPreAcceptDone());
+    }
+
+    @Test
+    public void bulkCreationLogicETOnlinePreAcceptDoneNull() {
+        multipleDetails.getCaseData().setMultipleSource(ET1_ONLINE_CASE_SOURCE);
+        multipleDetails.getCaseData().setPreAcceptDone(null);
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).writeAndUploadExcelDocument(ethosCaseRefCollection,
+                userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verifyNoMoreInteractions(excelDocManagementService);
+        assertEquals(NO, multipleDetails.getCaseData().getPreAcceptDone());
+    }
+
+    @Test
     public void bulkCreationLogicMigration() {
         multipleDetails.getCaseData().setLeadCase("");
         multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
@@ -103,6 +133,44 @@ public class MultipleCreationServiceTest {
                 multipleDetails,
                 new ArrayList<>(Arrays.asList("Sub3", "Sub2", "Sub1")));
         verifyNoMoreInteractions(excelDocManagementService);
+    }
+
+    @Test
+    public void bulkCreationLogicMigrationPreAcceptDoneNull() {
+        multipleDetails.getCaseData().setLeadCase("");
+        multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
+        multipleDetails.getCaseData().setMultipleSource(MIGRATION_CASE_SOURCE);
+        multipleDetails.getCaseData().setPreAcceptDone(null);
+        multipleDetails.getCaseData().setCaseMultipleCollection(MultipleUtil.getCaseMultipleCollection());
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).writeAndUploadExcelDocument(
+                MultipleUtil.getCaseMultipleObjectCollection(),
+                userToken,
+                multipleDetails,
+                new ArrayList<>(Arrays.asList("Sub3", "Sub2", "Sub1")));
+        verifyNoMoreInteractions(excelDocManagementService);
+        assertEquals(YES, multipleDetails.getCaseData().getPreAcceptDone());
+    }
+
+    @Test
+    public void bulkCreationLogicMigrationPreAcceptDone() {
+        multipleDetails.getCaseData().setLeadCase("");
+        multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
+        multipleDetails.getCaseData().setMultipleSource(MIGRATION_CASE_SOURCE);
+        multipleDetails.getCaseData().setPreAcceptDone(YES);
+        multipleDetails.getCaseData().setCaseMultipleCollection(MultipleUtil.getCaseMultipleCollection());
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).writeAndUploadExcelDocument(
+                MultipleUtil.getCaseMultipleObjectCollection(),
+                userToken,
+                multipleDetails,
+                new ArrayList<>(Arrays.asList("Sub3", "Sub2", "Sub1")));
+        verifyNoMoreInteractions(excelDocManagementService);
+        assertEquals(YES, multipleDetails.getCaseData().getPreAcceptDone());
     }
 
     @Test
