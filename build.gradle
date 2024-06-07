@@ -306,7 +306,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.9'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.1.2'
     implementation 'org.springframework.retry:spring-retry'
     implementation group: 'org.webjars.npm', name: 'minimatch', version: '9.0.3'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
