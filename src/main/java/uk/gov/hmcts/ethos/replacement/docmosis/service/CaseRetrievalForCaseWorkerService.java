@@ -32,6 +32,14 @@ public class CaseRetrievalForCaseWorkerService {
         }
     }
 
+    public String caseRefRetrievalRequest(String authToken, String caseTypeId, String jurisdiction, String caseId) {
+        try {
+            return ccdClient.retrieveTransferredCaseReference(authToken, caseTypeId, jurisdiction, caseId);
+        } catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + caseId + ex.getMessage());
+        }
+    }
+
     public List<SubmitEvent> casesRetrievalRequest(CCDRequest ccdRequest, String authToken) {
         var caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());

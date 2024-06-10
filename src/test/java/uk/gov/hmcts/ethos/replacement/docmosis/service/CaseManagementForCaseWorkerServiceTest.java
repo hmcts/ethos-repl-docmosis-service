@@ -998,11 +998,10 @@ class CaseManagementForCaseWorkerServiceTest {
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                 anyString(), anyString(), anyList()))
                 .thenReturn(submitEventList22);
-        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(any(), any(), any(), any()))
-                .thenReturn(submitEventFullSourceCase);
+        when(caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(any(), any(), any(), any()))
+                .thenReturn(submitEventFullSourceCase.getCaseData().getEthosCaseReference());
 
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
-
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(AUTH_TOKEN, caseDetails);
         assertEquals("<a target=\"_blank\" href=\"" + ccdGatewayBaseUrl + "/cases/case-details/"
                 + submitEventLocal.getCaseId() + "\">EthosCaseRef</a>",
