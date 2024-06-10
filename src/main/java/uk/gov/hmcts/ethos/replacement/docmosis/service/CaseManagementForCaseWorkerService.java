@@ -367,25 +367,22 @@ public class CaseManagementForCaseWorkerService {
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data and
         // elastic search query
-        List<SubmitEvent> submitEvent = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+        List<SubmitEvent> submitEvents = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                 caseDetails.getCaseId(), authToken, caseTypeIdsToCheck);
-        if (CollectionUtils.isEmpty(submitEvent) || submitEvent.get(0) == null) {
+        if (CollectionUtils.isEmpty(submitEvents) || submitEvents.get(0) == null) {
             return;
         }
-        log.info("SubmitEvent is retrieved from ES for the update target case: {}.", submitEvent.get(0).getCaseId());
 
-        String sourceCaseId = String.valueOf(submitEvent.get(0).getCaseId());
-        SubmitEvent fullSourceCase = caseRetrievalForCaseWorkerService.caseRetrievalRequest(authToken,
+        log.info("SubmitEvents are retrieved from ES for the update target case: {}.", submitEvents.get(0).getCaseId());
+        String sourceCaseId = String.valueOf(submitEvents.get(0).getCaseId());
+        String ethosCaseReference = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(authToken,
                 caseDetails.getCaseTypeId(), EMPLOYMENT_JURISDICTION, sourceCaseId);
-        if (fullSourceCase == null || fullSourceCase.getCaseData() == null) {
-            return;
-        }
-        log.info("Full Source Case with data is retrieved via caseRetrievalRequest: {}.", fullSourceCase.getCaseId());
+        log.info("Source Case reference is retrieved via retrieveTransferredCaseReference: {}.", ethosCaseReference);
 
-        if (fullSourceCase.getCaseData().getEthosCaseReference() != null) {
+        if (ethosCaseReference != null) {
             caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
                     + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
-                    + fullSourceCase.getCaseData().getEthosCaseReference() + "</a>");
+                    + ethosCaseReference + "</a>");
         }
     }
 
