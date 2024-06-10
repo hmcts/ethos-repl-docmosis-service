@@ -137,6 +137,8 @@ public class MultipleTransferService {
                     String.valueOf(oldSubmitMultipleEvent.getCaseId()),
                     multipleReference));
 
+            multipleDetails.getCaseData().setMultipleSource(oldSubmitMultipleEvent.getCaseData().getMultipleSource());
+            multipleDetails.getCaseData().setPreAcceptDone(oldSubmitMultipleEvent.getCaseData().getPreAcceptDone());
             multipleDetails.getCaseData().setReasonForCT(oldSubmitMultipleEvent.getCaseData().getReasonForCT());
             multipleDetails.getCaseData().setMultipleName(oldSubmitMultipleEvent.getCaseData().getMultipleName());
         }
