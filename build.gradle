@@ -223,6 +223,7 @@ ext {
     log4JVersion = '2.23.1'
     serenity = '3.9.8'
     tomcatEmbedVersion = '9.0.88'
+    springCloudVersion = '2021.0.8'
 }
 
 ext["rest-assured.version"] = '5.1.0'
@@ -265,7 +266,7 @@ dependencyManagement {
         }
     }
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
