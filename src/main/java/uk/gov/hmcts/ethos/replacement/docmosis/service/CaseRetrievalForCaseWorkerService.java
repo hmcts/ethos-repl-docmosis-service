@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -17,6 +18,7 @@ import java.util.List;
 public class CaseRetrievalForCaseWorkerService {
 
     private static final String MESSAGE = "Failed to retrieve case for : ";
+    private static final String EMPTY_STRING = "";
     private final CcdClient ccdClient;
 
     @Autowired
@@ -34,6 +36,7 @@ public class CaseRetrievalForCaseWorkerService {
 
     public String caseRefRetrievalRequest(String authToken, String caseTypeId, String jurisdiction, String caseId) {
         try {
+            log.info("In Case Retrieval Service - caseRefRetrievalRequest for case type: {} ",  caseTypeId);
             return ccdClient.retrieveTransferredCaseReference(authToken, caseTypeId, jurisdiction, caseId);
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseId + ex.getMessage());
@@ -59,20 +62,21 @@ public class CaseRetrievalForCaseWorkerService {
         }
     }
 
-    public List<SubmitEvent> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken,
-                                                                  List<String> caseTypeIdsToCheck) {
+public Pair<String, List<SubmitEvent>> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken,
+                                                              List<String> caseTypeIdsToCheck) {
         try {
             for(String targetOffice : caseTypeIdsToCheck) {
                 List<SubmitEvent> submitEvents = ccdClient.retrieveTransferredCaseElasticSearch(authToken,
                         targetOffice, currentCaseId);
                 if(!submitEvents.isEmpty()) {
-                    return submitEvents;
+                    return Pair.of(targetOffice, submitEvents);
                 }
             }
 
-            return new ArrayList<>();
+            return Pair.of(EMPTY_STRING, new ArrayList<>());
         } catch (Exception ex) {
             throw new CaseRetrievalException(MESSAGE + currentCaseId + ex.getMessage());
         }
     }
+
 }

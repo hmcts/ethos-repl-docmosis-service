@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.util.Pair;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,7 +29,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ER
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseRetrievalForCaseWorkerServiceTest {
-
+    private static final String EMPTY_STRING = "";
     @InjectMocks
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @Mock
@@ -97,44 +99,46 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         String currentCaseId = "123456";
         String authToken = "authToken";
 
-        List<SubmitEvent> submitEvents = getSubmitEvent();
-        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(submitEvents);
-        List<SubmitEvent> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
+        SubmitEvent submitEvent = getSubmitEvent();
+        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
+                .thenReturn(List.of(submitEvent));
+        Pair<String, List<SubmitEvent>> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
                 authToken, List.of("Leeds"));
 
-        assertEquals(submitEvents, result);
+        assertEquals(submitEvent, result.getSecond().get(0));
+        assertEquals("Leeds", result.getFirst());
     }
 
     @Test
     public void testTransferSourceCaseRetrievalESRequest_When_CaseTypeIdsToCheck_Null() throws IOException {
         String currentCaseId = "123456";
         String authToken = "authToken";
-        List<SubmitEvent> submitEvents = getSubmitEvent();
-        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(submitEvents);
-        List<SubmitEvent> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
-                authToken, new ArrayList<>());
+        SubmitEvent submitEvent = getSubmitEvent();
+        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(List.of(submitEvent));
+        Pair<String, List<SubmitEvent>> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                currentCaseId, authToken, new ArrayList<>());
         assertNotNull(result);
-        assertEquals(0, result.size());
+        assertEquals(EMPTY_STRING, result.getFirst());
+        assertTrue(result.getSecond().isEmpty());
     }
 
     @Test(expected = Exception.class)
     public void testTransferSourceCaseRetrievalESRequestThrowsException() throws IOException {
         String currentCaseId = "123456";
         String authToken = "authToken";
-        List<SubmitEvent> submitEvents = getSubmitEvent();
-        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(submitEvents);
+        SubmitEvent submitEvent = getSubmitEvent();
+        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
+                .thenReturn(List.of(submitEvent));
         caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
                 authToken, null);
     }
 
-    private List<SubmitEvent> getSubmitEvent() {
-        List<SubmitEvent> submitEvents = new ArrayList<>();
+    private SubmitEvent getSubmitEvent() {
         CaseData linkedCaseData = new CaseData();
         linkedCaseData.setEthosCaseReference("R5000656");
         SubmitEvent submitEventTwo = new SubmitEvent();
         submitEventTwo.setCaseId(123456);
         submitEventTwo.setCaseData(linkedCaseData);
-        submitEvents.add(submitEventTwo);
-        return submitEvents;
+        return submitEventTwo;
     }
 }

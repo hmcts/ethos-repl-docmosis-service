@@ -342,9 +342,7 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("MIGRATE CASE LINK DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
-        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(userToken,
-                ccdRequest.getCaseDetails());
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(userToken, ccdRequest.getCaseDetails());
         return getCallbackRespEntityNoErrors(ccdRequest.getCaseDetails().getCaseData());
     }
 
