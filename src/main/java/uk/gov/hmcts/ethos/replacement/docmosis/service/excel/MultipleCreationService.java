@@ -108,7 +108,9 @@ public class MultipleCreationService {
 
             log.info("Multiple Creation Migration Logic");
 
-            multipleDetails.getCaseData().setPreAcceptDone(YES);
+            if (multipleDetails.getCaseData().getPreAcceptDone() == null) {
+                multipleDetails.getCaseData().setPreAcceptDone(YES);
+            }
 
             List<MultipleObject> multipleObjectList = new ArrayList<>();
 
@@ -125,8 +127,9 @@ public class MultipleCreationService {
                     new ArrayList<>(subMultipleNames));
 
         } else {
-
-            multipleDetails.getCaseData().setPreAcceptDone(NO);
+            if (multipleDetails.getCaseData().getPreAcceptDone() == null) {
+                multipleDetails.getCaseData().setPreAcceptDone(NO);
+            }
 
             log.info("Generating the excel document for ET1 Online");
 
