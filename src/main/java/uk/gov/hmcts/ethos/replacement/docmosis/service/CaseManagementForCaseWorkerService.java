@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -36,14 +37,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
@@ -55,11 +54,11 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -367,16 +366,21 @@ public class CaseManagementForCaseWorkerService {
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data and
         // elastic search query
-        List<SubmitEvent> submitEvents = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                caseDetails.getCaseId(), authToken, caseTypeIdsToCheck);
-        if (CollectionUtils.isEmpty(submitEvents) || submitEvents.get(0) == null) {
+        Pair<String, List<SubmitEvent>> caseRefAndCaseDataPair =
+                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                        caseDetails.getCaseId(), authToken,caseTypeIdsToCheck);
+        if (caseRefAndCaseDataPair == null
+                || caseRefAndCaseDataPair.getFirst().isEmpty()
+                || caseRefAndCaseDataPair.getSecond().isEmpty()) {
             return;
         }
-
-        log.info("SubmitEvents are retrieved from ES for the update target case: {}.", submitEvents.get(0).getCaseId());
-        String sourceCaseId = String.valueOf(submitEvents.get(0).getCaseId());
+        String sourceCaseTypeId = caseRefAndCaseDataPair.getFirst();
+        SubmitEvent submitEvent = caseRefAndCaseDataPair.getSecond().get(0);
+        log.info("SubmitEvent retrieved from ES for the update target case: {} with source case type of {}.",
+                submitEvent.getCaseId(), sourceCaseTypeId);
+        String sourceCaseId = String.valueOf(submitEvent.getCaseId());
         String ethosCaseReference = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(authToken,
-                caseDetails.getCaseTypeId(), EMPLOYMENT_JURISDICTION, sourceCaseId);
+                sourceCaseTypeId, EMPLOYMENT_JURISDICTION, sourceCaseId);
         log.info("Source Case reference is retrieved via retrieveTransferredCaseReference: {}.", ethosCaseReference);
 
         if (ethosCaseReference != null) {
@@ -458,7 +462,7 @@ public class CaseManagementForCaseWorkerService {
                 }
             }
             caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(),
-                    struckRespondent.stream()).collect(Collectors.toList()));
+                    struckRespondent.stream()).toList());
             respondentDefaults(caseData);
         }
         return caseData;
@@ -481,7 +485,7 @@ public class CaseManagementForCaseWorkerService {
                 }
             }
             caseData.setRespondentCollection(Stream.concat(continuingRespondent.stream(),
-                    notContinuingRespondent.stream()).collect(Collectors.toList()));
+                    notContinuingRespondent.stream()).toList());
             respondentDefaults(caseData);
         }
         return caseData;
