@@ -43,7 +43,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
@@ -55,11 +54,11 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFCTC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CFT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -369,7 +368,7 @@ public class CaseManagementForCaseWorkerService {
         // elastic search query
         Pair<String, List<SubmitEvent>> caseRefAndCaseDataPair =
                 caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                        caseDetails.getCaseId(), authToken, caseTypeIdsToCheck);
+                        caseDetails.getCaseId(), authToken,caseTypeIdsToCheck);
         if (caseRefAndCaseDataPair == null
                 || caseRefAndCaseDataPair.getFirst().isEmpty()
                 || caseRefAndCaseDataPair.getSecond().isEmpty()) {

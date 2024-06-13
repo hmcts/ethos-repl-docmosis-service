@@ -62,13 +62,13 @@ public class CaseRetrievalForCaseWorkerService {
         }
     }
 
-public Pair<String, List<SubmitEvent>> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken,
+    public Pair<String, List<SubmitEvent>> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken,
                                                               List<String> caseTypeIdsToCheck) {
         try {
-            for(String targetOffice : caseTypeIdsToCheck) {
+            for (String targetOffice : caseTypeIdsToCheck) {
                 List<SubmitEvent> submitEvents = ccdClient.retrieveTransferredCaseElasticSearch(authToken,
                         targetOffice, currentCaseId);
-                if(!submitEvents.isEmpty()) {
+                if (!submitEvents.isEmpty()) {
                     return Pair.of(targetOffice, submitEvents);
                 }
             }
