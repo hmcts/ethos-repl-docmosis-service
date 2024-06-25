@@ -150,6 +150,27 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     }
 
     @Test
+    public void testTransferSourceCaseRetrievalESRequestContinue() throws IOException {
+        String currentCaseId = "123456";
+        SubmitEvent submitEvent = getSubmitEvent();
+        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
+                .thenReturn(List.of(submitEvent));
+        List<Pair<String, List<SubmitEvent>>> result =
+                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                        currentCaseId, "Newcastle", AUTH_TOKEN,
+                        List.of("Leeds", "Newcastle", "Manchester"));
+
+        assertEquals(submitEvent, result.get(0).getSecond().get(0));
+        assertEquals("Leeds", result.get(0).getFirst());
+        verify(ccdClient, times(0)).retrieveTransferredCaseElasticSearch(
+                AUTH_TOKEN, "Newcastle", currentCaseId);
+        verify(ccdClient, times(1)).retrieveTransferredCaseElasticSearch(
+                AUTH_TOKEN, "Leeds", currentCaseId);
+        verify(ccdClient, times(1)).retrieveTransferredCaseElasticSearch(
+                AUTH_TOKEN, "Manchester", currentCaseId);
+    }
+
+    @Test
     public void testTransferSourceCaseRetrievalESRequest_When_CaseTypeIdsToCheck_Null() throws IOException {
         String currentCaseId = "123456";
         SubmitEvent submitEvent = getSubmitEvent();
