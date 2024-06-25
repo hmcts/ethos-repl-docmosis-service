@@ -81,6 +81,7 @@ public class CaseManagementForCaseWorkerService {
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
     private final String ccdGatewayBaseUrl;
+    private static final String TRANSFERRED = "Transferred";
     private static final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
             "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
             "MidlandsEast", "MidlandsWest", "Newcastle", "Scotland",
@@ -192,11 +193,11 @@ public class CaseManagementForCaseWorkerService {
         caseData.getHearingsCollectionForUpdate().clear();
 
         // check if update is only on one hearing
-        if (HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType()) &&
-                caseData.getHearingCollection() != null) {
+        if (HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType())
+                && caseData.getHearingCollection() != null) {
             if (caseData.getSelectedHearingNumberForUpdate() != null) {
                 Optional<HearingTypeItem> hearingForUpdate = caseData.getHearingCollection().stream()
-                        .filter(h->h.getValue().getHearingNumber()
+                        .filter(h -> h.getValue().getHearingNumber()
                                 .equals(caseData.getSelectedHearingNumberForUpdate()
                                         .getValue().getCode())).findFirst();
                 if (hearingForUpdate.isPresent()) {
@@ -228,7 +229,7 @@ public class CaseManagementForCaseWorkerService {
                                 caseData.getUpdateHearingDetails().getHearingDate())).toList();
 
                 //prepare hearing with only needed date entries and exclude the ones out of the filter/search criteria
-                if(!validHearingDates.isEmpty()) {
+                if (!validHearingDates.isEmpty()) {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
@@ -242,7 +243,7 @@ public class CaseManagementForCaseWorkerService {
                                 caseData.getUpdateHearingDetails().getHearingDateTo())).toList();
 
                 // hearing/s with only needed date entries and exclude the ones out of the filter/search criteria
-                if(!validHearingDates.isEmpty()) {
+                if (!validHearingDates.isEmpty()) {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
@@ -285,7 +286,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void updateSelectedHearing(CaseData caseData) {
-        if(caseData.getHearingsCollectionForUpdate() != null) {
+        if (caseData.getHearingsCollectionForUpdate() != null) {
 
             for (HearingTypeItem updatedHearing : caseData.getHearingsCollectionForUpdate()) {
                 Optional<HearingTypeItem> matchingHearing = caseData.getHearingCollection().stream()
@@ -299,7 +300,7 @@ public class CaseManagementForCaseWorkerService {
                     targetHearingType.setHearingSitAlone(sourceHearingType.getHearingSitAlone());
                     targetHearingType.setJudge(sourceHearingType.getJudge());
 
-                    if(FULL_PANEL.equals(sourceHearingType.getHearingSitAlone())) {
+                    if (FULL_PANEL.equals(sourceHearingType.getHearingSitAlone())) {
                         targetHearingType.setHearingEEMember(sourceHearingType.getHearingEEMember());
                         targetHearingType.setHearingERMember(sourceHearingType.getHearingERMember());
                     }
@@ -320,7 +321,7 @@ public class CaseManagementForCaseWorkerService {
             Optional<DateListedTypeItem> hdToUpdate = matchingHearing.getValue().getHearingDateCollection()
                     .stream().filter(uhd -> String.valueOf(uhd.getId())
                             .equals(hearingDate.getId())).findFirst();
-            if(hdToUpdate.isPresent()) {
+            if (hdToUpdate.isPresent()) {
                 hdToUpdate.get().setValue(hearingDate.getValue());
             }
         }
@@ -366,28 +367,58 @@ public class CaseManagementForCaseWorkerService {
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data and
         // elastic search query
-        Pair<String, List<SubmitEvent>> caseRefAndCaseDataPair =
-                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                        caseDetails.getCaseId(), authToken,caseTypeIdsToCheck);
-        if (caseRefAndCaseDataPair == null
-                || caseRefAndCaseDataPair.getFirst().isEmpty()
-                || caseRefAndCaseDataPair.getSecond().isEmpty()) {
+        List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPair =
+                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(),
+                        caseDetails.getCaseTypeId(), authToken, caseTypeIdsToCheck);
+        // For the first round, update only by referring & validating single duplicates, i.e. ethos reference
+        // similar to the current update target case
+        if (listOfCaseTypeIdAndCaseDataPair == null || listOfCaseTypeIdAndCaseDataPair.size() != 1) {
             return;
         }
-        String sourceCaseTypeId = caseRefAndCaseDataPair.getFirst();
-        SubmitEvent submitEvent = caseRefAndCaseDataPair.getSecond().get(0);
-        log.info("SubmitEvent retrieved from ES for the update target case: {} with source case type of {}.",
-                submitEvent.getCaseId(), sourceCaseTypeId);
-        String sourceCaseId = String.valueOf(submitEvent.getCaseId());
-        String ethosCaseReference = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(authToken,
-                sourceCaseTypeId, EMPLOYMENT_JURISDICTION, sourceCaseId);
-        log.info("Source Case reference is retrieved via retrieveTransferredCaseReference: {}.", ethosCaseReference);
+        String sourceCaseTypeId = listOfCaseTypeIdAndCaseDataPair.get(0).getFirst();
+        SubmitEvent submitEvent = listOfCaseTypeIdAndCaseDataPair.get(0).getSecond().get(0);
 
-        if (ethosCaseReference != null) {
-            caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
-                    + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
-                    + ethosCaseReference + "</a>");
+        //check if the source case is not of a transferred state
+        if (!isTransferredCase(submitEvent)) {
+            if (isValidDuplicateCase(submitEvent, caseDetails.getCaseData())) {
+                log.info("SubmitEvent retrieved from ES for the update target case: {} with source case type of {}.",
+                        submitEvent.getCaseId(), sourceCaseTypeId);
+                String sourceCaseId = String.valueOf(submitEvent.getCaseId());
+                String ethosCaseReference = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(authToken,
+                        sourceCaseTypeId, EMPLOYMENT_JURISDICTION, sourceCaseId);
+                log.info("Source Case reference is retrieved via retrieveTransferredCaseReference: {}.",
+                        ethosCaseReference);
+
+                if (ethosCaseReference != null) {
+                    caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
+                            + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
+                            + ethosCaseReference + "</a>");
+                }
+            }
         }
+    }
+
+    private boolean isTransferredCase(SubmitEvent submitEvent) {
+        return submitEvent != null && submitEvent.getState() != null
+                && TRANSFERRED.equals(submitEvent.getState());
+    }
+
+    private boolean isValidDuplicateCase(SubmitEvent submitEvent, CaseData caseData) {
+        boolean isValidationDuplicate = false;
+        // check if the duplicate case is the same as the source case by comparing the following fields:
+        // ethos ref, respondent, claimant, submission ref(i.e. FeeGroupReference), and date of receipt
+        if (submitEvent != null && submitEvent.getCaseData() != null) {
+            CaseData targetCaseData = submitEvent.getCaseData();
+            if (targetCaseData != null) {
+                if (caseData.getEthosCaseReference().equals(targetCaseData.getEthosCaseReference())
+                        && caseData.getClaimant().equals(targetCaseData.getClaimant())
+                        && caseData.getRespondent().equals(targetCaseData.getRespondent())
+                        && caseData.getFeeGroupReference().equals(targetCaseData.getFeeGroupReference())) {
+                    isValidationDuplicate = true;
+                }
+            }
+        }
+        return isValidationDuplicate;
     }
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {
