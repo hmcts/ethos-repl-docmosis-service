@@ -255,5 +255,12 @@
         <packageUrl regex="true">^pkg:npm/braces@.*$</packageUrl>
         <vulnerabilityName>GHSA-grv7-fg5c-xmjg</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: yarn.lock
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/ws@.*$</packageUrl>
+        <vulnerabilityName>GHSA-3h5v-q93c-6h6q</vulnerabilityName>
+    </suppress>
 </suppressions>
 
