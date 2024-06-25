@@ -1096,9 +1096,31 @@ class CaseManagementForCaseWorkerServiceTest {
         caseData.setCcdID("2277");
         caseDetails.setCaseData(caseData);
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
+        assertNull(caseDetails.getCaseData().getTransferredCaseLink());
+    }
+
+    @Test
+    void testSetMigratedCaseLinkDetails_InvalidDuplicateCases() {
+        SubmitEvent submitEventFour = new SubmitEvent();
+        CaseData caseDataOne = new CaseData();
+        caseDataOne.setCcdID("889900");
+        submitEventFour.setCaseData(caseDataOne);
+        submitEventFour.setState("Transferred");
+        
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
+                anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType",
+                List.of(submitEventFour))));
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("456");
+        CaseData caseData = new CaseData();
+        caseData.setCcdID("2277");
+        caseDetails.setCaseData(caseData);
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
 
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
     }
+
     @Test
     void testSetMigratedCaseLinkDetails_When_EthosCaseReferenceIsNull() {
         String authToken = "authToken";
