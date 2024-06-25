@@ -62,6 +62,8 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
@@ -1004,6 +1006,12 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals("<a target=\"_blank\" href=\"" + ccdGatewayBaseUrl + "/cases/case-details/"
                 + submitEventLocal.getCaseId() + "\">EthosCaseRef</a>",
                 caseDetails.getCaseData().getTransferredCaseLink());
+        assertEquals("testClaimant", caseDetails.getCaseData().getClaimant());
+        assertEquals("testRespondent", caseDetails.getCaseData().getRespondent());
+        assertEquals("testFeeGroupReference", caseDetails.getCaseData().getFeeGroupReference());
+        verify(caseRetrievalForCaseWorkerService,
+                times(1)).transferSourceCaseRetrievalESRequest(anyString(),
+                anyString(), anyString(), anyList());
     }
 
     private static @NotNull CaseDetails getCaseDetails() {
@@ -1036,6 +1044,9 @@ class CaseManagementForCaseWorkerServiceTest {
                 caseId, caseTypeId, authToken, List.of("Leeds"))).thenReturn(null);
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
+        verify(caseRetrievalForCaseWorkerService,
+                times(0)).transferSourceCaseRetrievalESRequest(
+                        anyString(), anyString(), anyString(), anyList());
     }
 
     @Test
@@ -1126,7 +1137,7 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    void testSetMigratedCaseLinkDetails_InvalidDuplicateCases() {
+    void testSetMigratedCaseLinkDetails_InvalidDuplicateCases_Transferred() {
         SubmitEvent submitEventFour = new SubmitEvent();
         CaseData caseDataOne = new CaseData();
         caseDataOne.setCcdID("889900");

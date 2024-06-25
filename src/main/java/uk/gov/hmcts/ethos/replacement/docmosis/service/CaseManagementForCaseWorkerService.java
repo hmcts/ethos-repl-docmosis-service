@@ -367,16 +367,16 @@ public class CaseManagementForCaseWorkerService {
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data and
         // elastic search query
-        List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPair =
+        List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPairsList =
                 caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(),
                         caseDetails.getCaseTypeId(), authToken, caseTypeIdsToCheck);
         // For the first round, update only by referring & validating single duplicates, i.e. ethos reference
         // similar to the current update target case
-        if (listOfCaseTypeIdAndCaseDataPair == null || listOfCaseTypeIdAndCaseDataPair.size() != 1) {
+        if (!isValidListOfPairs(listOfCaseTypeIdAndCaseDataPairsList)) {
             return;
         }
-        String sourceCaseTypeId = listOfCaseTypeIdAndCaseDataPair.get(0).getFirst();
-        SubmitEvent submitEvent = listOfCaseTypeIdAndCaseDataPair.get(0).getSecond().get(0);
+        String sourceCaseTypeId = listOfCaseTypeIdAndCaseDataPairsList.get(0).getFirst();
+        SubmitEvent submitEvent = listOfCaseTypeIdAndCaseDataPairsList.get(0).getSecond().get(0);
 
         if (isValidDuplicateCase(submitEvent, caseDetails.getCaseData())) {
             log.info("SubmitEvent retrieved from ES for the update target case: {} with source case type of {}.",
@@ -393,6 +393,12 @@ public class CaseManagementForCaseWorkerService {
                         + ethosCaseReference + "</a>");
             }
         }
+    }
+
+    private boolean isValidListOfPairs(List<Pair<String, List<SubmitEvent>>>
+                                                                    listOfCaseTypeIdAndCaseDataPairsList) {
+        return listOfCaseTypeIdAndCaseDataPairsList != null
+                && listOfCaseTypeIdAndCaseDataPairsList.size() == 1;
     }
 
     private boolean isTransferredCase(SubmitEvent submitEvent) {
