@@ -1006,6 +1006,7 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals("<a target=\"_blank\" href=\"" + ccdGatewayBaseUrl + "/cases/case-details/"
                 + submitEventLocal.getCaseId() + "\">EthosCaseRef</a>",
                 caseDetails.getCaseData().getTransferredCaseLink());
+        assertEquals("EthosCaseRef", caseDetails.getCaseData().getEthosCaseReference());
         assertEquals("testClaimant", caseDetails.getCaseData().getClaimant());
         assertEquals("testRespondent", caseDetails.getCaseData().getRespondent());
         assertEquals("testFeeGroupReference", caseDetails.getCaseData().getFeeGroupReference());
@@ -1143,6 +1144,25 @@ class CaseManagementForCaseWorkerServiceTest {
         caseDataOne.setCcdID("889900");
         submitEventFour.setCaseData(caseDataOne);
         submitEventFour.setState("Transferred");
+
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
+                anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType",
+                List.of(submitEventFour))));
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("456");
+        CaseData caseData = new CaseData();
+        caseData.setCcdID("2277");
+        caseDetails.setCaseData(caseData);
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
+
+        assertNull(caseDetails.getCaseData().getTransferredCaseLink());
+    }
+
+    @Test
+    void testSetMigratedCaseLinkDetails_InvalidDuplicateCases_Null_SubmitEvent_Casedata() {
+        SubmitEvent submitEventFour = new SubmitEvent();
+        submitEventFour.setCaseData(null);
 
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
                 anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType",
