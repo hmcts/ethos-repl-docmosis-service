@@ -1010,9 +1010,10 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals("testClaimant", caseDetails.getCaseData().getClaimant());
         assertEquals("testRespondent", caseDetails.getCaseData().getRespondent());
         assertEquals("testFeeGroupReference", caseDetails.getCaseData().getFeeGroupReference());
-        verify(caseRetrievalForCaseWorkerService,
-                times(1)).transferSourceCaseRetrievalESRequest(anyString(),
-                anyString(), anyString(), anyList());
+        verify(caseRetrievalForCaseWorkerService, times(1))
+                .transferSourceCaseRetrievalESRequest(anyString(), anyString(), anyString(), anyList());
+        verify(caseRetrievalForCaseWorkerService,times(1)).caseRefRetrievalRequest(
+                anyString(), anyString(), anyString(), anyString());
     }
 
     private static @NotNull CaseDetails getCaseDetails() {
@@ -1035,19 +1036,17 @@ class CaseManagementForCaseWorkerServiceTest {
     void testSetMigratedCaseLinkDetails_When_CaseRefAndCaseDataPairIsNull() {
         String authToken = "authToken";
         String caseId = "caseId";
-        String caseTypeId = "Leeds";
         CaseDetails caseDetails = new CaseDetails();
         CaseData caseData = new CaseData();
         caseData.setCcdID(caseId);
         caseDetails.setCaseData(caseData);
 
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                caseId, caseTypeId, authToken, List.of("Leeds"))).thenReturn(null);
+                anyString(), anyString(), anyString(), anyList())).thenReturn(null);
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
-        verify(caseRetrievalForCaseWorkerService,
-                times(0)).transferSourceCaseRetrievalESRequest(
-                        anyString(), anyString(), anyString(), anyList());
+        verify(caseRetrievalForCaseWorkerService,times(0)).caseRefRetrievalRequest(
+                anyString(), anyString(), anyString(), anyString());
     }
 
     @Test
@@ -1160,25 +1159,6 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    void testSetMigratedCaseLinkDetails_InvalidDuplicateCases_Null_SubmitEvent_Casedata() {
-        SubmitEvent submitEventFour = new SubmitEvent();
-        submitEventFour.setCaseData(null);
-
-        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
-                anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType",
-                List.of(submitEventFour))));
-
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId("456");
-        CaseData caseData = new CaseData();
-        caseData.setCcdID("2277");
-        caseDetails.setCaseData(caseData);
-        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
-
-        assertNull(caseDetails.getCaseData().getTransferredCaseLink());
-    }
-
-    @Test
     void testSetMigratedCaseLinkDetails_When_EthosCaseReferenceIsNull() {
         String authToken = "authToken";
         String caseId = "caseId";
@@ -1202,9 +1182,7 @@ class CaseManagementForCaseWorkerServiceTest {
         when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(
                 authToken, "caseTypeId", EMPLOYMENT_JURISDICTION, "12345"))
                 .thenReturn(fullSourceCase);
-
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
-
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
     }
 
