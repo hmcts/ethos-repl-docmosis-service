@@ -378,44 +378,43 @@ public class CaseManagementForCaseWorkerService {
         String sourceCaseTypeId = listOfCaseTypeIdAndCaseDataPair.get(0).getFirst();
         SubmitEvent submitEvent = listOfCaseTypeIdAndCaseDataPair.get(0).getSecond().get(0);
 
-        //check if the source case is not of a transferred state
-        if (!isTransferredCase(submitEvent)) {
-            if (isValidDuplicateCase(submitEvent, caseDetails.getCaseData())) {
-                log.info("SubmitEvent retrieved from ES for the update target case: {} with source case type of {}.",
-                        submitEvent.getCaseId(), sourceCaseTypeId);
-                String sourceCaseId = String.valueOf(submitEvent.getCaseId());
-                String ethosCaseReference = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(authToken,
-                        sourceCaseTypeId, EMPLOYMENT_JURISDICTION, sourceCaseId);
-                log.info("Source Case reference is retrieved via retrieveTransferredCaseReference: {}.",
-                        ethosCaseReference);
+        if (isValidDuplicateCase(submitEvent, caseDetails.getCaseData())) {
+            log.info("SubmitEvent retrieved from ES for the update target case: {} with source case type of {}.",
+                    submitEvent.getCaseId(), sourceCaseTypeId);
+            String sourceCaseId = String.valueOf(submitEvent.getCaseId());
+            String ethosCaseReference = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(authToken,
+                    sourceCaseTypeId, EMPLOYMENT_JURISDICTION, sourceCaseId);
+            log.info("Source Case reference is retrieved via retrieveTransferredCaseReference: {}.",
+                    ethosCaseReference);
 
-                if (ethosCaseReference != null) {
-                    caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
-                            + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
-                            + ethosCaseReference + "</a>");
-                }
+            if (ethosCaseReference != null) {
+                caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
+                        + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
+                        + ethosCaseReference + "</a>");
             }
         }
     }
 
     private boolean isTransferredCase(SubmitEvent submitEvent) {
+        //check if the source case is not of a transferred state
         return submitEvent != null && submitEvent.getState() != null
                 && TRANSFERRED.equals(submitEvent.getState());
     }
 
     private boolean isValidDuplicateCase(SubmitEvent submitEvent, CaseData caseData) {
         boolean isValidationDuplicate = false;
+
         // check if the duplicate case is the same as the source case by comparing the following fields:
         // ethos ref, respondent, claimant, submission ref(i.e. FeeGroupReference), and date of receipt
-        if (submitEvent != null && submitEvent.getCaseData() != null) {
+        if (submitEvent != null && submitEvent.getCaseData() != null
+                && !isTransferredCase(submitEvent)) {
             CaseData targetCaseData = submitEvent.getCaseData();
-            if (targetCaseData != null) {
-                if (caseData.getEthosCaseReference().equals(targetCaseData.getEthosCaseReference())
-                        && caseData.getClaimant().equals(targetCaseData.getClaimant())
-                        && caseData.getRespondent().equals(targetCaseData.getRespondent())
-                        && caseData.getFeeGroupReference().equals(targetCaseData.getFeeGroupReference())) {
-                    isValidationDuplicate = true;
-                }
+            if (targetCaseData != null
+                    && caseData.getEthosCaseReference().equals(targetCaseData.getEthosCaseReference())
+                    && caseData.getClaimant().equals(targetCaseData.getClaimant())
+                    && caseData.getRespondent().equals(targetCaseData.getRespondent())
+                    && caseData.getFeeGroupReference().equals(targetCaseData.getFeeGroupReference())) {
+                isValidationDuplicate = true;
             }
         }
         return isValidationDuplicate;

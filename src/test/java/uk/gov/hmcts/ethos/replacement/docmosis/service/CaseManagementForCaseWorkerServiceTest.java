@@ -1058,12 +1058,12 @@ class CaseManagementForCaseWorkerServiceTest {
     @Test
     void testSetMigratedCaseLinkDetails_EmptySourceCaseTypeId() {
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
-                anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType", new ArrayList<>())));
+                anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseTypeId", new ArrayList<>())));
 
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId("123");
+        caseDetails.setCaseId("14423");
         CaseData caseData = new CaseData();
-        caseData.setCcdID("67777");
+        caseData.setCcdID("89987");
         caseDetails.setCaseData(caseData);
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
@@ -1072,7 +1072,7 @@ class CaseManagementForCaseWorkerServiceTest {
     @Test
     void testSetMigratedCaseLinkDetails_NullSourceCase() {
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
-                anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType", new ArrayList<>())));
+                anyString(), anyList())).thenReturn(List.of(Pair.of("testNullSourceCase", new ArrayList<>())));
 
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseId("123");
