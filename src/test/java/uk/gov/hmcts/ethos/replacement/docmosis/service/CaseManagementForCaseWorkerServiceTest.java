@@ -1039,6 +1039,32 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    void testSetMigratedCaseLinkDetails_When_CaseRefAndCaseDataPairIsNotOne() {
+        List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPair = new ArrayList<>();
+        listOfCaseTypeIdAndCaseDataPair.add(Pair.of("Leeds", List.of(submitEvent)));
+        SubmitEvent newcastleSubmitEvent = new SubmitEvent();
+        CaseData newcastlCaseCaseData = new CaseData();
+        newcastlCaseCaseData.setEthosCaseReference("EthosCaseRef");
+        newcastleSubmitEvent.setCaseData(newcastlCaseCaseData);
+        listOfCaseTypeIdAndCaseDataPair.add(Pair.of("Newcastle", List.of(newcastleSubmitEvent)));
+
+        String authToken = "authToken";
+        String caseId = "caseId";
+        String caseTypeId = "Leeds";
+        CaseDetails caseDetails = new CaseDetails();
+        CaseData caseData = new CaseData();
+        caseData.setCcdID(caseId);
+        caseDetails.setCaseData(caseData);
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                caseId, caseTypeId, authToken, List.of("Leeds"))).thenReturn(listOfCaseTypeIdAndCaseDataPair);
+        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                caseId, caseTypeId, authToken, List.of("Leeds"))).thenReturn(null);
+
+        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
+        assertNull(caseDetails.getCaseData().getTransferredCaseLink());
+    }
+
+    @Test
     void testSetMigratedCaseLinkDetails_When_SubmitEventList_IsEmpty() {
         String authToken = "authToken";
         String caseId = "caseId";
@@ -1106,7 +1132,7 @@ class CaseManagementForCaseWorkerServiceTest {
         caseDataOne.setCcdID("889900");
         submitEventFour.setCaseData(caseDataOne);
         submitEventFour.setState("Transferred");
-        
+
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
                 anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType",
                 List.of(submitEventFour))));
