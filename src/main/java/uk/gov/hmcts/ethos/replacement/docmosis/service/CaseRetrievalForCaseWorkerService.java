@@ -18,6 +18,8 @@ import java.util.List;
 public class CaseRetrievalForCaseWorkerService {
 
     private static final String MESSAGE = "Failed to retrieve case for : ";
+    private static final String ETHOS_REF_DUPLICATES_RETRIEVAL_ERROR_MESSAGE =
+            "Failed to retrieve cases with duplicate Ethos ref for : ";
     private static final String EMPTY_STRING = "";
     private final CcdClient ccdClient;
 
@@ -62,21 +64,26 @@ public class CaseRetrievalForCaseWorkerService {
         }
     }
 
-    public Pair<String, List<SubmitEvent>> transferSourceCaseRetrievalESRequest(String currentCaseId, String authToken,
-                                                              List<String> caseTypeIdsToCheck) {
+    public List<Pair<String, List<SubmitEvent>>> transferSourceCaseRetrievalESRequest(String currentCaseId,
+                                                                                String currentCaseTypeId,
+                                                                                String authToken,
+                                                                                List<String> caseTypeIdsToCheck) {
+        List<Pair<String, List<SubmitEvent>>> listOfParis = new ArrayList<>();
         try {
             for (String targetOffice : caseTypeIdsToCheck) {
+                if (currentCaseTypeId.equals(targetOffice)) {
+                    continue;
+                }
                 List<SubmitEvent> submitEvents = ccdClient.retrieveTransferredCaseElasticSearch(authToken,
                         targetOffice, currentCaseId);
                 if (!submitEvents.isEmpty()) {
-                    return Pair.of(targetOffice, submitEvents);
+                    listOfParis.add(Pair.of(targetOffice, submitEvents));
                 }
             }
-
-            return Pair.of(EMPTY_STRING, new ArrayList<>());
+            return listOfParis;
         } catch (Exception ex) {
-            throw new CaseRetrievalException(MESSAGE + currentCaseId + ex.getMessage());
+            throw new CaseRetrievalException(ETHOS_REF_DUPLICATES_RETRIEVAL_ERROR_MESSAGE
+                    + currentCaseId + ex.getMessage());
         }
     }
-
 }
