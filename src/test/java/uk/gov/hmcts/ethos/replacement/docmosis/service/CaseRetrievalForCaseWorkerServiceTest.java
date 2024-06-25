@@ -152,15 +152,15 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     @Test
     public void testTransferSourceCaseRetrievalESRequestContinue() throws IOException {
         String currentCaseId = "123456";
-        SubmitEvent submitEvent = getSubmitEvent();
+        SubmitEvent submitEventLocal = getSubmitEvent();
         when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
-                .thenReturn(List.of(submitEvent));
+                .thenReturn(List.of(submitEventLocal));
         List<Pair<String, List<SubmitEvent>>> result =
                 caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                         currentCaseId, "Newcastle", AUTH_TOKEN,
                         List.of("Leeds", "Newcastle", "Manchester"));
 
-        assertEquals(submitEvent, result.get(0).getSecond().get(0));
+        assertEquals(submitEventLocal, result.get(0).getSecond().get(0));
         assertEquals("Leeds", result.get(0).getFirst());
         verify(ccdClient, times(0)).retrieveTransferredCaseElasticSearch(
                 AUTH_TOKEN, "Newcastle", currentCaseId);
