@@ -1015,6 +1015,7 @@ class CaseManagementForCaseWorkerServiceTest {
         caseData.setClaimant("testClaimant");
         caseData.setRespondent("testRespondent");
         caseData.setFeeGroupReference("testFeeGroupReference");
+        caseData.setReceiptDate("2024-03-12");
         caseDetails.setCaseData(caseData);
         return caseDetails;
     }
@@ -1027,6 +1028,7 @@ class CaseManagementForCaseWorkerServiceTest {
         caseData.setClaimant("testClaimant");
         caseData.setRespondent("testRespondent");
         caseData.setFeeGroupReference("testFeeGroupReference");
+        caseData.setReceiptDate("2024-03-12");
         submitEvent.setCaseData(caseData);
         submitEvent.setState("Accepted");
         return submitEvent;
