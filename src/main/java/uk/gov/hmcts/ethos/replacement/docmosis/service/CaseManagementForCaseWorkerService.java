@@ -412,11 +412,11 @@ public class CaseManagementForCaseWorkerService {
 
         // check if the duplicate case is the same as the source case by comparing the following fields:
         // ethos ref, respondent, claimant, submission ref(i.e. FeeGroupReference), and date of receipt
-        if (submitEvent != null && submitEvent.getCaseData() != null
+        if (caseData != null
+                && submitEvent != null && submitEvent.getCaseData() != null
                 && !isTransferredCase(submitEvent)) {
             CaseData targetCaseData = submitEvent.getCaseData();
-            if (targetCaseData != null
-                    && caseData.getEthosCaseReference().equals(targetCaseData.getEthosCaseReference())
+            if (caseData.getEthosCaseReference().equals(targetCaseData.getEthosCaseReference())
                     && caseData.getClaimant().equals(targetCaseData.getClaimant())
                     && caseData.getRespondent().equals(targetCaseData.getRespondent())
                     && caseData.getFeeGroupReference().equals(targetCaseData.getFeeGroupReference())) {

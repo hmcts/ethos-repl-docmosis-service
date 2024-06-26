@@ -1050,9 +1050,10 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    void testSetMigratedCaseLinkDetails_When_CaseRefAndCaseDataPairIsNotOne() {
+    void testSetMigratedCaseLinkDetails_When_CaseRefAndCaseDataPairList_Size_NotEqualTo_One() {
         List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPair = new ArrayList<>();
         listOfCaseTypeIdAndCaseDataPair.add(Pair.of("Leeds", List.of(submitEvent)));
+
         SubmitEvent newcastleSubmitEvent = new SubmitEvent();
         CaseData newcastlCaseCaseData = new CaseData();
         newcastlCaseCaseData.setEthosCaseReference("EthosCaseRef");
@@ -1068,11 +1069,11 @@ class CaseManagementForCaseWorkerServiceTest {
         caseDetails.setCaseData(caseData);
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
                 caseId, caseTypeId, authToken, List.of("Leeds"))).thenReturn(listOfCaseTypeIdAndCaseDataPair);
-        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                caseId, caseTypeId, authToken, List.of("Leeds"))).thenReturn(null);
 
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(authToken, caseDetails);
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
+        verify(caseRetrievalForCaseWorkerService,times(0)).caseRefRetrievalRequest(
+                anyString(), anyString(), anyString(), anyString());
     }
 
     @Test
@@ -1107,21 +1108,7 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    void testSetMigratedCaseLinkDetails_NullSourceCase() {
-        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
-                anyString(), anyList())).thenReturn(List.of(Pair.of("testNullSourceCase", new ArrayList<>())));
-
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId("123");
-        CaseData caseData = new CaseData();
-        caseData.setCcdID("67777");
-        caseDetails.setCaseData(caseData);
-        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
-        assertNull(caseDetails.getCaseData().getTransferredCaseLink());
-    }
-
-    @Test
-    void testSetMigratedCaseLinkDetails_NullCaseData() {
+    void testSetMigratedCaseLinkDetails_NullSourceCaseData() {
         SubmitEvent submitEventFour = new SubmitEvent();
         submitEventFour.setCaseData(null);
         when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
