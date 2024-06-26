@@ -408,7 +408,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private boolean isValidDuplicateCase(SubmitEvent submitEvent, CaseData caseData) {
-        boolean isValidationDuplicate = false;
+        boolean isValidDuplicate = false;
 
         // check if the duplicate case is the same as the source case by comparing the following fields:
         // ethos ref, respondent, claimant, submission ref(i.e. FeeGroupReference), and date of receipt
@@ -420,10 +420,10 @@ public class CaseManagementForCaseWorkerService {
                     && caseData.getClaimant().equals(targetCaseData.getClaimant())
                     && caseData.getRespondent().equals(targetCaseData.getRespondent())
                     && caseData.getFeeGroupReference().equals(targetCaseData.getFeeGroupReference())) {
-                isValidationDuplicate = true;
+                isValidDuplicate = true;
             }
         }
-        return isValidationDuplicate;
+        return isValidDuplicate;
     }
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {
