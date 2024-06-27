@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.springframework.data.util.Pair;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -20,23 +21,26 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseRetrievalForCaseWorkerServiceTest {
-    private static final String EMPTY_STRING = "";
-    @InjectMocks
+     @InjectMocks
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @Mock
     private CcdClient ccdClient;
     private CCDRequest ccdRequest;
     private SubmitEvent submitEvent;
-
+    private static final String AUTH_TOKEN = "authToken";
+    private static final String MESSAGE = "Failed to retrieve case for : ";
     @Before
     public void setUp() {
         CaseDetails caseDetails;
@@ -52,14 +56,14 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     @Test(expected = Exception.class)
     public void caseRetrievalRequestException() throws IOException {
         when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
-        caseRetrievalForCaseWorkerService.caseRetrievalRequest("authToken", ccdRequest.getCaseDetails().getCaseTypeId(),
+        caseRetrievalForCaseWorkerService.caseRetrievalRequest(AUTH_TOKEN, ccdRequest.getCaseDetails().getCaseTypeId(),
                 ccdRequest.getCaseDetails().getJurisdiction(), "11111");
     }
 
     @Test
     public void caseRetrievalRequest() throws IOException {
         when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), any())).thenReturn(submitEvent);
-        SubmitEvent submitEvent1 = caseRetrievalForCaseWorkerService.caseRetrievalRequest("authToken",
+        SubmitEvent submitEvent1 = caseRetrievalForCaseWorkerService.caseRetrievalRequest(AUTH_TOKEN,
                 ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getJurisdiction(), "11111");
         assertEquals(submitEvent, submitEvent1);
     }
@@ -67,21 +71,22 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     @Test(expected = Exception.class)
     public void casesRetrievalRequestException() throws IOException {
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
-        caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, "authToken");
+        caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, AUTH_TOKEN);
     }
 
     @Test
     public void casesRetrievalRequest() throws IOException {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEventList);
-        List<SubmitEvent> submitEventList1 = caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, "authToken");
+        List<SubmitEvent> submitEventList1 = caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest,
+                AUTH_TOKEN);
         assertEquals(submitEventList, submitEventList1);
     }
 
     @Test(expected = Exception.class)
     public void casesRetrievalESRequestException() throws IOException {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
-        caseRetrievalForCaseWorkerService.casesRetrievalESRequest("1111", "authToken",
+        caseRetrievalForCaseWorkerService.casesRetrievalESRequest("1111", AUTH_TOKEN,
                 ccdRequest.getCaseDetails().getCaseTypeId(), new ArrayList<>(Collections.singleton("1")));
     }
 
@@ -89,48 +94,102 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     public void casesRetrievalESRequest() throws IOException {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), any())).thenReturn(submitEventList);
-        List<SubmitEvent> submitEventList1 = caseRetrievalForCaseWorkerService.casesRetrievalESRequest("1111", "authToken",
-                ccdRequest.getCaseDetails().getCaseTypeId(), new ArrayList<>(Collections.singleton("1")));
+        List<SubmitEvent> submitEventList1 = caseRetrievalForCaseWorkerService.casesRetrievalESRequest(
+                "1111", AUTH_TOKEN, ccdRequest.getCaseDetails().getCaseTypeId(),
+                new ArrayList<>(Collections.singleton("1")));
         assertEquals(submitEventList, submitEventList1);
+    }
+
+    @Test
+    public void testCaseRefRetrievalRequest_Success() throws Exception {
+        String ethosCaseReference = "R5000656/2020";
+        String currentCaseId = "123456";
+        when(ccdClient.retrieveTransferredCaseReference(any(), any(), any(), any()))
+                .thenReturn(ethosCaseReference);
+
+        String result = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(
+                AUTH_TOKEN, "Newcastle", "EMPLOYMENT", currentCaseId);
+
+        // Assert
+        assertEquals(ethosCaseReference, result);
+        verify(ccdClient, times(1)).retrieveTransferredCaseReference(
+                AUTH_TOKEN, "Newcastle", "EMPLOYMENT", currentCaseId);
+    }
+
+    @Test
+    public void testCaseRefRetrievalRequest_Exception() throws Exception {
+        String errorMessage = "TEST Error Message";
+        String caseId = "44456";
+        when(ccdClient.retrieveTransferredCaseReference(any(), any(), any(), any()))
+                .thenThrow(new RuntimeException(errorMessage));
+
+        // Act & Assert
+        Exception exception = assertThrows(CaseCreationException.class, () -> {
+            caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(AUTH_TOKEN, "Newcastle",
+                    "EMPLOYMENT", caseId);
+        });
+
+        String expectedMessage = MESSAGE + caseId + errorMessage;
+        assertTrue(exception.getMessage().contains(expectedMessage));
+        verify(ccdClient, times(1)).retrieveTransferredCaseReference(
+                AUTH_TOKEN, "Newcastle", "EMPLOYMENT", caseId);
     }
 
     @Test
     public void testTransferSourceCaseRetrievalESRequest() throws IOException {
         String currentCaseId = "123456";
-        String authToken = "authToken";
-
         SubmitEvent submitEvent = getSubmitEvent();
         when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
                 .thenReturn(List.of(submitEvent));
-        Pair<String, List<SubmitEvent>> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
-                authToken, List.of("Leeds"));
+        List<Pair<String, List<SubmitEvent>>> result =
+                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                        currentCaseId, "Newcastle", AUTH_TOKEN, List.of("Leeds"));
 
-        assertEquals(submitEvent, result.getSecond().get(0));
-        assertEquals("Leeds", result.getFirst());
+        assertEquals(submitEvent, result.get(0).getSecond().get(0));
+        assertEquals("Leeds", result.get(0).getFirst());
+    }
+
+    @Test
+    public void testTransferSourceCaseRetrievalESRequestContinue() throws IOException {
+        String currentCaseId = "123456";
+        SubmitEvent submitEventLocal = getSubmitEvent();
+        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
+                .thenReturn(List.of(submitEventLocal));
+        List<Pair<String, List<SubmitEvent>>> result =
+                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                        currentCaseId, "Newcastle", AUTH_TOKEN,
+                        List.of("Leeds", "Newcastle", "Manchester"));
+
+        assertEquals(submitEventLocal, result.get(0).getSecond().get(0));
+        assertEquals("Leeds", result.get(0).getFirst());
+        verify(ccdClient, times(0)).retrieveTransferredCaseElasticSearch(
+                AUTH_TOKEN, "Newcastle", currentCaseId);
+        verify(ccdClient, times(1)).retrieveTransferredCaseElasticSearch(
+                AUTH_TOKEN, "Leeds", currentCaseId);
+        verify(ccdClient, times(1)).retrieveTransferredCaseElasticSearch(
+                AUTH_TOKEN, "Manchester", currentCaseId);
     }
 
     @Test
     public void testTransferSourceCaseRetrievalESRequest_When_CaseTypeIdsToCheck_Null() throws IOException {
         String currentCaseId = "123456";
-        String authToken = "authToken";
         SubmitEvent submitEvent = getSubmitEvent();
         when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any())).thenReturn(List.of(submitEvent));
-        Pair<String, List<SubmitEvent>> result = caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                currentCaseId, authToken, new ArrayList<>());
+        List<Pair<String, List<SubmitEvent>>> result =
+                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                        currentCaseId, "Newcastle", AUTH_TOKEN, new ArrayList<>());
         assertNotNull(result);
-        assertEquals(EMPTY_STRING, result.getFirst());
-        assertTrue(result.getSecond().isEmpty());
+        assertEquals(0, result.size());
     }
 
     @Test(expected = Exception.class)
     public void testTransferSourceCaseRetrievalESRequestThrowsException() throws IOException {
         String currentCaseId = "123456";
-        String authToken = "authToken";
         SubmitEvent submitEvent = getSubmitEvent();
         when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
                 .thenReturn(List.of(submitEvent));
         caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(currentCaseId,
-                authToken, null);
+                "Newcastle", AUTH_TOKEN, null);
     }
 
     private SubmitEvent getSubmitEvent() {
