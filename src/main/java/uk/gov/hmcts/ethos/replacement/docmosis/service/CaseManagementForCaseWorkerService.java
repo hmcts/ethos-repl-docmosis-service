@@ -369,6 +369,9 @@ public class CaseManagementForCaseWorkerService {
         List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPairsList =
                 caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(),
                         caseDetails.getCaseTypeId(), authToken, caseTypeIdsToCheck);
+
+        log.info("ListOfCaseTypeIdAndCaseDataPairsList retrieved from SourceCaseRetrieval ES Request with size {}.",
+                String.valueOf(listOfCaseTypeIdAndCaseDataPairsList.size()));
         // For the first round, update only by referring & validating single duplicates, i.e. ethos reference
         // similar to the current update target case
         if (!isValidListOfPairs(listOfCaseTypeIdAndCaseDataPairsList)) {
@@ -376,6 +379,7 @@ public class CaseManagementForCaseWorkerService {
         }
 
         String sourceCaseTypeId = listOfCaseTypeIdAndCaseDataPairsList.get(0).getFirst();
+        log.info("First element: SourceCaseTypeId of {}.", sourceCaseTypeId);
         SubmitEvent submitEvent = listOfCaseTypeIdAndCaseDataPairsList.get(0).getSecond().get(0);
 
         if (isValidDuplicateCase(submitEvent, caseDetails.getCaseData())) {
@@ -388,10 +392,13 @@ public class CaseManagementForCaseWorkerService {
                     ethosCaseReference);
 
             if (ethosCaseReference != null) {
+                log.info("None null Ethos Case Reference found: {}.", ethosCaseReference);
                 caseDetails.getCaseData().setLinkedCaseCT("Transferred to: ");
-                caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
-                        + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
-                        + ethosCaseReference + "</a>");
+                String fullConstructedLink = "<a target=\"_blank\" href=\""
+                        + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId)
+                        + ethosCaseReference + "</a>";
+                caseDetails.getCaseData().setTransferredCaseLink(fullConstructedLink);
+                log.info("Full constructed link for field transferredCaseLink created: {}.", fullConstructedLink);
             }
         }
     }
@@ -414,11 +421,14 @@ public class CaseManagementForCaseWorkerService {
         // check if the duplicate case is the same as the source case by comparing the following fields:
         // ethos ref, respondent, claimant, submission ref(i.e. FeeGroupReference), and date of receipt
         if (caseData == null || submitEvent == null || submitEvent.getCaseData() == null) {
+            log.info("Valid Duplicate Case check: isValidDuplicateCase - {}.", isValidDuplicate);
             return isValidDuplicate;
         }
 
         CaseData targetCaseData = submitEvent.getCaseData();
         if (!isTransferredCase(submitEvent) && haveSameCheckedFieldValues(caseData, targetCaseData)) {
+            log.info("None Transferred case with Valid ethos ref Duplicate found for case {} ",
+                   submitEvent.getCaseId());
             isValidDuplicate = true;
         }
 
