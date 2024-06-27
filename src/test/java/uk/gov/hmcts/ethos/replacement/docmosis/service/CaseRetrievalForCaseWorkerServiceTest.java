@@ -110,7 +110,6 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         String result = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(
                 AUTH_TOKEN, "Newcastle", "EMPLOYMENT", currentCaseId);
 
-        // Assert
         assertEquals(ethosCaseReference, result);
         verify(ccdClient, times(1)).retrieveTransferredCaseReference(
                 AUTH_TOKEN, "Newcastle", "EMPLOYMENT", currentCaseId);
@@ -123,7 +122,6 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         when(ccdClient.retrieveTransferredCaseReference(any(), any(), any(), any()))
                 .thenThrow(new RuntimeException(errorMessage));
 
-        // Act & Assert
         Exception exception = assertThrows(CaseCreationException.class, () -> {
             caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(AUTH_TOKEN, "Newcastle",
                     "EMPLOYMENT", caseId);

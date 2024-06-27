@@ -365,8 +365,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
-        // get a target case data using the source case data and
-        // elastic search query
+        // get a target case data using the source case data and elastic search query
         List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPairsList =
                 caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(),
                         caseDetails.getCaseTypeId(), authToken, caseTypeIdsToCheck);
@@ -375,6 +374,7 @@ public class CaseManagementForCaseWorkerService {
         if (!isValidListOfPairs(listOfCaseTypeIdAndCaseDataPairsList)) {
             return;
         }
+
         String sourceCaseTypeId = listOfCaseTypeIdAndCaseDataPairsList.get(0).getFirst();
         SubmitEvent submitEvent = listOfCaseTypeIdAndCaseDataPairsList.get(0).getSecond().get(0);
 
@@ -388,6 +388,7 @@ public class CaseManagementForCaseWorkerService {
                     ethosCaseReference);
 
             if (ethosCaseReference != null) {
+                caseDetails.getCaseData().setLinkedCaseCT("Transferred to: ");
                 caseDetails.getCaseData().setTransferredCaseLink("<a target=\"_blank\" href=\""
                         + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId) + "\">"
                         + ethosCaseReference + "</a>");
