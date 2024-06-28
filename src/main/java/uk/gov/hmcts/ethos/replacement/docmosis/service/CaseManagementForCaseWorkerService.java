@@ -396,6 +396,7 @@ public class CaseManagementForCaseWorkerService {
                 caseDetails.getCaseData().setLinkedCaseCT("Transferred to: ");
                 String fullConstructedLink = "<a target=\"_blank\" href=\""
                         + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId)
+                        + "\">"
                         + ethosCaseReference + "</a>";
                 caseDetails.getCaseData().setTransferredCaseLink(fullConstructedLink);
                 log.info("Full constructed link for field transferredCaseLink created: {}.", fullConstructedLink);
