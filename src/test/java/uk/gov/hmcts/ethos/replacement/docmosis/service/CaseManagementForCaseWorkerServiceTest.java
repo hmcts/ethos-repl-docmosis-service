@@ -1129,7 +1129,7 @@ class CaseManagementForCaseWorkerServiceTest {
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
         verify(caseRetrievalForCaseWorkerService, times(1))
                 .transferSourceCaseRetrievalESRequest(caseDetails.getCaseData().getEthosCaseReference(),
-                        caseDetails.getCaseTypeId(),"authToken", caseTypeIdsToCheck);
+                        caseDetails.getCaseTypeId(), "authToken", caseTypeIdsToCheck);
         verify(caseRetrievalForCaseWorkerService,times(0)).caseRefRetrievalRequest(
                 anyString(), anyString(), anyString(), anyString());
     }
