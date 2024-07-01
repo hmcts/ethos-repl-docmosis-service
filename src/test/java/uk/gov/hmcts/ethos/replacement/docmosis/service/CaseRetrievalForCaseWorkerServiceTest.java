@@ -110,7 +110,6 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         String result = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(
                 AUTH_TOKEN, "Newcastle", "EMPLOYMENT", currentCaseId);
 
-        // Assert
         assertEquals(ethosCaseReference, result);
         verify(ccdClient, times(1)).retrieveTransferredCaseReference(
                 AUTH_TOKEN, "Newcastle", "EMPLOYMENT", currentCaseId);
@@ -123,7 +122,6 @@ public class CaseRetrievalForCaseWorkerServiceTest {
         when(ccdClient.retrieveTransferredCaseReference(any(), any(), any(), any()))
                 .thenThrow(new RuntimeException(errorMessage));
 
-        // Act & Assert
         Exception exception = assertThrows(CaseCreationException.class, () -> {
             caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(AUTH_TOKEN, "Newcastle",
                     "EMPLOYMENT", caseId);
@@ -139,7 +137,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     public void testTransferSourceCaseRetrievalESRequest() throws IOException {
         String currentCaseId = "123456";
         SubmitEvent submitEvent = getSubmitEvent();
-        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
+        when(ccdClient.retrieveCasesWithDuplicateEthosRefElasticSearch(any(), any(), any()))
                 .thenReturn(List.of(submitEvent));
         List<Pair<String, List<SubmitEvent>>> result =
                 caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
@@ -153,7 +151,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     public void testTransferSourceCaseRetrievalESRequestContinue() throws IOException {
         String currentCaseId = "123456";
         SubmitEvent submitEventLocal = getSubmitEvent();
-        when(ccdClient.retrieveTransferredCaseElasticSearch(any(), any(), any()))
+        when(ccdClient.retrieveCasesWithDuplicateEthosRefElasticSearch(any(), any(), any()))
                 .thenReturn(List.of(submitEventLocal));
         List<Pair<String, List<SubmitEvent>>> result =
                 caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
@@ -162,11 +160,11 @@ public class CaseRetrievalForCaseWorkerServiceTest {
 
         assertEquals(submitEventLocal, result.get(0).getSecond().get(0));
         assertEquals("Leeds", result.get(0).getFirst());
-        verify(ccdClient, times(0)).retrieveTransferredCaseElasticSearch(
+        verify(ccdClient, times(0)).retrieveCasesWithDuplicateEthosRefElasticSearch(
                 AUTH_TOKEN, "Newcastle", currentCaseId);
-        verify(ccdClient, times(1)).retrieveTransferredCaseElasticSearch(
+        verify(ccdClient, times(1)).retrieveCasesWithDuplicateEthosRefElasticSearch(
                 AUTH_TOKEN, "Leeds", currentCaseId);
-        verify(ccdClient, times(1)).retrieveTransferredCaseElasticSearch(
+        verify(ccdClient, times(1)).retrieveCasesWithDuplicateEthosRefElasticSearch(
                 AUTH_TOKEN, "Manchester", currentCaseId);
     }
 

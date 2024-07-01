@@ -71,7 +71,7 @@ public class CaseRetrievalForCaseWorkerService {
                 if (currentCaseTypeId.equals(targetOffice)) {
                     continue;
                 }
-                List<SubmitEvent> submitEvents = ccdClient.retrieveTransferredCaseElasticSearch(authToken,
+                List<SubmitEvent> submitEvents = ccdClient.retrieveCasesWithDuplicateEthosRefElasticSearch(authToken,
                         targetOffice, currentCaseId);
                 if (!submitEvents.isEmpty()) {
                     listOfParis.add(Pair.of(targetOffice, submitEvents));
