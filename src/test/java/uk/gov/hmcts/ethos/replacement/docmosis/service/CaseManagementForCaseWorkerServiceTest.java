@@ -1122,13 +1122,14 @@ class CaseManagementForCaseWorkerServiceTest {
         caseDetails.setCaseId("456");
         CaseData caseData = new CaseData();
         caseData.setCcdID("2277");
+        caseData.setEthosCaseReference("EthosCaseRef");
         caseDetails.setCaseData(caseData);
         caseDetails.setCaseTypeId("testSourceCaseType");
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
         verify(caseRetrievalForCaseWorkerService, times(1))
-                .transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(), caseDetails.getCaseTypeId(),
-                        "authToken", caseTypeIdsToCheck);
+                .transferSourceCaseRetrievalESRequest(caseDetails.getCaseData().getEthosCaseReference(),
+                        caseDetails.getCaseTypeId(), "authToken", caseTypeIdsToCheck);
         verify(caseRetrievalForCaseWorkerService,times(0)).caseRefRetrievalRequest(
                 anyString(), anyString(), anyString(), anyString());
     }
