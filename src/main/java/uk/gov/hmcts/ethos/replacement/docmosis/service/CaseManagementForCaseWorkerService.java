@@ -367,7 +367,8 @@ public class CaseManagementForCaseWorkerService {
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
         // get a target case data using the source case data and elastic search query
         List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPairsList =
-                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(caseDetails.getCaseId(),
+                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
+                        caseDetails.getCaseData().getEthosCaseReference(),
                         caseDetails.getCaseTypeId(), authToken, caseTypeIdsToCheck);
 
         log.info("ListOfCaseTypeIdAndCaseDataPairsList retrieved from SourceCaseRetrieval ES Request with size {}.",
