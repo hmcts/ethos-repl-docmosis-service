@@ -443,7 +443,7 @@ public class DefaultValuesReaderServiceTest {
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
                 + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, "
-                + "transferredCaseLink=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
+                + "transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
                 + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, "
                 + "appealDocumentCollection=null, addDocumentCollection=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
@@ -528,7 +528,7 @@ public class DefaultValuesReaderServiceTest {
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
                 + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null,"
-                + " transferredCaseLink=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
+                + " transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
                 + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null,"
                 + " appealDocumentCollection=null, addDocumentCollection=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);

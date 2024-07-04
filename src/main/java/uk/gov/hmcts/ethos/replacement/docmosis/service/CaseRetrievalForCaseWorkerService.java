@@ -65,6 +65,8 @@ public class CaseRetrievalForCaseWorkerService {
 
     public List<Pair<String, List<SubmitEvent>>>  transferSourceCaseRetrievalESRequest(
             String ethosCaseReference, String currentCaseTypeId, String authToken, List<String> caseTypeIdsToCheck) {
+        log.info("About to retrieve ES result(in mtd transferSourceCaseRetrievalESRequest) for case with ethos ref: "
+                + ethosCaseReference);
         List<Pair<String, List<SubmitEvent>>> listOfParis = new ArrayList<>();
         try {
             for (String targetOffice : caseTypeIdsToCheck) {
@@ -74,6 +76,10 @@ public class CaseRetrievalForCaseWorkerService {
                 List<SubmitEvent> submitEvents = ccdClient.retrieveCasesWithDuplicateEthosRefElasticSearch(authToken,
                         targetOffice, ethosCaseReference);
                 if (!submitEvents.isEmpty()) {
+                    log.info("In Case Retrieval Service - transferSourceCaseRetrievalESRequest for case type: {} ",
+                            targetOffice);
+                    log.info("SubmitEvents count: {}", submitEvents.size());
+
                     listOfParis.add(Pair.of(targetOffice, submitEvents));
                 }
             }
