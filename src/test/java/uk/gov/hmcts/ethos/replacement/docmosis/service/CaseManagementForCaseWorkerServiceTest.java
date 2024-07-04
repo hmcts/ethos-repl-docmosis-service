@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
 import org.springframework.data.util.Pair;
 import org.joda.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
@@ -103,9 +102,7 @@ class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest ccdRequest16;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
-    private static final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland",
-            "Bristol", "Leeds", "LondonCentral", "LondonEast", "LondonSouth", "Manchester", "MidlandsEast",
-            "MidlandsWest", "Newcastle", "Scotland", "Wales", "Watford");
+
     @MockBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @MockBean
