@@ -102,9 +102,7 @@ class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest ccdRequest16;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
-    private static final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland",
-            "Bristol", "Leeds", "LondonCentral", "LondonEast", "LondonSouth", "Manchester", "MidlandsEast",
-            "MidlandsWest", "Newcastle", "Scotland", "Wales", "Watford");
+
     @MockBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @MockBean
@@ -985,22 +983,26 @@ class CaseManagementForCaseWorkerServiceTest {
     void testSetMigratedCaseLinkDetails_Success() {
         CaseDetails caseDetails = getCaseDetails();
         SubmitEvent submitEventFullSourceCase = getSubmitEvent();
-        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(),
-                anyString(), anyString(), anyList()))
-                .thenReturn(List.of(Pair.of("Leeds", List.of(submitEventFullSourceCase))));
+        caseDetails.getCaseData().setTransferredCaseLinkSourceCaseTypeId("Leeds");
+        caseDetails.getCaseData().setTransferredCaseLinkSourceCaseId(
+                String.valueOf(submitEventFullSourceCase.getCaseId()));
         when(caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(any(), any(), any(), any()))
                 .thenReturn(submitEventFullSourceCase.getCaseData().getEthosCaseReference());
 
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails(AUTH_TOKEN, caseDetails);
         assertEquals("<a target=\"_blank\" href=\"" + ccdGatewayBaseUrl + "/cases/case-details/"
-                + submitEventFullSourceCase.getCaseId() + "\">EthosCaseRef</a>",
+                + submitEventFullSourceCase.getCaseId() + "\">"
+                        + submitEventFullSourceCase.getCaseData().getEthosCaseReference() + "</a>",
                 caseDetails.getCaseData().getTransferredCaseLink());
         assertEquals("EthosCaseRef", caseDetails.getCaseData().getEthosCaseReference());
         assertEquals("testClaimant", caseDetails.getCaseData().getClaimant());
         assertEquals("testRespondent", caseDetails.getCaseData().getRespondent());
         assertEquals("testFeeGroupReference", caseDetails.getCaseData().getFeeGroupReference());
-        verify(caseRetrievalForCaseWorkerService, times(1))
-                .transferSourceCaseRetrievalESRequest(anyString(), anyString(), anyString(), anyList());
+        assertEquals("2024-03-12", caseDetails.getCaseData().getReceiptDate());
+        assertTrue(caseDetails.getCaseData().getTransferredCaseLink()
+                .contains(submitEventFullSourceCase.getCaseData().getEthosCaseReference()));
+        assertTrue(caseDetails.getCaseData().getTransferredCaseLink()
+                .contains(String.valueOf(submitEventFullSourceCase.getCaseId())));
         verify(caseRetrievalForCaseWorkerService,times(1)).caseRefRetrievalRequest(
                 anyString(), anyString(), anyString(), anyString());
     }
@@ -1026,7 +1028,7 @@ class CaseManagementForCaseWorkerServiceTest {
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(12345);
         CaseData caseData = new CaseData();
-        caseData.setEthosCaseReference("EthosCaseRef");
+        caseData.setEthosCaseReference("EthosCaseTestRef");
         caseData.setClaimant("testClaimant");
         caseData.setRespondent("testRespondent");
         caseData.setFeeGroupReference("testFeeGroupReference");
@@ -1112,11 +1114,12 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    void testSetMigratedCaseLinkDetails_NullSourceCaseData() {
-        SubmitEvent submitEventFour = new SubmitEvent();
-        submitEventFour.setCaseData(null);
-        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(), anyString(),
-                anyString(), anyList())).thenReturn(List.of(Pair.of("testSourceCaseType", List.of(submitEventFour))));
+    void testSetMigratedCaseLinkDetails_NullSourceCaseDataLinkDetails() {
+        SubmitEvent submitEventFour = getSubmitEvent();
+        CaseData caseDataOne = new CaseData();
+        caseDataOne.setTransferredCaseLinkSourceCaseTypeId(null);
+        caseDataOne.setTransferredCaseLinkSourceCaseId(null);
+        submitEventFour.setCaseData(caseDataOne);
 
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseId("456");
@@ -1127,9 +1130,6 @@ class CaseManagementForCaseWorkerServiceTest {
         caseDetails.setCaseTypeId("testSourceCaseType");
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
-        verify(caseRetrievalForCaseWorkerService, times(1))
-                .transferSourceCaseRetrievalESRequest(caseDetails.getCaseData().getEthosCaseReference(),
-                        caseDetails.getCaseTypeId(), "authToken", caseTypeIdsToCheck);
         verify(caseRetrievalForCaseWorkerService,times(0)).caseRefRetrievalRequest(
                 anyString(), anyString(), anyString(), anyString());
     }
@@ -1154,24 +1154,6 @@ class CaseManagementForCaseWorkerServiceTest {
         caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
         assertNull(caseDetails.getCaseData().getTransferredCaseLink());
         verify(caseRetrievalForCaseWorkerService,times(0)).caseRefRetrievalRequest(
-                anyString(), anyString(), anyString(), anyString());
-    }
-
-    @Test
-    void testSetMigratedCaseLinkDetails_ValidDuplicateCases_None_Transferred() {
-        CaseDetails caseDetails = getCaseDetails();
-        SubmitEvent submitEventFour = getSubmitEvent();
-        when(caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(anyString(),
-                anyString(), anyString(), anyList()))
-                .thenReturn(List.of(Pair.of("Leeds", List.of(submitEventFour))));
-        when(caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(any(), any(), any(), any()))
-                .thenReturn(submitEventFour.getCaseData().getEthosCaseReference());
-
-        caseManagementForCaseWorkerService.setMigratedCaseLinkDetails("authToken", caseDetails);
-        assertEquals("<a target=\"_blank\" href=\"" + ccdGatewayBaseUrl + "/cases/case-details/"
-                        + submitEventFour.getCaseId() + "\">EthosCaseRef</a>",
-                caseDetails.getCaseData().getTransferredCaseLink());
-        verify(caseRetrievalForCaseWorkerService,times(1)).caseRefRetrievalRequest(
                 anyString(), anyString(), anyString(), anyString());
     }
 

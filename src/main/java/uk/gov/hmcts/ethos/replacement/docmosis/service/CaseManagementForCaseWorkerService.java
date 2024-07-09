@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -81,16 +80,11 @@ public class CaseManagementForCaseWorkerService {
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
     private final String ccdGatewayBaseUrl;
-    private static final String TRANSFERRED = "Transferred";
-    private static final List<String> caseTypeIdsToCheck = List.of("ET_EnglandWales", "ET_Scotland", "Bristol", "Leeds",
-            "LondonCentral", "LondonEast", "LondonSouth", "Manchester",
-            "MidlandsEast", "MidlandsWest", "Newcastle", "Scotland",
-            "Wales", "Watford");
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
                                               CcdClient ccdClient,
-                                              @Value("${ccd_gateway_base_url}")String ccdGatewayBaseUrl) {
+                                              @Value("${ccd_gateway_base_url}") String ccdGatewayBaseUrl) {
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.ccdClient = ccdClient;
         this.ccdGatewayBaseUrl = ccdGatewayBaseUrl;
@@ -365,86 +359,26 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void setMigratedCaseLinkDetails(String authToken, CaseDetails caseDetails) {
-        // get a target case data using the source case data and elastic search query
-        List<Pair<String, List<SubmitEvent>>> listOfCaseTypeIdAndCaseDataPairsList =
-                caseRetrievalForCaseWorkerService.transferSourceCaseRetrievalESRequest(
-                        caseDetails.getCaseData().getEthosCaseReference(),
-                        caseDetails.getCaseTypeId(), authToken, caseTypeIdsToCheck);
+        String transferredCaseLinkSourceCaseId = caseDetails.getCaseData().getTransferredCaseLinkSourceCaseId();
+        String transferredCaseLinkSourceCaseTypeId = caseDetails.getCaseData().getTransferredCaseLinkSourceCaseTypeId();
 
-        log.info("ListOfCaseTypeIdAndCaseDataPairsList retrieved from SourceCaseRetrieval ES Request with size {}.",
-                String.valueOf(listOfCaseTypeIdAndCaseDataPairsList.size()));
-        // For the first round, update only by referring & validating single duplicates, i.e. ethos reference
-        // similar to the current update target case
-        if (!isValidListOfPairs(listOfCaseTypeIdAndCaseDataPairsList)) {
-            return;
-        }
-
-        String sourceCaseTypeId = listOfCaseTypeIdAndCaseDataPairsList.get(0).getFirst();
-        log.info("First element: SourceCaseTypeId of {}.", sourceCaseTypeId);
-        SubmitEvent submitEvent = listOfCaseTypeIdAndCaseDataPairsList.get(0).getSecond().get(0);
-
-        if (isValidDuplicateCase(submitEvent, caseDetails.getCaseData())) {
-            log.info("SubmitEvent retrieved from ES for the update target case: {} with source case type of {}.",
-                    submitEvent.getCaseId(), sourceCaseTypeId);
-            String sourceCaseId = String.valueOf(submitEvent.getCaseId());
+        if (transferredCaseLinkSourceCaseId != null && transferredCaseLinkSourceCaseTypeId != null) {
             String ethosCaseReference = caseRetrievalForCaseWorkerService.caseRefRetrievalRequest(authToken,
-                    sourceCaseTypeId, EMPLOYMENT_JURISDICTION, sourceCaseId);
-            log.info("Source Case reference is retrieved via retrieveTransferredCaseReference: {}.",
-                    ethosCaseReference);
-
+                    transferredCaseLinkSourceCaseTypeId, EMPLOYMENT_JURISDICTION, transferredCaseLinkSourceCaseId);
             if (ethosCaseReference != null) {
                 log.info("None null Ethos Case Reference found: {}.", ethosCaseReference);
-                caseDetails.getCaseData().setLinkedCaseCT("Transferred to: ");
+                caseDetails.getCaseData().setLinkedCaseCT("Transferred from: ");
                 String fullConstructedLink = "<a target=\"_blank\" href=\""
-                        + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, sourceCaseId)
+                        + String.format("%s/cases/case-details/%s", ccdGatewayBaseUrl, transferredCaseLinkSourceCaseId)
                         + "\">"
                         + ethosCaseReference + "</a>";
                 caseDetails.getCaseData().setTransferredCaseLink(fullConstructedLink);
-                log.info("Full constructed link for field transferredCaseLink created: {}.", fullConstructedLink);
             }
+        } else {
+            log.info("Transferred Case Link can not be built for case {} "
+                            + " because not source case details are set for {} and {} fields.",
+                    caseDetails.getCaseId(), transferredCaseLinkSourceCaseId, transferredCaseLinkSourceCaseTypeId);
         }
-    }
-
-    private boolean isValidListOfPairs(List<Pair<String, List<SubmitEvent>>>
-                                                                    listOfCaseTypeIdAndCaseDataPairsList) {
-        return listOfCaseTypeIdAndCaseDataPairsList != null
-                && listOfCaseTypeIdAndCaseDataPairsList.size() == 1;
-    }
-
-    private boolean isTransferredCase(SubmitEvent submitEvent) {
-        //check if the source case is not of a transferred state
-        return submitEvent != null && submitEvent.getState() != null
-                && TRANSFERRED.equals(submitEvent.getState());
-    }
-
-    private boolean isValidDuplicateCase(SubmitEvent submitEvent, CaseData caseData) {
-        boolean isValidDuplicate = false;
-
-        // check if the duplicate case is the same as the source case by comparing the following fields:
-        // ethos ref, respondent, claimant, submission ref(i.e. FeeGroupReference), and date of receipt
-        if (caseData == null || submitEvent == null || submitEvent.getCaseData() == null) {
-            log.info("Valid Duplicate Case check: isValidDuplicateCase - {}.", isValidDuplicate);
-            return isValidDuplicate;
-        }
-
-        CaseData targetCaseData = submitEvent.getCaseData();
-        if (!isTransferredCase(submitEvent) && haveSameCheckedFieldValues(caseData, targetCaseData)) {
-            log.info("None Transferred case with Valid ethos ref Duplicate found for case {} ",
-                   submitEvent.getCaseId());
-            isValidDuplicate = true;
-        }
-
-        return isValidDuplicate;
-    }
-
-    // Checked field values : ethos ref, respondent, claimant, submission ref(i.e. FeeGroupReference),
-    // and date of receipt
-    private boolean haveSameCheckedFieldValues(CaseData caseData, CaseData targetCaseData) {
-        return caseData.getEthosCaseReference().equals(targetCaseData.getEthosCaseReference())
-                && caseData.getClaimant().equals(targetCaseData.getClaimant())
-                && caseData.getRespondent().equals(targetCaseData.getRespondent())
-                && caseData.getFeeGroupReference().equals(targetCaseData.getFeeGroupReference())
-                && caseData.getReceiptDate().equals(targetCaseData.getReceiptDate());
     }
 
     public void amendRespondentNameRepresentativeNames(CaseData caseData) {
