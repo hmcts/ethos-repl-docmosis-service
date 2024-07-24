@@ -97,8 +97,8 @@ public class HearingsToJudgmentsReport {
             if (!isValidCase(submitEvent)) {
                 continue;
             }
-
             var caseData = submitEvent.getCaseData();
+            log.info(String.format("Processing case %s", caseData.getEthosCaseReference());
             for (HearingTypeItem hearingItem: caseData.getHearingCollection()) {
                 var judgmentsCollection = caseData.getJudgementCollection();
                 var hearingsWithJudgments =
