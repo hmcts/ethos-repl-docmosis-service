@@ -219,7 +219,7 @@ repositories {
 }
 
 ext {
-    junitJupiterVersion = '5.10.2'
+    junitJupiterVersion = '5.10.3'
     log4JVersion = '2.23.1'
     serenity = '3.9.8'
     tomcatEmbedVersion = '9.0.88'
@@ -345,7 +345,7 @@ dependencies {
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    contractTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.10.2'
+    contractTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.10.3'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.1.2'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.10.RELEASE'
     contractTestImplementation sourceSets.main.runtimeClasspath
