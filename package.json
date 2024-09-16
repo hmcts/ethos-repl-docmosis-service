@@ -51,7 +51,7 @@
   "resolutions": {
     "async": "^3.2.4",
     "ansi-regex": "^5.0.1",
-    "axios": "1.7.5",
+    "axios": "1.7.7",
     "braces": "^3.0.2",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
