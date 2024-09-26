@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
@@ -11,6 +12,8 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.TokenRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.TokenResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
@@ -178,7 +181,22 @@ public class TornadoServiceTest {
 
     private void createUserService() {
         var userDetails = HelperTest.getUserDetails();
-        IdamApi idamApi = authorisation -> userDetails;
+        IdamApi idamApi = new IdamApi() {
+            @Override
+            public UserDetails retrieveUserDetails(String authorisation) {
+                return HelperTest.getUserDetails();
+            }
+
+            @Override
+            public UserDetails getUserByUserId(String authorisation, String userId) {
+                return HelperTest.getUserDetails();
+            }
+
+            @Override
+            public TokenResponse generateOpenIdToken(TokenRequest tokenRequest) {
+                return null;
+            }
+        };
         userService = new UserService(idamApi);
     }
 

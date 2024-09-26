@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.TokenRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.TokenResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 
@@ -27,7 +29,22 @@ public class UserServiceTest {
     @Before
     public void setUp() {
         userDetails = HelperTest.getUserDetails();
-        idamApi = authorisation -> userDetails;
+        IdamApi idamApi = new IdamApi() {
+            @Override
+            public UserDetails retrieveUserDetails(String authorisation) {
+                return HelperTest.getUserDetails();
+            }
+
+            @Override
+            public UserDetails getUserByUserId(String authorisation, String userId) {
+                return HelperTest.getUserDetails();
+            }
+
+            @Override
+            public TokenResponse generateOpenIdToken(TokenRequest tokenRequest) {
+                return null;
+            }
+        };
         userService = new UserService(idamApi);
     }
 
