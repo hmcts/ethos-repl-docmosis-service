@@ -24,6 +24,10 @@ java:
           alias: ETHOS_REPL_DB_HOST
         - name: ethos-postgres-port-v15
           alias: ETHOS_REPL_DB_PORT
+        - name: caseworker-user-name
+          alias: CASEWORKER_USER_NAME
+        - name: caseworker-password
+          alias: CASEWORKER_PASSWORD
   aadIdentityName: ethos
   environment:
     SERVER_PORT: 8081
