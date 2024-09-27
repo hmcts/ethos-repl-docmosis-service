@@ -6,6 +6,7 @@ import org.junit.Test;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.TokenResponse;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,6 +46,10 @@ public class HelperTest {
         userDetails.setLastName("Jordan");
         userDetails.setRoles(Collections.singletonList("role"));
         return userDetails;
+    }
+
+    public static TokenResponse getUserToken() {
+        return new TokenResponse("abcefg", "28799", "pqrst", "hijklmno", "openid profile roles", "Bearer");
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {

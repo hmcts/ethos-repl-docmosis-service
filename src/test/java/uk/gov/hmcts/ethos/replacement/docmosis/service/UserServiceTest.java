@@ -29,7 +29,7 @@ public class UserServiceTest {
     @Before
     public void setUp() {
         userDetails = HelperTest.getUserDetails();
-        IdamApi idamApi = new IdamApi() {
+        idamApi = new IdamApi() {
             @Override
             public UserDetails retrieveUserDetails(String authorisation) {
                 return HelperTest.getUserDetails();

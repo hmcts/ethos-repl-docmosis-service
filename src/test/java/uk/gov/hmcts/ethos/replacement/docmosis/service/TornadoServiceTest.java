@@ -180,7 +180,6 @@ public class TornadoServiceTest {
     }
 
     private void createUserService() {
-        var userDetails = HelperTest.getUserDetails();
         IdamApi idamApi = new IdamApi() {
             @Override
             public UserDetails retrieveUserDetails(String authorisation) {
