@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
@@ -19,21 +18,34 @@ public class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
-    @Mock
-    private IdamApi idamApi;
 
     private UserDetails userDetails;
 
     @Before
     public void setUp() {
         userDetails = HelperTest.getUserDetails();
-        idamApi = authorisation -> userDetails;
+        IdamApi idamApi = new IdamApi() {
+            @Override
+            public UserDetails retrieveUserDetails(String authorisation) {
+                return HelperTest.getUserDetails();
+            }
+
+            @Override
+            public UserDetails getUserByUserId(String authorisation, String userId) {
+                return HelperTest.getUserDetails();
+            }
+        };
         userService = new UserService(idamApi);
     }
 
     @Test
     public void shouldHaveUserDetails() {
         assertEquals(userService.getUserDetails("TOKEN"), userDetails);
+    }
+
+    @Test
+    public void shouldGetUserById() {
+        assertEquals(userDetails, userService.getUserDetailsById("TOKEN", "id"));
     }
 
     @Test
