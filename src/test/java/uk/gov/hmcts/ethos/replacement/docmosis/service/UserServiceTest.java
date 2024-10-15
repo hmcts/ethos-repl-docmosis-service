@@ -44,6 +44,11 @@ public class UserServiceTest {
     }
 
     @Test
+    public void shouldGetUserById() {
+        assertEquals(userDetails, userService.getUserDetailsById("TOKEN", "id"));
+    }
+
+    @Test
     public void shouldCheckAllUserDetails() {
         assertEquals(userDetails, userService.getUserDetails("TOKEN"));
         assertEquals("mail@mail.com", userService.getUserDetails("TOKEN").getEmail());
