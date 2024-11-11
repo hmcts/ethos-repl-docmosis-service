@@ -445,7 +445,7 @@ public class DefaultValuesReaderServiceTest {
                 + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, "
                 + "transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
                 + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, "
-                + "appealDocumentCollection=null, addDocumentCollection=null)";
+                + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -496,7 +496,8 @@ public class DefaultValuesReaderServiceTest {
                 + "responseReturnedFromJudge=null, respondentName=Andrew Smith, respondentACASQuestion=null, "
                 + "respondentACAS=null, respondentACASNo=null, respondentAddress=Line1, PostCode, "
                 + "respondentPhone1=null, respondentPhone2=null, respondentEmail=null, "
-                + "respondentContactPreference=null, responseStruckOut=null, responseStruckOutDate=null, "
+                + "respondentContactPreference=null, respondentHearingPanelPreference=null, "
+                + "respondentHearingPanelPreferenceReason=null, responseStruckOut=null, responseStruckOutDate=null, "
                 + "responseStruckOutChairman=null, responseStruckOutReason=null, responseRespondentAddress=null, "
                 + "responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, "
                 + "responseRespondentContactPreference=null, responseReceived=null, responseReceivedDate=null, "
@@ -530,7 +531,7 @@ public class DefaultValuesReaderServiceTest {
                 + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null,"
                 + " transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
                 + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null,"
-                + " appealDocumentCollection=null, addDocumentCollection=null)";
+                + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
