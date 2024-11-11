@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,8 @@ import java.util.stream.Stream;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
@@ -114,7 +116,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private void respondentDefaults(CaseData caseData) {
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+        if (isNotEmpty(caseData.getRespondentCollection())) {
             var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
@@ -125,7 +127,7 @@ public class CaseManagementForCaseWorkerService {
                         && respondentSumTypeItem.getValue().getResponseRespondentAddress() != null) {
                     resetResponseRespondentAddress(respondentSumTypeItem);
                 }
-                if (Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())) {
+                if (isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())) {
                     respondentSumTypeItem.getValue().setResponseContinue(YES);
                 }
             }
@@ -135,37 +137,36 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private void resetResponseRespondentAddress(RespondentSumTypeItem respondentSumTypeItem) {
-        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine1())) {
+        if (!isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine1())) {
             respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine1("");
         }
-        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine2())) {
+        if (!isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine2())) {
             respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine2("");
         }
-        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine3())) {
+        if (!isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine3())) {
             respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine3("");
         }
-        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCountry())) {
+        if (!isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCountry())) {
             respondentSumTypeItem.getValue().getResponseRespondentAddress().setCountry("");
         }
-        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCounty())) {
+        if (!isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCounty())) {
             respondentSumTypeItem.getValue().getResponseRespondentAddress().setCounty("");
         }
-        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostCode())) {
+        if (!isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostCode())) {
             respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostCode("");
         }
-        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostTown())) {
+        if (!isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostTown())) {
             respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostTown("");
         }
     }
 
     private void struckOutDefaults(CaseData caseData) {
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                if (respondentSumTypeItem.getValue().getResponseStruckOut() == null) {
-                    respondentSumTypeItem.getValue().setResponseStruckOut(NO);
-                }
-            }
+        if (isEmpty(caseData.getRespondentCollection())) {
+            return;
         }
+        caseData.getRespondentCollection().stream()
+                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null)
+                .forEach(respondentSumTypeItem -> respondentSumTypeItem.getValue().setResponseStruckOut(NO));
     }
 
     private void flagsImageFileNameDefaults(CaseData caseData) {
@@ -187,24 +188,28 @@ public class CaseManagementForCaseWorkerService {
         caseData.getHearingsCollectionForUpdate().clear();
 
         // check if update is only on one hearing
-        if (HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType())
-                && caseData.getHearingCollection() != null) {
+        if (HEARING_NUMBER.equals(caseData.getHearingUpdateFilterType()) && caseData.getHearingCollection() != null) {
             if (caseData.getSelectedHearingNumberForUpdate() != null) {
                 Optional<HearingTypeItem> hearingForUpdate = caseData.getHearingCollection().stream()
                         .filter(h -> h.getValue().getHearingNumber()
                                 .equals(caseData.getSelectedHearingNumberForUpdate()
                                         .getValue().getCode())).findFirst();
-                if (hearingForUpdate.isPresent()) {
-                    caseData.setHearingsCollectionForUpdate(new ArrayList<>());
-                    caseData.getHearingsCollectionForUpdate().add(hearingForUpdate.get());
-                }
+                hearingForUpdate.ifPresent(hearingTypeItem -> caseData.setHearingsCollectionForUpdate(
+                        Collections.singletonList(hearingTypeItem)));
             }
         } else {
             // when update request is on hearings from more than one hearing, i.e.
             // custom filter for filtering by hearing date
-            if (caseData.getHearingCollection() != null) {
+            if (isNotEmpty(caseData.getHearingCollection())) {
                 filterValidHearingDates(caseData);
             }
+        }
+
+        if (isNotEmpty(caseData.getHearingsCollectionForUpdate())) {
+            caseData.getHearingsCollectionForUpdate().stream()
+                    .filter(hearingTypeItem ->
+                            ObjectUtils.isNotEmpty(hearingTypeItem.getValue().getHearingNotesDocument()))
+                    .forEach(hearingTypeItem -> hearingTypeItem.getValue().setDoesHearingNotesDocExist(YES));
         }
     }
 
@@ -223,7 +228,7 @@ public class CaseManagementForCaseWorkerService {
                                 caseData.getUpdateHearingDetails().getHearingDate())).toList();
 
                 //prepare hearing with only needed date entries and exclude the ones out of the filter/search criteria
-                if (!validHearingDates.isEmpty()) {
+                if (isNotEmpty(validHearingDates)) {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
@@ -237,7 +242,7 @@ public class CaseManagementForCaseWorkerService {
                                 caseData.getUpdateHearingDetails().getHearingDateTo())).toList();
 
                 // hearing/s with only needed date entries and exclude the ones out of the filter/search criteria
-                if (!validHearingDates.isEmpty()) {
+                if (isNotEmpty(validHearingDates)) {
                     addFilteredHearingDates(caseData, hearingTypeItem, validHearingDates);
                 }
             }
@@ -260,19 +265,20 @@ public class CaseManagementForCaseWorkerService {
         currentHearingTypeItem.setId(hearingTypeItem.getId());
 
         HearingType hearingType = new HearingType();
-        hearingType.setHearingVenue(hearingTypeItem.getValue().getHearingVenue());
-        hearingType.setHearingType(hearingTypeItem.getValue().getHearingType());
-
-        hearingType.setHearingFormat(hearingTypeItem.getValue().getHearingFormat());
-        hearingType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
-        hearingType.setHearingEstLengthNum(hearingTypeItem.getValue().getHearingEstLengthNum());
-        hearingType.setHearingEstLengthNumType(hearingTypeItem.getValue().getHearingEstLengthNumType());
-        hearingType.setHearingSitAlone(hearingTypeItem.getValue().getHearingSitAlone());
-        hearingType.setJudge(hearingTypeItem.getValue().getJudge());
-        hearingType.setHearingEEMember(hearingTypeItem.getValue().getHearingEEMember());
-        hearingType.setHearingERMember(hearingTypeItem.getValue().getHearingERMember());
-        hearingType.setHearingStage(hearingTypeItem.getValue().getHearingStage());
-        hearingType.setHearingNotes(hearingTypeItem.getValue().getHearingNotes());
+        HearingType hearingTypeItemValue = hearingTypeItem.getValue();
+        hearingType.setHearingVenue(hearingTypeItemValue.getHearingVenue());
+        hearingType.setHearingType(hearingTypeItemValue.getHearingType());
+        hearingType.setHearingNotesDocument(hearingTypeItemValue.getHearingNotesDocument());
+        hearingType.setHearingFormat(hearingTypeItemValue.getHearingFormat());
+        hearingType.setHearingNumber(hearingTypeItemValue.getHearingNumber());
+        hearingType.setHearingEstLengthNum(hearingTypeItemValue.getHearingEstLengthNum());
+        hearingType.setHearingEstLengthNumType(hearingTypeItemValue.getHearingEstLengthNumType());
+        hearingType.setHearingSitAlone(hearingTypeItemValue.getHearingSitAlone());
+        hearingType.setJudge(hearingTypeItemValue.getJudge());
+        hearingType.setHearingEEMember(hearingTypeItemValue.getHearingEEMember());
+        hearingType.setHearingERMember(hearingTypeItemValue.getHearingERMember());
+        hearingType.setHearingStage(hearingTypeItemValue.getHearingStage());
+        hearingType.setHearingNotes(hearingTypeItemValue.getHearingNotes());
 
         filteredHearingDates.forEach(hd -> hearingType.getHearingDateCollection().add(hd));
         currentHearingTypeItem.setValue(hearingType);
@@ -280,33 +286,39 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void updateSelectedHearing(CaseData caseData) {
-        if (caseData.getHearingsCollectionForUpdate() != null) {
-
-            for (HearingTypeItem updatedHearing : caseData.getHearingsCollectionForUpdate()) {
-                Optional<HearingTypeItem> matchingHearing = caseData.getHearingCollection().stream()
-                        .filter(h -> h.getId().equals(updatedHearing.getId())).findFirst();
-
-                if (matchingHearing.isPresent()) {
-                    HearingType sourceHearingType = updatedHearing.getValue();
-                    HearingType targetHearingType = matchingHearing.get().getValue();
-
-                    // update  fields shared at hearing level like Sit Alone or Full Panel
-                    targetHearingType.setHearingSitAlone(sourceHearingType.getHearingSitAlone());
-                    targetHearingType.setJudge(sourceHearingType.getJudge());
-
-                    if (FULL_PANEL.equals(sourceHearingType.getHearingSitAlone())) {
-                        targetHearingType.setHearingEEMember(sourceHearingType.getHearingEEMember());
-                        targetHearingType.setHearingERMember(sourceHearingType.getHearingERMember());
-                    }
-
-                    // update hearing dates for the selected hearing dates collection entries
-                    updateHearingDates(matchingHearing.get(), sourceHearingType);
-                }
-            }
-
-            caseData.getHearingsCollectionForUpdate().clear();
-            caseData.setHearingUpdateFilterType(null);
+        if (isEmpty(caseData.getHearingsCollectionForUpdate())) {
+            return;
         }
+
+        caseData.getHearingsCollectionForUpdate().forEach(updatedHearing -> {
+            Optional<HearingTypeItem> matchingHearing = caseData.getHearingCollection().stream()
+                    .filter(h -> h.getId().equals(updatedHearing.getId()))
+                    .findFirst();
+            matchingHearing.ifPresent(hearingTypeItem -> {
+                HearingType sourceHearingType = updatedHearing.getValue();
+                HearingType targetHearingType = hearingTypeItem.getValue();
+
+                // update  fields shared at hearing level like Sit Alone or Full Panel
+                targetHearingType.setHearingSitAlone(sourceHearingType.getHearingSitAlone());
+                targetHearingType.setJudge(sourceHearingType.getJudge());
+                targetHearingType.setHearingNotesDocument(isNotEmpty(sourceHearingType.getRemoveHearingNotesDocument())
+                        ? null
+                        : sourceHearingType.getHearingNotesDocument());
+                targetHearingType.setDoesHearingNotesDocExist(null);
+                targetHearingType.setRemoveHearingNotesDocument(Collections.emptyList());
+
+                if (FULL_PANEL.equals(sourceHearingType.getHearingSitAlone())) {
+                    targetHearingType.setHearingEEMember(sourceHearingType.getHearingEEMember());
+                    targetHearingType.setHearingERMember(sourceHearingType.getHearingERMember());
+                }
+
+                // update hearing dates for the selected hearing dates collection entries
+                updateHearingDates(hearingTypeItem, sourceHearingType);
+            });
+        });
+
+        caseData.getHearingsCollectionForUpdate().clear();
+        caseData.setHearingUpdateFilterType(null);
     }
 
     private void updateHearingDates(HearingTypeItem matchingHearing, HearingType updatedHearing) {
@@ -315,9 +327,7 @@ public class CaseManagementForCaseWorkerService {
             Optional<DateListedTypeItem> hdToUpdate = matchingHearing.getValue().getHearingDateCollection()
                     .stream().filter(uhd -> String.valueOf(uhd.getId())
                             .equals(hearingDate.getId())).findFirst();
-            if (hdToUpdate.isPresent()) {
-                hdToUpdate.get().setValue(hearingDate.getValue());
-            }
+            hdToUpdate.ifPresent(dateListedTypeItem -> dateListedTypeItem.setValue(hearingDate.getValue()));
         }
     }
 
@@ -325,15 +335,15 @@ public class CaseManagementForCaseWorkerService {
         List<String> dates = new ArrayList<>();
         String nextListedDate = "";
 
-        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+        if (isNotEmpty(caseData.getHearingCollection())) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 dates.addAll(getListedDates(hearingTypeItem));
             }
 
             for (String date : dates) {
                 LocalDateTime parsedDate = LocalDateTime.parse(date);
-                if (nextListedDate.equals("") && parsedDate.isAfter(LocalDateTime.now())
-                        || parsedDate.isAfter(LocalDateTime.now())
+                if (nextListedDate.isEmpty() && parsedDate.isAfter(LocalDateTime.now())
+                    || parsedDate.isAfter(LocalDateTime.now())
                         && parsedDate.isBefore(LocalDateTime.parse(nextListedDate))) {
                     nextListedDate = date;
                 }
@@ -346,11 +356,11 @@ public class CaseManagementForCaseWorkerService {
     private List<String> getListedDates(HearingTypeItem hearingTypeItem) {
         HearingType hearingType = hearingTypeItem.getValue();
         List<String> dates = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(hearingType.getHearingDateCollection())) {
+        if (isNotEmpty(hearingType.getHearingDateCollection())) {
             for (DateListedTypeItem dateListedTypeItem : hearingType.getHearingDateCollection()) {
                 DateListedType dateListedType = dateListedTypeItem.getValue();
                 if (HEARING_STATUS_LISTED.equals(dateListedType.getHearingStatus())
-                        && !Strings.isNullOrEmpty(dateListedType.getListedDate())) {
+                        && !isNullOrEmpty(dateListedType.getListedDate())) {
                     dates.add(dateListedType.getListedDate());
                 }
             }
@@ -436,26 +446,27 @@ public class CaseManagementForCaseWorkerService {
 
     public CaseData struckOutRespondents(CCDRequest ccdRequest) {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            List<RespondentSumTypeItem> activeRespondent = new ArrayList<>();
-            List<RespondentSumTypeItem> struckRespondent = new ArrayList<>();
-            for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                var respondentSumType = respondentSumTypeItem.getValue();
-                if (respondentSumType.getResponseStruckOut() != null) {
-                    if (respondentSumType.getResponseStruckOut().equals(YES)) {
-                        struckRespondent.add(respondentSumTypeItem);
-                    } else {
-                        activeRespondent.add(respondentSumTypeItem);
-                    }
+        if (isEmpty(caseData.getRespondentCollection())) {
+            return caseData;
+        }
+        List<RespondentSumTypeItem> activeRespondent = new ArrayList<>();
+        List<RespondentSumTypeItem> struckRespondent = new ArrayList<>();
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            var respondentSumType = respondentSumTypeItem.getValue();
+            if (respondentSumType.getResponseStruckOut() != null) {
+                if (respondentSumType.getResponseStruckOut().equals(YES)) {
+                    struckRespondent.add(respondentSumTypeItem);
                 } else {
-                    respondentSumType.setResponseStruckOut(NO);
                     activeRespondent.add(respondentSumTypeItem);
                 }
+            } else {
+                respondentSumType.setResponseStruckOut(NO);
+                activeRespondent.add(respondentSumTypeItem);
             }
-            caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(),
-                    struckRespondent.stream()).toList());
-            respondentDefaults(caseData);
         }
+        caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(),
+                struckRespondent.stream()).toList());
+        respondentDefaults(caseData);
         return caseData;
     }
 
@@ -488,32 +499,33 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void amendHearing(CaseData caseData, String caseTypeId) {
-        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                var hearingType =  hearingTypeItem.getValue();
-                if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                    for (DateListedTypeItem dateListedTypeItem
-                            : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        var dateListedType = dateListedTypeItem.getValue();
-                        if (dateListedType.getHearingStatus() == null) {
-                            dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
-                            dateListedType.setHearingTimingStart(dateListedType.getListedDate());
-                            dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
-                        }
-                        populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
+        if (isEmpty(caseData.getHearingCollection())) {
+            return;
+        }
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            var hearingType =  hearingTypeItem.getValue();
+            if (isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                for (DateListedTypeItem dateListedTypeItem
+                        : hearingTypeItem.getValue().getHearingDateCollection()) {
+                    var dateListedType = dateListedTypeItem.getValue();
+                    if (dateListedType.getHearingStatus() == null) {
+                        dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+                        dateListedType.setHearingTimingStart(dateListedType.getListedDate());
+                        dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
                     }
+                    populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
                 }
             }
         }
     }
 
     public void midEventAmendHearing(CaseData caseData, List<String> errors, List<String> warnings) {
-        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+        if (isEmpty(caseData.getHearingCollection())) {
             return;
         }
 
         for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-            if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+            if (isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                 for (DateListedTypeItem dateListedTypeItm : hearingTypeItem.getValue().getHearingDateCollection()) {
                     processHearingDates(errors, warnings, hearingTypeItem, dateListedTypeItm);
                 }
@@ -523,8 +535,7 @@ public class CaseManagementForCaseWorkerService {
 
     private void processHearingDates(List<String> errors, List<String> warnings, HearingTypeItem hearingTypeItem,
                                      DateListedTypeItem dateListedTypeItm) {
-        addHearingsOnWeekendError(dateListedTypeItm, errors,
-                hearingTypeItem.getValue().getHearingNumber());
+        addHearingsOnWeekendError(dateListedTypeItm, errors, hearingTypeItem.getValue().getHearingNumber());
         addHearingsInPastWarning(dateListedTypeItm, warnings, hearingTypeItem.getValue().getHearingNumber());
     }
 
@@ -532,8 +543,8 @@ public class CaseManagementForCaseWorkerService {
                                           String hearingNumber) {
         LocalDate date = LocalDateTime.parse(
                 dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
-        if ((Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingStatus())
-                || HEARING_STATUS_LISTED.equals(dateListedTypeItem.getValue().getHearingStatus()))
+        if ((isNullOrEmpty(dateListedTypeItem.getValue().getHearingStatus())
+             || HEARING_STATUS_LISTED.equals(dateListedTypeItem.getValue().getHearingStatus()))
                 && date.isBefore(LocalDate.now())) {
             warnings.add(PAST_LISTED_DATE.formatted(hearingNumber));
 
@@ -545,8 +556,7 @@ public class CaseManagementForCaseWorkerService {
         var date = LocalDateTime.parse(
                 dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
         DayOfWeek dayOfWeek = date.getDayOfWeek();
-        if (SUNDAY.equals(dayOfWeek)
-                || SATURDAY.equals(dayOfWeek)) {
+        if (SUNDAY.equals(dayOfWeek) || SATURDAY.equals(dayOfWeek)) {
             errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE + hearingNumber);
         }
     }
@@ -585,22 +595,18 @@ public class CaseManagementForCaseWorkerService {
     private void setHearingScottishOffices(DateListedType dateListedType, HearingType hearingType) {
         if (hearingType.getHearingAberdeen() != null) {
             if (dateListedType.getHearingAberdeen() == null) {
-                log.info("Adding hearing day level Aberdeen");
                 dateListedType.setHearingAberdeen(hearingType.getHearingAberdeen());
             }
         } else if (hearingType.getHearingDundee() != null) {
             if (dateListedType.getHearingDundee() == null) {
-                log.info("Adding hearing day level Dundee");
                 dateListedType.setHearingDundee(hearingType.getHearingDundee());
             }
         } else if (hearingType.getHearingEdinburgh() != null) {
             if (dateListedType.getHearingEdinburgh() == null) {
-                log.info("Adding hearing day level Edinburgh");
                 dateListedType.setHearingEdinburgh(hearingType.getHearingEdinburgh());
             }
         } else {
             if (dateListedType.getHearingGlasgow() == null) {
-                log.info("Adding hearing day level Glasgow");
                 dateListedType.setHearingGlasgow(hearingType.getHearingGlasgow());
             }
         }
@@ -609,7 +615,7 @@ public class CaseManagementForCaseWorkerService {
     public CaseData createECC(CaseDetails caseDetails, String authToken, List<String> errors, String callback) {
         var currentCaseData = caseDetails.getCaseData();
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
-        if (submitEvents != null && !submitEvents.isEmpty()) {
+        if (isNotEmpty(submitEvents)) {
             var submitEvent = submitEvents.get(0);
             if (ECCHelper.validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
@@ -643,14 +649,14 @@ public class CaseManagementForCaseWorkerService {
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
                                          String caseIdToLink) {
         try {
-            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
-                    currentCaseDetails.getJurisdiction(), caseIdToLink);
-            CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
             EccCounterClaimTypeItem eccCounterClaimTypeItem = new EccCounterClaimTypeItem();
             EccCounterClaimType eccCounterClaimType = new EccCounterClaimType();
             eccCounterClaimType.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
             eccCounterClaimTypeItem.setId(UUID.randomUUID().toString());
             eccCounterClaimTypeItem.setValue(eccCounterClaimType);
+            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
+                    currentCaseDetails.getJurisdiction(), caseIdToLink);
+            CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
             if (returnedRequestCaseData.getEccCases() != null) {
                 returnedRequestCaseData.getEccCases().add(eccCounterClaimTypeItem);
             } else {

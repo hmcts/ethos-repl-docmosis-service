@@ -102,6 +102,11 @@
         "id" : "123345",
         "value" : {
           "hearingEstLengthNum": "1",
+          "hearingNotesDocument": {
+            "document_url": "http://dm-store:4506/documents/123456",
+            "document_filename": "HearingNotes.pdf",
+            "document_binary_url": "http://dm-store:4506/documents/123456/binary"
+          },
           "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
           "hearingNumber": "1",
@@ -143,6 +148,11 @@
         "id" : "123345",
         "value" : {
           "hearingEstLengthNum": "1",
+          "hearingNotesDocument": {
+            "document_url": "http://dm-store:4506/documents/123456",
+            "document_filename": "HearingNotes.pdf",
+            "document_binary_url": "http://dm-store:4506/documents/123456/binary"
+          },
           "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
           "hearingNumber": "3",
