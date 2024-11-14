@@ -52,8 +52,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
-        DefaultValuesReaderService.class,
-        TribunalOfficesService.class,
+    DefaultValuesReaderService.class,
+    TribunalOfficesService.class,
 })
 @EnableConfigurationProperties({CaseDefaultValuesConfiguration.class, TribunalOfficesConfiguration.class})
 public class DefaultValuesReaderServiceTest {
@@ -335,73 +335,85 @@ public class DefaultValuesReaderServiceTest {
 
     @Test
     public void getManchesterPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", manchesterCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                manchesterCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesManchester, postDefaultValues1);
     }
 
     @Test
     public void getBristolPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", bristolCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                bristolCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesBristol, postDefaultValues1);
     }
 
     @Test
     public void getLeedsPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", leedsCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                leedsCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLeeds, postDefaultValues1);
     }
 
     @Test
     public void getLondonCentralPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", londonCentralCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                londonCentralCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonCentral, postDefaultValues1);
     }
 
     @Test
     public void getLondonEastPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("", londonEastCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                londonEastCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonEast, postDefaultValues1);
     }
 
     @Test
     public void getLondonSouthPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", londonSouthCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                londonSouthCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonSouth, postDefaultValues1);
     }
 
     @Test
     public void getMidlandsEastPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", midlandsEastCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                midlandsEastCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesMidlandsEast, postDefaultValues1);
     }
 
     @Test
     public void getMidlandsWestPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", midlandsWestCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                midlandsWestCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesMidlandsWest, postDefaultValues1);
     }
 
     @Test
     public void getNewcastlePostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", newcastleCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                newcastleCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesNewcastle, postDefaultValues1);
     }
 
     @Test
     public void getWalesPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", walesCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                walesCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesWales, postDefaultValues1);
     }
 
     @Test
     public void getWatfordPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", watfordCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                watfordCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesWatford, postDefaultValues1);
     }
 
     @Test
     public void getGlasgowDefaultPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("",
+                glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesGlasgow, postDefaultValues1);
     }
 
@@ -411,10 +423,11 @@ public class DefaultValuesReaderServiceTest {
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, ecmCaseType=Single, "
-                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null," +
-                " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null,"
+                + " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
-                + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, "
+                + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
+                + "feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
                 + "representativeClaimantType=null, respondentCollection=null, repCollection=null, "
                 + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
@@ -443,9 +456,11 @@ public class DefaultValuesReaderServiceTest {
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
                 + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, "
-                + "transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
+                + "transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, "
+                + "transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, "
+                + "caseBundles=null, "
                 + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, "
-                + "appealDocumentCollection=null, addDocumentCollection=null)";
+                + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -478,16 +493,18 @@ public class DefaultValuesReaderServiceTest {
         caseData.setClaimantWorkAddressQRespondent(dynamicFixedListType);
         return caseData;
     }
+
     @Test
     public void getCaseDataWithClaimantWorkAddress() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Glasgow Tribunals Centre, 3 Atlantic Quay, "
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, ecmCaseType=Single, "
-                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null," +
-                " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null,"
+                + " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
-                + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, "
+                + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
+                + "feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, "
                 + "representativeClaimantType=null, respondentCollection=[RespondentSumTypeItem(id=null, "
                 + "value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, "
@@ -496,7 +513,8 @@ public class DefaultValuesReaderServiceTest {
                 + "responseReturnedFromJudge=null, respondentName=Andrew Smith, respondentACASQuestion=null, "
                 + "respondentACAS=null, respondentACASNo=null, respondentAddress=Line1, PostCode, "
                 + "respondentPhone1=null, respondentPhone2=null, respondentEmail=null, "
-                + "respondentContactPreference=null, responseStruckOut=null, responseStruckOutDate=null, "
+                + "respondentContactPreference=null, respondentHearingPanelPreference=null, "
+                + "respondentHearingPanelPreferenceReason=null, responseStruckOut=null, responseStruckOutDate=null, "
                 + "responseStruckOutChairman=null, responseStruckOutReason=null, responseRespondentAddress=null, "
                 + "responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, "
                 + "responseRespondentContactPreference=null, responseReceived=null, responseReceivedDate=null, "
@@ -505,7 +523,8 @@ public class DefaultValuesReaderServiceTest {
                 + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
                 + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
                 + "fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, "
-                + "hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, depositCollection=null, "
+                + "hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, hearingUpdateFilterType=null, "
+                + "depositCollection=null, "
                 + "judgementCollection=null, jurCodesCollection=null, bfActions=null, clerkResponsible=null, "
                 + "userLocation=null, documentCollection=null, additionalCaseInfoType=null, "
                 + "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, "
@@ -528,9 +547,11 @@ public class DefaultValuesReaderServiceTest {
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
                 + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null,"
-                + " transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, "
+                + " transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, "
+                + "transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, "
+                + "caseBundles=null, "
                 + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null,"
-                + " appealDocumentCollection=null, addDocumentCollection=null)";
+                + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -538,28 +559,32 @@ public class DefaultValuesReaderServiceTest {
     @Test
     public void getGlasgowOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(GLASGOW_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( GLASGOW_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE,
+                glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesGlasgow.toString(), postDefaultValues1.toString());
     }
 
     @Test
     public void getAberdeenOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(ABERDEEN_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( ABERDEEN_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(ABERDEEN_OFFICE,
+                glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesAberdeen.toString(), postDefaultValues1.toString());
     }
 
     @Test
     public void getDundeeOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(DUNDEE_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( DUNDEE_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(DUNDEE_OFFICE,
+                glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesDundee, postDefaultValues1);
     }
 
     @Test
     public void getEdinburghOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(EDINBURGH_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( EDINBURGH_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(EDINBURGH_OFFICE,
+                glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesEdinburgh, postDefaultValues1);
     }
 
@@ -568,14 +593,16 @@ public class DefaultValuesReaderServiceTest {
         String listingDataExpected = "ListingData(tribunalCorrespondenceAddress=Glasgow Tribunals Centre, 3 "
                 + "Atlantic Quay, 20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
-                + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, reportDate=null, hearingDateType=null, listingDate=null, "
+                + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, reportDate=null, hearingDateType=null,"
+                + " listingDate=null, "
                 + "listingDateFrom=null, listingDateTo=null, listingVenue=null, listingCollection=null, "
                 + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, "
                 + "venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
                 + "docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=null, documentName=null, "
                 + "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
                 + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData, postDefaultValuesGlasgow).toString());
+        assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData,
+                postDefaultValuesGlasgow).toString());
     }
 
     @ParameterizedTest
