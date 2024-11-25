@@ -19,4 +19,11 @@ public interface BundleApiClient {
             @RequestBody
             BundleCreateRequest bundleCreateRequest
     );
+
+    @PostMapping(value = "api/async-stitch-ccd-bundles", consumes = "application/json")
+    BundleCreateResponse asyncStitchBundle(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+            @RequestBody BundleCreateRequest bundleCreateRequest
+    );
 }

@@ -1,17 +1,24 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import uk.gov.hmcts.ecm.common.model.bundle.Bundle;
+import uk.gov.hmcts.ecm.common.model.bundle.BundleDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DigitalCaseFileType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 
 public class DigitalCaseFileHelper {
+
+    private static final List<String> OK_STATUS = List.of("DONE", "COMPLETED");
 
     private DigitalCaseFileHelper() {
         // access through static methods
@@ -26,22 +33,29 @@ public class DigitalCaseFileHelper {
                 .stream()
                 .filter(bundle -> bundle.value().getStitchedDocument() != null)
                 .findFirst();
-        if (stitchedFile.isEmpty()) {
-            return;
-        }
+        stitchedFile.ifPresent(bundle -> caseData.setDigitalCaseFile(createTribunalCaseFile(bundle.value())));
 
-        DocumentLink documentLink = stitchedFile.get().value().getStitchedDocument();
-        caseData.setDigitalCaseFile(createTribunalCaseFile(documentLink));
     }
 
-    private static DigitalCaseFileType createTribunalCaseFile(DocumentLink documentLink) {
+    private static DigitalCaseFileType createTribunalCaseFile(BundleDetails bundleDetails) {
+        DocumentLink documentLink = bundleDetails.getStitchedDocument();
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
         uploadedDocumentType.setDocumentFilename(documentLink.documentFilename);
         uploadedDocumentType.setDocumentUrl(documentLink.documentUrl);
         uploadedDocumentType.setDocumentBinaryUrl(documentLink.documentBinaryUrl);
+
         DigitalCaseFileType digitalCaseFile = new DigitalCaseFileType();
         digitalCaseFile.setUploadedDocument(uploadedDocumentType);
-        digitalCaseFile.setDateGenerated(String.valueOf(LocalDate.now()));
+        if (OK_STATUS.contains(bundleDetails.getStitchStatus())) {
+            digitalCaseFile.setStatus("DCF Generated: " + LocalDate.now().format(NEW_DATE_PATTERN));
+            digitalCaseFile.setError(null);
+        } else {
+            digitalCaseFile.setStatus("DCF Failed to generate: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
+            digitalCaseFile.setError(bundleDetails.getStitchingFailureMessage());
+        }
+
+        // Deprecating old field regardless of status
+        digitalCaseFile.setDateGenerated(null);
 
         return digitalCaseFile;
     }

@@ -86,7 +86,7 @@ public class DigitalCaseFileService {
         }
     }
 
-    private List<Bundle> createBundleData(CaseData caseData) {
+    public List<Bundle> createBundleData(CaseData caseData) {
         Bundle bundle = Bundle.builder()
                 .value(createBundleDetails(caseData))
                 .build();

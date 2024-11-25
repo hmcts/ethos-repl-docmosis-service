@@ -90,4 +90,54 @@ public class DigitalCaseFileController {
         caseData.setCaseBundles(null);
         return getCallbackRespEntityNoErrors(caseData);
     }
+
+    @PostMapping(path = "/asyncAboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @Operation(description = "Submit DCF asynchronously")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> aboutToSubmitAsync(@RequestBody CCDRequest ccdRequest,
+                                                             @RequestHeader(value = HttpHeaders.AUTHORIZATION)
+                                                             String userToken) {
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseData.setCaseBundles(digitalCaseFileService.createBundleData(caseData));
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(path = "/ayncCompleteAboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @Operation(description = "Submit DCF asynchronously")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> ayncCompleteAboutToSubmit(@RequestBody CCDRequest ccdRequest,
+                                                                  @RequestHeader(value = HttpHeaders.AUTHORIZATION)
+                                                                  String userToken) {
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        DigitalCaseFileHelper.addDcfToDocumentCollection(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+
 }
