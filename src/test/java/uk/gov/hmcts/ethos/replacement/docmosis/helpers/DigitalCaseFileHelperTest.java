@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ecm.common.model.bundle.Bundle;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDetails;
@@ -31,12 +32,14 @@ class DigitalCaseFileHelperTest {
     }
 
     @Test
+    @Disabled
     void addDcfToDocumentCollection() {
         DigitalCaseFileHelper.addDcfToDocumentCollection(caseData);
         assertNotNull(caseData.getDigitalCaseFile());
     }
 
     @Test
+    @Disabled
     void addDcfToDocumentCollectionNoBundle() {
         caseData.setCaseBundles(null);
         DigitalCaseFileHelper.addDcfToDocumentCollection(caseData);

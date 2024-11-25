@@ -11,7 +11,6 @@ import uk.gov.hmcts.ecm.common.model.bundle.BundleDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDocument;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDocumentDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
-
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
