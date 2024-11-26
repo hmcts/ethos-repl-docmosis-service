@@ -68,6 +68,11 @@ public class DigitalCaseFileService {
         return bundleApiClient.stitchBundle(authorization, serviceAuthorization, bundleCreateRequest);
     }
 
+    public BundleCreateResponse stitchCaseFileAsync(String authorization, CaseDetails caseDetails) {
+        return bundleApiClient.asyncStitchBundle(authorization, authTokenGenerator.generate(),
+                bundleRequestMapper(caseDetails));
+    }
+
     private BundleCreateRequest bundleRequestMapper(CaseDetails caseDetails) {
         return BundleCreateRequest.builder()
                 .caseDetails(caseDetails)

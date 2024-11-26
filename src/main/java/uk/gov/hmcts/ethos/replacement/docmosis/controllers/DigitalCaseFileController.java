@@ -112,6 +112,7 @@ public class DigitalCaseFileController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData.setCaseBundles(digitalCaseFileService.createBundleData(caseData));
+        digitalCaseFileService.stitchCaseFileAsync(userToken, ccdRequest.getCaseDetails());
         return getCallbackRespEntityNoErrors(caseData);
     }
 
