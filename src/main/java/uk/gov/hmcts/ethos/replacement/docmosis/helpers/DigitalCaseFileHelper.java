@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bundle.Bundle;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
@@ -13,9 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 
+@Slf4j
 public class DigitalCaseFileHelper {
 
     private static final List<String> OK_STATUS = List.of("DONE", "COMPLETED");
@@ -46,7 +49,8 @@ public class DigitalCaseFileHelper {
 
         DigitalCaseFileType digitalCaseFile = new DigitalCaseFileType();
         digitalCaseFile.setUploadedDocument(uploadedDocumentType);
-        if (OK_STATUS.contains(bundleDetails.getStitchStatus())) {
+        if (OK_STATUS.contains(defaultIfEmpty(bundleDetails.getStitchStatus(), ""))) {
+            log.info(bundleDetails.getStitchStatus());
             digitalCaseFile.setStatus("DCF Generated: " + LocalDate.now().format(NEW_DATE_PATTERN));
             digitalCaseFile.setError(null);
         } else {
