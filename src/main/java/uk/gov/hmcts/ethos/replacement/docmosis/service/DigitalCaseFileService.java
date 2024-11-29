@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class DigitalCaseFileService {
     private final AuthTokenGenerator authTokenGenerator;
     private final BundleApiClient bundleApiClient;
@@ -69,8 +71,10 @@ public class DigitalCaseFileService {
     }
 
     public void stitchCaseFileAsync(String authorization, CaseDetails caseDetails) {
-        bundleApiClient.asyncStitchBundle(authorization, authTokenGenerator.generate(),
-                bundleRequestMapper(caseDetails));
+        BundleCreateResponse bundleCreateResponse = bundleApiClient.asyncStitchBundle(authorization,
+                authTokenGenerator.generate(), bundleRequestMapper(caseDetails));
+        log.info("Stitching bundle for case {} returned {}", caseDetails.getCaseData().getEthosCaseReference(),
+                bundleCreateResponse.toString());
     }
 
     private BundleCreateRequest bundleRequestMapper(CaseDetails caseDetails) {

@@ -32,6 +32,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 @RequestMapping("/dcf")
 public class DigitalCaseFileController {
 
+    private static final String LOG_MESSAGE = "received request for case reference :    ";
     private final DigitalCaseFileService digitalCaseFileService;
     private final DocumentManagementService documentManagementService;
     private final VerifyTokenService verifyTokenService;
@@ -104,6 +105,7 @@ public class DigitalCaseFileController {
     public ResponseEntity<CCDCallbackResponse> aboutToSubmitAsync(@RequestBody CCDRequest ccdRequest,
                                                              @RequestHeader(value = HttpHeaders.AUTHORIZATION)
                                                              String userToken) {
+        log.info("asyncAboutToSubmit ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error(INVALID_TOKEN, userToken);
@@ -129,6 +131,7 @@ public class DigitalCaseFileController {
     public ResponseEntity<CCDCallbackResponse> ayncCompleteAboutToSubmit(@RequestBody CCDRequest ccdRequest,
                                                                   @RequestHeader(value = HttpHeaders.AUTHORIZATION)
                                                                   String userToken) {
+        log.info("ayncCompleteAboutToSubmit ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error(INVALID_TOKEN, userToken);
