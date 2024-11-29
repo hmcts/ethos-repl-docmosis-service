@@ -115,10 +115,11 @@ public class DigitalCaseFileController {
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData.setCaseBundles(digitalCaseFileService.createBundleData(caseData));
         digitalCaseFileService.stitchCaseFileAsync(userToken, ccdRequest.getCaseDetails());
+        DigitalCaseFileHelper.setUpdatingStatus(caseData);
         return getCallbackRespEntityNoErrors(caseData);
     }
 
-    @PostMapping(path = "/ayncCompleteAboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @PostMapping(path = "/asyncCompleteAboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @Operation(description = "Submit DCF asynchronously")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Accessed successfully",

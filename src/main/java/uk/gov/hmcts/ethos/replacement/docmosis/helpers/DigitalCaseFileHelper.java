@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import uk.gov.hmcts.ecm.common.model.bundle.Bundle;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
@@ -20,9 +21,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTE
 
 @Slf4j
 public class DigitalCaseFileHelper {
-
-    private static final List<String> OK_STATUS = List.of("DONE", "COMPLETED");
-
     private DigitalCaseFileHelper() {
         // access through static methods
     }
@@ -49,9 +47,8 @@ public class DigitalCaseFileHelper {
 
         DigitalCaseFileType digitalCaseFile = new DigitalCaseFileType();
         digitalCaseFile.setUploadedDocument(uploadedDocumentType);
-        log.info("DCF generated: {}", bundleDetails);
-        if (OK_STATUS.contains(defaultIfEmpty(bundleDetails.getStitchStatus(), ""))) {
-            digitalCaseFile.setStatus("DCF Generated: " + LocalDate.now().format(NEW_DATE_PATTERN));
+        if ("DONE".equals(bundleDetails.getStitchStatus())) {
+            digitalCaseFile.setStatus("DCF Generated: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
             digitalCaseFile.setError(null);
         } else {
             digitalCaseFile.setStatus("DCF Failed to generate: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
@@ -62,5 +59,12 @@ public class DigitalCaseFileHelper {
         digitalCaseFile.setDateGenerated(null);
 
         return digitalCaseFile;
+    }
+
+    public static void setUpdatingStatus(CaseData caseData) {
+        if (ObjectUtils.isEmpty(caseData.getDigitalCaseFile())) {
+            caseData.setDigitalCaseFile(new DigitalCaseFileType());
+        }
+        caseData.getDigitalCaseFile().setStatus("DCF Updating: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
     }
 }
