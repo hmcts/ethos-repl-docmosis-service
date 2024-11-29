@@ -49,8 +49,8 @@ public class DigitalCaseFileHelper {
 
         DigitalCaseFileType digitalCaseFile = new DigitalCaseFileType();
         digitalCaseFile.setUploadedDocument(uploadedDocumentType);
+        log.info("DCF generated: {}", bundleDetails);
         if (OK_STATUS.contains(defaultIfEmpty(bundleDetails.getStitchStatus(), ""))) {
-            log.info(bundleDetails.getStitchStatus());
             digitalCaseFile.setStatus("DCF Generated: " + LocalDate.now().format(NEW_DATE_PATTERN));
             digitalCaseFile.setError(null);
         } else {
