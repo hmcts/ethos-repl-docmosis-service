@@ -54,6 +54,7 @@ class DigitalCaseFileHelperTest {
                 .build();
         return BundleDetails.builder()
                 .id(UUID.randomUUID().toString())
+                .stitchStatus("DONE")
                 .stitchedDocument(documentLink)
                 .build();
     }
