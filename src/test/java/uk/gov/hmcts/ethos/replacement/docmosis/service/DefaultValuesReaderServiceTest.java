@@ -550,7 +550,7 @@ public class DefaultValuesReaderServiceTest {
                 + " transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, "
                 + "transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, "
                 + "caseBundles=null, "
-                + "digitalCaseFile=null,  uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
+                + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
                                   + "piiDocumentCollection=null,"
                 + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
