@@ -9,18 +9,20 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DigitalCaseFileType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_PATTERN;
+import static org.apache.commons.lang3.ObjectUtils.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 
 @Slf4j
 public class DigitalCaseFileHelper {
+
+    private static final String DONE = "DONE";
+    private static final String UPLOAD = "Upload";
+    private static final String REMOVE = "Remove";
+
     private DigitalCaseFileHelper() {
         // access through static methods
     }
@@ -39,16 +41,16 @@ public class DigitalCaseFileHelper {
     }
 
     private static DigitalCaseFileType createTribunalCaseFile(BundleDetails bundleDetails) {
-        DocumentLink documentLink = bundleDetails.getStitchedDocument();
-        UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
-        uploadedDocumentType.setDocumentFilename(documentLink.documentFilename);
-        uploadedDocumentType.setDocumentUrl(documentLink.documentUrl);
-        uploadedDocumentType.setDocumentBinaryUrl(documentLink.documentBinaryUrl);
-
         DigitalCaseFileType digitalCaseFile = new DigitalCaseFileType();
-        digitalCaseFile.setUploadedDocument(uploadedDocumentType);
-        if ("DONE".equals(bundleDetails.getStitchStatus())) {
-            digitalCaseFile.setStatus("DCF Generated: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
+        if (DONE.equals(bundleDetails.getStitchStatus())) {
+            DocumentLink documentLink = bundleDetails.getStitchedDocument();
+            UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
+            uploadedDocumentType.setDocumentFilename(documentLink.documentFilename);
+            uploadedDocumentType.setDocumentUrl(documentLink.documentUrl);
+            uploadedDocumentType.setDocumentBinaryUrl(documentLink.documentBinaryUrl);
+
+            digitalCaseFile.setUploadedDocument(uploadedDocumentType);
+            digitalCaseFile.setStatus("DCF Updated: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
             digitalCaseFile.setError(null);
         } else {
             digitalCaseFile.setStatus("DCF Failed to generate: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
@@ -62,9 +64,26 @@ public class DigitalCaseFileHelper {
     }
 
     public static void setUpdatingStatus(CaseData caseData) {
-        if (ObjectUtils.isEmpty(caseData.getDigitalCaseFile())) {
+        if (isEmpty(caseData.getDigitalCaseFile())) {
             caseData.setDigitalCaseFile(new DigitalCaseFileType());
         }
         caseData.getDigitalCaseFile().setStatus("DCF Updating: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
+    }
+
+    public static void uploadOrRemoveDcf(CaseData caseData) {
+        switch (caseData.getUploadOrRemoveDcf()) {
+            case UPLOAD -> {
+                DigitalCaseFileType digitalCaseFile = caseData.getDigitalCaseFile();
+                if (isNotEmpty(digitalCaseFile)) {
+                    digitalCaseFile.setStatus("DCF Uploaded: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
+                    digitalCaseFile.setError(null);
+
+                    // Deprecating old field
+                    digitalCaseFile.setDateGenerated(null);
+                }
+            }
+            case REMOVE -> caseData.setDigitalCaseFile(null);
+            default -> log.error("Invalid uploadOrRemoveDcf value: {}", caseData.getUploadOrRemoveDcf());
+        }
     }
 }
