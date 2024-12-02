@@ -459,7 +459,8 @@ public class DefaultValuesReaderServiceTest {
                 + "transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, "
                 + "transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, "
                 + "caseBundles=null, "
-                + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, "
+                + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
+                + "piiDocumentCollection=null, "
                 + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
@@ -550,7 +551,8 @@ public class DefaultValuesReaderServiceTest {
                 + " transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, "
                 + "transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, "
                 + "caseBundles=null, "
-                + "digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null,"
+                + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
+                + "piiDocumentCollection=null,"
                 + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());

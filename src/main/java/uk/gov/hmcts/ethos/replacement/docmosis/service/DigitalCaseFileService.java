@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import uk.gov.hmcts.ecm.common.model.bundle.BundleDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDocument;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDocumentDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
-
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
@@ -30,10 +30,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class DigitalCaseFileService {
     private final AuthTokenGenerator authTokenGenerator;
     private final BundleApiClient bundleApiClient;
-    private static final String DOCUMENT_INDEX_NAME = "%s - %s - %s";
 
     @Value("${em-ccd-orchestrator.config.default}")
     private String defaultBundle;
@@ -69,6 +69,11 @@ public class DigitalCaseFileService {
         return bundleApiClient.stitchBundle(authorization, serviceAuthorization, bundleCreateRequest);
     }
 
+    public void stitchCaseFileAsync(String authorization, CaseDetails caseDetails) {
+        bundleApiClient.asyncStitchBundle(authorization, authTokenGenerator.generate(),
+                bundleRequestMapper(caseDetails));
+    }
+
     private BundleCreateRequest bundleRequestMapper(CaseDetails caseDetails) {
         return BundleCreateRequest.builder()
                 .caseDetails(caseDetails)
@@ -86,7 +91,7 @@ public class DigitalCaseFileService {
         }
     }
 
-    private List<Bundle> createBundleData(CaseData caseData) {
+    public List<Bundle> createBundleData(CaseData caseData) {
         Bundle bundle = Bundle.builder()
                 .value(createBundleDetails(caseData))
                 .build();
@@ -116,7 +121,7 @@ public class DigitalCaseFileService {
     private List<BundleDocumentDetails> getDocsForDcf(CaseData caseData) {
         return caseData.getDocumentCollection().stream()
                 .map(DocumentTypeItem::getValue)
-                .filter(doc -> doc.getUploadedDocument() != null && isExcludedFromDcf(doc))
+                .filter(doc -> doc.getUploadedDocument() != null && isNotExcludedFromDcf(doc))
                 .map(doc -> BundleDocumentDetails.builder()
                         .name(getDocumentName(doc))
                         .sourceDocument(DocumentLink.builder()
@@ -139,10 +144,13 @@ public class DigitalCaseFileService {
                 ? ""
                 : " - " + LocalDate.parse(doc.getDateOfCorrespondence())
                 .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return doc.getDocNumber()  + docType + docFileName + docDate;
+        String customDocName = doc.getDocNumber() + docType + docFileName + docDate;
+        return customDocName.length() > 250
+                ? doc.getUploadedDocument().getDocumentFilename()
+                : customDocName;
     }
 
-    private static boolean isExcludedFromDcf(DocumentType doc) {
+    private static boolean isNotExcludedFromDcf(DocumentType doc) {
         return CollectionUtils.isEmpty(doc.getExcludeFromDcf()) || !YES.equals(doc.getExcludeFromDcf().get(0));
     }
 }

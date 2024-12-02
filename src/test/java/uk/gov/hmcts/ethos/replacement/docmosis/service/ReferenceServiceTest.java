@@ -170,7 +170,8 @@ public class ReferenceServiceTest {
             officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, \
             linkedCaseCT=null, transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, \
             transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, \
-            digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, \
+            digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, \
+            piiDocumentCollection=null, \
             appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEvents);
@@ -219,7 +220,8 @@ public class ReferenceServiceTest {
             companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, \
             positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, transferredCaseLinkSourceCaseId=null,\
              transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null,\
-             digitalCaseFile=null, acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null,\
+             digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null,\
+             piiDocumentCollection=null,\
              appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEventsNoVenues);
@@ -271,7 +273,7 @@ public class ReferenceServiceTest {
             hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, \
             relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, \
             transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, \
-            stateAPI=null, bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, \
+            stateAPI=null, bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, uploadOrRemoveDcf=null, \
             acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, \
             appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null)""";
         referenceSubmitEvents.clear();
@@ -346,7 +348,7 @@ public class ReferenceServiceTest {
             relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, \
             transferredCaseLinkSourceCaseId=null, \
             transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, \
-            digitalCaseFile=null, \
+            digitalCaseFile=null, uploadOrRemoveDcf=null, \
             acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, \
             appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null)""";
@@ -408,7 +410,8 @@ public class ReferenceServiceTest {
             hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, \
             relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, \
             transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, \
-            bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, acasCertificate=null, \
+            bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, uploadOrRemoveDcf=null,\
+             acasCertificate=null, \
             adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
@@ -466,7 +469,8 @@ public class ReferenceServiceTest {
             hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, \
             relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, \
             transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, \
-            bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, acasCertificate=null, \
+            bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, uploadOrRemoveDcf=null,\
+             acasCertificate=null, \
             adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
@@ -530,7 +534,8 @@ public class ReferenceServiceTest {
             hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, \
             relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, \
             transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, \
-            bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, acasCertificate=null, \
+            bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, uploadOrRemoveDcf=null,\
+             acasCertificate=null, \
             adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
@@ -584,7 +589,8 @@ public class ReferenceServiceTest {
             hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, \
             relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null,\
              transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, stateAPI=null,\
-             bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, acasCertificate=null,\
+             bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, uploadOrRemoveDcf=null,\
+             acasCertificate=null,\
              adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null,\
              addDocumentCollection=null, claimantHearingPreference=null)""";
         referenceSubmitEvents.clear();
