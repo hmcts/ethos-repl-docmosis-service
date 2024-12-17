@@ -1,2 +1,1 @@
-yarn run v1.22.19
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+{"type":"auditSummary","data":{"vulnerabilities":{"info":0,"low":0,"moderate":0,"high":0,"critical":0},"dependencies":764,"devDependencies":0,"optionalDependencies":0,"totalDependencies":764}}
