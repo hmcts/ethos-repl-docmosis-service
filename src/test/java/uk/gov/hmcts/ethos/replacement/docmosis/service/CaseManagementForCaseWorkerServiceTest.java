@@ -500,7 +500,7 @@ class CaseManagementForCaseWorkerServiceTest {
             + "<font size='5'> - </font>"
             + "<font color='Green' size='5'> LIVE APPEAL </font>"
             + "<font size='5'> - </font>"
-            + "<font color='Red' size='5'> RULE 50(3)b </font>"
+            + "<font color='Red' size='5'> RULE 49(3)b </font>"
             + "<font size='5'> - </font>"
             + "<font color='LightBlack' size='5'> REPORTING </font>"
             + "<font size='5'> - </font>"
