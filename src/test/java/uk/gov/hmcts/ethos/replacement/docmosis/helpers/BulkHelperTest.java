@@ -20,11 +20,18 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.PENDING_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 public class BulkHelperTest {
 
@@ -246,28 +253,34 @@ public class BulkHelperTest {
 
     @Test
     public void getJurCodesCollectionWithHide_AllJurCodesAreFiltered_ReturnsEmptyString() {
-        JurCodesTypeItem JurCodesTypeItem1 = getJurCodesWithOutcome("A", "Acas conciliated settlement");
-        JurCodesTypeItem JurCodesTypeItem2 = getJurCodesWithOutcome("B", "Withdrawn or private settlement");
-        JurCodesTypeItem JurCodesTypeItem3 = getJurCodesWithOutcome("C", "Input in error");
-        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(JurCodesTypeItem1, JurCodesTypeItem2, JurCodesTypeItem3));
+        JurCodesTypeItem jurCodesTypeItem1 = getJurCodesWithOutcome("A", "Acas conciliated settlement");
+        JurCodesTypeItem jurCodesTypeItem2 = getJurCodesWithOutcome("B", "Withdrawn or private settlement");
+        JurCodesTypeItem jurCodesTypeItem3 = getJurCodesWithOutcome("C", "Input in error");
+        JurCodesTypeItem jurCodesTypeItem4 = getJurCodesWithOutcome("D", "Dismissed on withdrawal");
+        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(jurCodesTypeItem1, jurCodesTypeItem2,
+                jurCodesTypeItem3, jurCodesTypeItem4));
         assertEquals(" ", BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
     }
 
     @Test
     public void getJurCodesCollectionWithHide_NoJurCodeFiltered_ReturnsAllOutputs() {
-        JurCodesTypeItem JurCodesTypeItem1 = getJurCodesWithOutcome("A", "Successful at hearing");
-        JurCodesTypeItem JurCodesTypeItem2 = getJurCodesWithOutcome("B", "Unsuccessful at hearing");
-        JurCodesTypeItem JurCodesTypeItem3 = getJurCodesWithOutcome("C", "Dismissed at hearing - out of scope");
-        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(JurCodesTypeItem1, JurCodesTypeItem2, JurCodesTypeItem3));
+        JurCodesTypeItem jurCodesTypeItem1 = getJurCodesWithOutcome("A", "Successful at hearing");
+        JurCodesTypeItem jurCodesTypeItem2 = getJurCodesWithOutcome("B", "Unsuccessful at hearing");
+        JurCodesTypeItem jurCodesTypeItem3 = getJurCodesWithOutcome("C", "Dismissed at hearing - out of scope");
+        JurCodesTypeItem jurCodesTypeItem4 = getJurCodesWithOutcome("D", "Dismissed on withdrawal");
+        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(jurCodesTypeItem1,
+                jurCodesTypeItem2, jurCodesTypeItem3, jurCodesTypeItem4));
         assertEquals("A, B, C", BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
     }
 
     @Test
     public void getJurCodesCollectionWithHide_PartJurCodesFiltered_ReturnsSomeOutputs() {
-        JurCodesTypeItem JurCodesTypeItem1 = getJurCodesWithOutcome("A", "Acas conciliated settlement");
-        JurCodesTypeItem JurCodesTypeItem2 = getJurCodesWithOutcome("B", "Successful at hearing");
-        JurCodesTypeItem JurCodesTypeItem3 = getJurCodesWithOutcome("C", "Withdrawn or private settlement");
-        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(JurCodesTypeItem1, JurCodesTypeItem2, JurCodesTypeItem3));
+        JurCodesTypeItem jurCodesTypeItem1 = getJurCodesWithOutcome("A", "Acas conciliated settlement");
+        JurCodesTypeItem jurCodesTypeItem2 = getJurCodesWithOutcome("B", "Successful at hearing");
+        JurCodesTypeItem jurCodesTypeItem3 = getJurCodesWithOutcome("C", "Withdrawn or private settlement");
+        JurCodesTypeItem jurCodesTypeItem4 = getJurCodesWithOutcome("D", "Dismissed on withdrawal");
+        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(jurCodesTypeItem1,
+                jurCodesTypeItem2, jurCodesTypeItem3, jurCodesTypeItem4));
         assertEquals("B", BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
     }
 
