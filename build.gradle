@@ -314,7 +314,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.retry:spring-retry'
-    implementation group: 'org.webjars.npm', name: 'minimatch', version: '9.0.3'
+    implementation group: 'org.webjars.npm', name: 'minimatch', version: '9.0.5'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.3'
 
