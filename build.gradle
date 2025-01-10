@@ -316,7 +316,7 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation group: 'org.webjars.npm', name: 'minimatch', version: '9.0.5'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.3'
-    implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.3'
+    implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.2.4'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.2'
