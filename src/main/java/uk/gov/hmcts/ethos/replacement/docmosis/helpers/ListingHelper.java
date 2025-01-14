@@ -75,7 +75,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.PRESS_LIST_CAUSE_LI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.PUBLIC_CASE_CAUSE_LIST_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RULE_50_APPLIES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
@@ -107,6 +106,7 @@ public class ListingHelper {
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
     public static final DateTimeFormatter CAUSE_LIST_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+    public static final String RULE_49_APPLIES = "Order made pursuant to Rule 49";
 
     private ListingHelper() {
     }
@@ -227,8 +227,8 @@ public class ListingHelper {
             listingType.setClaimantName(" ");
             listingType.setRespondent(" ");
         } else if ((rule50b && isPressListType) || (rule50d && isPressListType)) {
-            listingType.setClaimantName(RULE_50_APPLIES);
-            listingType.setRespondent(RULE_50_APPLIES);
+            listingType.setClaimantName(RULE_49_APPLIES);
+            listingType.setRespondent(RULE_49_APPLIES);
         } else {
             if (!isNullOrEmpty(caseData.getClaimantCompany())) {
                 log.info("Company claimant");
