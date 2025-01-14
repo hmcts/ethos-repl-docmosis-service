@@ -45,6 +45,9 @@ public class DigitalCaseFileHelper {
 
     private static DigitalCaseFileType createTribunalCaseFile(DigitalCaseFileType digitalCaseFile,
                                                               BundleDetails bundleDetails) {
+        if (isEmpty(digitalCaseFile)) {
+            digitalCaseFile = new DigitalCaseFileType();
+        }
         switch (bundleDetails.getStitchStatus()) {
             case DONE -> {
                 DocumentLink documentLink = bundleDetails.getStitchedDocument();
