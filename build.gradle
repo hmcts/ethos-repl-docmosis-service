@@ -319,7 +319,7 @@ dependencies {
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.2.4'
-    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.2'
+    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.7.0'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.9.1'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
