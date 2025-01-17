@@ -42,7 +42,7 @@ jacocoTestCoverageVerification {
 
 checkstyle {
     maxWarnings = 2302
-    toolVersion = '10.16.0'
+    toolVersion = '10.21.1'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
