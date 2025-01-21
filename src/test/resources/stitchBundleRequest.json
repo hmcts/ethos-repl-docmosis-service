@@ -23,7 +23,7 @@
           }
         }],
         "folders" : [ ],
-        "stitchStatus" : "NEW",
+        "stitchStatus" : "DONE",
         "stitchedDocument" : {
           "document_url" : "http://localhost:5005/documents/0eb5dd14-18be-45ef-b530-260f905f6d38",
           "document_filename" : "123456-2021-DCF.pdf",

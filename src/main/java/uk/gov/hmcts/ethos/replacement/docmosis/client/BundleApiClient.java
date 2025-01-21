@@ -12,14 +12,6 @@ import uk.gov.hmcts.ecm.common.model.bundle.BundleCreateResponse;
 @FeignClient(name = "bundle", url = "${em-ccd-orchestrator.api.url}",
         configuration = FeignClientProperties.FeignClientConfiguration.class)
 public interface BundleApiClient {
-    @PostMapping(value = "api/stitch-ccd-bundles", consumes = "application/json")
-    BundleCreateResponse stitchBundle(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
-            @RequestHeader("ServiceAuthorization") String serviceAuthorization,
-            @RequestBody
-            BundleCreateRequest bundleCreateRequest
-    );
-
     @PostMapping(value = "api/async-stitch-ccd-bundles", consumes = "application/json")
     BundleCreateResponse asyncStitchBundle(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,

@@ -15,18 +15,23 @@ import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DigitalCaseFileType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.BundleApiClient;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DigitalCaseFileHelper.setUpdatingStatus;
 
 @RequiredArgsConstructor
 @Service
@@ -34,42 +39,35 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class DigitalCaseFileService {
     private final AuthTokenGenerator authTokenGenerator;
     private final BundleApiClient bundleApiClient;
+    private static final String CREATE = "Create";
+    private static final String UPLOAD = "Upload";
+    private static final String REMOVE = "Remove";
 
-    @Value("${em-ccd-orchestrator.config.default}")
-    private String defaultBundle;
+    public void createUploadRemoveDcf(String userToken, CaseDetails caseDetails) {
+        CaseData caseData = caseDetails.getCaseData();
+        switch (caseData.getUploadOrRemoveDcf()) {
+            case CREATE -> {
+                caseData.setCaseBundles(createBundleData(caseData));
+                stitchCaseFileAsync(userToken, caseDetails);
+                setUpdatingStatus(caseData);
+            }
+            case UPLOAD -> {
+                DigitalCaseFileType digitalCaseFile = caseData.getDigitalCaseFile();
+                if (isNotEmpty(digitalCaseFile)) {
+                    digitalCaseFile.setStatus("DCF Uploaded: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
+                    digitalCaseFile.setError(null);
 
-    /**
-     * Creates a request to create a case file.
-     * @param caseData data
-     * @return list of bundles
-     */
-    public List<Bundle> createCaseFileRequest(CaseData caseData) {
-        setBundleConfig(caseData);
-        return createBundleData(caseData);
-    }
-
-    /**
-     * Creates a case file.
-     * @param caseDetails data
-     * @param userToken token
-     * @return list of bundles
-     */
-    public List<Bundle> stitchCaseFile(CaseDetails caseDetails, String userToken) {
-        setBundleConfig(caseDetails.getCaseData());
-        if (CollectionUtils.isEmpty(caseDetails.getCaseData().getCaseBundles())) {
-            caseDetails.getCaseData().setCaseBundles(createBundleData(caseDetails.getCaseData()));
+                    // Deprecating old field
+                    digitalCaseFile.setDateGenerated(null);
+                }
+            }
+            case REMOVE -> caseData.setDigitalCaseFile(null);
+            default -> log.error("Invalid uploadOrRemoveDcf value: {}", caseData.getUploadOrRemoveDcf());
         }
-        BundleCreateResponse bundleCreateResponse = stitchCaseFile(userToken, authTokenGenerator.generate(),
-                bundleRequestMapper(caseDetails));
-        return bundleCreateResponse.getData().getCaseBundles();
+        caseData.setUploadOrRemoveDcf(null);
     }
 
-    private BundleCreateResponse stitchCaseFile(String authorization, String serviceAuthorization,
-                                                BundleCreateRequest bundleCreateRequest) {
-        return bundleApiClient.stitchBundle(authorization, serviceAuthorization, bundleCreateRequest);
-    }
-
-    public void stitchCaseFileAsync(String authorization, CaseDetails caseDetails) {
+    private void stitchCaseFileAsync(String authorization, CaseDetails caseDetails) {
         bundleApiClient.asyncStitchBundle(authorization, authTokenGenerator.generate(),
                 bundleRequestMapper(caseDetails));
     }
@@ -79,16 +77,6 @@ public class DigitalCaseFileService {
                 .caseDetails(caseDetails)
                 .caseTypeId(caseDetails.getCaseTypeId())
                 .build();
-    }
-
-    /**
-     * Sets the default bundle config is none is present.
-     * @param caseData data
-     */
-    public void setBundleConfig(CaseData caseData) {
-        if (isNullOrEmpty(caseData.getBundleConfiguration())) {
-            caseData.setBundleConfiguration(defaultBundle);
-        }
     }
 
     public List<Bundle> createBundleData(CaseData caseData) {
@@ -153,5 +141,6 @@ public class DigitalCaseFileService {
     private static boolean isNotExcludedFromDcf(DocumentType doc) {
         return CollectionUtils.isEmpty(doc.getExcludeFromDcf()) || !YES.equals(doc.getExcludeFromDcf().get(0));
     }
+
 }
 

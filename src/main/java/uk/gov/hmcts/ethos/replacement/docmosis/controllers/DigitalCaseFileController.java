@@ -19,7 +19,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DigitalCaseFileHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DigitalCaseFileService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
@@ -32,65 +31,10 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 @RequestMapping("/dcf")
 public class DigitalCaseFileController {
 
-    private static final String LOG_MESSAGE = "received request for case reference :    ";
     private final DigitalCaseFileService digitalCaseFileService;
-    private final DocumentManagementService documentManagementService;
     private final VerifyTokenService verifyTokenService;
 
     private static final String INVALID_TOKEN = "Invalid Token {}";
-
-    @PostMapping(path = "/selectDcf", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    @Operation(description = "Select DCF configuration and documents")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Accessed successfully",
-            content = {
-                @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = CCDCallbackResponse.class))
-            }),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> selectDcf(@RequestBody CCDRequest ccdRequest,
-                                                         @RequestHeader(value = HttpHeaders.AUTHORIZATION)
-                                                            String userToken) {
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        // Convert doc type from legacy to new before dcf
-        documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
-        documentManagementService.setDocumentTypeForDocumentCollection(caseData);
-        caseData.setCaseBundles(digitalCaseFileService.createCaseFileRequest(caseData));
-        return getCallbackRespEntityNoErrors(caseData);
-    }
-
-    @PostMapping(path = "/aboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    @Operation(description = "Stitch DCF")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                content = {
-                    @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = CCDCallbackResponse.class))
-                }),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> aboutToSubmit(@RequestBody CCDRequest ccdRequest,
-                                                            @RequestHeader(value = HttpHeaders.AUTHORIZATION)
-                                                            String userToken) {
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        caseData.setCaseBundles(digitalCaseFileService.stitchCaseFile(ccdRequest.getCaseDetails(), userToken));
-        DigitalCaseFileHelper.addDcfToDocumentCollection(caseData);
-        caseData.setCaseBundles(null);
-        return getCallbackRespEntityNoErrors(caseData);
-    }
 
     @PostMapping(path = "/asyncAboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @Operation(description = "Submit DCF asynchronously")
@@ -112,9 +56,7 @@ public class DigitalCaseFileController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        caseData.setCaseBundles(digitalCaseFileService.createBundleData(caseData));
-        digitalCaseFileService.stitchCaseFileAsync(userToken, ccdRequest.getCaseDetails());
-        DigitalCaseFileHelper.setUpdatingStatus(caseData);
+        digitalCaseFileService.createUploadRemoveDcf(userToken, ccdRequest.getCaseDetails());
         return getCallbackRespEntityNoErrors(caseData);
     }
 
@@ -138,30 +80,6 @@ public class DigitalCaseFileController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         DigitalCaseFileHelper.addDcfToDocumentCollection(caseData);
-        return getCallbackRespEntityNoErrors(caseData);
-    }
-
-    @PostMapping(path = "/uploadOrRemoveDcf", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    @Operation(description = "Manually upload or remove the DCF")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                content = {
-                    @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = CCDCallbackResponse.class))
-                }),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> uploadOrRemoveDcf(@RequestBody CCDRequest ccdRequest,
-                                                                 @RequestHeader(value = HttpHeaders.AUTHORIZATION)
-                                                                 String userToken) {
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        DigitalCaseFileHelper.uploadOrRemoveDcf(caseData);
         return getCallbackRespEntityNoErrors(caseData);
     }
 

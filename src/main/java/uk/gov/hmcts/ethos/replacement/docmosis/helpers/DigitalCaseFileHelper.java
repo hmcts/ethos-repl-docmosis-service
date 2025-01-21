@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import uk.gov.hmcts.ecm.common.model.bundle.Bundle;
 import uk.gov.hmcts.ecm.common.model.bundle.BundleDetails;
 import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
@@ -14,7 +15,6 @@ import java.util.Optional;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 
 @Slf4j
@@ -22,8 +22,6 @@ public class DigitalCaseFileHelper {
 
     private static final String DONE = "DONE";
     private static final String FAILED = "FAILED";
-    private static final String UPLOAD = "Upload";
-    private static final String REMOVE = "Remove";
 
     private DigitalCaseFileHelper() {
         // access through static methods
@@ -39,25 +37,22 @@ public class DigitalCaseFileHelper {
                 .filter(bundle -> List.of(DONE, FAILED).contains(bundle.value().getStitchStatus()))
                 .findFirst();
         stitchedFile.ifPresent(bundle -> caseData.setDigitalCaseFile(
-                createTribunalCaseFile(caseData.getDigitalCaseFile(), bundle.value())));
+                createTribunalCaseFile(caseData, bundle.value())));
 
     }
 
-    private static DigitalCaseFileType createTribunalCaseFile(DigitalCaseFileType digitalCaseFile,
+    private static DigitalCaseFileType createTribunalCaseFile(CaseData caseData,
                                                               BundleDetails bundleDetails) {
+        DigitalCaseFileType digitalCaseFile = caseData.getDigitalCaseFile();
         if (isEmpty(digitalCaseFile)) {
             digitalCaseFile = new DigitalCaseFileType();
         }
         switch (bundleDetails.getStitchStatus()) {
             case DONE -> {
-                DocumentLink documentLink = bundleDetails.getStitchedDocument();
-                UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
-                uploadedDocumentType.setDocumentFilename(documentLink.documentFilename);
-                uploadedDocumentType.setDocumentUrl(documentLink.documentUrl);
-                uploadedDocumentType.setDocumentBinaryUrl(documentLink.documentBinaryUrl);
+                UploadedDocumentType uploadedDocumentType = getUploadedDocumentType(bundleDetails);
 
                 digitalCaseFile.setUploadedDocument(uploadedDocumentType);
-                digitalCaseFile.setStatus("DCF Updated: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
+                digitalCaseFile.setStatus("DCF Generated: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
                 digitalCaseFile.setError(null);
             }
             case FAILED -> {
@@ -74,6 +69,16 @@ public class DigitalCaseFileHelper {
         return digitalCaseFile;
     }
 
+    @NotNull
+    private static UploadedDocumentType getUploadedDocumentType(BundleDetails bundleDetails) {
+        DocumentLink documentLink = bundleDetails.getStitchedDocument();
+        UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
+        uploadedDocumentType.setDocumentFilename(documentLink.documentFilename);
+        uploadedDocumentType.setDocumentUrl(documentLink.documentUrl);
+        uploadedDocumentType.setDocumentBinaryUrl(documentLink.documentBinaryUrl);
+        return uploadedDocumentType;
+    }
+
     public static void setUpdatingStatus(CaseData caseData) {
         if (isEmpty(caseData.getDigitalCaseFile())) {
             caseData.setDigitalCaseFile(new DigitalCaseFileType());
@@ -81,21 +86,4 @@ public class DigitalCaseFileHelper {
         caseData.getDigitalCaseFile().setStatus("DCF Updating: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
     }
 
-    public static void uploadOrRemoveDcf(CaseData caseData) {
-        switch (caseData.getUploadOrRemoveDcf()) {
-            case UPLOAD -> {
-                DigitalCaseFileType digitalCaseFile = caseData.getDigitalCaseFile();
-                if (isNotEmpty(digitalCaseFile)) {
-                    digitalCaseFile.setStatus("DCF Uploaded: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
-                    digitalCaseFile.setError(null);
-
-                    // Deprecating old field
-                    digitalCaseFile.setDateGenerated(null);
-                }
-            }
-            case REMOVE -> caseData.setDigitalCaseFile(null);
-            default -> log.error("Invalid uploadOrRemoveDcf value: {}", caseData.getUploadOrRemoveDcf());
-        }
-        caseData.setUploadOrRemoveDcf(null);
-    }
 }
