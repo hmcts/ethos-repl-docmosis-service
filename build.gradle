@@ -3,7 +3,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'jacoco'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'org.springframework.boot' version '2.7.18'
     id 'org.owasp.dependencycheck' version '9.1.0'
     id 'com.github.ben-manes.versions' version '0.51.0'
@@ -41,8 +41,8 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    maxWarnings = 23020
-    toolVersion = '10.16.0'
+    maxWarnings = 2302
+    toolVersion = '10.21.1'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -228,7 +228,7 @@ ext {
     junitJupiterVersion = '5.10.3'
     log4JVersion = '2.23.1'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '9.0.88'
+    tomcatEmbedVersion = '9.0.98'
     springCloudVersion = '2021.0.8'
 }
 
@@ -309,7 +309,7 @@ dependencies {
             strictly '7.17.3'
         }
     }
-    implementation 'org.postgresql:postgresql:42.7.4'
+    implementation 'org.postgresql:postgresql:42.7.5'
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.16'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.8.0'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
@@ -323,7 +323,7 @@ dependencies {
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.2.4'
-    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.2'
+    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.7.0'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.9.1'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
