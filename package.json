@@ -24,7 +24,7 @@
     "chai-as-promised": "7.1.2",
     "chai-http": "4.4.0",
     "codeceptjs": "^3.6.5",
-    "eslint-plugin-mocha": "10.4.3",
+    "eslint-plugin-mocha": "10.5.0",
     "mocha": "10.4.0",
     "mocha-jenkins-reporter": "0.4.8",
     "mocha-junit-reporter": "2.2.1",
