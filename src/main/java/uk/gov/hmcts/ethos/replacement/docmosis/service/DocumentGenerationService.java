@@ -185,7 +185,7 @@ public class DocumentGenerationService {
 
     public boolean areBfActionsForEnglandOrWalesToBeUpdated(CaseData caseData, String sectionName) {
         if (caseData.getCorrespondenceType() != null) {
-            var values = new String[]{"2.6", "2.7", "2.8"};
+            var values = new String[]{"2.6", "2.7", "2.8", "2.7A", "2.8A"};
             return Arrays.asList(values).contains(sectionName);
         }
         return false;
