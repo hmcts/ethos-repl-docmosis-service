@@ -1216,10 +1216,10 @@
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
   integrity sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==
 
-"@sindresorhus/is@^6.1.0":
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-6.3.0.tgz#c67768a6d85668afef39af6425950a495f29a8ba"
-  integrity sha512-bOSPck7aIJjASXIg1qvXSIjXhVBpIEKdl2Wxg4pVqoTRPL8wWExKBrnGIh6CEnhkFQHfc36k7APhO3uXV4g5xg==
+"@sindresorhus/is@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-7.0.1.tgz#693cd0bfa7fdc71a3386b72088b660fb70851927"
+  integrity sha512-QWLl2P+rsCJeofkDNIT3WFmb6NrRud1SUYW8dIhXK/46XFV8Q/g7Bsvib0Askb0reRLe+WYPeeE+l5cH7SlkuQ==
 
 "@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.3":
   version "1.8.6"
@@ -1986,7 +1986,7 @@ cacheable-lookup@^7.0.0:
   resolved "https://registry.yarnpkg.com/cacheable-lookup/-/cacheable-lookup-7.0.0.tgz#3476a8215d046e5a3202a9209dd13fec1f933a27"
   integrity sha512-+qJyx4xiKra8mZrcwhjMRMUhD5NR1R8esPkzIYxX96JiecFoxAXFuz/GpR3+ev4PE1WamHip78wV0vcmPQtp8w==
 
-cacheable-request@^10.2.14, cacheable-request@^12.0.0:
+cacheable-request@^12.0.0, cacheable-request@^12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-12.0.1.tgz#e6f473b5b76c02e72a0ec2cd44c7cfb7c751d7c5"
   integrity sha512-Yo9wGIQUaAfIbk+qY0X4cDQgCosecfBe3V9NSyeY4qPC2SAkbCS4Xj79VP8WOzitpJUZKc/wsRCYF5ariDIwkg==
@@ -3730,11 +3730,6 @@ get-stream@^6.0.0:
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-6.0.1.tgz#a262d8eef67aced57c2852ad6167526a43cbf7b7"
   integrity sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==
 
-get-stream@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-8.0.1.tgz#def9dfd71742cd7754a7761ed43749a27d02eca2"
-  integrity sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==
-
 get-stream@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-9.0.1.tgz#95157d21df8eb90d1647102b63039b1df60ebd27"
@@ -3827,21 +3822,21 @@ gopd@^1.0.1:
     get-intrinsic "^1.1.3"
 
 got@^11.0.2, got@^11.8.1, got@^11.8.2, got@^14.0.0:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/got/-/got-14.2.1.tgz#59513971a4f990d7c20f4830cf78145d58b3042d"
-  integrity sha512-KOaPMremmsvx6l9BLC04LYE6ZFW4x7e4HkTe3LwBmtuYYQwpeS4XKqzhubTIkaQ1Nr+eXxeori0zuwupXMovBQ==
+  version "14.4.5"
+  resolved "https://registry.yarnpkg.com/got/-/got-14.4.5.tgz#49a8b49a49a851d658b19e2d1b97e50ef8903f17"
+  integrity sha512-sq+uET8TnNKRNnjEOPJzMcxeI0irT8BBNmf+GtZcJpmhYsQM1DSKmCROUjPWKsXZ5HzwD5Cf5/RV+QD9BSTxJg==
   dependencies:
-    "@sindresorhus/is" "^6.1.0"
+    "@sindresorhus/is" "^7.0.1"
     "@szmarczak/http-timer" "^5.0.1"
     cacheable-lookup "^7.0.0"
-    cacheable-request "^10.2.14"
+    cacheable-request "^12.0.1"
     decompress-response "^6.0.0"
     form-data-encoder "^4.0.2"
-    get-stream "^8.0.1"
     http2-wrapper "^2.2.1"
     lowercase-keys "^3.0.0"
     p-cancelable "^4.0.1"
     responselike "^3.0.0"
+    type-fest "^4.26.1"
 
 graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, graceful-fs@^4.2.9:
   version "4.2.11"
@@ -7462,6 +7457,11 @@ type-fest@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.7.1.tgz#8dda65feaf03ed78f0a3f9678f1869147f7c5c48"
   integrity sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==
+
+type-fest@^4.26.1:
+  version "4.33.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.33.0.tgz#2da0c135b9afa76cf8b18ecfd4f260ecd414a432"
+  integrity sha512-s6zVrxuyKbbAsSAD5ZPTB77q4YIdRctkTbJ2/Dqlinwz+8ooH2gd+YA7VA6Pa93KML9GockVvoxjZ2vHP+mu8g==
 
 typescript@^5.1.3:
   version "5.7.2"
