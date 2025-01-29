@@ -8,11 +8,15 @@ import uk.gov.hmcts.ecm.common.model.bundle.DocumentLink;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 
 class DigitalCaseFileHelperTest {
 
@@ -43,6 +47,26 @@ class DigitalCaseFileHelperTest {
         assertNull(caseData.getDigitalCaseFile());
     }
 
+    @Test
+    void dcf_failedToGenerate() {
+        BundleDetails bundleDetails = BundleDetails.builder()
+                .stitchStatus("FAILED")
+                .stitchingFailureMessage("Failed to generate")
+                .build();
+        caseData.setCaseBundles(List.of(Bundle.builder().value(bundleDetails).build()));
+        assertDoesNotThrow(() -> DigitalCaseFileHelper.addDcfToDocumentCollection(caseData));
+        assertEquals("DCF Failed to generate: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN),
+                caseData.getDigitalCaseFile().getStatus());
+        assertEquals("Failed to generate", caseData.getDigitalCaseFile().getError());
+    }
+
+    @Test
+    void setDcfUpdatingStatus() {
+        DigitalCaseFileHelper.setUpdatingStatus(caseData);
+        assertEquals("DCF Updating: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN),
+                caseData.getDigitalCaseFile().getStatus());
+    }
+
     private BundleDetails createBundleDetails() {
         DocumentLink documentLink = DocumentLink.builder()
                 .documentFilename("test.pdf")
@@ -51,6 +75,7 @@ class DigitalCaseFileHelperTest {
                 .build();
         return BundleDetails.builder()
                 .id(UUID.randomUUID().toString())
+                .stitchStatus("DONE")
                 .stitchedDocument(documentLink)
                 .build();
     }

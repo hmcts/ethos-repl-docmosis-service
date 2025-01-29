@@ -42,7 +42,7 @@ jacocoTestCoverageVerification {
 
 checkstyle {
     maxWarnings = 2302
-    toolVersion = '10.21.1'
+    toolVersion = '10.21.2'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -282,13 +282,13 @@ dependencies {
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.7'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.48'
     implementation group: 'commons-io', name: 'commons-io', version: '2.18.0'
-    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.26.2'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.27.1'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
-    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '3.0.3'
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '3.0.4'
     implementation group: 'org.apache.santuario', name: 'xmlsec', version: '4.0.3'
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatEmbedVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatEmbedVersion
@@ -296,8 +296,8 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
     implementation group: 'ch.qos.logback', name: 'logback-access', version: '1.4.14'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
-    implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.17', ext: 'pom'
-    implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.9'
+    implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.18', ext: 'pom'
+    implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.10'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'
 
     implementation('org.elasticsearch:elasticsearch') {
