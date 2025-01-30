@@ -324,7 +324,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    testImplementation group: 'com.auth0', name: 'java-jwt', version: '4.4.0'
+    testImplementation group: 'com.auth0', name: 'java-jwt', version: '4.5.0'
     testImplementation 'com.github.hmcts:fortify-client:1.4.6:all'
     testImplementation group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
     testImplementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
