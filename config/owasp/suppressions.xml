@@ -262,5 +262,33 @@
         <packageUrl regex="true">^pkg:npm/ws@.*$</packageUrl>
         <vulnerabilityName>GHSA-3h5v-q93c-6h6q</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: azure-client-authentication-1.7.14.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/azure\-client\-authentication@.*$</packageUrl>
+        <cve>CVE-2024-35255</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: azure-client-runtime-1.7.14.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/azure\-client\-runtime@.*$</packageUrl>
+        <cve>CVE-2024-43591</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: client-runtime-1.7.14.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.microsoft\.rest/client\-runtime@.*$</packageUrl>
+        <cve>CVE-2024-43591</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: azure-client-authentication-1.7.14.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/azure\-client\-authentication@.*$</packageUrl>
+        <cve>CVE-2024-43591</cve>
+    </suppress>
 </suppressions>
 

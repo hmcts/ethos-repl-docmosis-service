@@ -28,15 +28,15 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
-@RequestMapping("/migration")
+@RequestMapping("/migrateToReform")
 @RequiredArgsConstructor
 @RestController
-public class MigrationController {
+public class MigrateToReformController {
     private final MigrateToReformService migrateToReformService;
     private final VerifyTokenService verifyTokenService;
     private static final String INVALID_TOKEN = "Invalid Token {}";
 
-    @PostMapping(path = "/reform/aboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @PostMapping(path = "/aboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @Operation(description = "Migrates case from ECM to Reform")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Accessed successfully",
@@ -46,7 +46,7 @@ public class MigrationController {
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    public ResponseEntity<CCDCallbackResponse> migrateCaseToReform(@RequestBody CCDRequest ccdRequest,
+    public ResponseEntity<CCDCallbackResponse> migrateToReformAboutToSubmit(@RequestBody CCDRequest ccdRequest,
                                                          @RequestHeader(value = HttpHeaders.AUTHORIZATION)
                                                          String userToken) throws IOException {
 

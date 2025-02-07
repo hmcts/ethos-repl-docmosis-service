@@ -1,0 +1,620 @@
+{
+  "id": 1234123412341234,
+  "jurisdiction": "EMPLOYMENT",
+  "case_type_id": "Leeds",
+  "state": "Accepted",
+  "case_data" : {
+    "caseType": "Single",
+    "claimant": "Jace Littel",
+    "bfActions": [
+      {
+        "id": "f8d63879-10a9-4406-9060-ac6e871e8150",
+        "value": {
+          "notes": "Test",
+          "bfDate": "2025-02-01",
+          "cleared": "2025-02-02",
+          "cwActions": "Case listed",
+          "dateEntered": "2025-02-03"
+        }
+      }
+    ],
+    "caseNotes": "Assumenda earum rerum nam. Blanditiis harum labore porro quia perspiciatis. Enim ut maiores vel atque quo praesentium omnis. At vero quo velit. Repellendus atque dolore consectetur officia ea sint perspiciatis sunt.",
+    "caseSource": "ET1 Online",
+    "respondent": "John Doe",
+    "depositType": [
+      {
+        "id": "81e10230-efac-41d1-bc2c-93fd06f31022",
+        "value": {
+          "depositDoc": {
+            "document_url": "http://localhost:5005/documents/6a853c8f-7256-47eb-bb9a-911ec18f0fd1",
+            "document_filename": "2.7A Reform.docx",
+            "document_binary_url": "http://localhost:5005/documents/6a853c8f-7256-47eb-bb9a-911ec18f0fd1/binary"
+          },
+          "deposit_due": "2025-01-20",
+          "depositNotes": "Test",
+          "Deposit_amount": "100",
+          "deposit_covers": "All",
+          "deposit_refund": "Yes",
+          "depositReceived": "Yes",
+          "deposit_time_ext": "Yes",
+          "depositRefundedTo": "Respondent",
+          "deposit_order_sent": "2025-01-01",
+          "depositOrderAgainst": "Respondent",
+          "depositReceivedDate": "2025-01-21",
+          "deposit_refund_date": "2025-01-30",
+          "deposit_requested_by": "Respondent",
+          "deposit_time_ext_due": "2025-01-30",
+          "depositAmountRefunded": "100",
+          "dynamicDepositRefundedTo": {
+            "value": {
+              "code": "R: John Doe",
+              "label": "John Doe"
+            },
+            "list_items": [
+              {
+                "code": "R: John Doe",
+                "label": "John Doe"
+              },
+              {
+                "code": "C: Laura Rosenbaum",
+                "label": "Laura Rosenbaum"
+              }
+            ]
+          },
+          "dynamicDepositRequestedBy": {
+            "value": {
+              "code": "R: John Doe",
+              "label": "John Doe"
+            },
+            "list_items": [
+              {
+                "code": "R: John Doe",
+                "label": "John Doe"
+              },
+              {
+                "code": "C: Laura Rosenbaum",
+                "label": "Laura Rosenbaum"
+              },
+              {
+                "code": "Tribunal",
+                "label": "Tribunal"
+              }
+            ]
+          },
+          "dynamicDepositOrderAgainst": {
+            "value": {
+              "code": "R: John Doe",
+              "label": "John Doe"
+            },
+            "list_items": [
+              {
+                "code": "R: John Doe",
+                "label": "John Doe"
+              },
+              {
+                "code": "C: Laura Rosenbaum",
+                "label": "Laura Rosenbaum"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "receiptDate": "2025-01-01",
+    "claimantType": {
+      "claimant_addressUK": {
+        "Country": "Venezuela",
+        "PostCode": "LS16 6NB",
+        "PostTown": "South Gate",
+        "AddressLine1": "274 Fay Circles"
+      },
+      "claimant_phone_number": "01234121212",
+      "claimant_email_address": "Earline.Abernathy@example.org"
+    },
+    "fileLocation": "DJ",
+    "multipleFlag": "No",
+    "positionType": "Received by Auto-Import",
+    "preAcceptCase": {
+      "caseAccepted": "Yes",
+      "dateAccepted": "2025-02-01",
+      "dateRejected": "2025-02-01",
+      "rejectReason": [
+        "Defect"
+      ]
+    },
+    "repCollection": [
+      {
+        "id": "25577131-8b89-45a9-94c2-ac56b7ba2c52",
+        "value": {
+          "respondentId": "ce324d6d-b458-4c0c-baa4-6b09ce3af4fc",
+          "resp_rep_name": "John Doe",
+          "name_of_organisation": "Name of Organisation",
+          "dynamic_resp_rep_name": {
+            "value": {
+              "code": "R: John Doe",
+              "label": "John Doe"
+            },
+            "list_items": [
+              {
+                "code": "R: John Doe",
+                "label": "John Doe"
+              }
+            ]
+          },
+          "name_of_representative": "Respondent Rep",
+          "representative_address": {
+            "County": "dasasd",
+            "Country": "United Kingdom",
+            "PostCode": "SW11 1PD",
+            "PostTown": "London",
+            "AddressLine1": "1 Rse Way",
+            "AddressLine2": "asddas",
+            "AddressLine3": "dasasd"
+          },
+          "representative_reference": "123241",
+          "representative_occupation": "Trade Association",
+          "representative_preference": "Email",
+          "representative_phone_number": "01234121212",
+          "representative_email_address": "testemail@gmail.com",
+          "representative_mobile_number": "01234121212"
+        }
+      }
+    ],
+    "dateToPosition": "2025-02-01",
+    "nextListedDate": "2025-02-07",
+    "claimServedDate": "2025-02-01",
+    "claimantIndType": {
+      "claimant_gender": "Male",
+      "claimant_title1": "Mr",
+      "claimant_last_name": "Littel",
+      "claimant_first_names": "Jace",
+      "claimant_date_of_birth": "1997-12-19"
+    },
+    "companyPremises": {
+      "address": {
+        "PostCode": "LS1 2RP",
+        "PostTown": "Leeds",
+        "AddressLine1": "Westgate",
+        "AddressLine2": "6 Grace Street"
+      },
+      "premises": "Hilpert, Torp and Barton"
+    },
+    "currentPosition": "Received by Auto-Import",
+    "claimant_Company": "Fay - Nikolaus",
+    "clerkResponsible": "A Clerk",
+    "claimantOtherType": {
+      "claimant_disabled": "Yes",
+      "claimant_occupation": "Customer Interactions Developer",
+      "claimant_employed_to": "2024-12-12",
+      "claimant_employed_from": "2021-01-01",
+      "claimant_disabled_details": "Ipsum debitis quia. Occaecati ullam delectus nostrum. Temporibus id nihil veritatis et omnis quod. Error repellat rerum repudiandae sed. Perspiciatis iste aut.",
+      "claimant_employed_currently": "No"
+    },
+    "conciliationTrack": "Standard Track",
+    "feeGroupReference": "1738775695649776",
+    "flagsImageAltText": "<font color='DarkRed' size='5'> DO NOT POSTPONE </font><font size='5'> - </font><font color='Green' size='5'> LIVE APPEAL </font><font size='5'> - </font><font color='Red' size='5'> RULE 49(3)b </font><font size='5'> - </font><font color='Orange' size='5'> SENSITIVE </font><font size='5'> - </font><font color='Purple' size='5'> RESERVED </font><font size='5'> - </font><font color='SlateGray' size='5'> DIGITAL FILE </font><font size='5'> - </font><font color='DarkSlateBlue' size='5'> REASONABLE ADJUSTMENT </font>",
+    "hearingCollection": [
+      {
+        "id": "b7f042a0-90f2-40ce-8636-32c5c471d521",
+        "value": {
+          "judge": "A Judge",
+          "Hearing_type": "Costs Hearing",
+          "Hearing_notes": "Ut officiis praesentium aspernatur unde. In ipsam amet illo consequatur nobis odio laudantium inventore. Labore sint dolorum voluptatem velit. Debitis commodi commodi. Soluta nobis consequuntur adipisci a alias est omnis voluptatibus explicabo.",
+          "Hearing_stage": "Stage 1",
+          "Hearing_venue": "Harrogate CJC",
+          "hearingFormat": [
+            "In person"
+          ],
+          "hearingNumber": "1",
+          "hearingSitAlone": "Sit Alone",
+          "judicialMediation": "No",
+          "hearingEstLengthNum": "1",
+          "hearingDateCollection": [
+            {
+              "id": "b969ac45-d3b7-4ca7-add9-306a889ca955",
+              "value": {
+                "listedDate": "2025-02-05T14:00:00.000",
+                "Hearing_status": "Listed",
+                "hearingVenueDay": "Harrogate CJC",
+                "hearingTimingStart": "2025-02-05T14:00:00.000",
+                "hearingTimingFinish": "2025-02-05T14:00:00.000",
+                "hearingRoomHarrogateCJC": "* Not Allocated"
+              }
+            }
+          ],
+          "hearingEstLengthNumType": "Days"
+        }
+      },
+      {
+        "id": "8d66c389-2129-4bdd-978c-0ababe66767b",
+        "value": {
+          "Hearing_type": "Costs Hearing",
+          "Hearing_stage": "Stage 1",
+          "Hearing_venue": "Teesside ET",
+          "hearingFormat": [
+            "Hybrid",
+            "Video",
+            "Telephone",
+            "In person"
+          ],
+          "hearingNumber": "2",
+          "hearingSitAlone": "Full Panel",
+          "judicialMediation": "Yes",
+          "hearingEstLengthNum": "1",
+          "hearingDateCollection": [
+            {
+              "id": "21ac85f0-8db8-49c3-992d-6d7b32997a9e",
+              "value": {
+                "listedDate": "2025-02-06T13:00:00.000",
+                "Postponed_by": "Tribunal",
+                "postponedDate": "2025-02-03",
+                "Hearing_status": "Postponed",
+                "hearingVenueDay": "Teesside ET",
+                "hearingTimingStart": "2025-02-06T13:00:00.000",
+                "hearingRoomTeesside": "* Not Allocated",
+                "hearingTimingFinish": "2025-02-06T13:00:00.000"
+              }
+            },
+            {
+              "id": "2f1b98cc-ba3d-48b5-b427-cd01e2b21a9f",
+              "value": {
+                "listedDate": "2025-02-07T10:00:00.000",
+                "Hearing_status": "Listed",
+                "hearingVenueDay": "Teesside ET",
+                "hearingTimingStart": "2025-02-07T10:00:00.000",
+                "hearingTimingFinish": "2025-02-07T10:00:00.000"
+              }
+            }
+          ],
+          "hearingEstLengthNumType": "Hours"
+        }
+      },
+      {
+        "id": "23a1044e-c6b8-43d8-8170-d4fde5a96c31",
+        "value": {
+          "judge": "A Judge",
+          "Hearing_type": "Hearing",
+          "Hearing_notes": "Heard Hearing",
+          "Hearing_venue": "Hull Combined Court Centre",
+          "hearingFormat": [
+            "In person"
+          ],
+          "hearingNumber": "3",
+          "hearingEEMember": "EE Member",
+          "hearingERMember": "ER Member",
+          "hearingSitAlone": "Full Panel",
+          "judicialMediation": "No",
+          "hearingEstLengthNum": "1",
+          "hearingNotesDocument": {
+            "document_url": "http://localhost:5005/documents/0d369169-bb00-489a-b928-87afa8b888f0",
+            "document_filename": "HOW TO CLOSE A SERVICENOW CHANGE71.docx",
+            "document_binary_url": "http://localhost:5005/documents/0d369169-bb00-489a-b928-87afa8b888f0/binary"
+          },
+          "hearingDateCollection": [
+            {
+              "id": "b38f1e14-7f25-4d42-ba9b-5f4edcd06658",
+              "value": {
+                "listedDate": "2025-02-04T14:00:00.000",
+                "HearingNotes2": "Test",
+                "Hearing_clerk": "A Clerk",
+                "Hearing_status": "Heard",
+                "hearingVenueDay": "Hull Combined Court Centre",
+                "attendee_claimant": "Claimant and representative",
+                "attendee_rep_only": "10",
+                "Hearing_part_heard": "No",
+                "hearingTimingBreak": "2025-02-04T14:30:00.000",
+                "hearingTimingStart": "2025-02-04T14:00:00.000",
+                "attendee_resp_&_rep": "10",
+                "hearingCaseDisposed": "Yes",
+                "hearingTimingFinish": "2025-02-04T15:00:00.000",
+                "hearingTimingResume": "2025-02-04T14:45:00.000",
+                "attendee_resp_no_rep": "10",
+                "hearingTimingDuration": "45",
+                "attendee_non_attendees": "10",
+                "hearingRoomHullCombined": "1",
+                "Hearing_reserved_judgement": "Yes"
+              }
+            }
+          ],
+          "hearingEstLengthNumType": "Days"
+        }
+      }
+    ],
+    "targetHearingDate": "2025-06-30",
+    "additionalCaseInfo": {
+      "digitalFile": "Yes",
+      "doNotPostpone": "Yes",
+      "additional_sensitive": "Yes",
+      "reasonableAdjustment": "Yes",
+      "additional_live_appeal": "Yes"
+    },
+    "documentCollection": [
+      {
+        "id": "684c6882-a12f-4259-adf7-09dfcb56f877",
+        "value": {
+          "docNumber": "1",
+          "documentType": "ET1",
+          "shortDescription": "Quibusdam possimus nemo debitis iusto excepturi ut. Nemo ullam accusamus voluptatem ea ut. Sint mollitia dignissimos voluptate quis quas et beatae. Enim cumque omnis dolores dolores cum error incidunt itaque. Repudiandae numquam voluptatum natus similique rerum tenetur alias adipisci omnis. Quos est eos modi qui deserunt assumenda sed.",
+          "uploadedDocument": {
+            "document_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70",
+            "document_filename": "ET1 - Test.pdf",
+            "document_binary_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70/binary"
+          },
+          "topLevelDocuments": "Starting a Claim",
+          "dateOfCorrespondence": "2025-02-03",
+          "startingClaimDocuments": "ET1"
+        }
+      }
+    ],
+    "ethosCaseReference": "1800095/2025",
+    "flagsImageFileName": "EMP-TRIB-0111011011.jpg",
+    "jurCodesCollection": [
+      {
+        "id": "aacf9549-0684-4fc5-9a59-98e3252d4c6d",
+        "value": {
+          "juridictionCodesList": "ADT"
+        }
+      },
+      {
+        "id": "293c77ba-3866-470f-8e52-639497921da4",
+        "value": {
+          "judgmentOutcome": "Not allocated",
+          "juridictionCodesList": "ADG"
+        }
+      },
+      {
+        "id": "45956e40-573b-4259-a312-6c29404bd21c",
+        "value": {
+          "judgmentOutcome": "Struck Out",
+          "juridictionCodesList": "APA"
+        }
+      }
+    ],
+    "claimantWorkAddress": {
+      "claimant_work_address": {
+        "Country": "Uruguay",
+        "PostCode": "SW11 1PD",
+        "PostTown": "South Joshuah",
+        "AddressLine1": "0545 Lemke Ford"
+      }
+    },
+    "judgementCollection": [
+      {
+        "id": "df00de24-71c0-4ee0-8389-cabc043321ea",
+        "value": {
+          "judgement_type": "Case Management",
+          "judgment_notes": "dsaas",
+          "Judgement_costs": {
+            "costs_question": "Yes",
+            "wasted_cost_awarded_to": "Claimant",
+            "costs_expenses_awarded_to": "Claimant",
+            "pro_bono_costs_awarded_to": "Access to Justice Foundation",
+            "wasted_cost_amount_awarded": "100",
+            "wasted_cost_awarded_against": "Claimant",
+            "costs_expenses_awarded_amount": "100",
+            "pro_bono_costs_amount_awarded": "100",
+            "costs_expenses_awarded_against": "Claimant",
+            "preparation_of_time_awarded_to": "Claimant",
+            "pro_bono_costs_awarded_against": "Claimant's Representative",
+            "preparation_of_time_amount_awarded": "100",
+            "preparation_of_time_awarded_against": "Claimant"
+          },
+          "reconsiderations": {
+            "reconsideration": "Yes",
+            "reconsiderationDate": "2024-02-05",
+            "reconsiderationDecision": "Application Refused",
+            "reconsiderationDirection": "Application to be considered on the written submissions",
+            "reconsiderationOwnInitiative": "No",
+            "reconsiderationPartyInitiative": "Claimant"
+          },
+          "judgement_details": {
+            "awardMade": "Yes",
+            "adjustment": "Mitigation (Old regs)",
+            "total_award": "1000000",
+            "reasons_given": "Yes",
+            "financialAwardMade": "Yes",
+            "date_reasons_issued": "2024-02-05",
+            "non-financial_award": "Yes",
+            "reinstated_reengaged": "Reengaged",
+            "remedy_left_to_parties": "Yes",
+            "cert_of_correction_date": "2024-02-05",
+            "cert_of_correction_sent": "2024-02-02",
+            "certificateOfCorrection": "Yes",
+            "reinstate_reengage_order": "Reinstate"
+          },
+          "jurisdictionCodes": [
+            {
+              "id": "c84f58c5-5897-447c-b557-f13f4483531e",
+              "value": {
+                "juridictionCodesList": "ADT"
+              }
+            }
+          ],
+          "date_judgment_made": "2025-02-05",
+          "date_judgment_sent": "2025-02-05",
+          "liability_optional": "Liability",
+          "judgmentHearingDate": "2025-02-04",
+          "non_hearing_judgment": "No",
+          "judgement_outcome_doc": {
+            "document_url": "http://localhost:5005/documents/847b01f4-d485-4da0-8437-02e9165c04ff",
+            "document_filename": "EM-TRB-EGW-ENG-00027 1.docx",
+            "document_binary_url": "http://localhost:5005/documents/847b01f4-d485-4da0-8437-02e9165c04ff/binary"
+          },
+          "dynamicJudgementHearing": {
+            "value": {
+              "code": "3",
+              "label": "3 : Hearing - Hull Combined Court Centre - 04 Feb 2025"
+            },
+            "list_items": [
+              {
+                "code": "1",
+                "label": "1 : Costs Hearing - Harrogate CJC - 05 Feb 2025"
+              },
+              {
+                "code": "2",
+                "label": "2 : Costs Hearing - Teesside ET - 06 Feb 2025"
+              },
+              {
+                "code": "3",
+                "label": "3 : Hearing - Hull Combined Court Centre - 04 Feb 2025"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "restrictedReporting": {
+      "imposed": "No",
+      "rule503b": "Yes",
+      "startDate": "2025-01-01",
+      "dateCeased": "2025-01-01",
+      "requestedBy": "Respondent",
+      "excludedNames": "Omnis odit perferendis debitis amet aut. Animi rerum ipsam et libero deserunt omnis. Praesentium eveniet natus. Aliquam perspiciatis sed sint sit ex at quidem similique. Quas voluptatem unde laborum.",
+      "excludedRegister": "No",
+      "deletedPhyRegister": "No",
+      "dynamicRequestedBy": {
+        "value": {
+          "code": "R: Erma Aufderhar",
+          "label": "Erma Aufderhar"
+        },
+        "list_items": [
+          {
+            "code": "R: Erma Aufderhar",
+            "label": "Erma Aufderhar"
+          },
+          {
+            "code": "C: Carlotta Fisher",
+            "label": "Carlotta Fisher"
+          },
+          {
+            "code": "Judge",
+            "label": "Judge"
+          },
+          {
+            "code": "Both Parties",
+            "label": "Both Parties"
+          },
+          {
+            "code": "Other",
+            "label": "Other"
+          },
+          {
+            "code": "None",
+            "label": "None"
+          }
+        ]
+      }
+    },
+    "respondentCollection": [
+      {
+        "id": "bdb87ceb-2b3a-4971-9e38-2de3521de6c8",
+        "value": {
+          "respondent_ACAS": "15678",
+          "respondent_name": "John Doe",
+          "responseContinue": "Yes",
+          "responseReceived": "No",
+          "responseStruckOut": "No",
+          "respondent_address": {
+            "Country": "Trinidad and Tobago",
+            "PostCode": "EX1 3DD",
+            "PostTown": "East Lansing",
+            "AddressLine1": "1601 Corine Radial"
+          },
+          "respondent_ACAS_question": "Yes",
+          "respondent_hearing_panel_preference": "Panel",
+          "respondent_hearing_panel_preference_reason": "Panel q"
+        }
+      }
+    ],
+    "adrDocumentCollection": [
+      {
+        "id": "9c208b94-b45d-4d36-a70d-7cd35ab73271",
+        "value": {
+          "creationDate": "2025-02-04",
+          "shortDescription": "Et qui dolores sunt eum accusamus ut nesciunt. Qui at repellendus et. Similique sit veritatis quis est accusantium laborum voluptatum. Aut enim qui at quasi perferendis quis. Nostrum qui vitae ea voluptatem quasi praesentium dolorem provident.",
+          "uploadedDocument": {
+            "document_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70",
+            "document_filename": "ET1 - Test.pdf",
+            "document_binary_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70/binary"
+          }
+        }
+      }
+    ],
+    "piiDocumentCollection": [
+      {
+        "id": "a1f56e74-e32e-4a0f-ad42-bd3a7beda3d3",
+        "value": {
+          "creationDate": "2025-02-06",
+          "shortDescription": "Minus recusandae quia amet accusantium eligendi. Nostrum dolore dolor non eos fugit est. Perferendis laborum qui ex error. Nam ut vel eum ut omnis. Sequi nulla et laborum ut et velit dignissimos. Aliquid id earum inventore.",
+          "uploadedDocument": {
+            "document_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70",
+            "document_filename": "ET1 - Test.pdf",
+            "document_binary_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70/binary"
+          }
+        }
+      }
+    ],
+    "claimant_TypeOfClaimant": "Individual",
+    "appealDocumentCollection": [
+      {
+        "id": "214707ac-7dd1-4e3c-b806-d34b69b5ce50",
+        "value": {
+          "creationDate": "2025-02-05",
+          "shortDescription": "Libero eos accusamus ut incidunt in voluptas. Laborum quibusdam id quisquam nemo at sed et. Iure ducimus in natus sint eos ut. Nostrum voluptas maiores aut corrupti ducimus ipsam voluptatum hic voluptatem. Consequatur molestias sed sit rerum.",
+          "uploadedDocument": {
+            "document_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70",
+            "document_filename": "ET1 - Test.pdf",
+            "document_binary_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70/binary"
+          }
+        }
+      }
+    ],
+    "tribunalCorrespondenceDX": "DX 742940 Leeds 75",
+    "claimantHearingPreference": {
+      "claimant_hearing_panel_preference": "Judge",
+      "claimant_hearing_panel_preference_why": "Sunt accusantium debitis quos sunt et sapiente est quis. Sed voluptas perspiciatis. Veniam assumenda consequatur nostrum iste ut. Voluptatem qui rerum occaecati iure aut aliquid laboriosam mollitia incidunt. Assumenda quas aliquam adipisci."
+    },
+    "tribunalCorrespondenceFax": "01264 785136",
+    "representativeClaimantType": {
+      "name_of_organisation": "Name of Organisation",
+      "name_of_representative": "Claimant Representative",
+      "representative_address": {
+        "County": "County",
+        "Country": "United Kingdom",
+        "PostCode": "SW11 1PD",
+        "PostTown": "Town or City",
+        "AddressLine1": "Building and Street",
+        "AddressLine2": "Address Line 2",
+        "AddressLine3": "Address Line 3"
+      },
+      "representative_reference": "1234",
+      "representative_occupation": "Solicitor",
+      "representative_preference": "Email",
+      "representative_phone_number": "01234121212",
+      "representative_email_address": "testemail@gmail.com",
+      "representative_mobile_number": "01234121212"
+    },
+    "claimantRepresentedQuestion": "Yes",
+    "claimantWorkAddressQuestion": "No",
+    "tribunalCorrespondenceEmail": "LeedsET@justice.gov.uk",
+    "tribunalCorrespondenceAddress": {
+      "PostCode": "LS1 2RP",
+      "PostTown": "Leeds",
+      "AddressLine1": "Westgate",
+      "AddressLine2": "6 Grace Street"
+    },
+    "claimantWorkAddressQRespondent": {
+      "value": {
+        "code": "John Doe",
+        "label": "John Doe - 78 East Wonford Hill, Exeter, EX1 3DD, United Kingdom"
+      },
+      "list_items": [
+        {
+          "code": "John Doe",
+          "label": "John Doe - 78 East Wonford Hill, Exeter, EX1 3DD, United Kingdom"
+        }
+      ]
+    },
+    "tribunalCorrespondenceTelephone": "0113 245 9741"
+  }
+}
