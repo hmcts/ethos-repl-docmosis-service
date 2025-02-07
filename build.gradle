@@ -298,7 +298,7 @@ dependencies {
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
     implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.18', ext: 'pom'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.10'
-    implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '2.3'
 
     implementation('org.elasticsearch:elasticsearch') {
         version {
@@ -318,13 +318,13 @@ dependencies {
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.4'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
 
-    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.2.4'
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.4.2'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.7.0'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.10.2'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    testImplementation group: 'com.auth0', name: 'java-jwt', version: '4.4.0'
+    testImplementation group: 'com.auth0', name: 'java-jwt', version: '4.5.0'
     testImplementation 'com.github.hmcts:fortify-client:1.4.6:all'
     testImplementation group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
     testImplementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
