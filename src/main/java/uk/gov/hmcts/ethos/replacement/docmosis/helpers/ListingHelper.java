@@ -187,7 +187,7 @@ public class ListingHelper {
         }
     }
 
-    private static String getHearingRoom(DateListedType dateListedType) {
+    public static String getHearingRoom(DateListedType dateListedType) {
         for (Method m: dateListedType.getClass().getDeclaredMethods()) {
             if (m.getName().startsWith("getHearingRoom")) {
                 try {
