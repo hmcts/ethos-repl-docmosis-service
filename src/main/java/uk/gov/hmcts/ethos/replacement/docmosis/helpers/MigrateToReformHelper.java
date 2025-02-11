@@ -3,16 +3,13 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.et.common.model.ccd.Document;
-import uk.gov.hmcts.et.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.et.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.et.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.et.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.et.common.model.ccd.Address;
+import uk.gov.hmcts.et.common.model.ccd.Document;
 import uk.gov.hmcts.et.common.model.ccd.items.BFActionTypeItem;
+import uk.gov.hmcts.et.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.DepositTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.EccCounterClaimTypeItem;
@@ -29,7 +26,9 @@ import uk.gov.hmcts.et.common.model.ccd.types.ClaimantOtherType;
 import uk.gov.hmcts.et.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.et.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.et.common.model.ccd.types.CompanyPremisesType;
+import uk.gov.hmcts.et.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.et.common.model.ccd.types.DigitalCaseFileType;
+import uk.gov.hmcts.et.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.et.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.et.common.model.ccd.types.RestrictedReportingType;
 
@@ -37,6 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.elasticsearch.common.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
@@ -54,10 +55,12 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper.JURISDICTION_OUTCOME_INPUT_IN_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.getHearingRoom;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
 
 public class MigrateToReformHelper {
+
     private MigrateToReformHelper() {
         // Access through static methods
     }
@@ -68,6 +71,7 @@ public class MigrateToReformHelper {
         caseDetailsReform.setJurisdiction(caseDetails.getJurisdiction());
         caseDetailsReform.setCaseData(getReformCaseData(caseDetails));
         caseDetailsReform.setState(caseDetails.getState());
+        setJurisdictionDisposalDate(caseDetailsReform.getCaseData());
         return caseDetailsReform;
     }
 
@@ -79,7 +83,8 @@ public class MigrateToReformHelper {
             reformCaseData.setAllocatedOffice(caseData.getAllocatedOffice());
             reformCaseData.setFileLocationAberdeen(createDynamicListFromFixedList(caseData.getFileLocationAberdeen()));
             reformCaseData.setFileLocationDundee(createDynamicListFromFixedList(caseData.getFileLocationDundee()));
-            reformCaseData.setFileLocationEdinburgh(createDynamicListFromFixedList(caseData.getFileLocationEdinburgh()));
+            reformCaseData.setFileLocationEdinburgh(
+                    createDynamicListFromFixedList(caseData.getFileLocationEdinburgh()));
             reformCaseData.setFileLocationGlasgow(createDynamicListFromFixedList(caseData.getFileLocationGlasgow()));
         } else {
             reformCaseData.setManagingOffice(getEnglandWalesTribunalOffice(caseDetails.getCaseTypeId()));
@@ -104,32 +109,42 @@ public class MigrateToReformHelper {
         reformCaseData.setPositionType(caseData.getPositionType());
         reformCaseData.setCaseNotes(caseData.getCaseNotes());
         reformCaseData.setConciliationTrack(caseData.getConciliationTrack());
-        reformCaseData.setPreAcceptCase((CasePreAcceptType) objectMapper(caseData.getPreAcceptCase(), CasePreAcceptType.class));
+        reformCaseData.setPreAcceptCase(
+                (CasePreAcceptType) objectMapper(caseData.getPreAcceptCase(), CasePreAcceptType.class));
         reformCaseData.setClerkResponsible(createDynamicListFromFixedList(caseData.getClerkResponsible()));
         reformCaseData.setDocumentCollection(convertCaseDataDocumentCollection(caseData.getDocumentCollection()));
         reformCaseData.setAdrDocumentCollection(convertCaseDataDocumentCollection(caseData.getAdrDocumentCollection()));
         reformCaseData.setPiiDocumentCollection(convertCaseDataDocumentCollection(caseData.getPiiDocumentCollection()));
-        reformCaseData.setAppealDocumentCollection(convertCaseDataDocumentCollection(caseData.getAppealDocumentCollection()));
-        reformCaseData.setAdditionalCaseInfoType((AdditionalCaseInfoType) objectMapper(caseData.getAdditionalCaseInfoType(), AdditionalCaseInfoType.class));
+        reformCaseData.setAppealDocumentCollection(
+                convertCaseDataDocumentCollection(caseData.getAppealDocumentCollection()));
+        reformCaseData.setAdditionalCaseInfoType((AdditionalCaseInfoType)
+                objectMapper(caseData.getAdditionalCaseInfoType(), AdditionalCaseInfoType.class));
         reformCaseData.setClaimantTypeOfClaimant(caseData.getClaimantTypeOfClaimant());
         reformCaseData.setClaimantCompany(caseData.getClaimantCompany());
         reformCaseData.setClaimantIndType(convertClaimantIndtype(caseData.getClaimantIndType()));
         reformCaseData.setClaimantType((ClaimantType) objectMapper(caseData.getClaimantType(), ClaimantType.class));
-        reformCaseData.setClaimantOtherType((ClaimantOtherType) objectMapper(caseData.getClaimantOtherType(), ClaimantOtherType.class));
+        reformCaseData.setClaimantOtherType(
+                (ClaimantOtherType) objectMapper(caseData.getClaimantOtherType(), ClaimantOtherType.class));
         reformCaseData.setClaimantWorkAddressQuestion(caseData.getClaimantWorkAddressQuestion());
-        reformCaseData.setClaimantWorkAddressQRespondent(convertDynamicList(caseData.getClaimantWorkAddressQRespondent()));
-        reformCaseData.setClaimantWorkAddress((ClaimantWorkAddressType) objectMapper(caseData.getClaimantWorkAddress(), ClaimantWorkAddressType.class));
-        reformCaseData.setCompanyPremises((CompanyPremisesType) objectMapper(caseData.getCompanyPremises(), CompanyPremisesType.class));
+        reformCaseData.setClaimantWorkAddressQRespondent(
+                convertDynamicList(caseData.getClaimantWorkAddressQRespondent()));
+        reformCaseData.setClaimantWorkAddress((ClaimantWorkAddressType)
+                objectMapper(caseData.getClaimantWorkAddress(), ClaimantWorkAddressType.class));
+        reformCaseData.setCompanyPremises((CompanyPremisesType)
+                objectMapper(caseData.getCompanyPremises(), CompanyPremisesType.class));
         reformCaseData.setClaimantRepresentedQuestion(caseData.getClaimantRepresentedQuestion());
-        reformCaseData.setRepresentativeClaimantType((RepresentedTypeC) objectMapper(caseData.getRepresentativeClaimantType(), RepresentedTypeC.class));
+        reformCaseData.setRepresentativeClaimantType((RepresentedTypeC)
+                objectMapper(caseData.getRepresentativeClaimantType(), RepresentedTypeC.class));
         reformCaseData.setRespondentCollection(convertRespondentCollection(caseData.getRespondentCollection()));
         reformCaseData.setRepCollection(convertRepCollection(caseData.getRepCollection()));
         reformCaseData.setJurCodesCollection(convertJurCodesCollection(caseData.getJurCodesCollection()));
-        reformCaseData.setHearingCollection(convertHearingCollection(caseData.getHearingCollection(), caseDetails.getCaseTypeId()));
+        reformCaseData.setHearingCollection(
+                convertHearingCollection(caseData.getHearingCollection(), caseDetails.getCaseTypeId()));
         reformCaseData.setJudgementCollection(covertJudgementCollection(caseData.getJudgementCollection()));
         reformCaseData.setDepositCollection(convertDepositCollection(caseData.getDepositCollection()));
         reformCaseData.setBfActions(convertBfActions(caseData.getBfActions()));
-        reformCaseData.setRestrictedReporting((RestrictedReportingType) objectMapper(caseData.getRestrictedReporting(), RestrictedReportingType.class));
+        reformCaseData.setRestrictedReporting((RestrictedReportingType)
+                objectMapper(caseData.getRestrictedReporting(), RestrictedReportingType.class));
         reformCaseData.setCaseSource(caseData.getCaseSource());
         reformCaseData.setTargetHearingDate(caseData.getTargetHearingDate());
         reformCaseData.setClaimServedDate(caseData.getClaimServedDate());
@@ -154,13 +169,16 @@ public class MigrateToReformHelper {
         reformCaseData.setTransferredCaseLink(caseData.getTransferredCaseLink());
         reformCaseData.setTransferredCaseLinkSourceCaseId(caseData.getTransferredCaseLinkSourceCaseId());
         reformCaseData.setTransferredCaseLinkSourceCaseTypeId(caseData.getTransferredCaseLinkSourceCaseTypeId());
-        reformCaseData.setDigitalCaseFile((DigitalCaseFileType) objectMapper(caseData.getDigitalCaseFile(), DigitalCaseFileType.class));
-        reformCaseData.setClaimantHearingPreference((ClaimantHearingPreference) objectMapper(caseData.getClaimantHearingPreference(), ClaimantHearingPreference.class));
+        reformCaseData.setDigitalCaseFile((DigitalCaseFileType)
+                objectMapper(caseData.getDigitalCaseFile(), DigitalCaseFileType.class));
+        reformCaseData.setClaimantHearingPreference((ClaimantHearingPreference)
+                objectMapper(caseData.getClaimantHearingPreference(), ClaimantHearingPreference.class));
         return reformCaseData;
     }
 
-    private static List<HearingTypeItem> convertHearingCollection(List<uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem> hearingCollection, String caseTypeId) {
-        if (CollectionUtils.isEmpty(hearingCollection)) {
+    private static List<HearingTypeItem> convertHearingCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem> hearingCollection, String caseTypeId) {
+        if (isEmpty(hearingCollection)) {
             return List.of();
         }
         List<HearingTypeItem> hc = new ArrayList<>();
@@ -168,7 +186,8 @@ public class MigrateToReformHelper {
             HearingType reformHearingType = new HearingType();
             var hearingType = hearingTypeItem.getValue();
             reformHearingType.setHearingType(hearingType.getHearingType());
-            reformHearingType.setHearingNotesDocument((Document) objectMapper(hearingType.getHearingNotesDocument(), Document.class));
+            reformHearingType.setHearingNotesDocument((Document)
+                    objectMapper(hearingType.getHearingNotesDocument(), Document.class));
             reformHearingType.setHearingFormat(hearingType.getHearingFormat());
             reformHearingType.setJudicialMediation(hearingType.getJudicialMediation());
             reformHearingType.setHearingPublicPrivate(hearingType.getHearingPublicPrivate());
@@ -186,13 +205,15 @@ public class MigrateToReformHelper {
                 reformHearingType.setHearingVenueScotland(hearingType.getHearingVenue());
                 reformHearingType.setHearingAberdeen(createDynamicListFromFixedList(hearingType.getHearingAberdeen()));
                 reformHearingType.setHearingDundee(createDynamicListFromFixedList(hearingType.getHearingDundee()));
-                reformHearingType.setHearingEdinburgh(createDynamicListFromFixedList(hearingType.getHearingEdinburgh()));
+                reformHearingType.setHearingEdinburgh(
+                        createDynamicListFromFixedList(hearingType.getHearingEdinburgh()));
                 reformHearingType.setHearingGlasgow(createDynamicListFromFixedList(hearingType.getHearingGlasgow()));
             } else {
                 reformHearingType.setHearingVenue(createDynamicListFromFixedList(hearingType.getHearingVenue()));
             }
 
-            reformHearingType.setHearingDateCollection(createHearingDateCollection(hearingType.getHearingDateCollection(), caseTypeId));
+            reformHearingType.setHearingDateCollection(
+                    createHearingDateCollection(hearingType.getHearingDateCollection(), caseTypeId));
 
             HearingTypeItem reformHearingTypeItem = new HearingTypeItem();
             reformHearingTypeItem.setId(hearingTypeItem.getId());
@@ -203,9 +224,10 @@ public class MigrateToReformHelper {
         return hc;
     }
 
-    private static List<DateListedTypeItem> createHearingDateCollection(List<uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem> hearingDateCollection,
-                                                                        String caseTypeId) {
-        if (CollectionUtils.isEmpty(hearingDateCollection)) {
+    private static List<DateListedTypeItem> createHearingDateCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem> hearingDateCollection,
+            String caseTypeId) {
+        if (isEmpty(hearingDateCollection)) {
             return List.of();
         }
 
@@ -219,10 +241,12 @@ public class MigrateToReformHelper {
             reformDateListedType.setPostponedBy(ecmDateListedType.getPostponedBy());
             reformDateListedType.setPostponedDate(ecmDateListedType.getPostponedDate());
             if (SCOTLAND_CASE_TYPE_ID.equals(caseTypeId)) {
-                reformDateListedType.setHearingTypeReadingDeliberation(ecmDateListedType.getHearingTypeReadingDeliberation());
+                reformDateListedType.setHearingTypeReadingDeliberation(
+                        ecmDateListedType.getHearingTypeReadingDeliberation());
                 reformDateListedType.setHearingVenueDayScotland(ecmDateListedType.getHearingVenueDay());
             } else {
-                reformDateListedType.setHearingVenueDay(createDynamicListFromFixedList(ecmDateListedType.getHearingVenueDay()));
+                reformDateListedType.setHearingVenueDay(
+                        createDynamicListFromFixedList(ecmDateListedType.getHearingVenueDay()));
                 String hearingRoom = getHearingRoom(ecmDateListedType);
                 if (!isNullOrEmpty(hearingRoom.trim())) {
                     reformDateListedType.setHearingRoom(createDynamicListFromFixedList(hearingRoom));
@@ -252,17 +276,20 @@ public class MigrateToReformHelper {
         return hd;
     }
 
-    private static List<JudgementTypeItem> covertJudgementCollection(List<uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem> judgementCollection) {
+    private static List<JudgementTypeItem> covertJudgementCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem> judgementCollection) {
         return emptyIfNull(judgementCollection).stream()
                 .map(judgement -> (JudgementTypeItem) objectMapper(judgement, JudgementTypeItem.class)).toList();
     }
 
-    private static List<EccCounterClaimTypeItem> convertEccCases(List<uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem> eccCases) {
+    private static List<EccCounterClaimTypeItem> convertEccCases(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem> eccCases) {
         return emptyIfNull(eccCases).stream()
-                .map(eccCase -> (EccCounterClaimTypeItem) objectMapper(eccCase, EccCounterClaimTypeItem.class)).toList();
+            .map(eccCase -> (EccCounterClaimTypeItem) objectMapper(eccCase, EccCounterClaimTypeItem.class)).toList();
     }
 
-    private static DynamicFixedListType convertDynamicList(uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType dynamicList) {
+    private static DynamicFixedListType convertDynamicList(
+            uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType dynamicList) {
         if (ObjectUtils.isEmpty(dynamicList) || ObjectUtils.isEmpty(dynamicList.getValue())) {
             return null;
         } else {
@@ -270,12 +297,14 @@ public class MigrateToReformHelper {
         }
     }
 
-    private static List<DepositTypeItem> convertDepositCollection(List<uk.gov.hmcts.ecm.common.model.ccd.items.DepositTypeItem> depositCollection) {
+    private static List<DepositTypeItem> convertDepositCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.DepositTypeItem> depositCollection) {
         return emptyIfNull(depositCollection).stream()
                 .map(deposit -> (DepositTypeItem) objectMapper(deposit, DepositTypeItem.class)).toList();
     }
 
-    private static List<RepresentedTypeRItem> convertRepCollection(List<uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem> repCollection) {
+    private static List<RepresentedTypeRItem> convertRepCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem> repCollection) {
         return emptyIfNull(repCollection).stream()
                 .map(rep -> (RepresentedTypeRItem) objectMapper(rep, RepresentedTypeRItem.class)).toList();
     }
@@ -305,22 +334,29 @@ public class MigrateToReformHelper {
         };
     }
 
-    private static List<RespondentSumTypeItem> convertRespondentCollection(List<uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem> respondentCollection) {
+    private static List<RespondentSumTypeItem> convertRespondentCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem> respondentCollection) {
         return emptyIfNull(respondentCollection).stream()
-                .map(respondent -> (RespondentSumTypeItem) objectMapper(respondent, RespondentSumTypeItem.class)).toList();
+            .map(respondent -> (RespondentSumTypeItem) objectMapper(respondent, RespondentSumTypeItem.class)).toList();
     }
 
-    private static List<BFActionTypeItem> convertBfActions(List<uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem> bfActions) {
+    private static List<BFActionTypeItem> convertBfActions(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem> bfActions) {
         return emptyIfNull(bfActions).stream()
                 .map(bfAction -> (BFActionTypeItem) objectMapper(bfAction, BFActionTypeItem.class)).toList();
     }
 
-    private static List<JurCodesTypeItem> convertJurCodesCollection(List<uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem> jurCodesCollection) {
+    private static List<JurCodesTypeItem> convertJurCodesCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem> jurCodesCollection) {
         return emptyIfNull(jurCodesCollection).stream()
-                .map(jurCode -> (JurCodesTypeItem) objectMapper(jurCode, JurCodesTypeItem.class)).toList();
+                .filter(j -> ObjectUtils.isNotEmpty(j.getValue())
+                        && !JURISDICTION_OUTCOME_INPUT_IN_ERROR.equals(j.getValue().getJudgmentOutcome()))
+                .map(j -> (JurCodesTypeItem) objectMapper(j, JurCodesTypeItem.class))
+                .toList();
     }
 
-    private static ClaimantIndType convertClaimantIndtype(uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType claimantIndType) {
+    private static ClaimantIndType convertClaimantIndtype(
+            uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType claimantIndType) {
         ClaimantIndType reformClaimantIndType = new ClaimantIndType();
         reformClaimantIndType.setClaimantFirstNames(claimantIndType.getClaimantFirstNames());
         reformClaimantIndType.setClaimantLastName(claimantIndType.getClaimantLastName());
@@ -328,7 +364,7 @@ public class MigrateToReformHelper {
         switch (defaultIfEmpty(claimantIndType.getClaimantTitle(), "")) {
             case "Mr", "Mrs", "Miss", "Ms", "Mx" ->
                     reformClaimantIndType.setClaimantPreferredTitle(claimantIndType.getClaimantTitle());
-            case OTHER ->{
+            case OTHER -> {
                 reformClaimantIndType.setClaimantPreferredTitle(OTHER);
                 reformClaimantIndType.setClaimantTitleOther(claimantIndType.getClaimantTitleOther());
             }
@@ -380,6 +416,24 @@ public class MigrateToReformHelper {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return mapper.convertValue(object, classType);
+    }
+
+    private static void setJurisdictionDisposalDate(uk.gov.hmcts.et.common.model.ccd.CaseData caseData) {
+        if (isEmpty(caseData.getJurCodesCollection()) || isEmpty(caseData.getJudgementCollection())) {
+            return;
+        }
+
+        caseData.getJurCodesCollection().stream()
+            .map(JurCodesTypeItem::getValue)
+            .filter(jurCodesType -> isNullOrEmpty(jurCodesType.getDisposalDate()))
+            .forEach(jurCodesType -> caseData.getJudgementCollection().stream()
+                .map(JudgementTypeItem::getValue)
+                .filter(judgement -> isNotEmpty(judgement.getJurisdictionCodes())
+                        && !isNullOrEmpty(judgement.getDateJudgmentMade()))
+                .filter(judgementType -> judgementType.getJurisdictionCodes().stream()
+                    .anyMatch(jurCode ->
+                        jurCode.getValue().getJuridictionCodesList().equals(jurCodesType.getJuridictionCodesList())))
+                .forEach(judgementType -> jurCodesType.setDisposalDate(judgementType.getDateJudgmentSent())));
     }
 
 }
