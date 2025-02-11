@@ -26,14 +26,18 @@ public class MigrateToReformService {
     private final CcdClient ccdClient;
 
     public void migrateToReform(String authToken, CaseDetails caseDetails) throws IOException {
+        log.info("ECM Case {} retrieved for migration to Reform", caseDetails.getCaseId());
         var reformCaseDetails = reformCaseMapper(caseDetails);
-        var ecmCase = ccdClient.retrieveCase(authToken, caseDetails.getCaseTypeId(),"EMPLOYMENT" , caseDetails.getCaseId());
-        CCDRequest ccdRequest = ccdClient.startCaseMigrationToReform(authToken, "EMPLOYMENT", reformCaseDetails.getCaseTypeId());
+        var ecmCase = ccdClient.retrieveCase(authToken, caseDetails.getCaseTypeId(),
+                "EMPLOYMENT", caseDetails.getCaseId());
+        CCDRequest ccdRequest = ccdClient.startCaseMigrationToReform(authToken,
+                "EMPLOYMENT", reformCaseDetails.getCaseTypeId());
         CaseData reformCaseData = reformCaseDetails.getCaseData();
         reformCaseData.setStateAPI(ecmCase.getState());
         reformCaseData.setEcmCaseLink(setCaseLink(caseDetails.getCaseId(),
                 caseDetails.getCaseData().getEthosCaseReference()));
         SubmitEvent submitEvent = ccdClient.submitCaseCaseReform(authToken, reformCaseDetails, ccdRequest);
+        log.info("ECM Case {} migrated to Reform with caseId: {}", caseDetails.getCaseId(), submitEvent.getCaseId());
         caseDetails.getCaseData().setReformCaseLink(
                 setCaseLink(String.valueOf(submitEvent.getCaseId()), reformCaseData.getEthosCaseReference()));
     }
