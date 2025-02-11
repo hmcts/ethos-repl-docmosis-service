@@ -60,8 +60,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.getH
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
 
 public class MigrateToReformHelper {
-    private static final List<String> NO_DISPOSAL_DATE_JURISDICTION_OUTCOME =
-            List.of(JURISDICTION_OUTCOME_INPUT_IN_ERROR, "Not allocated");
 
     private MigrateToReformHelper() {
         // Access through static methods
