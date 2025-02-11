@@ -351,7 +351,10 @@ public class MigrateToReformHelper {
     private static List<JurCodesTypeItem> convertJurCodesCollection(
             List<uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem> jurCodesCollection) {
         return emptyIfNull(jurCodesCollection).stream()
-                .map(jurCode -> (JurCodesTypeItem) objectMapper(jurCode, JurCodesTypeItem.class)).toList();
+                .filter(j -> ObjectUtils.isNotEmpty(j.getValue())
+                        && !JURISDICTION_OUTCOME_INPUT_IN_ERROR.equals(j.getValue().getJudgmentOutcome()))
+                .map(j -> (JurCodesTypeItem) objectMapper(j, JurCodesTypeItem.class))
+                .toList();
     }
 
     private static ClaimantIndType convertClaimantIndtype(
@@ -424,12 +427,11 @@ public class MigrateToReformHelper {
 
         caseData.getJurCodesCollection().stream()
             .map(JurCodesTypeItem::getValue)
-            .filter(jurCodesType -> isNullOrEmpty(jurCodesType.getDisposalDate())
-                    && !NO_DISPOSAL_DATE_JURISDICTION_OUTCOME.contains(
-                            defaultIfEmpty(jurCodesType.getJudgmentOutcome(), "")))
+            .filter(jurCodesType -> isNullOrEmpty(jurCodesType.getDisposalDate()))
             .forEach(jurCodesType -> caseData.getJudgementCollection().stream()
                 .map(JudgementTypeItem::getValue)
-                .filter(judgement -> isNotEmpty(judgement.getJurisdictionCodes()))
+                .filter(judgement -> isNotEmpty(judgement.getJurisdictionCodes())
+                        && !isNullOrEmpty(judgement.getDateJudgmentMade()))
                 .filter(judgementType -> judgementType.getJurisdictionCodes().stream()
                     .anyMatch(jurCode ->
                         jurCode.getValue().getJuridictionCodesList().equals(jurCodesType.getJuridictionCodesList())))
