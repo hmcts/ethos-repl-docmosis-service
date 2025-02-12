@@ -1502,10 +1502,10 @@ abbrev@1:
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
 
-abbrev@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-2.0.0.tgz#cf59829b8b4f03f89dda2771cb7f3653828c89bf"
-  integrity sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==
+abbrev@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-3.0.0.tgz#c29a6337e167ac61a84b41b80461b29c5c271a27"
+  integrity sha512-+/kfrslGQ7TNV2ecmQwMJj/B65g5KVq1/L3SGVZ3tCYGqlzFuFCGBZJtMP99wH3NpEUyAjn0zPdPUg0D+DwrOA==
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -2391,9 +2391,9 @@ clone@^1.0.2:
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
 
 codeceptjs@^3.6.5:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/codeceptjs/-/codeceptjs-3.7.1.tgz#80109aeff9f0fb859aba75c97464b417a3b56325"
-  integrity sha512-FBV4PFtwjFzuHDhHtu2ngkQULMir7oUtNOoxbG7X1Dgct30pic+nJV9moOonkwcJrph2p2oAAD3LP1vpio8/bA==
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/codeceptjs/-/codeceptjs-3.7.2.tgz#e931b7803b380fb184dc45dfd3496a9666f46e3b"
+  integrity sha512-9WKK0+drfW04kSNHGEkBUbA7i5a3zPYTnY2z0bBhBIQYVgSmVGic2IzLWPuWKO2Q1EcjuJHbn5qlnTg6NxTXaw==
   dependencies:
     "@codeceptjs/configure" "1.0.2"
     "@codeceptjs/helper" "2.0.4"
@@ -2421,12 +2421,12 @@ codeceptjs@^3.6.5:
     inquirer "8.2.6"
     invisi-data "^1.0.0"
     joi "17.13.3"
-    js-beautify "1.15.1"
+    js-beautify "1.15.2"
     lodash.clonedeep "4.5.0"
     lodash.merge "4.6.2"
     mkdirp "3.0.1"
     mocha "11.1.0"
-    monocart-coverage-reports "2.12.0"
+    monocart-coverage-reports "2.12.1"
     ms "2.1.3"
     ora-classic "5.4.2"
     parse-function "5.6.10"
@@ -2494,7 +2494,7 @@ commander@^12.0.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-12.1.0.tgz#01423b36f501259fdaac4d0e4d60c96c991585d3"
   integrity sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==
 
-commander@^13.0.0:
+commander@^13.1.0:
   version "13.1.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-13.1.0.tgz#776167db68c78f38dcce1f9b8d7b8b9a488abf46"
   integrity sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==
@@ -3760,7 +3760,7 @@ glob-parent@^5.1.2, glob-parent@~5.1.2:
   dependencies:
     is-glob "^4.0.1"
 
-"glob@>=9.0.0 <12":
+"glob@>=9.0.0 <12", glob@^11.0.0:
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-11.0.1.tgz#1c3aef9a59d680e611b53dcd24bb8639cef064d9"
   integrity sha512-zrQDm8XPnYEKawJScsnM0QzobJxlT/kHOOlRTio8IH/GrmxRE5fjllkzdaHclIuNjUQTJYH2xHNIGfdpJkDJUw==
@@ -3772,7 +3772,7 @@ glob-parent@^5.1.2, glob-parent@~5.1.2:
     package-json-from-dist "^1.0.0"
     path-scurry "^2.0.0"
 
-glob@^10.3.3, glob@^10.4.5:
+glob@^10.4.5:
   version "10.4.5"
   resolved "https://registry.yarnpkg.com/glob/-/glob-10.4.5.tgz#f4d9f0b90ffdbab09c9d77f5f29b4262517b0956"
   integrity sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==
@@ -4337,9 +4337,9 @@ jackspeak@^3.1.2:
     "@pkgjs/parseargs" "^0.11.0"
 
 jackspeak@^4.0.1:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/jackspeak/-/jackspeak-4.0.2.tgz#11f9468a3730c6ff6f56823a820d7e3be9bef015"
-  integrity sha512-bZsjR/iRjl1Nk1UkjGpAzLNfQtzuijhn2g+pbZb98HQ1Gk8vM9hfbxeMBP+M2/UUdwj0RqGG3mlvk2MsAqwvEw==
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/jackspeak/-/jackspeak-4.0.3.tgz#8a21082b8c019e7a0a8187ad8b736609bc85ab18"
+  integrity sha512-oSwM7q8PTHQWuZAlp995iPpPJ4Vkl7qT0ZRD+9duL9j2oBy6KcTfyxc8mEuHJYC+z/kbps80aJLkaNzTOrf/kw==
   dependencies:
     "@isaacs/cliui" "^8.0.2"
 
@@ -4467,16 +4467,16 @@ joi@17.13.3:
     "@sideway/formula" "^3.0.1"
     "@sideway/pinpoint" "^2.0.0"
 
-js-beautify@1.15.1:
-  version "1.15.1"
-  resolved "https://registry.yarnpkg.com/js-beautify/-/js-beautify-1.15.1.tgz#4695afb508c324e1084ee0b952a102023fc65b64"
-  integrity sha512-ESjNzSlt/sWE8sciZH8kBF8BPlwXPwhR6pWKAw8bw4Bwj+iZcnKW6ONWUutJ7eObuBZQpiIb8S7OYspWrKt7rA==
+js-beautify@1.15.2:
+  version "1.15.2"
+  resolved "https://registry.yarnpkg.com/js-beautify/-/js-beautify-1.15.2.tgz#9b1e6471bcfded2052e6a4af784c15718b1bd522"
+  integrity sha512-mcG6CHJxxih+EFAbd5NEBwrosIs6MoJmiNLFYN6kj5SeJMf7n29Ii/H4lt6zGTvmdB9AApuj5cs4zydjuLeqjw==
   dependencies:
     config-chain "^1.1.13"
     editorconfig "^1.0.4"
-    glob "^10.3.3"
+    glob "^11.0.0"
     js-cookie "^3.0.5"
-    nopt "^7.2.0"
+    nopt "^8.0.0"
 
 js-cookie@^3.0.5:
   version "3.0.5"
@@ -5371,15 +5371,15 @@ moment@^2.19.3, moment@^2.29.2, moment@^2.29.4:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
 
-monocart-coverage-reports@2.12.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/monocart-coverage-reports/-/monocart-coverage-reports-2.12.0.tgz#f74e685d6d04b4b784588e8dff73f00250b257b1"
-  integrity sha512-smAwiZfU+bjhprWAw329CX6ng1KxoEdz4wtAFI7IKWv1ptHzGRI6qhL1NCREMq0cyqQPDYpiQzbztx0sSyEm3g==
+monocart-coverage-reports@2.12.1:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/monocart-coverage-reports/-/monocart-coverage-reports-2.12.1.tgz#374abb21ac221ad31d1ed739b1ac04f86250490a"
+  integrity sha512-pfHpUTX00a5Ts9WuBxEnQjH957M3H4tRTASZRVtSDKzyE8xRLkSat0fcz1AJpWQv7QBB2aP39+eeQUccWToh6Q==
   dependencies:
     acorn "^8.14.0"
     acorn-loose "^8.4.0"
     acorn-walk "^8.3.4"
-    commander "^13.0.0"
+    commander "^13.1.0"
     console-grid "^2.2.3"
     eight-colors "^1.3.1"
     foreground-child "^3.3.0"
@@ -5587,12 +5587,12 @@ nodemon@3.1.9:
     touch "^3.1.0"
     undefsafe "^2.0.5"
 
-nopt@^7.2.0:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/nopt/-/nopt-7.2.1.tgz#1cac0eab9b8e97c9093338446eddd40b2c8ca1e7"
-  integrity sha512-taM24ViiimT/XntxbPyJQzCG+p4EKOpgD3mxFwW38mGjVUrfERQOeY4EDHjdnptttfHuHQXFx+lTP08Q+mLa/w==
+nopt@^8.0.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/nopt/-/nopt-8.1.0.tgz#b11d38caf0f8643ce885818518064127f602eae3"
+  integrity sha512-ieGu42u/Qsa4TFktmaKEwM6MQH0pOWnaB3htzh0JRtx84+Mebc0cbZYN5bC+6WTZ4+77xrL9Pn5m7CV6VIkV7A==
   dependencies:
-    abbrev "^2.0.0"
+    abbrev "^3.0.0"
 
 nopt@~1.0.10:
   version "1.0.10"
@@ -7215,9 +7215,9 @@ tempfile@^2.0.0:
     uuid "^3.0.1"
 
 terser@^5.15.0, terser@^5.15.1:
-  version "5.38.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.38.1.tgz#a18d83c8acf3175e847ab0b66839f3c318167c58"
-  integrity sha512-GWANVlPM/ZfYzuPHjq0nxT+EbOEDDN3Jwhwdg1D8TU8oSkktp8w64Uq4auuGLxFSoNTRDncTq2hQHX1Ld9KHkA==
+  version "5.38.2"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.38.2.tgz#24aef4ea48c900d46a4b13f6a53789980d59967f"
+  integrity sha512-w8CXxxbFA5zfNsR/i8HZq5bvn18AK0O9jj7hyo1YqkovLxEFa0uP0LCVGZRqiRaKRFxXhELBp8SteeAjEnfeJg==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"
