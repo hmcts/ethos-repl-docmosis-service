@@ -67,7 +67,7 @@
     "ua-parser-js": "^1.0.33",
     "got": "^14.0.0",
     "flat": "6.0.1",
-    "cacheable-request": "^12.0.0",
+    "cacheable-request": "^13.0.0",
     "semver": "^7.5.2",
     "tough-cookie": "^4.1.3",
     "word-wrap": "^1.2.5",
