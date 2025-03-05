@@ -81,6 +81,19 @@ class MigrateToReformControllerTest {
                 .andExpect(jsonPath("$.data.ReformCaseLink").doesNotExist());
     }
 
+    @Test
+    void migrateToReformRollbackAboutToSubmit_invalidToken() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = generateCaseDetails("migrateEcmToReformLeeds-ECM.json");
+        ccdRequest.setCaseDetails(caseDetails);
+        mockMvc.perform(post(ROLLBACK_ABOUT_TO_SUBMIT_URL)
+                        .contentType("application/json")
+                        .header("Authorization", AUTH_TOKEN)
+                        .content(jsonMapper.toJson(ccdRequest)))
+                .andExpect(status().isForbidden());
+    }
+
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource(jsonFileName)).toURI())));
