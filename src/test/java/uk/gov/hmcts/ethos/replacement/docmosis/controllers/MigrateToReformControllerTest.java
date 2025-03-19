@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -28,6 +29,7 @@ class MigrateToReformControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String ABOUT_TO_SUBMIT_URL = "/migrateToReform/aboutToSubmit";
+    private static final String ROLLBACK_ABOUT_TO_SUBMIT_URL = "/migrateToReform/rollback/aboutToSubmit";
 
     @MockBean
     private MigrateToReformService migrateToReformService;
@@ -61,6 +63,34 @@ class MigrateToReformControllerTest {
                 .contentType("application/json")
                 .header("Authorization", AUTH_TOKEN)
                 .content(jsonMapper.toJson(ccdRequest)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void migrateToReformRollbackAboutToSubmit() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = generateCaseDetails("migrateEcmToReformLeeds-ECM.json");
+        caseDetails.getCaseData().setReformCaseLink("<a href=\"https://www.example.com\">Reform Case Link</a>");
+        ccdRequest.setCaseDetails(caseDetails);
+        mockMvc.perform(post(ROLLBACK_ABOUT_TO_SUBMIT_URL)
+                        .contentType("application/json")
+                        .header("Authorization", AUTH_TOKEN)
+                        .content(jsonMapper.toJson(ccdRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.ReformCaseLink").doesNotExist());
+    }
+
+    @Test
+    void migrateToReformRollbackAboutToSubmit_invalidToken() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        CCDRequest ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = generateCaseDetails("migrateEcmToReformLeeds-ECM.json");
+        ccdRequest.setCaseDetails(caseDetails);
+        mockMvc.perform(post(ROLLBACK_ABOUT_TO_SUBMIT_URL)
+                        .contentType("application/json")
+                        .header("Authorization", AUTH_TOKEN)
+                        .content(jsonMapper.toJson(ccdRequest)))
                 .andExpect(status().isForbidden());
     }
 
