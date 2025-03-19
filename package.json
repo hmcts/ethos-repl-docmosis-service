@@ -51,7 +51,9 @@
   "resolutions": {
     "async": "^3.2.4",
     "ansi-regex": "^6.0.0",
-    "axios": "1.8.1",
+    "axios": "1.8.3",
+    "@babel/runtime": "7.26.10",
+    "@babel/helpers": "^7.26.10",
     "braces": "^3.0.2",
     "cross-spawn": "^7.0.5",
     "json-schema": "^0.4.0",
@@ -76,7 +78,6 @@
     "send": "^0.19.0",
     "serve-static": "^1.16.0",
     "fast-xml-parser": "^4.4.1",
-    "path-to-regexp": "^6.3.0",
-    "cross-spawn": "^7.0.5"
+    "path-to-regexp": "^6.3.0"
   }
 }
