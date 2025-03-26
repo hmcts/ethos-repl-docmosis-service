@@ -28,6 +28,7 @@ import uk.gov.hmcts.et.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.et.common.model.ccd.types.CompanyPremisesType;
 import uk.gov.hmcts.et.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.et.common.model.ccd.types.DigitalCaseFileType;
+import uk.gov.hmcts.et.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.et.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.et.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.et.common.model.ccd.types.RestrictedReportingType;
@@ -57,6 +58,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_I
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper.JURISDICTION_OUTCOME_INPUT_IN_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.getHearingRoom;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.MISC;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
 
 public class MigrateToReformHelper {
@@ -383,10 +385,25 @@ public class MigrateToReformHelper {
         return reformClaimantIndType;
     }
 
+    /**
+     * Convert the document collection from ECM to Reform. If the document type is empty, set it to "Needs updating".
+     * @param documentCollection The document collection from ECM
+     * @return The document collection for Reform
+     */
     private static List<DocumentTypeItem> convertCaseDataDocumentCollection(
             List<uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem> documentCollection) {
         return emptyIfNull(documentCollection).stream()
-                .map(doc -> (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class)).toList();
+                .map(doc -> {
+                    DocumentTypeItem documentTypeItem = (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class);
+                    DocumentType value = documentTypeItem.getValue();
+                    if (isNullOrEmpty(value.getDocumentType())) {
+                        value.setTopLevelDocuments(MISC);
+                        value.setMiscDocuments("Needs updating");
+                        value.setDocumentType("Needs updating");
+                    }
+                    return documentTypeItem;
+                })
+                .toList();
     }
 
     private static Address addressMapper(uk.gov.hmcts.ecm.common.model.ccd.Address ecmAddress) {
