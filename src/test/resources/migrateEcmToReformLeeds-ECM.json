@@ -344,7 +344,20 @@
           "dateOfCorrespondence": "2025-02-03",
           "startingClaimDocuments": "ET1"
         }
+      },
+      {
+        "id": "684c6882-a12f-4259-adf7-09dfcb56f877",
+        "value": {
+          "docNumber": "2",
+          "uploadedDocument": {
+            "document_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70",
+            "document_filename": "Random Document with no doc type.pdf",
+            "document_binary_url": "http://localhost:5005/documents/f30e2370-7f98-46c8-aae3-bb75cbf22c70/binary"
+          },
+          "dateOfCorrespondence": "2025-02-03"
+        }
       }
+
     ],
     "ethosCaseReference": "1800095/2025",
     "flagsImageFileName": "EMP-TRIB-0111011011.jpg",
