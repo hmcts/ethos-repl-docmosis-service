@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import org.apache.commons.lang3.ObjectUtils;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -29,7 +28,6 @@ import uk.gov.hmcts.et.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.et.common.model.ccd.types.CompanyPremisesType;
 import uk.gov.hmcts.et.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.et.common.model.ccd.types.DigitalCaseFileType;
-import uk.gov.hmcts.et.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.et.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.et.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.et.common.model.ccd.types.RestrictedReportingType;
@@ -59,7 +57,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_I
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper.JURISDICTION_OUTCOME_INPUT_IN_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.getHearingRoom;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.MISC;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
 
 public class MigrateToReformHelper {
@@ -394,20 +391,8 @@ public class MigrateToReformHelper {
     private static List<DocumentTypeItem> convertCaseDataDocumentCollection(
             List<uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem> documentCollection) {
 
-        emptyIfNull(documentCollection).stream()
-                .map(uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem::getValue)
-                .forEach(MigrateToReformHelper::setDocumentTypeForDocument);
         return emptyIfNull(documentCollection).stream()
-                .map(doc -> {
-                    DocumentTypeItem documentTypeItem = (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class);
-                    DocumentType value = documentTypeItem.getValue();
-                    if (isNullOrEmpty(value.getTypeOfDocument())) {
-                        value.setTopLevelDocuments(MISC);
-                        value.setMiscDocuments("Needs updating");
-                        value.setDocumentType("Needs updating");
-                    }
-                    return documentTypeItem;
-                })
+                .map(doc -> (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class))
                 .toList();
     }
 
@@ -458,34 +443,4 @@ public class MigrateToReformHelper {
                 .forEach(judgementType -> jurCodesType.setDisposalDate(judgementType.getDateJudgmentSent())));
     }
 
-    private static void setDocumentTypeForDocument(uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType documentType) {
-        if (documentType == null) {
-            return;
-        }
-
-        if (!Strings.isNullOrEmpty(documentType.getTopLevelDocuments()) ||
-            !Strings.isNullOrEmpty(documentType.getTypeOfDocument())) {
-            if (!Strings.isNullOrEmpty(documentType.getStartingClaimDocuments())) {
-                documentType.setDocumentType(documentType.getStartingClaimDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getResponseClaimDocuments())) {
-                documentType.setDocumentType(documentType.getResponseClaimDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getInitialConsiderationDocuments())) {
-                documentType.setDocumentType(documentType.getInitialConsiderationDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getCaseManagementDocuments())) {
-                documentType.setDocumentType(documentType.getCaseManagementDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getWithdrawalSettledDocuments())) {
-                documentType.setDocumentType(documentType.getWithdrawalSettledDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getHearingsDocuments())) {
-                documentType.setDocumentType(documentType.getHearingsDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getJudgmentAndReasonsDocuments())) {
-                documentType.setDocumentType(documentType.getJudgmentAndReasonsDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getReconsiderationDocuments())) {
-                documentType.setDocumentType(documentType.getReconsiderationDocuments());
-            } else if (!Strings.isNullOrEmpty(documentType.getMiscDocuments())) {
-                documentType.setDocumentType(documentType.getMiscDocuments());
-            } else {
-                documentType.setDocumentType(documentType.getTypeOfDocument());
-            }
-        }
-    }
 }
