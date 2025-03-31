@@ -396,7 +396,7 @@ public class MigrateToReformHelper {
                 .map(doc -> {
                     DocumentTypeItem documentTypeItem = (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class);
                     DocumentType value = documentTypeItem.getValue();
-                    if (isNullOrEmpty(value.getDocumentType())) {
+                    if (isNullOrEmpty(value.getDocumentType()) && isNullOrEmpty(value.getTypeOfDocument()))) {
                         value.setTopLevelDocuments(MISC);
                         value.setMiscDocuments("Needs updating");
                         value.setDocumentType("Needs updating");
