@@ -357,6 +357,9 @@ public class MigrateToReformHelper {
 
     private static ClaimantIndType convertClaimantIndtype(
             uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType claimantIndType) {
+        if (ObjectUtils.isEmpty(claimantIndType)) {
+            return null;
+        }
         ClaimantIndType reformClaimantIndType = new ClaimantIndType();
         reformClaimantIndType.setClaimantFirstNames(claimantIndType.getClaimantFirstNames());
         reformClaimantIndType.setClaimantLastName(claimantIndType.getClaimantLastName());
