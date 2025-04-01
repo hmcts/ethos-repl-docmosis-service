@@ -56,7 +56,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper.JURISDICTION_OUTCOME_INPUT_IN_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.convertLegacyDocsToNewDocNaming;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setDocumentTypeForDocumentCollection;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.getHearingRoom;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.MISC;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
 
 public class MigrateToReformHelper {
@@ -78,6 +81,8 @@ public class MigrateToReformHelper {
     private static uk.gov.hmcts.et.common.model.ccd.CaseData getReformCaseData(CaseDetails caseDetails) {
         var reformCaseData = new uk.gov.hmcts.et.common.model.ccd.CaseData();
         CaseData caseData = caseDetails.getCaseData();
+        convertLegacyDocsToNewDocNaming(caseData);
+        setDocumentTypeForDocumentCollection(caseData);
         if (SCOTLAND_CASE_TYPE_ID.equals(caseDetails.getCaseTypeId())) {
             reformCaseData.setManagingOffice(caseData.getManagingOffice());
             reformCaseData.setAllocatedOffice(caseData.getAllocatedOffice());
@@ -402,9 +407,18 @@ public class MigrateToReformHelper {
     private static List<DocumentTypeItem> convertCaseDataDocumentCollection(
             List<uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem> documentCollection) {
 
-        return emptyIfNull(documentCollection).stream()
-                .map(doc -> (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class))
-                .toList();
+        List<DocumentTypeItem> list = new ArrayList<>();
+        emptyIfNull(documentCollection).stream()
+            .map(doc -> (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class))
+            .forEach(documentTypeItem -> {
+                if (isNullOrEmpty(documentTypeItem.getValue().getDocumentType())) {
+                    documentTypeItem.getValue().setTopLevelDocuments(MISC);
+                    documentTypeItem.getValue().setMiscDocuments("Needs updating");
+                    documentTypeItem.getValue().setDocumentType("Needs updating");
+                }
+            list.add(documentTypeItem);
+        });
+        return list;
     }
 
     private static Address addressMapper(uk.gov.hmcts.ecm.common.model.ccd.Address ecmAddress) {

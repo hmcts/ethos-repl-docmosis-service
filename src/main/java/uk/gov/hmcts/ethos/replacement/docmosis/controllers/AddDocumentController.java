@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
-
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import java.util.List;
 
@@ -24,22 +23,17 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.addUploadedDocsToCaseDocCollection;
 
 /**
  * REST controller for the Add Document event page.
  */
 @Slf4j
 @RequestMapping("/addDocument")
+@RequiredArgsConstructor
 @RestController
 public class AddDocumentController {
-    private final DocumentManagementService documentManagementService;
     private final VerifyTokenService verifyTokenService;
-
-    public AddDocumentController(DocumentManagementService documentManagementService,
-                                 VerifyTokenService verifyTokenService) {
-        this.documentManagementService = documentManagementService;
-        this.verifyTokenService = verifyTokenService;
-    }
 
     @PostMapping(value = "/aboutToSubmit", consumes = APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
@@ -61,7 +55,7 @@ public class AddDocumentController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         try {
-            documentManagementService.addUploadedDocsToCaseDocCollection(caseData);
+            addUploadedDocsToCaseDocCollection(caseData);
             caseData.getAddDocumentCollection().clear();
             return getCallbackRespEntityNoErrors(caseData);
         } catch (Exception e) {
