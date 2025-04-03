@@ -29,11 +29,14 @@ import uk.gov.hmcts.et.common.model.ccd.types.CompanyPremisesType;
 import uk.gov.hmcts.et.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.et.common.model.ccd.types.DigitalCaseFileType;
 import uk.gov.hmcts.et.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.et.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.et.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.et.common.model.ccd.types.RestrictedReportingType;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
@@ -450,10 +453,30 @@ public class MigrateToReformHelper {
         return mapper.convertValue(object, classType);
     }
 
+    private static void calculateJurisdictionDisposalDate(JudgementType judgement, String jurCode, Map<String, LocalDate> judgmentDisposalDate) {
+        if (!judgmentDisposalDate.containsKey(jurCode)) {
+            judgmentDisposalDate.put(jurCode, LocalDate.parse(judgement.getDateJudgmentSent()));
+        } else {
+            LocalDate existingDate = judgmentDisposalDate.get(jurCode);
+            if (LocalDate.parse(judgement.getDateJudgmentSent()).isAfter(existingDate)) {
+                judgmentDisposalDate.put(jurCode, LocalDate.parse(judgement.getDateJudgmentSent()));
+            }
+        }
+    }
+
     private static void setJurisdictionDisposalDate(uk.gov.hmcts.et.common.model.ccd.CaseData caseData) {
         if (isEmpty(caseData.getJurCodesCollection()) || isEmpty(caseData.getJudgementCollection())) {
             return;
         }
+
+        Map<String, LocalDate> judgmentDisposalDate = new java.util.HashMap<>();
+        caseData.getJudgementCollection().stream()
+                .map(JudgementTypeItem::getValue)
+                .filter(judgement -> isNotEmpty(judgement.getJurisdictionCodes())
+                                     && !isNullOrEmpty(judgement.getDateJudgmentSent()))
+                .forEach(judgement -> judgement.getJurisdictionCodes().stream()
+                        .map(jur -> jur.getValue().getJuridictionCodesList())
+                        .forEach(jurCode -> calculateJurisdictionDisposalDate(judgement, jurCode, judgmentDisposalDate)));
 
         caseData.getJurCodesCollection().stream()
             .map(JurCodesTypeItem::getValue)
@@ -465,7 +488,9 @@ public class MigrateToReformHelper {
                 .filter(judgementType -> judgementType.getJurisdictionCodes().stream()
                     .anyMatch(jurCode ->
                         jurCode.getValue().getJuridictionCodesList().equals(jurCodesType.getJuridictionCodesList())))
-                .forEach(judgementType -> jurCodesType.setDisposalDate(judgementType.getDateJudgmentSent())));
+                .forEach(judgementType ->
+                        jurCodesType.setDisposalDate(judgmentDisposalDate.get(jurCodesType.getJuridictionCodesList())
+                                .toString())));
     }
 
 }
