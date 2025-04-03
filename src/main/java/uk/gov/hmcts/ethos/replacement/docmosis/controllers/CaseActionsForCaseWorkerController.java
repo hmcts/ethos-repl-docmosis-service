@@ -68,6 +68,8 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrorsAndWarnings;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.convertLegacyDocsToNewDocNaming;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setDocumentTypeForDocumentCollection;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -268,8 +270,8 @@ public class CaseActionsForCaseWorkerController {
             FlagsImageHelper.buildFlagsImageFileName(caseData);
             caseData.setMultipleFlag(caseData.getEcmCaseType() != null
                     && caseData.getEcmCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
-            documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
-            documentManagementService.setDocumentTypeForDocumentCollection(caseData);
+            convertLegacyDocsToNewDocNaming(caseData);
+            setDocumentTypeForDocumentCollection(caseData);
         }
 
         log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());
@@ -317,8 +319,8 @@ public class CaseActionsForCaseWorkerController {
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
             caseManagementForCaseWorkerService.setNextListedDate(caseData);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
-            documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
-            documentManagementService.setDocumentTypeForDocumentCollection(caseData);
+            convertLegacyDocsToNewDocNaming(caseData);
+            setDocumentTypeForDocumentCollection(caseData);
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
                     userToken, caseData, caseDetails.getCaseTypeId(),
                     caseDetails.getJurisdiction(),

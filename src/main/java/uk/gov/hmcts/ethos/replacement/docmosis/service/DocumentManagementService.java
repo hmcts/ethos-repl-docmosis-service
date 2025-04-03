@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,12 +13,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
 import uk.gov.hmcts.reform.ccd.document.am.model.Classification;
@@ -28,26 +22,11 @@ import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ACAS_CERTIFICATE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.CLAIM_ACCEPTED;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.CLAIM_REJECTED;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1_ATTACHMENT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET3;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET3_ATTACHMENT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.HEARINGS;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.LEGACY_DOCUMENT_NAMES;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_CLAIM;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_HEARING;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.RESPONSE_TO_A_CLAIM;
-import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.STARTING_A_CLAIM;
 
 @Service
 @Slf4j
@@ -177,162 +156,5 @@ public class DocumentManagementService {
         var documentUUID = urlString.replace(ccdDMStoreBaseUrl + "/documents/", "");
         documentUUID = documentUUID.replace("/binary", "");
         return documentUUID;
-    }
-
-    /**
-     * Changes the old documents into the new doc naming convention by checking what the old is and converting it to the
-     * new where possible. If it can't find a new doc type version, defaults to a new section called Legacy Document
-     * Names where all the preexisting data will sit
-     * @param caseData where the data is stored
-     */
-    public void convertLegacyDocsToNewDocNaming(CaseData caseData) {
-        if (CollectionUtils.isEmpty(caseData.getDocumentCollection())) {
-            return;
-        }
-        for (DocumentTypeItem documentTypeItem : caseData.getDocumentCollection()) {
-            DocumentType documentType = documentTypeItem.getValue();
-            if (isNullOrEmpty(documentType.getTopLevelDocuments()) && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
-                mapLegacyDocTypeToNewDocType(documentType);
-
-            }
-            if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
-                documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence()).toString());
-            }
-        }
-    }
-
-    private static void mapLegacyDocTypeToNewDocType(DocumentType documentType) {
-        switch (documentType.getTypeOfDocument()) {
-            case ET1 -> {
-                documentType.setTopLevelDocuments(STARTING_A_CLAIM);
-                documentType.setStartingClaimDocuments(ET1);
-            }
-            case ET1_ATTACHMENT -> {
-                documentType.setTopLevelDocuments(STARTING_A_CLAIM);
-                documentType.setStartingClaimDocuments(ET1_ATTACHMENT);
-            }
-            case ACAS_CERTIFICATE -> {
-                documentType.setTopLevelDocuments(STARTING_A_CLAIM);
-                documentType.setStartingClaimDocuments(ACAS_CERTIFICATE);
-            }
-            case DocumentConstants.NOTICE_OF_A_CLAIM -> {
-                documentType.setTopLevelDocuments(STARTING_A_CLAIM);
-                documentType.setStartingClaimDocuments(NOTICE_OF_CLAIM);
-            }
-            case DocumentConstants.TRIBUNAL_CORRESPONDENCE -> {
-                documentType.setTopLevelDocuments(STARTING_A_CLAIM);
-                documentType.setStartingClaimDocuments(CLAIM_ACCEPTED);
-            }
-            case DocumentConstants.REJECTION_OF_CLAIM -> {
-                documentType.setTopLevelDocuments(STARTING_A_CLAIM);
-                documentType.setStartingClaimDocuments(CLAIM_REJECTED);
-            }
-            case ET3 -> {
-                documentType.setTopLevelDocuments(RESPONSE_TO_A_CLAIM);
-                documentType.setResponseClaimDocuments(ET3);
-            }
-            case ET3_ATTACHMENT -> {
-                documentType.setTopLevelDocuments(RESPONSE_TO_A_CLAIM);
-                documentType.setResponseClaimDocuments(ET3_ATTACHMENT);
-            }
-            case NOTICE_OF_HEARING -> {
-                documentType.setTopLevelDocuments(HEARINGS);
-                documentType.setHearingsDocuments(NOTICE_OF_HEARING);
-            }
-            default -> documentType.setTopLevelDocuments(LEGACY_DOCUMENT_NAMES);
-        }
-    }
-
-    /**
-     * Sets the document type for the document collection.
-     * @param caseData where the data is stored
-     */
-    public void setDocumentTypeForDocumentCollection(CaseData caseData) {
-        if (CollectionUtils.isEmpty(caseData.getDocumentCollection())) {
-            return;
-        }
-        caseData.getDocumentCollection().stream()
-                .map(DocumentTypeItem::getValue)
-                .forEach(this::setDocumentTypeForDocument);
-        caseData.getDocumentCollection()
-                .forEach(documentTypeItem -> documentTypeItem.getValue().setDocNumber(
-                        String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
-    }
-
-    /**
-     * Adds all uploaded documents to the case's document collection.
-     * @param caseData case that provides both document collections(uploaded and case doc collections)
-     */
-    public void addUploadedDocsToCaseDocCollection(CaseData caseData) {
-
-        if(caseData.getAddDocumentCollection() == null) {
-            return;
-        }
-
-        if (caseData.getDocumentCollection() == null) {
-            caseData.setDocumentCollection(new ArrayList<>());
-        }
-
-        caseData.getAddDocumentCollection().forEach(
-                uploadDoc -> {
-                    DocumentType uploadedDocType = uploadDoc.getValue();
-                    setDocumentTypeForDocument(uploadedDocType);
-
-                    if(!isNullOrEmpty(uploadedDocType.getDocumentType())) {
-                        DocumentHelper.setSecondLevelDocumentFromType(
-                                uploadedDocType, uploadedDocType.getDocumentType());
-                    }
-
-                    String shortDescription = "";
-                    if(!isNullOrEmpty(uploadedDocType.getShortDescription())) {
-                        shortDescription = uploadedDocType.getShortDescription();
-                    }
-
-                    DocumentTypeItem docTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
-                            uploadedDocType.getUploadedDocument(), uploadedDocType.getTopLevelDocuments(),
-                            uploadedDocType.getDocumentType(), shortDescription);
-                    setDocumentTypeForDocument(docTypeItem.getValue());
-                    docTypeItem.getValue().setDateOfCorrespondence(uploadedDocType.getDateOfCorrespondence());
-                    docTypeItem.getValue().setExcludeFromDcf(uploadedDocType.getExcludeFromDcf());
-                    DocumentHelper.addDocumentToCollectionAtIndex(caseData.getDocumentCollection(), docTypeItem,
-                            uploadedDocType.getDocumentIndex());
-                });
-        DocumentHelper.setDocumentNumbers(caseData);
-    }
-
-    private void setDocumentTypeForDocument(DocumentType documentType) {
-        if(documentType == null ) {
-            return;
-        }
-
-        if (!isNullOrEmpty(documentType.getTopLevelDocuments()) ||
-                !isNullOrEmpty(documentType.getTypeOfDocument())) {
-            if (!isNullOrEmpty(documentType.getStartingClaimDocuments())) {
-                documentType.setDocumentType(documentType.getStartingClaimDocuments());
-            } else if (!isNullOrEmpty(documentType.getResponseClaimDocuments())) {
-                documentType.setDocumentType(documentType.getResponseClaimDocuments());
-            } else if (!isNullOrEmpty(documentType.getInitialConsiderationDocuments())) {
-                documentType.setDocumentType(documentType.getInitialConsiderationDocuments());
-            } else if (!isNullOrEmpty(documentType.getCaseManagementDocuments())) {
-                documentType.setDocumentType(documentType.getCaseManagementDocuments());
-            } else if (!isNullOrEmpty(documentType.getWithdrawalSettledDocuments())) {
-                documentType.setDocumentType(documentType.getWithdrawalSettledDocuments());
-            } else if (!isNullOrEmpty(documentType.getHearingsDocuments())) {
-                documentType.setDocumentType(documentType.getHearingsDocuments());
-            } else if (!isNullOrEmpty(documentType.getJudgmentAndReasonsDocuments())) {
-                documentType.setDocumentType(documentType.getJudgmentAndReasonsDocuments());
-            } else if (!isNullOrEmpty(documentType.getReconsiderationDocuments())) {
-                documentType.setDocumentType(documentType.getReconsiderationDocuments());
-            } else if (!isNullOrEmpty(documentType.getMiscDocuments())) {
-                documentType.setDocumentType(documentType.getMiscDocuments());
-            } else {
-                documentType.setDocumentType(documentType.getTypeOfDocument());
-            }
-        }
-        if (isNullOrEmpty(documentType.getDateOfCorrespondence())) {
-            return;
-        }
-        documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
-                .toString());
     }
 }

@@ -33,6 +33,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_EMPTY_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.convertLegacyDocsToNewDocNaming;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setDocumentTypeForDocumentCollection;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -168,8 +170,8 @@ public class DocumentGenerationController {
             documentGenerationService.updateBfActions(documentInfo, caseDetails.getCaseData());
             caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
             documentGenerationService.clearUserChoices(caseDetails);
-            documentManagementService.convertLegacyDocsToNewDocNaming(caseDetails.getCaseData());
-            documentManagementService.setDocumentTypeForDocumentCollection(caseDetails.getCaseData());
+            convertLegacyDocsToNewDocNaming(caseDetails.getCaseData());
+            setDocumentTypeForDocumentCollection(caseDetails.getCaseData());
             var significantItem = Helper.generateSignificantItem(documentInfo, errors);
 
             if (errors.isEmpty()) {

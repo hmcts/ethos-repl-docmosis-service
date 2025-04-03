@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.text.RandomStringGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -91,7 +90,6 @@ class MigrateToReformServiceTest {
     }
 
     @Test
-    @Disabled
     void verifyDocumentCollectionDocTypes() throws IOException {
         ecmCaseDetails.getCaseData().getDocumentCollection().forEach(d -> d.getValue().setDocumentType(null));
         assertDoesNotThrow(() -> migrateToReformService.migrateToReform(AUTH_TOKEN, ecmCaseDetails));
@@ -101,7 +99,7 @@ class MigrateToReformServiceTest {
         reformCaseData.getDocumentCollection().stream()
                 .map(d -> d.getValue().getDocumentType())
                 .forEach(Assertions::assertNotNull);
-        assertEquals("Needs updating", reformCaseData.getDocumentCollection().get(0).getValue().getDocumentType());
+        assertEquals("Needs updating", reformCaseData.getDocumentCollection().get(1).getValue().getMiscDocuments());
     }
 
     @Test
