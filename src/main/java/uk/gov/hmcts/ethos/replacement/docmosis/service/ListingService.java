@@ -62,6 +62,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
@@ -174,8 +175,8 @@ public class ListingService {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
-                    if (submitEvent.getCaseData().getHearingCollection() != null
-                            && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
+                    if (isNotEmpty(submitEvent.getCaseData().getHearingCollection())
+                        && !"Migrated".equals(submitEvent.getState())) {
                         addListingTypeItems(submitEvent, listingTypeItems, listingDetails);
                     }
                 }
