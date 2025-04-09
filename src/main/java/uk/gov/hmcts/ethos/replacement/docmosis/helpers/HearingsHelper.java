@@ -39,7 +39,7 @@ public class HearingsHelper {
             + "resume times of 00:00:00. If the hearing had a break then please update the times. If there was no "
             + "break, please remove the hearing date and times from the break and resume fields before continuing.";
     public static final String TWO_JUDGES = "Two Judges";
-    private static final String TWO_JUDGES_ERROR = "Please choose a different judge for the second "
+    public static final String TWO_JUDGES_ERROR = "Please choose a different judge for the second "
             + "judge as the same judge has been selected for both judges for hearing %s.";
 
     public static String findHearingNumber(CaseData caseData, String hearingDate) {
@@ -74,8 +74,6 @@ public class HearingsHelper {
             }
             if (isNotEmpty(hearingType.getHearingDateCollection())) {
                 listedDateAndJudgeValidation(hearingType, errors);
-
-
             }
         }
         return errors;

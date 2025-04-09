@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports;
 
-import com.google.common.base.Strings;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 
@@ -54,12 +53,16 @@ public class ReportCommonMethods {
         String judgeName = "";
         if (!isNullOrEmpty(hearingType.getJudge())) {
             if (!isNullOrEmpty(hearingType.getAdditionalJudge())) {
-                judgeName = String.join(", ", hearingType.getJudge(),
-                        hearingType.getAdditionalJudge());
+                judgeName = String.join(", ", formatJudgeName(hearingType.getJudge()),
+                        formatJudgeName(hearingType.getAdditionalJudge()));
             } else {
-                judgeName = hearingType.getJudge();
+                judgeName = formatJudgeName(hearingType.getJudge());
             }
         }
         return judgeName;
+    }
+
+    private static String formatJudgeName(String judgeName) {
+        return judgeName.substring(judgeName.indexOf('_') + 1);
     }
 }
