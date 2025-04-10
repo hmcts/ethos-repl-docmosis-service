@@ -30,6 +30,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -86,7 +87,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstant
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_VARY_AN_ORDER_R;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_VARY_OR_REVOKE_AN_ORDER_C;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.APP_TO_VARY_OR_REVOKE_AN_ORDER_R;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CASE_MANAGEMENT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CERTIFICATE_OF_CORRECTION;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CHANGE_OF_PARTYS_DETAILS;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.CLAIM_ACCEPTED;
@@ -106,28 +106,21 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstant
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET3_ATTACHMENT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.ET3_PROCESSING;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.EXTRACT_OF_JUDGMENT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.HEARINGS;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.HEARING_BUNDLE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.INITIAL_CONSIDERATION;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.JUDGMENT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.JUDGMENT_AND_REASONS;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.JUDGMENT_WITH_REASONS;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.LEGACY_DOCUMENT_NAMES;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.MISC;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.NOTICE_OF_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.NOTICE_OF_HEARING;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.OTHER;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.REASONS;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RECONSIDERATION;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.REFERRAL_JUDICIAL_DIRECTION;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RESPONSE_ACCEPTED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RESPONSE_REJECTED;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RESPONSE_TO_A_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RULE_27_NOTICE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.RULE_28_NOTICE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.R_HAS_NOT_COMPLIED_WITH_AN_ORDER_C;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.SCHEDULE_OF_LOSS;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.STARTING_A_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.TRIBUNAL_CASE_FILE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.TRIBUNAL_NOTICE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.TRIBUNAL_ORDER;
@@ -135,7 +128,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstant
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_OF_ALL_OR_PART_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_OF_ENTIRE_CLAIM;
 import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_OF_PART_OF_CLAIM;
-import static uk.gov.hmcts.ethos.replacement.docmosis.constants.DocumentConstants.WITHDRAWAL_SETTLED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -1216,5 +1208,162 @@ public class DocumentHelper {
         DocumentTypeItem docTypeItem = new DocumentTypeItem();
         docTypeItem.setValue(docType);
         return docTypeItem;
+    }
+
+    /**
+     * Changes the old documents into the new doc naming convention by checking what the old is and converting it to the
+     * new where possible. If it can't find a new doc type version, defaults to a new section called Legacy Document
+     * Names where all the preexisting data will sit
+     * @param caseData where the data is stored
+     */
+    public static void convertLegacyDocsToNewDocNaming(CaseData caseData) {
+        if (CollectionUtils.isEmpty(caseData.getDocumentCollection())) {
+            return;
+        }
+        for (DocumentTypeItem documentTypeItem : caseData.getDocumentCollection()) {
+            DocumentType documentType = documentTypeItem.getValue();
+            if (isNullOrEmpty(documentType.getTopLevelDocuments()) && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
+                mapLegacyDocTypeToNewDocType(documentType);
+
+            }
+            if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
+                documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence()).toString());
+            }
+        }
+    }
+
+    private static void mapLegacyDocTypeToNewDocType(DocumentType documentType) {
+        switch (documentType.getTypeOfDocument()) {
+            case DocumentConstants.ET1 -> {
+                documentType.setTopLevelDocuments(DocumentConstants.STARTING_A_CLAIM);
+                documentType.setStartingClaimDocuments(DocumentConstants.ET1);
+            }
+            case DocumentConstants.ET1_ATTACHMENT -> {
+                documentType.setTopLevelDocuments(DocumentConstants.STARTING_A_CLAIM);
+                documentType.setStartingClaimDocuments(DocumentConstants.ET1_ATTACHMENT);
+            }
+            case DocumentConstants.ACAS_CERTIFICATE -> {
+                documentType.setTopLevelDocuments(DocumentConstants.STARTING_A_CLAIM);
+                documentType.setStartingClaimDocuments(DocumentConstants.ACAS_CERTIFICATE);
+            }
+            case DocumentConstants.NOTICE_OF_A_CLAIM -> {
+                documentType.setTopLevelDocuments(DocumentConstants.STARTING_A_CLAIM);
+                documentType.setStartingClaimDocuments(DocumentConstants.NOTICE_OF_CLAIM);
+            }
+            case DocumentConstants.TRIBUNAL_CORRESPONDENCE -> {
+                documentType.setTopLevelDocuments(DocumentConstants.STARTING_A_CLAIM);
+                documentType.setStartingClaimDocuments(DocumentConstants.CLAIM_ACCEPTED);
+            }
+            case DocumentConstants.REJECTION_OF_CLAIM -> {
+                documentType.setTopLevelDocuments(DocumentConstants.STARTING_A_CLAIM);
+                documentType.setStartingClaimDocuments(DocumentConstants.CLAIM_REJECTED);
+            }
+            case DocumentConstants.ET3 -> {
+                documentType.setTopLevelDocuments(DocumentConstants.RESPONSE_TO_A_CLAIM);
+                documentType.setResponseClaimDocuments(DocumentConstants.ET3);
+            }
+            case DocumentConstants.ET3_ATTACHMENT -> {
+                documentType.setTopLevelDocuments(DocumentConstants.RESPONSE_TO_A_CLAIM);
+                documentType.setResponseClaimDocuments(DocumentConstants.ET3_ATTACHMENT);
+            }
+            case DocumentConstants.NOTICE_OF_HEARING -> {
+                documentType.setTopLevelDocuments(DocumentConstants.HEARINGS);
+                documentType.setHearingsDocuments(DocumentConstants.NOTICE_OF_HEARING);
+            }
+            default -> documentType.setTopLevelDocuments(DocumentConstants.LEGACY_DOCUMENT_NAMES);
+        }
+    }
+
+    /**
+     * Sets the document type for the document collection.
+     * @param caseData where the data is stored
+     */
+    public static void setDocumentTypeForDocumentCollection(CaseData caseData) {
+        if (CollectionUtils.isEmpty(caseData.getDocumentCollection())) {
+            return;
+        }
+        caseData.getDocumentCollection().stream()
+                .map(DocumentTypeItem::getValue)
+                .forEach(DocumentHelper::setDocumentTypeForDocument);
+        caseData.getDocumentCollection()
+                .forEach(documentTypeItem -> documentTypeItem.getValue().setDocNumber(
+                        String.valueOf(caseData.getDocumentCollection().indexOf(documentTypeItem) + 1)));
+    }
+
+    /**
+     * Adds all uploaded documents to the case's document collection.
+     * @param caseData case that provides both document collections(uploaded and case doc collections)
+     */
+    public static void addUploadedDocsToCaseDocCollection(CaseData caseData) {
+
+        if(caseData.getAddDocumentCollection() == null) {
+            return;
+        }
+
+        if (caseData.getDocumentCollection() == null) {
+            caseData.setDocumentCollection(new ArrayList<>());
+        }
+
+        caseData.getAddDocumentCollection().forEach(
+                uploadDoc -> {
+                    DocumentType uploadedDocType = uploadDoc.getValue();
+                    setDocumentTypeForDocument(uploadedDocType);
+
+                    if(!isNullOrEmpty(uploadedDocType.getDocumentType())) {
+                        DocumentHelper.setSecondLevelDocumentFromType(
+                                uploadedDocType, uploadedDocType.getDocumentType());
+                    }
+
+                    String shortDescription = "";
+                    if(!isNullOrEmpty(uploadedDocType.getShortDescription())) {
+                        shortDescription = uploadedDocType.getShortDescription();
+                    }
+
+                    DocumentTypeItem docTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
+                            uploadedDocType.getUploadedDocument(), uploadedDocType.getTopLevelDocuments(),
+                            uploadedDocType.getDocumentType(), shortDescription);
+                    setDocumentTypeForDocument(docTypeItem.getValue());
+                    docTypeItem.getValue().setDateOfCorrespondence(uploadedDocType.getDateOfCorrespondence());
+                    docTypeItem.getValue().setExcludeFromDcf(uploadedDocType.getExcludeFromDcf());
+                    DocumentHelper.addDocumentToCollectionAtIndex(caseData.getDocumentCollection(), docTypeItem,
+                            uploadedDocType.getDocumentIndex());
+                });
+        DocumentHelper.setDocumentNumbers(caseData);
+    }
+
+    private static void setDocumentTypeForDocument(DocumentType documentType) {
+        if(documentType == null ) {
+            return;
+        }
+
+        if (!isNullOrEmpty(documentType.getTopLevelDocuments()) ||
+            !isNullOrEmpty(documentType.getTypeOfDocument())) {
+            if (!isNullOrEmpty(documentType.getStartingClaimDocuments())) {
+                documentType.setDocumentType(documentType.getStartingClaimDocuments());
+            } else if (!isNullOrEmpty(documentType.getResponseClaimDocuments())) {
+                documentType.setDocumentType(documentType.getResponseClaimDocuments());
+            } else if (!isNullOrEmpty(documentType.getInitialConsiderationDocuments())) {
+                documentType.setDocumentType(documentType.getInitialConsiderationDocuments());
+            } else if (!isNullOrEmpty(documentType.getCaseManagementDocuments())) {
+                documentType.setDocumentType(documentType.getCaseManagementDocuments());
+            } else if (!isNullOrEmpty(documentType.getWithdrawalSettledDocuments())) {
+                documentType.setDocumentType(documentType.getWithdrawalSettledDocuments());
+            } else if (!isNullOrEmpty(documentType.getHearingsDocuments())) {
+                documentType.setDocumentType(documentType.getHearingsDocuments());
+            } else if (!isNullOrEmpty(documentType.getJudgmentAndReasonsDocuments())) {
+                documentType.setDocumentType(documentType.getJudgmentAndReasonsDocuments());
+            } else if (!isNullOrEmpty(documentType.getReconsiderationDocuments())) {
+                documentType.setDocumentType(documentType.getReconsiderationDocuments());
+            } else if (!isNullOrEmpty(documentType.getMiscDocuments())) {
+                documentType.setDocumentType(documentType.getMiscDocuments());
+            } else {
+                documentType.setDocumentType(documentType.getTypeOfDocument());
+            }
+        }
+        if (isNullOrEmpty(documentType.getDateOfCorrespondence())) {
+            return;
+        }
+        documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
+                .toString());
     }
 }

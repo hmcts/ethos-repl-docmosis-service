@@ -45,7 +45,7 @@ class SingleCasesValidatorTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ACCEPTED_STATE, SUBMITTED_STATE, CLOSED_STATE})
+    @CsvSource({ACCEPTED_STATE, SUBMITTED_STATE, CLOSED_STATE, REJECTED_STATE})
     void shouldSetValidStateCaseAsValid(String caseState) throws IOException {
         var ethosReference = "case1";
         caseIds.add(ethosReference);
@@ -57,7 +57,7 @@ class SingleCasesValidatorTest {
     }
 
     @ParameterizedTest
-    @CsvSource({REJECTED_STATE, PENDING_STATE, OPEN_STATE, TRANSFERRED_STATE})
+    @CsvSource({PENDING_STATE, OPEN_STATE, TRANSFERRED_STATE})
     void shouldSetInvalidCaseStateAsInvalid(String caseState) throws IOException {
         String ethosReference = "case1";
         caseIds.add(ethosReference);

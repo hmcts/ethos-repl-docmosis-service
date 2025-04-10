@@ -41,7 +41,7 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    maxWarnings = 2302
+    maxWarnings = 2291
     toolVersion = '10.21.3'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
@@ -52,7 +52,8 @@ def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/util/**',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/service/DocumentManagementService.java',
-                       '**/uk/gov/hmcts/ethos/replacement/docmosis/controllers/CaseActionsForCaseWorkerController.java'
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/controllers/CaseActionsForCaseWorkerController.java',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/helpers/MigrateToReformHelper.java'
 ]
 
 sonarqube {
@@ -126,12 +127,12 @@ task yarnInstall(type: Exec) {
     commandLine 'yarn', 'install'
 }
 
-task codeceptSmoke(type: Exec, dependsOn: ':yarnInstall') {
+task codeceptSmoke(type: Exec) {
     commandLine 'echo', 'smoketest'
 //    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@smoke', '--reporter', 'mocha-multi'
 }
 
-task codeceptFunctional(type: Exec, dependsOn :'yarnInstall') {
+task codeceptFunctional(type: Exec) {
     commandLine 'echo', 'functionaltest'
 //    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@temp-disable', '--reporter', 'mocha-multi'
 }

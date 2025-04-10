@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,25 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.convertLegacyDocsToNewDocNaming;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setDocumentTypeForDocumentCollection;
 
 @Slf4j
 @RequestMapping("/uploadDocument")
+@RequiredArgsConstructor
 @RestController
 public class UploadDocumentController {
-    private final DocumentManagementService documentManagementService;
     private final VerifyTokenService verifyTokenService;
-
-    public UploadDocumentController(DocumentManagementService documentManagementService,
-                                    VerifyTokenService verifyTokenService) {
-        this.documentManagementService = documentManagementService;
-        this.verifyTokenService = verifyTokenService;
-    }
 
     @PostMapping(value = "/aboutToStart", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "Convert's the legacy style of docs into the new doc naming system")
@@ -55,7 +51,7 @@ public class UploadDocumentController {
         }
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        documentManagementService.convertLegacyDocsToNewDocNaming(caseData);
+        convertLegacyDocsToNewDocNaming(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -79,7 +75,7 @@ public class UploadDocumentController {
         }
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        documentManagementService.setDocumentTypeForDocumentCollection(caseData);
+        setDocumentTypeForDocumentCollection(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
     }

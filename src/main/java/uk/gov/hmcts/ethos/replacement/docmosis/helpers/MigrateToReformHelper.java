@@ -29,11 +29,14 @@ import uk.gov.hmcts.et.common.model.ccd.types.CompanyPremisesType;
 import uk.gov.hmcts.et.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.et.common.model.ccd.types.DigitalCaseFileType;
 import uk.gov.hmcts.et.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.et.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.et.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.et.common.model.ccd.types.RestrictedReportingType;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
@@ -56,7 +59,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper.JURISDICTION_OUTCOME_INPUT_IN_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.convertLegacyDocsToNewDocNaming;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setDocumentTypeForDocumentCollection;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper.getHearingRoom;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.MISC;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
 
 public class MigrateToReformHelper {
@@ -78,6 +84,8 @@ public class MigrateToReformHelper {
     private static uk.gov.hmcts.et.common.model.ccd.CaseData getReformCaseData(CaseDetails caseDetails) {
         var reformCaseData = new uk.gov.hmcts.et.common.model.ccd.CaseData();
         CaseData caseData = caseDetails.getCaseData();
+        convertLegacyDocsToNewDocNaming(caseData);
+        setDocumentTypeForDocumentCollection(caseData);
         if (SCOTLAND_CASE_TYPE_ID.equals(caseDetails.getCaseTypeId())) {
             reformCaseData.setManagingOffice(caseData.getManagingOffice());
             reformCaseData.setAllocatedOffice(caseData.getAllocatedOffice());
@@ -106,7 +114,7 @@ public class MigrateToReformHelper {
         reformCaseData.setNextListedDate(caseData.getNextListedDate());
         reformCaseData.setReceiptDate(caseData.getReceiptDate());
         reformCaseData.setEcmFeeGroupReference(caseData.getFeeGroupReference());
-        reformCaseData.setPositionType(caseData.getPositionType());
+        reformCaseData.setPositionType(getPositionType(caseData.getPositionType()));
         reformCaseData.setCaseNotes(caseData.getCaseNotes());
         reformCaseData.setConciliationTrack(caseData.getConciliationTrack());
         reformCaseData.setPreAcceptCase(
@@ -174,6 +182,14 @@ public class MigrateToReformHelper {
         reformCaseData.setClaimantHearingPreference((ClaimantHearingPreference)
                 objectMapper(caseData.getClaimantHearingPreference(), ClaimantHearingPreference.class));
         return reformCaseData;
+    }
+
+    private static String getPositionType(String positionType) {
+        if (isNullOrEmpty(positionType) || "Case transferred to Reform ECM".equals(positionType)) {
+            return null;
+        } else {
+            return positionType;
+        }
     }
 
     private static List<HearingTypeItem> convertHearingCollection(
@@ -357,6 +373,9 @@ public class MigrateToReformHelper {
 
     private static ClaimantIndType convertClaimantIndtype(
             uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType claimantIndType) {
+        if (ObjectUtils.isEmpty(claimantIndType)) {
+            return null;
+        }
         ClaimantIndType reformClaimantIndType = new ClaimantIndType();
         reformClaimantIndType.setClaimantFirstNames(claimantIndType.getClaimantFirstNames());
         reformClaimantIndType.setClaimantLastName(claimantIndType.getClaimantLastName());
@@ -383,10 +402,26 @@ public class MigrateToReformHelper {
         return reformClaimantIndType;
     }
 
+    /**
+     * Convert the document collection from ECM to Reform. If the document type is empty, set it to "Needs updating".
+     * @param documentCollection The document collection from ECM
+     * @return The document collection for Reform
+     */
     private static List<DocumentTypeItem> convertCaseDataDocumentCollection(
             List<uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem> documentCollection) {
-        return emptyIfNull(documentCollection).stream()
-                .map(doc -> (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class)).toList();
+
+        List<DocumentTypeItem> list = new ArrayList<>();
+        emptyIfNull(documentCollection).stream()
+            .map(doc -> (DocumentTypeItem) objectMapper(doc, DocumentTypeItem.class))
+            .forEach(documentTypeItem -> {
+                if (isNullOrEmpty(documentTypeItem.getValue().getDocumentType())) {
+                    documentTypeItem.getValue().setTopLevelDocuments(MISC);
+                    documentTypeItem.getValue().setMiscDocuments("Needs updating");
+                    documentTypeItem.getValue().setDocumentType("Needs updating");
+                }
+            list.add(documentTypeItem);
+        });
+        return list;
     }
 
     private static Address addressMapper(uk.gov.hmcts.ecm.common.model.ccd.Address ecmAddress) {
@@ -418,10 +453,30 @@ public class MigrateToReformHelper {
         return mapper.convertValue(object, classType);
     }
 
+    private static void calculateJurisdictionDisposalDate(JudgementType judgement, String jurCode, Map<String, LocalDate> judgmentDisposalDate) {
+        if (!judgmentDisposalDate.containsKey(jurCode)) {
+            judgmentDisposalDate.put(jurCode, LocalDate.parse(judgement.getDateJudgmentSent()));
+        } else {
+            LocalDate existingDate = judgmentDisposalDate.get(jurCode);
+            if (LocalDate.parse(judgement.getDateJudgmentSent()).isAfter(existingDate)) {
+                judgmentDisposalDate.put(jurCode, LocalDate.parse(judgement.getDateJudgmentSent()));
+            }
+        }
+    }
+
     private static void setJurisdictionDisposalDate(uk.gov.hmcts.et.common.model.ccd.CaseData caseData) {
         if (isEmpty(caseData.getJurCodesCollection()) || isEmpty(caseData.getJudgementCollection())) {
             return;
         }
+
+        Map<String, LocalDate> judgmentDisposalDate = new java.util.HashMap<>();
+        caseData.getJudgementCollection().stream()
+                .map(JudgementTypeItem::getValue)
+                .filter(judgement -> isNotEmpty(judgement.getJurisdictionCodes())
+                                     && !isNullOrEmpty(judgement.getDateJudgmentSent()))
+                .forEach(judgement -> judgement.getJurisdictionCodes().stream()
+                        .map(jur -> jur.getValue().getJuridictionCodesList())
+                        .forEach(jurCode -> calculateJurisdictionDisposalDate(judgement, jurCode, judgmentDisposalDate)));
 
         caseData.getJurCodesCollection().stream()
             .map(JurCodesTypeItem::getValue)
@@ -433,7 +488,9 @@ public class MigrateToReformHelper {
                 .filter(judgementType -> judgementType.getJurisdictionCodes().stream()
                     .anyMatch(jurCode ->
                         jurCode.getValue().getJuridictionCodesList().equals(jurCodesType.getJuridictionCodesList())))
-                .forEach(judgementType -> jurCodesType.setDisposalDate(judgementType.getDateJudgmentSent())));
+                .forEach(judgementType ->
+                        jurCodesType.setDisposalDate(judgmentDisposalDate.get(jurCodesType.getJuridictionCodesList())
+                                .toString())));
     }
 
 }

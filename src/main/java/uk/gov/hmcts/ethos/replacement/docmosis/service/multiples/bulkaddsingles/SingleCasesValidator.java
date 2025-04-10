@@ -13,6 +13,7 @@ import java.util.Optional;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @Service
@@ -70,6 +71,6 @@ class SingleCasesValidator {
 
     private boolean validateStates(SubmitEvent submitEvent) {
         return ACCEPTED_STATE.equals(submitEvent.getState()) || SUBMITTED_STATE.equals(submitEvent.getState())
-            || CLOSED_STATE.equals(submitEvent.getState());
+            || CLOSED_STATE.equals(submitEvent.getState()) || REJECTED_STATE.equals(submitEvent.getState());
     }
 }

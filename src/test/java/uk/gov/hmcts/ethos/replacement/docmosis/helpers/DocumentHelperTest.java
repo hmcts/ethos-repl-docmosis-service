@@ -1,8 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -23,7 +29,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -33,14 +41,34 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMP
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.addUploadedDocsToCaseDocCollection;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.buildDocumentContent;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setSecondLevelDocumentFromType;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.CLAIM_ACCEPTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.CLAIM_REJECTED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET3;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.HEARINGS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.LEGACY_DOCUMENT_NAMES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.NOTICE_OF_HEARING;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.OTHER;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.REJECTION_OF_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.RESPONSE_TO_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.STARTING_A_CLAIM;
+import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.TRIBUNAL_CORRESPONDENCE;
 
-public class DocumentHelperTest {
+@ExtendWith(SpringExtension.class)
+class DocumentHelperTest {
 
     private static final String DUMMY_CASE_TYPE_ID = "dummy case type id";
     public static final String ET1 = "ET1";
     public static final String ET1_ATTACHMENT = "ET1 Attachment";
     public static final String ACAS_CERTIFICATE  = "ACAS Certificate";
     public static final String ET3_ATTACHMENT = "ET3 Attachment";
+    private static final String DOC_FILE_NAME_1 = "DOC_FILE_NAME_1";
+    private static final String DOC_FILE_NAME_2 = "DOC_FILE_NAME_2";
+    private static final String DOC_FILE_NAME_3 = "DOC_FILE_NAME_3";
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
@@ -66,8 +94,8 @@ public class DocumentHelperTest {
 
     private InputStream venueAddressInputStream;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
@@ -103,7 +131,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent1() {
+    void buildDocumentContent1() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00026.docx\",\n"
@@ -174,7 +202,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails1.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails1.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails1.getCaseData().getCorrespondenceType(),
                 caseDetails1.getCaseData().getCorrespondenceScotType(), null,
@@ -182,7 +210,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent2_ResponseStruckOut() {
+    void buildDocumentContent2_ResponseStruckOut() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n"
@@ -245,7 +273,7 @@ public class DocumentHelperTest {
                 + "}\n"
                 + "}\n";
         caseDetails2.getCaseData().getRepCollection().get(0).getValue().setRespRepName("Antonio Vazquez");
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails2.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails2.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails2.getCaseData().getCorrespondenceType(),
                 caseDetails2.getCaseData().getCorrespondenceScotType(), null,
@@ -254,7 +282,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent2_ResponseNotStruckOut() {
+    void buildDocumentContent2_ResponseNotStruckOut() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n"
@@ -325,7 +353,7 @@ public class DocumentHelperTest {
                 + "}\n";
         caseDetails2.getCaseData().getRespondentCollection().get(0).getValue().setResponseStruckOut(NO);
         caseDetails2.getCaseData().getRepCollection().get(0).getValue().setRespRepName("Antonio Vazquez");
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails2.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails2.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails2.getCaseData().getCorrespondenceType(),
                 caseDetails2.getCaseData().getCorrespondenceScotType(), null,
@@ -334,7 +362,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent3() {
+    void buildDocumentContent3() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00028.docx\",\n"
@@ -402,7 +430,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails3.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails3.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails3.getCaseData().getCorrespondenceType(),
                 caseDetails3.getCaseData().getCorrespondenceScotType(),
@@ -410,7 +438,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent4() {
+    void buildDocumentContent4() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00029.docx\",\n"
@@ -478,7 +506,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails4.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails4.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails4.getCaseData().getCorrespondenceType(),
                 caseDetails4.getCaseData().getCorrespondenceScotType(),
@@ -486,7 +514,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent5() {
+    void buildDocumentContent5() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00030.docx\",\n"
@@ -557,7 +585,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails5.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails5.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails5.getCaseData().getCorrespondenceType(),
                 caseDetails5.getCaseData().getCorrespondenceScotType(),
@@ -565,7 +593,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent6() {
+    void buildDocumentContent6() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00031.docx\",\n"
@@ -635,7 +663,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails6.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails6.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails6.getCaseData().getCorrespondenceType(),
                 caseDetails6.getCaseData().getCorrespondenceScotType(),
@@ -643,7 +671,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent7() {
+    void buildDocumentContent7() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00032.docx\",\n"
@@ -714,7 +742,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails7.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails7.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails7.getCaseData().getCorrespondenceType(),
                 caseDetails7.getCaseData().getCorrespondenceScotType(),
@@ -722,7 +750,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent8() {
+    void buildDocumentContent8() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00033.docx\",\n"
@@ -792,7 +820,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails8.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails8.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails8.getCaseData().getCorrespondenceType(),
                 caseDetails8.getCaseData().getCorrespondenceScotType(),
@@ -800,7 +828,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent9() {
+    void buildDocumentContent9() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-EGW-ENG-00034.docx\",\n"
@@ -869,7 +897,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails9.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails9.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails9.getCaseData().getCorrespondenceType(),
                 caseDetails9.getCaseData().getCorrespondenceScotType(),
@@ -877,7 +905,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent10() {
+    void buildDocumentContent10() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n"
@@ -897,15 +925,14 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper
-                .buildDocumentContent(caseDetails10.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID,
+        assertEquals(expected, buildDocumentContent(caseDetails10.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID,
                         venueAddressInputStream, caseDetails10.getCaseData().getCorrespondenceType(),
                         caseDetails10.getCaseData().getCorrespondenceScotType(),
                         null, null).toString());
     }
 
     @Test
-    public void buildDocumentContent12() {
+    void buildDocumentContent12() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n"
@@ -946,7 +973,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails12.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails12.getCaseData(), "",
                 userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails12.getCaseData().getCorrespondenceType(),
@@ -955,7 +982,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent13() {
+    void buildDocumentContent13() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n"
@@ -988,7 +1015,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails13.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails13.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails13.getCaseData().getCorrespondenceType(),
                 caseDetails13.getCaseData().getCorrespondenceScotType(),
@@ -996,7 +1023,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent14() {
+    void buildDocumentContent14() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n"
@@ -1147,7 +1174,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails14.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails14.getCaseData(), "",
                 userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails14.getCaseData().getCorrespondenceType(),
@@ -1156,7 +1183,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent15() {
+    void buildDocumentContent15() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n"
@@ -1373,7 +1400,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails15.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails15.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails15.getCaseData().getCorrespondenceType(),
                 caseDetails15.getCaseData().getCorrespondenceScotType(),
@@ -1381,9 +1408,9 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContent20() throws URISyntaxException, IOException {
+    void buildDocumentContent20() throws URISyntaxException, IOException {
         var expectedResult = getExpectedResult("expectedDocumentContent20.json");
-        var actualResult = DocumentHelper.buildDocumentContent(caseDetails20.getCaseData(), "",
+        var actualResult = buildDocumentContent(caseDetails20.getCaseData(), "",
             userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
             caseDetails20.getCaseData().getCorrespondenceType(),
             caseDetails20.getCaseData().getCorrespondenceScotType(),
@@ -1392,7 +1419,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentWithNotContent() {
+    void buildDocumentWithNotContent() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\".docx\",\n"
@@ -1453,7 +1480,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetailsEmpty.getCaseData(), "",
                 userDetails, "", venueAddressInputStream,
                 caseDetailsEmpty.getCaseData().getCorrespondenceType(),
                 caseDetailsEmpty.getCaseData().getCorrespondenceScotType(),
@@ -1461,7 +1488,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContentScot1() {
+    void buildDocumentContentScot1() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-SCO-ENG-00042.docx\",\n"
@@ -1530,7 +1557,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot1.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetailsScot1.getCaseData(), "",
                 userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsScot1.getCaseData().getCorrespondenceType(),
                 caseDetailsScot1.getCaseData().getCorrespondenceScotType(),
@@ -1538,7 +1565,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContentScot2() {
+    void buildDocumentContentScot2() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-SCO-ENG-00043.docx\",\n"
@@ -1605,7 +1632,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot2.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetailsScot2.getCaseData(), "",
                 userDetails, DUMMY_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsScot2.getCaseData().getCorrespondenceType(),
                 caseDetailsScot2.getCaseData().getCorrespondenceScotType(),
@@ -1613,7 +1640,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContentScot3() {
+    void buildDocumentContentScot3() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n"
@@ -1679,7 +1706,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot3.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetailsScot3.getCaseData(), "",
                 userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsScot3.getCaseData().getCorrespondenceType(),
                 caseDetailsScot3.getCaseData().getCorrespondenceScotType(),
@@ -1687,12 +1714,12 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContentScot4() throws URISyntaxException, IOException {
+    void buildDocumentContentScot4() throws URISyntaxException, IOException {
         var expectedResult = getExpectedResult("expectedDocumentContentScot4.json");
         expectedResult = expectedResult.replace("current-date", UtilHelper.formatCurrentDate(LocalDate.now()));
         expectedResult = expectedResult.replace("plus28",
                 UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28));
-        var actualResult = DocumentHelper.buildDocumentContent(caseDetailsScot4.getCaseData(), "",
+        var actualResult = buildDocumentContent(caseDetailsScot4.getCaseData(), "",
             userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
             caseDetailsScot4.getCaseData().getCorrespondenceType(),
             caseDetailsScot4.getCaseData().getCorrespondenceScotType(),
@@ -1701,7 +1728,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContentScot3AllocatedOffice() {
+    void buildDocumentContentScot3AllocatedOffice() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n"
@@ -1774,7 +1801,7 @@ public class DocumentHelperTest {
                 .tribunalCorrespondenceEmail("aberdeen@gmail.com")
                 .tribunalCorrespondenceTown("Aberdeen")
                 .build();
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot3.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetailsScot3.getCaseData(), "",
                 userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsScot3.getCaseData().getCorrespondenceType(),
                 caseDetailsScot3.getCaseData().getCorrespondenceScotType(),
@@ -1782,7 +1809,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildScotDocumentTemplates() {
+    void buildScotDocumentTemplates() {
         CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
         CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
@@ -1792,7 +1819,7 @@ public class DocumentHelperTest {
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -1804,7 +1831,7 @@ public class DocumentHelperTest {
         correspondenceScotType.setPart4ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -1816,7 +1843,7 @@ public class DocumentHelperTest {
         correspondenceScotType.setPart5ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -1828,7 +1855,7 @@ public class DocumentHelperTest {
         correspondenceScotType.setPart6ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -1840,7 +1867,7 @@ public class DocumentHelperTest {
         correspondenceScotType.setPart7ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -1852,7 +1879,7 @@ public class DocumentHelperTest {
         correspondenceScotType.setPart15ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -1864,7 +1891,7 @@ public class DocumentHelperTest {
         correspondenceScotType.setPart9ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -1872,7 +1899,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentTemplates() {
+    void buildDocumentTemplates() {
         CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
         CorrespondenceType correspondenceType = new CorrespondenceType();
@@ -1943,7 +1970,7 @@ public class DocumentHelperTest {
                 + "\"Case_No\":\"\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(result, DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
+        assertEquals(result, buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, "", venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
                 caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null,
@@ -2015,7 +2042,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void buildDocumentContentMultiples() {
+    void buildDocumentContentMultiples() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n"
@@ -2055,14 +2082,14 @@ public class DocumentHelperTest {
         multipleData.setCorrespondenceType(correspondenceType);
         multipleData.setAddressLabelsAttributesType(addressLabelsAttributesType);
         multipleData.setAddressLabelCollection(MultipleUtil.getAddressLabelTypeItemList());
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails2.getCaseData(), "",
+        assertEquals(expected, buildDocumentContent(caseDetails2.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 multipleData.getCorrespondenceType(), multipleData.getCorrespondenceScotType(),
                 multipleData, null).toString());
     }
 
     @Test
-    public void getCorrespondenceHearingNumber() {
+    void getCorrespondenceHearingNumber() {
         String expectedCorrespondenceHearingNumber = "2";
 
         assertEquals(expectedCorrespondenceHearingNumber, DocumentHelper.getCorrespondenceHearingNumber(
@@ -2071,7 +2098,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void getHearingByNumber() {
+    void getHearingByNumber() {
         String expectedHearingNumber = "2";
         String expectedHearing_type = "Single";
         String expectedHearingVenue = "Manchester";
@@ -2101,7 +2128,7 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void setDocumentNumbers() {
+    void setDocumentNumbers() {
         CaseData caseData = CaseDataBuilder.builder()
                 .withDocumentCollection(ET1)
                 .withDocumentCollection(ET1_ATTACHMENT)
@@ -2112,85 +2139,85 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_StartClaim_DocumentType_Null() {
+    void setSecondLevelDocumentFromType_StartClaim_DocumentType_Null() {
         DocumentType documentType = null;
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
+        setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
         assertNull(documentType);
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_StartClaim_TypeOfDocument_Null() {
+    void setSecondLevelDocumentFromType_StartClaim_TypeOfDocument_Null() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, null);
+        setSecondLevelDocumentFromType(documentType, null);
         assertNull(documentType.getStartingClaimDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_StartClaim() {
+    void setSecondLevelDocumentFromType_StartClaim() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
+        setSecondLevelDocumentFromType(documentType, ET1_ATTACHMENT);
         assertNotNull(documentType.getStartingClaimDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_ResponseClaimDoc() {
+    void setSecondLevelDocumentFromType_ResponseClaimDoc() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, ET3_ATTACHMENT);
+        setSecondLevelDocumentFromType(documentType, ET3_ATTACHMENT);
         assertNotNull(documentType.getResponseClaimDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_InitialConsiderationDoc() {
+    void setSecondLevelDocumentFromType_InitialConsiderationDoc() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Rule 27 Notice");
+        setSecondLevelDocumentFromType(documentType, "Rule 27 Notice");
         assertNotNull(documentType.getInitialConsiderationDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_CaseManagementDocuments() {
+    void setSecondLevelDocumentFromType_CaseManagementDocuments() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Tribunal Order");
+        setSecondLevelDocumentFromType(documentType, "Tribunal Order");
         assertNotNull(documentType.getCaseManagementDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_WithdrawalSettledDocuments() {
+    void setSecondLevelDocumentFromType_WithdrawalSettledDocuments() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Withdrawal of entire claim");
+        setSecondLevelDocumentFromType(documentType, "Withdrawal of entire claim");
         assertNotNull(documentType.getWithdrawalSettledDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_HearingsDocuments() {
+    void setSecondLevelDocumentFromType_HearingsDocuments() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Notice of Hearing");
+        setSecondLevelDocumentFromType(documentType, "Notice of Hearing");
         assertNotNull(documentType.getHearingsDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_JudgmentAndReasonsDocuments() {
+    void setSecondLevelDocumentFromType_JudgmentAndReasonsDocuments() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType, "Judgment with Reasons");
+        setSecondLevelDocumentFromType(documentType, "Judgment with Reasons");
         assertNotNull(documentType.getJudgmentAndReasonsDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_ReconsiderationDocuments() {
+    void setSecondLevelDocumentFromType_ReconsiderationDocuments() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType,
+        setSecondLevelDocumentFromType(documentType,
                 "App to have a Legal Officer decision considered afresh - R");
         assertNotNull(documentType.getReconsiderationDocuments());
     }
 
     @Test
-    public void setSecondLevelDocumentFromType_MiscDocuments() {
+    void setSecondLevelDocumentFromType_MiscDocuments() {
         DocumentType documentType = new DocumentType();
-        DocumentHelper.setSecondLevelDocumentFromType(documentType,"Certificate of Correction");
+        setSecondLevelDocumentFromType(documentType,"Certificate of Correction");
         assertNotNull(documentType.getMiscDocuments());
     }
 
     @Test
-    public void createDocumentTypeItemFromTopLevel() {
+    void createDocumentTypeItemFromTopLevel() {
         UploadedDocumentType uploadedDocType = new UploadedDocumentType();
         DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(uploadedDocType,
                 "Top Level", ET1_ATTACHMENT, "test Short description");
@@ -2198,18 +2225,352 @@ public class DocumentHelperTest {
     }
 
     @Test
-    public void createDocumentTypeItemFromTopLevel_ShortDescription_Null() {
+    void createDocumentTypeItemFromTopLevel_ShortDescription_Null() {
         DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
                 new UploadedDocumentType(),"Top Level", ET1_ATTACHMENT, null);
         assertEquals(null, documentTypeItem.getValue().getShortDescription());
     }
 
     @Test
-    public void createDocumentTypeItemFromTopLevel_TopLevelDocumentsCategory_Null() {
+    void createDocumentTypeItemFromTopLevel_TopLevelDocumentsCategory_Null() {
         DocumentType documentType = new DocumentType();
         DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
                 new UploadedDocumentType(),null, ET1_ATTACHMENT, "short description");
         assertEquals(null, documentTypeItem.getValue().getTopLevelDocuments());
+    }
+
+
+    @ParameterizedTest
+    @MethodSource
+    void convertLegacyDocsToNewDocNaming(String docType, String topLevel) {
+        CaseData caseData = new CaseDataBuilder()
+                .withDocumentCollection(docType)
+                .build();
+        DocumentHelper.convertLegacyDocsToNewDocNaming(caseData);
+        assertNotNull(caseData.getDocumentCollection());
+        Assertions.assertEquals(topLevel, caseData.getDocumentCollection().get(0).getValue().getTopLevelDocuments());
+    }
+
+    private static Stream<Arguments> convertLegacyDocsToNewDocNaming() {
+        return Stream.of(
+                Arguments.of(ET1, STARTING_A_CLAIM),
+                Arguments.of(ET1_ATTACHMENT, STARTING_A_CLAIM),
+                Arguments.of(ACAS_CERTIFICATE, STARTING_A_CLAIM),
+                Arguments.of(NOTICE_OF_A_CLAIM, STARTING_A_CLAIM),
+                Arguments.of(TRIBUNAL_CORRESPONDENCE, STARTING_A_CLAIM),
+                Arguments.of(REJECTION_OF_CLAIM, STARTING_A_CLAIM),
+                Arguments.of(ET3, RESPONSE_TO_A_CLAIM),
+                Arguments.of(ET3_ATTACHMENT, RESPONSE_TO_A_CLAIM),
+                Arguments.of(NOTICE_OF_HEARING, HEARINGS),
+                Arguments.of(OTHER, LEGACY_DOCUMENT_NAMES)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void setDocumentTypeForDocumentCollection(String typeOfDocument, String documentType) {
+        CaseData caseData = new CaseDataBuilder()
+                .withDocumentCollection(typeOfDocument)
+                .build();
+        DocumentHelper.convertLegacyDocsToNewDocNaming(caseData);
+        DocumentHelper.setDocumentTypeForDocumentCollection(caseData);
+        assertNotNull(caseData.getDocumentCollection());
+        Assertions.assertEquals(documentType, caseData.getDocumentCollection().get(0).getValue().getDocumentType());
+    }
+
+    private static Stream<Arguments> setDocumentTypeForDocumentCollection() {
+        return Stream.of(
+                Arguments.of(ET1, ET1),
+                Arguments.of(ET1_ATTACHMENT, ET1_ATTACHMENT),
+                Arguments.of(ACAS_CERTIFICATE, ACAS_CERTIFICATE),
+                Arguments.of(NOTICE_OF_A_CLAIM, NOTICE_OF_CLAIM),
+                Arguments.of(TRIBUNAL_CORRESPONDENCE, CLAIM_ACCEPTED),
+                Arguments.of(REJECTION_OF_CLAIM, CLAIM_REJECTED),
+                Arguments.of(ET3, ET3),
+                Arguments.of(ET3_ATTACHMENT, ET3_ATTACHMENT),
+                Arguments.of(NOTICE_OF_HEARING, NOTICE_OF_HEARING),
+                Arguments.of(OTHER, OTHER)
+
+        );
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_WithNullDateOfCorrespondence() {
+        DocumentTypeItem doc1 = new DocumentTypeItem();
+        DocumentType dt = new DocumentType();
+        dt.setTopLevelDocuments("ET1 Vetting");
+        doc1.setValue(dt);
+        UploadedDocumentType uploadedDocType1 = new UploadedDocumentType();
+        uploadedDocType1.setDocumentUrl("test doc url");
+        uploadedDocType1.setDocumentFilename("test file name");
+        uploadedDocType1.setDocumentBinaryUrl("test binary doc url");
+        doc1.getValue().setUploadedDocument(uploadedDocType1);
+
+        doc1.getValue().setDocNumber("1");
+        doc1.getValue().setDocumentIndex("1");
+        doc1.getValue().setTopLevelDocuments("ET1 Vetting");
+        doc1.getValue().setTypeOfDocument("ET1 being vetted");
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(doc1);
+
+        DocumentType dt4 = new DocumentType();
+        DocumentTypeItem doc4 = new DocumentTypeItem();
+        doc4.setValue(dt4);
+        UploadedDocumentType uploadedDocType4 = new UploadedDocumentType();
+        uploadedDocType4.setDocumentUrl("test doc url 4");
+        uploadedDocType4.setDocumentFilename("test file name 4");
+        uploadedDocType4.setDocumentBinaryUrl("test binary doc url 4");
+
+        doc4.getValue().setUploadedDocument(uploadedDocType4);
+        doc4.getValue().setDateOfCorrespondence("2024-03-04");
+        doc4.getValue().setDocNumber("2");
+        doc4.getValue().setDocumentIndex("2");
+        doc4.getValue().setTopLevelDocuments("ET3");
+        doc4.getValue().setTypeOfDocument("ET3 reconsidered");
+        caseData.setDocumentCollection(new ArrayList<>());
+        caseData.getDocumentCollection().add(doc4);
+
+        addUploadedDocsToCaseDocCollection(caseData);
+
+        Assertions.assertEquals(2, caseData.getDocumentCollection().size());
+        assertNull(caseData.getDocumentCollection().get(0).getValue().getDateOfCorrespondence());
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_DocumentCollection_NotNull() {
+        DocumentTypeItem doc1 = new DocumentTypeItem();
+        DocumentType dt = new DocumentType();
+        dt.setTopLevelDocuments("ET3");
+        doc1.setValue(dt);
+
+        UploadedDocumentType uploadedDocType1 = new UploadedDocumentType();
+        uploadedDocType1.setDocumentUrl("test doc url");
+        uploadedDocType1.setDocumentFilename("test file name");
+        uploadedDocType1.setDocumentBinaryUrl("test binary doc url");
+        doc1.getValue().setUploadedDocument(uploadedDocType1);
+        doc1.getValue().setDateOfCorrespondence("2024-03-04");
+        doc1.getValue().setDocNumber("2");
+        doc1.getValue().setDocumentIndex("2");
+        doc1.getValue().setTopLevelDocuments("ET3");
+        doc1.getValue().setTypeOfDocument("ET3 being vetted");
+
+        //docs that already existing in collection
+        UploadedDocumentType uploadedDocType2 = new UploadedDocumentType();
+        uploadedDocType2.setDocumentUrl("test doc url 2");
+        uploadedDocType2.setDocumentFilename("test file name 2");
+        uploadedDocType2.setDocumentBinaryUrl("test binary doc url 2");
+        DocumentTypeItem doc2 = new DocumentTypeItem();
+        DocumentType dt2 = new DocumentType();
+        doc2.setValue(dt2);
+        doc2.getValue().setUploadedDocument(uploadedDocType2);
+        doc2.getValue().setDateOfCorrespondence("2024-03-04");
+        doc2.getValue().setDocNumber("1");
+        doc2.getValue().setDocumentIndex("1");
+        doc2.getValue().setTopLevelDocuments("ET3");
+        doc2.getValue().setTypeOfDocument("ET3 Accepted");
+
+        UploadedDocumentType uploadedDocType3 = new UploadedDocumentType();
+        uploadedDocType3.setDocumentUrl("test doc url 3");
+        uploadedDocType3.setDocumentFilename("test file name 3");
+        uploadedDocType3.setDocumentBinaryUrl("test binary doc url 3");
+
+        DocumentTypeItem doc3 = new DocumentTypeItem();
+        DocumentType dt3 = new DocumentType();
+        doc3.setValue(dt3);
+        doc3.getValue().setUploadedDocument(uploadedDocType3);
+        doc3.getValue().setDateOfCorrespondence("2024-03-04");
+        doc3.getValue().setDocNumber("2");
+        doc3.getValue().setDocumentIndex("2");
+        doc3.getValue().setTopLevelDocuments("ET3");
+        doc3.getValue().setTypeOfDocument("ET3 rejected");
+
+        CaseData caseData = new CaseData();
+        caseData.setDocumentCollection(new ArrayList<>());
+        caseData.getDocumentCollection().add(doc2);
+        caseData.getDocumentCollection().add(doc3);
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(doc1);
+        DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
+
+        Assertions.assertEquals(3, caseData.getDocumentCollection().size());
+        Assertions.assertEquals("2024-03-04",
+                caseData.getDocumentCollection().get(2).getValue().getDateOfCorrespondence());
+
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_DocumentCollection_Null() {
+        DocumentTypeItem doc1 = new DocumentTypeItem();
+        DocumentType dt = new DocumentType();
+        dt.setTopLevelDocuments("ET1 Vetting");
+        doc1.setValue(dt);
+        UploadedDocumentType uploadedDocType1 = new UploadedDocumentType();
+        uploadedDocType1.setDocumentUrl("test doc url");
+        uploadedDocType1.setDocumentFilename("test file name");
+        uploadedDocType1.setDocumentBinaryUrl("test binary doc url");
+        doc1.getValue().setUploadedDocument(uploadedDocType1);
+
+        doc1.getValue().setDocNumber("1");
+        doc1.getValue().setDocumentIndex("1");
+        doc1.getValue().setTopLevelDocuments("ET1 Vetting");
+        doc1.getValue().setTypeOfDocument("ET1 vetted");
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(doc1);
+
+        DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
+
+        Assertions.assertEquals(1, caseData.getDocumentCollection().size());
+        assertNotNull(caseData.getDocumentCollection());
+        assertNull(caseData.getDocumentCollection().get(0).getValue().getDateOfCorrespondence());
+    }
+    @Test
+    void addUploadedDocsToCaseDocCollection_AddDocumentCollection_Null() {
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(null);
+        DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
+        assertNull(caseData.getDocumentCollection());
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_UploadedDocumentType_Null() {
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(null);
+        DocumentTypeItem documentTypeItem = getDocumentTypeItem();
+        documentTypeItem.getValue().setDocumentType(null);
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(documentTypeItem);
+        DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
+        Assertions.assertEquals(1, caseData.getDocumentCollection().size());
+        assertNull(caseData.getDocumentCollection().get(0).getValue().getDocumentType());
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_ShortDescription_Null() {
+        CaseData caseData = new CaseData();
+        DocumentTypeItem documentTypeItem = getDocumentTypeItem();
+        documentTypeItem.getValue().setShortDescription(null);
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(documentTypeItem);
+        DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
+        Assertions.assertEquals(1, caseData.getDocumentCollection().size());
+        assertNull(caseData.getDocumentCollection().get(0).getValue().getShortDescription());
+    }
+
+    private DocumentTypeItem getDocumentTypeItem() {
+        UploadedDocumentType uploadedDocType1 = new UploadedDocumentType();
+        uploadedDocType1.setDocumentUrl("test doc url");
+        uploadedDocType1.setDocumentFilename("test file name");
+        uploadedDocType1.setDocumentBinaryUrl("test binary doc url");
+        DocumentTypeItem doc1 = new DocumentTypeItem();
+        DocumentType dt = new DocumentType();
+        dt.setTopLevelDocuments("ET1 Vetting");
+        doc1.setValue(dt);
+        doc1.getValue().setUploadedDocument(uploadedDocType1);
+        return doc1;
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_WithDocumentIndex() {
+        DocumentTypeItem doc1 = new DocumentTypeItem();
+        DocumentType dt = new DocumentType();
+        dt.setTopLevelDocuments("ET1 Vetting");
+        doc1.setValue(dt);
+        UploadedDocumentType uploadedDocType1 = new UploadedDocumentType();
+        uploadedDocType1.setDocumentUrl("test doc url");
+        uploadedDocType1.setDocumentFilename(DOC_FILE_NAME_1);
+        uploadedDocType1.setDocumentBinaryUrl("test binary doc url");
+        doc1.getValue().setUploadedDocument(uploadedDocType1);
+
+        doc1.getValue().setDocumentIndex("1");
+        doc1.getValue().setTopLevelDocuments("ET1 Vetting");
+        doc1.getValue().setTypeOfDocument("ET1 being vetted");
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(doc1);
+
+        DocumentType dt4 = new DocumentType();
+        DocumentTypeItem doc4 = new DocumentTypeItem();
+        doc4.setValue(dt4);
+        UploadedDocumentType uploadedDocType4 = new UploadedDocumentType();
+        uploadedDocType4.setDocumentUrl("test doc url 4");
+        uploadedDocType4.setDocumentFilename(DOC_FILE_NAME_2);
+        uploadedDocType4.setDocumentBinaryUrl("test binary doc url 4");
+
+        doc4.getValue().setDocumentIndex("2");
+        doc4.getValue().setUploadedDocument(uploadedDocType4);
+        doc4.getValue().setDateOfCorrespondence("2024-03-04");
+        doc4.getValue().setTopLevelDocuments("ET3");
+        doc4.getValue().setTypeOfDocument("ET3 reconsidered");
+        caseData.getAddDocumentCollection().add(doc4);
+
+        DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
+
+        Assertions.assertEquals(2, caseData.getDocumentCollection().size());
+        Assertions.assertEquals(DOC_FILE_NAME_1,
+                caseData.getDocumentCollection().get(0).getValue().getUploadedDocument().getDocumentFilename());
+        Assertions.assertEquals(DOC_FILE_NAME_2,
+                caseData.getDocumentCollection().get(1).getValue().getUploadedDocument().getDocumentFilename());
+    }
+
+    @Test
+    void addUploadedDocsToCaseDocCollection_WithoutDocumentIndex() {
+        DocumentTypeItem doc1 = new DocumentTypeItem();
+        DocumentType dt = new DocumentType();
+        dt.setTopLevelDocuments("ET1 Vetting");
+        doc1.setValue(dt);
+        UploadedDocumentType uploadedDocType1 = new UploadedDocumentType();
+        uploadedDocType1.setDocumentUrl("test doc url");
+        uploadedDocType1.setDocumentFilename(DOC_FILE_NAME_1);
+        uploadedDocType1.setDocumentBinaryUrl("test binary doc url");
+        doc1.getValue().setUploadedDocument(uploadedDocType1);
+
+        doc1.getValue().setDocumentIndex("1");
+        doc1.getValue().setTopLevelDocuments("ET1 Vetting");
+        doc1.getValue().setTypeOfDocument("ET1 being vetted");
+        CaseData caseData = new CaseData();
+        caseData.setAddDocumentCollection(new ArrayList<>());
+        caseData.getAddDocumentCollection().add(doc1);
+
+        DocumentType dt2 = new DocumentType();
+        DocumentTypeItem doc2 = new DocumentTypeItem();
+        doc2.setValue(dt2);
+        UploadedDocumentType uploadedDocType2 = new UploadedDocumentType();
+        uploadedDocType2.setDocumentUrl("test doc url 4");
+        uploadedDocType2.setDocumentFilename(DOC_FILE_NAME_2);
+        uploadedDocType2.setDocumentBinaryUrl("test binary doc url 4");
+
+        doc2.getValue().setUploadedDocument(uploadedDocType2);
+        doc2.getValue().setDateOfCorrespondence("2024-03-04");
+        doc2.getValue().setTopLevelDocuments("ET3");
+        doc2.getValue().setTypeOfDocument("ET3 reconsidered");
+        caseData.getAddDocumentCollection().add(doc2);
+
+        DocumentType dt4 = new DocumentType();
+        DocumentTypeItem doc4 = new DocumentTypeItem();
+        doc4.setValue(dt4);
+        UploadedDocumentType uploadedDocType4 = new UploadedDocumentType();
+        uploadedDocType4.setDocumentUrl("test doc url 4");
+        uploadedDocType4.setDocumentFilename(DOC_FILE_NAME_3);
+        uploadedDocType4.setDocumentBinaryUrl("test binary doc url 4");
+
+        doc4.getValue().setDocumentIndex("2");
+        doc4.getValue().setUploadedDocument(uploadedDocType4);
+        doc4.getValue().setDateOfCorrespondence("2024-03-04");
+        doc4.getValue().setTopLevelDocuments("ET3");
+        doc4.getValue().setTypeOfDocument("ET3 reconsidered");
+        caseData.getAddDocumentCollection().add(doc4);
+
+        DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
+
+        Assertions.assertEquals(3, caseData.getDocumentCollection().size());
+        Assertions.assertEquals(DOC_FILE_NAME_1,
+                caseData.getDocumentCollection().get(0).getValue().getUploadedDocument().getDocumentFilename());
+        Assertions.assertEquals(DOC_FILE_NAME_3,
+                caseData.getDocumentCollection().get(1).getValue().getUploadedDocument().getDocumentFilename());
+        Assertions.assertEquals(DOC_FILE_NAME_2,
+                caseData.getDocumentCollection().get(2).getValue().getUploadedDocument().getDocumentFilename());
     }
 
 }
