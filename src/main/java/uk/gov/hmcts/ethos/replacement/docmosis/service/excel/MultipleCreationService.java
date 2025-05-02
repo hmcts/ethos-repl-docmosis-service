@@ -50,18 +50,15 @@ public class MultipleCreationService {
         multipleDetails.getCaseData().setState(OPEN_STATE);
 
         log.info("Check if creation is coming from Case Transfer");
-
         multipleTransferService.populateDataIfComingFromCT(userToken, multipleDetails, errors);
 
         log.info("Get lead case link and add to the collection case Ids");
-
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
         if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
                 && !multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
             log.info("Multiple Creation UI");
-
             multipleCreationUI(userToken, multipleDetails, errors);
 
         } else {
@@ -237,7 +234,7 @@ public class MultipleCreationService {
 
         if (!isNullOrEmpty(multipleData.getLeadCase())) {
 
-            log.info("Adding lead case introduced by user: " + multipleData.getLeadCase());
+            log.info("Pre-existing Lead case: Adding lead case introduced by user: " + multipleData.getLeadCase());
 
             MultiplesHelper.addLeadToCaseIds(multipleData, multipleData.getLeadCase());
 
@@ -247,13 +244,13 @@ public class MultipleCreationService {
 
             if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
-                log.info("Getting lead case from caseMultipleCollection");
+                log.info("No Lead case - Migration Source: Getting lead case from caseMultipleCollection");
 
                 leadCase = MultiplesHelper.getLeadFromCaseMultipleCollection(multipleData);
 
             } else {
 
-                log.info("Getting lead case from the case ids collection");
+                log.info("No Lead case - to set New : Getting lead case from the case ids collection");
 
                 leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
 

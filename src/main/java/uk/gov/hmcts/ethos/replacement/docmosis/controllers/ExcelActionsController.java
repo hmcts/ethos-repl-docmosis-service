@@ -17,6 +17,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -690,10 +691,8 @@ public class ExcelActionsController {
         }
 
         List<String> errors = new ArrayList<>();
-        var multipleDetails = multipleRequest.getCaseDetails();
-
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
         multipleTransferService.multipleTransferLogic(userToken, multipleDetails, errors);
-
         return getMultipleCallbackRespEntity(errors, multipleDetails);
     }
 }
