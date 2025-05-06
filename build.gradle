@@ -318,6 +318,8 @@ dependencies {
     implementation group: 'org.webjars.npm', name: 'minimatch', version: '9.0.5'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.4'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
+    implementation group: 'io.netty', name: 'netty-transport-classes-epoll', version: '4.1.118.Final'
+    implementation group: 'io.netty', name: 'netty-transport-classes-kqueue', version: '4.1.118.Final'
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.4.3'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.1.0'
