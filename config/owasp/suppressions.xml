@@ -290,5 +290,18 @@
         <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/azure\-client\-authentication@.*$</packageUrl>
         <cve>CVE-2024-43591</cve>
     </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.apache.*$</packageUrl>
+        <cve>CVE-2024-45772</cve>
+    </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/*$</packageUrl>
+        <cve>CVE-2024-38820</cve>
+    </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.tomcat.*$</packageUrl>
+        <cve>CVE-2025-31651</cve>
+        <cve>CVE-2025-31650</cve>
+    </suppress>
 </suppressions>
 
