@@ -18,7 +18,7 @@ public class HttpClientConfiguration {
     @Bean
     public RestTemplate restTemplate() {
         var restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(getHttpClient()));
         return restTemplate;
     }
 

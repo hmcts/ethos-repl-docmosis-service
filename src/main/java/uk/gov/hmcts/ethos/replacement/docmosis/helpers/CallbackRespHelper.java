@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.NotNull;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -39,15 +39,6 @@ public class CallbackRespHelper {
     }
 
     @NotNull
-    public static ResponseEntity<CCDAdminCallbackResponse> getCallbackRespEntityNoErrors(
-            AdminData caseData) {
-
-        return ResponseEntity.ok(CCDAdminCallbackResponse.builder()
-                .data(caseData)
-                .build());
-    }
-
-    @NotNull
     public static ResponseEntity<CCDCallbackResponse> getCallbackRespEntityErrorsAndWarnings(
             List<String> warnings, List<String> errors, CaseData caseData) {
 
@@ -55,6 +46,15 @@ public class CallbackRespHelper {
                 .data(caseData)
                 .errors(errors)
                 .warnings(warnings)
+                .build());
+    }
+
+    @NotNull
+    public static ResponseEntity<CCDAdminCallbackResponse> getCallbackRespEntityNoErrors(
+            AdminData caseData) {
+
+        return ResponseEntity.ok(CCDAdminCallbackResponse.builder()
+                .data(caseData)
                 .build());
     }
 
