@@ -309,7 +309,6 @@
             - spring-orm
             - spring-tx
             - spring-webmvc
-        Ensure CVE is not exploitable in your usage context before relying on this suppression.
     ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|webmvc)@5\.3\.31$</packageUrl>
         <cve>CVE-2024-38820</cve>
@@ -322,7 +321,6 @@
         Suppressing CVE-2025-31650 and CVE-2025-31651 for:
           - tomcat-embed-core@9.0.100
           - tomcat-embed-websocket@9.0.100
-        Ensure both CVEs are assessed and verified as non-exploitable for your application context.
     ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-(core|websocket)@9\.0\.100$</packageUrl>
         <cve>CVE-2025-31650</cve>
