@@ -22,7 +22,7 @@
   "devDependencies": {
     "chai": "5.2.0",
     "chai-as-promised": "8.0.1",
-    "chai-http": "5.1.1",
+    "chai-http": "5.1.2",
     "codeceptjs": "^3.6.5",
     "eslint-plugin-mocha": "10.5.0",
     "mocha": "10.8.2",
