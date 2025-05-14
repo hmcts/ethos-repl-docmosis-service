@@ -1435,7 +1435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keyv/serialize@npm:^1.0.2":
+"@keyv/serialize@npm:^1.0.3":
   version: 1.0.3
   resolution: "@keyv/serialize@npm:1.0.3"
   dependencies:
@@ -2949,17 +2949,17 @@ __metadata:
   linkType: hard
 
 "cacheable-request@npm:^13.0.0":
-  version: 13.0.3
-  resolution: "cacheable-request@npm:13.0.3"
+  version: 13.0.6
+  resolution: "cacheable-request@npm:13.0.6"
   dependencies:
-    "@types/http-cache-semantics": "npm:^4.0.4"
-    get-stream: "npm:^9.0.1"
-    http-cache-semantics: "npm:^4.1.1"
-    keyv: "npm:^5.2.3"
-    mimic-response: "npm:^4.0.0"
-    normalize-url: "npm:^8.0.1"
-    responselike: "npm:^3.0.0"
-  checksum: 12d76be145fd204b99ef614f1407233a7ee51679f5275a2765029bec63cd6b5f32c0bb821f2e6a98c10db2dba3d329d808736cb655786869f27f277b7901918b
+    "@types/http-cache-semantics": ^4.0.4
+    get-stream: ^9.0.1
+    http-cache-semantics: ^4.1.1
+    keyv: ^5.3.3
+    mimic-response: ^4.0.0
+    normalize-url: ^8.0.1
+    responselike: ^3.0.0
+  checksum: 4a33fe8aeef4c08985f5c2438584021d33216bcc259a4d466d618569370be8388af611980ca8c092d89d8e74fe3931f0c8ccf329cb724d2b4e512f8314237847
   languageName: node
   linkType: hard
 
@@ -6468,12 +6468,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keyv@npm:^5.2.3":
-  version: 5.2.3
-  resolution: "keyv@npm:5.2.3"
+"keyv@npm:^5.3.3":
+  version: 5.3.3
+  resolution: "keyv@npm:5.3.3"
   dependencies:
-    "@keyv/serialize": "npm:^1.0.2"
-  checksum: b317a71550431ba6238bc8c71ce9ab263560df2227ca7933f7a3f18f0fa1a931312b02951cbcce9d316689709f67c5e4a4095e8e6b9aa13d19ce82c5dd7293e2
+    "@keyv/serialize": ^1.0.3
+  checksum: f73fbca241a071cf3dac52d32935c99a76ea2995442dded71d31ae9ac65907b5ff0d8ca63b201df25474d28433e402e5f2440159bd1f985f8a0055c259b6e536
   languageName: node
   linkType: hard
 
