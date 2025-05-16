@@ -78,6 +78,8 @@ public class CaseManagementForCaseWorkerService {
             + "please enter a date after today otherwise click Ignore and Continue.";
     public static final String LISTED_DATE_ON_WEEKEND_MESSAGE = "A hearing date you have entered "
             + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing ";
+    public static final String NEGATIVE_HEARING_LENGTH_MESSAGE = "The estimated hearing length for hearing %s must be "
+        + "greater than 0.";
     private static final String FULL_PANEL = "Full Panel";
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
@@ -537,6 +539,7 @@ public class CaseManagementForCaseWorkerService {
                                      DateListedTypeItem dateListedTypeItm) {
         addHearingsOnWeekendError(dateListedTypeItm, errors, hearingTypeItem.getValue().getHearingNumber());
         addHearingsInPastWarning(dateListedTypeItm, warnings, hearingTypeItem.getValue().getHearingNumber());
+        addNegativeHearingLengthsError(hearingTypeItem, errors, hearingTypeItem.getValue().getHearingNumber());
     }
 
     private void addHearingsInPastWarning(DateListedTypeItem dateListedTypeItem, List<String> warnings,
@@ -558,6 +561,18 @@ public class CaseManagementForCaseWorkerService {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         if (SUNDAY.equals(dayOfWeek) || SATURDAY.equals(dayOfWeek)) {
             errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE + hearingNumber);
+        }
+    }
+
+    private void addNegativeHearingLengthsError(HearingTypeItem hearingTypeItem, List<String> errors,
+                                                String hearingNumber) {
+        try {
+            int parsed = Integer.parseInt(hearingTypeItem.getValue().getHearingEstLengthNum().trim());
+            if (parsed <= 0) {
+                errors.add(String.format(NEGATIVE_HEARING_LENGTH_MESSAGE, hearingNumber));
+            }
+        } catch (NumberFormatException e) {
+            errors.add(String.format(NEGATIVE_HEARING_LENGTH_MESSAGE, hearingNumber));
         }
     }
 
@@ -619,16 +634,13 @@ public class CaseManagementForCaseWorkerService {
             var submitEvent = submitEvents.get(0);
             if (ECCHelper.validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
-                    case MID_EVENT_CALLBACK:
-                        Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
-                        break;
-                    case ABOUT_TO_SUBMIT_EVENT_CALLBACK:
+                    case MID_EVENT_CALLBACK -> Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
+                    case ABOUT_TO_SUBMIT_EVENT_CALLBACK -> {
                         ECCHelper.createECCLogic(currentCaseData, submitEvent.getCaseData());
                         currentCaseData.setRespondentECC(null);
                         currentCaseData.setCaseSource(FLAG_ECC);
-                        break;
-                    default:
-                        sendUpdateSingleCaseECC(authToken, caseDetails, String.valueOf(submitEvent.getCaseId()));
+                    }
+                    default -> sendUpdateSingleCaseECC(authToken, caseDetails, String.valueOf(submitEvent.getCaseId()));
                 }
             }
         } else {
