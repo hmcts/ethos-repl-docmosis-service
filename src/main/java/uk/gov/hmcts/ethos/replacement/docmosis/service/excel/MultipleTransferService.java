@@ -2,8 +2,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -16,6 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.PersistentQHelperService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.UUID;
 
@@ -60,15 +64,30 @@ public class MultipleTransferService {
 
             if (errors.isEmpty()) {
                 multipleDetails.getCaseData().setState(UPDATING_STATE);
+                multipleDetails.getCaseData().setCaseIdCollection(populateCaseIdsList(multipleObjects));
                 sendUpdatesToSinglesCT(userToken, multipleDetails, errors, multipleObjects);
             }
-
         }
 
         log.info("Resetting mid fields");
 
         MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
 
+    }
+
+    private List<CaseIdTypeItem> populateCaseIdsList(SortedMap<String, Object> multipleObjects) {
+        List<String> keys = new ArrayList<>(multipleObjects.keySet());
+        List<CaseIdTypeItem> caseIdTypeItems = new ArrayList<>();
+        keys.forEach(k -> {
+            var caseIdTypeItem = new CaseIdTypeItem();
+            var multipleObject = (MultipleObject) multipleObjects.get(k);
+            var caseTypeItem = new CaseType();
+            caseTypeItem.setEthosCaseReference(multipleObject.getEthosCaseRef());
+            caseIdTypeItem.setValue(caseTypeItem);
+            caseIdTypeItem.setId(UUID.randomUUID().toString());
+            caseIdTypeItems.add(caseIdTypeItem);
+        });
+        return caseIdTypeItems;
     }
 
     private void validateCaseBeforeTransfer(String userToken, MultipleDetails multipleDetails, List<String> errors,
@@ -80,7 +99,6 @@ public class MultipleTransferService {
         for (var submitEvent : submitEvents) {
             caseTransferService.validateCase(submitEvent.getCaseData(), errors);
         }
-
     }
 
     private void sendUpdatesToSinglesCT(String userToken, MultipleDetails multipleDetails,
@@ -122,20 +140,23 @@ public class MultipleTransferService {
                     userToken,
                     oldCaseTypeId,
                     multipleReference).get(0);
+            log.info("Retrieved the old multiple data is: {} \n", oldSubmitMultipleEvent);
 
             log.info("Generate case multiple items");
-
             multipleDetails.getCaseData().setCaseMultipleCollection(generateCaseMultipleItems(
                     userToken,
                     oldSubmitMultipleEvent,
                     errors));
+            log.info("Generated case multiple items is : {} \n",
+                    multipleDetails.getCaseData().getCaseMultipleCollection());
 
             log.info("Generate linked multiple CT markup");
-
             multipleDetails.getCaseData().setLinkedMultipleCT(MultiplesHelper.generateMarkUp(
                     ccdGatewayBaseUrl,
                     String.valueOf(oldSubmitMultipleEvent.getCaseId()),
                     multipleReference));
+            log.info("Generated linked multiple CT markup is: {} \n",
+                    multipleDetails.getCaseData().getLinkedMultipleCT());
 
             multipleDetails.getCaseData().setMultipleSource(oldSubmitMultipleEvent.getCaseData().getMultipleSource());
             multipleDetails.getCaseData().setPreAcceptDone(oldSubmitMultipleEvent.getCaseData().getPreAcceptDone());

@@ -290,5 +290,43 @@
         <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/azure\-client\-authentication@.*$</packageUrl>
         <cve>CVE-2024-43591</cve>
     </suppress>
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.apache.*$</packageUrl>
+        <cve>CVE-2024-45772</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        Suppressing CVE-2024-38820 for all relevant Spring Framework 5.3.31 modules.
+        Modules include:
+            - spring-aop
+            - spring-aspects
+            - spring-beans
+            - spring-context
+            - spring-core
+            - spring-expression
+            - spring-jcl
+            - spring-jdbc
+            - spring-orm
+            - spring-tx
+            - spring-webmvc
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|webmvc)@5\.3\.31$</packageUrl>
+        <cve>CVE-2024-38820</cve>
+        <cpe>cpe:2.3:a:pivotal_software:spring_framework:5.3.31:*:*:*:*:*:*:*</cpe>
+        <cpe>cpe:2.3:a:springsource:spring_framework:5.3.31:*:*:*:*:*:*:*</cpe>
+        <cpe>cpe:2.3:a:vmware:spring_framework:5.3.31:*:*:*:*:*:*:*</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        Suppressing CVE-2025-31650 and CVE-2025-31651 for:
+          - tomcat-embed-core@9.0.100
+          - tomcat-embed-websocket@9.0.100
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-(core|websocket)@9\.0\.100$</packageUrl>
+        <cve>CVE-2025-31650</cve>
+        <cve>CVE-2025-31651</cve>
+        <cpe>cpe:2.3:a:apache:tomcat:9.0.100:*:*:*:*:*:*:*</cpe>
+        <cpe>cpe:2.3:a:apache_tomcat:apache_tomcat:9.0.100:*:*:*:*:*:*:*</cpe>
+    </suppress>
 </suppressions>
 

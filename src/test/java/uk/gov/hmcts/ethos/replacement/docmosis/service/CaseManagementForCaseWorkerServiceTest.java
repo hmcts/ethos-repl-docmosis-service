@@ -700,7 +700,7 @@ class CaseManagementForCaseWorkerServiceTest {
         var updatedHearing = caseDetails.getCaseData().getHearingCollection().get(index);
         updatedHearing.getValue().setHearingSitAlone("Sit Alone");
         caseDetails.getCaseData().setHearingsCollectionForUpdate(null);
-        
+
         caseManagementForCaseWorkerService.updateSelectedHearing(caseDetails.getCaseData());
 
         assertNull(caseDetails.getCaseData().getHearingsCollectionForUpdate());
@@ -782,6 +782,29 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals(warning, warnings.size());
     }
 
+    @ParameterizedTest
+    @CsvSource({
+        "' 1 ', false",
+        "'-1', true",
+        "'0', true",
+        "'Test', true"
+    })
+    void amendMidEventHearingEstLengthNum(String input, boolean expectError) {
+        CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
+        caseData.getHearingCollection().get(0).getValue().setHearingEstLengthNum(input);
+        List<String> errors = new ArrayList<>();
+        List<String> warnings = new ArrayList<>();
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors, warnings);
+        if (expectError) {
+            assertEquals(1, errors.size());
+            String hearingNumber = caseData.getHearingCollection().get(0).getValue().getHearingNumber();
+            String expectedErrMsg = "The estimated hearing length for hearing " + hearingNumber + " must be greater than 0.";
+            assertEquals(expectedErrMsg, errors.get(0));
+        } else {
+            assertTrue(errors.isEmpty());
+        }
+    }
+
     private CaseData createCaseWithHearingDate(String date) {
         HearingTypeItem hearing = new HearingTypeItem();
         hearing.setId(UUID.randomUUID().toString());
@@ -792,6 +815,7 @@ class CaseManagementForCaseWorkerServiceTest {
         dateListedTypeItem.setValue(dateListedType);
         HearingType hearingType = new HearingType();
         hearingType.setHearingDateCollection(Collections.singletonList(dateListedTypeItem));
+        hearingType.setHearingEstLengthNum("1");
         hearing.setValue(hearingType);
         List<HearingTypeItem> hearings = new ArrayList<>();
         hearings.add(hearing);
@@ -1008,10 +1032,8 @@ class CaseManagementForCaseWorkerServiceTest {
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString()))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
 
-        assertThrows(Exception.class, () -> {
-            caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                    new ArrayList<>(), SUBMITTED_CALLBACK);
-        });
+        assertThrows(Exception.class, () -> caseManagementForCaseWorkerService.createECC(
+            manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN, new ArrayList<>(), SUBMITTED_CALLBACK));
     }
 
     @Test
