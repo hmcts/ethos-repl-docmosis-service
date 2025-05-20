@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.TWO_JUDGES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReport.OLD_DATE_TIME_PATTERN3;
 
 public class ReportCommonMethods {
@@ -52,7 +55,8 @@ public class ReportCommonMethods {
     public static String getHearingJudgeName(HearingType hearingType) {
         String judgeName = "";
         if (!isNullOrEmpty(hearingType.getJudge())) {
-            if (!isNullOrEmpty(hearingType.getAdditionalJudge())) {
+            if (!isNullOrEmpty(hearingType.getAdditionalJudge())
+                && TWO_JUDGES.equals(hearingType.getHearingSitAlone())) {
                 judgeName = String.join(", ", formatJudgeName(hearingType.getJudge()),
                         formatJudgeName(hearingType.getAdditionalJudge()));
             } else {
@@ -63,6 +67,6 @@ public class ReportCommonMethods {
     }
 
     private static String formatJudgeName(String judgeName) {
-        return judgeName.substring(judgeName.indexOf('_') + 1);
+        return defaultIfEmpty(judgeName, NOT_ALLOCATED).substring(judgeName.indexOf('_') + 1);
     }
 }
