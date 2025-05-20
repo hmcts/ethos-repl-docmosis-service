@@ -233,7 +233,7 @@ ext["rest-assured.version"] = '5.1.0'
 
 dependencyManagement {
     dependencies {
-        dependencySet(group: 'com.google.guava', version: '33.4.0-jre') {
+        dependencySet(group: 'com.google.guava', version: '33.4.8-jre') {
             entry 'guava'
         }
         dependencySet(group: 'io.netty', version: '4.1.119.Final') {
