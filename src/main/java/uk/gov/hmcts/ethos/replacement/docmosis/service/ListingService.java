@@ -167,10 +167,10 @@ public class ListingService {
         return listingData;
     }
 
-    public ListingData processListingHearingsRequest(ListingDetails listingDetails,
+    public ListingData processListingHearingsRequest(ListingDetails listingDetails, String managingOffice,
                                                      String authToken) {
         try {
-            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
+            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, managingOffice, authToken);
             if (submitEvents != null) {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
@@ -202,12 +202,12 @@ public class ListingService {
         }
     }
 
-    private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
+    private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String managingOffice,
+                                                       String authToken)
             throws IOException {
         var listingData = listingDetails.getCaseData();
         Map.Entry<String, String> entry =
                 ListingHelper.getListingVenueToSearch(listingData).entrySet().iterator().next();
-        String venueToSearchMapping = entry.getKey();
         String venueToSearch = getCheckedHearingVenueToSearch(entry.getValue());
         String dateFrom;
         String dateTo;
@@ -222,7 +222,7 @@ public class ListingService {
 
         return ccdClient.retrieveCasesVenueAndDateElasticSearch(
                 authToken, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()),
-                dateFrom, dateTo, venueToSearch, venueToSearchMapping);
+                dateFrom, dateTo, venueToSearch, managingOffice);
     }
 
     private String getCheckedHearingVenueToSearch(String venueToCheck) {

@@ -1103,7 +1103,8 @@ public class ListingHelperTest {
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , "
                 + "respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, "
-                + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat=Telephone, hearingReadingDeliberationMembersChambers= )";
+                + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat=Telephone, "
+                + "hearingReadingDeliberationMembersChambers= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData,
                 hearingType, dateListedType, 1, 3).toString());
         dateListedType.setHearingRoomStranraer("Tribunal 5");
@@ -1143,7 +1144,8 @@ public class ListingHelperTest {
                 + "hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, "
                 + "claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, "
                 + "respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , "
-                + "hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat=Telephone, hearingReadingDeliberationMembersChambers= )";
+                + "hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat=Telephone, "
+                + "hearingReadingDeliberationMembersChambers= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData,
                 hearingType, dateListedType, 1, 3).toString());
 
@@ -1280,7 +1282,8 @@ public class ListingHelperTest {
         String dateToSearchFrom = "2020-01-11";
         String dateToSearchTo = "2020-01-20";
         String dateToSearch = "2020-01-15";
-        boolean isBetween = ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, dateToSearch, true);
+        boolean isBetween =
+                ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, dateToSearch, true);
         assertTrue(isBetween);
 
         dateToSearchFrom = "2020-01-11";
@@ -1356,7 +1359,8 @@ public class ListingHelperTest {
     public void getRespondentOthersWithLineBreaksForMultipleRespondents() {
         String expected = "Mark Taylor\\nTony Jones\\nSteve Thomas";
 
-        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(0).getValue());
+        String actual =
+                ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(0).getValue());
 
         assertEquals(expected, actual);
     }
@@ -1365,7 +1369,8 @@ public class ListingHelperTest {
     public void getRespondentOthersWithLineBreaksForTwoRespondents() {
         String expected = "Mark Taylor\\nTony Jones";
 
-        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(1).getValue());
+        String actual =
+                ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(1).getValue());
 
         assertEquals(expected, actual);
     }
@@ -1374,7 +1379,8 @@ public class ListingHelperTest {
     public void getRespondentOthersWithLineBreaksForSingleRespondent() {
         String expected = "Mark Taylor";
 
-        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(2).getValue());
+        String actual =
+                ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(2).getValue());
 
         assertEquals(expected, actual);
     }
@@ -1383,7 +1389,8 @@ public class ListingHelperTest {
     public void getRespondentOthersWithLineBreaksForNoRespondents() {
         String expected = "";
 
-        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(3).getValue());
+        String actual =
+                ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(3).getValue());
 
         assertEquals(expected, actual);
     }
