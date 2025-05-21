@@ -276,11 +276,13 @@ dependencyManagement {
 dependencies {
 
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '2.1.4'
+
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.14.1'
-    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '3.18.30'
+    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '3.18.33'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
+
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
-    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.8'
+    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.9'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.48'
     implementation group: 'commons-io', name: 'commons-io', version: '2.18.0'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.27.1'
@@ -300,7 +302,6 @@ dependencies {
     implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.18', ext: 'pom'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.10'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.4'
-
     implementation('org.elasticsearch:elasticsearch') {
         version {
             strictly '7.17.3'
@@ -318,6 +319,8 @@ dependencies {
     implementation group: 'org.webjars.npm', name: 'minimatch', version: '9.0.5'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.4'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
+    implementation group: 'io.netty', name: 'netty-transport-classes-epoll', version: '4.1.118.Final'
+    implementation group: 'io.netty', name: 'netty-transport-classes-kqueue', version: '4.1.118.Final'
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.4.3'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.1.0'
