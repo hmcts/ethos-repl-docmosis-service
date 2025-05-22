@@ -236,7 +236,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearings() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), isA(String.class), eq(AUTH_TOKEN)))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
                 .thenReturn(listingDetails.getCaseData());
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class)))
                 .thenReturn(defaultValues);
@@ -571,7 +571,7 @@ public class ListingGenerationControllerTest {
 
     @Test
     public void listingHearingsError500() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), isA(String.class), eq(AUTH_TOKEN)))
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN)))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)

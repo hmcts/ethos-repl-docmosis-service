@@ -167,10 +167,9 @@ public class ListingService {
         return listingData;
     }
 
-    public ListingData processListingHearingsRequest(ListingDetails listingDetails, String managingOffice,
-                                                     String authToken) {
+    public ListingData processListingHearingsRequest(ListingDetails listingDetails, String authToken) {
         try {
-            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, managingOffice, authToken);
+            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
                 log.info(CASES_SEARCHED + submitEvents.size());
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
@@ -202,8 +201,7 @@ public class ListingService {
         }
     }
 
-    private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String managingOffice,
-                                                       String authToken)
+    private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
         var listingData = listingDetails.getCaseData();
         Map.Entry<String, String> entry =
@@ -216,7 +214,7 @@ public class ListingService {
 
         return ccdClient.retrieveCasesVenueAndDateElasticSearch(
                 authToken, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()),
-                dateFrom, dateTo, venueToSearchMapping, venueToSearch, managingOffice);
+                dateFrom, dateTo, venueToSearchMapping, venueToSearch);
     }
 
     private String getCheckedHearingVenueToSearch(String venueToCheck) {
@@ -271,16 +269,15 @@ public class ListingService {
 
     private void setCauseListVenueForNewcastle(DateListedTypeItem dateListedTypeItem,
                                                ListingTypeItem listingTypeItem) {
-        if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFCTC) &&
-            dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT() != null) {
-                listingTypeItem.getValue().setCauseListVenue(
+        if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFCTC)
+            && dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT() != null) {
+            listingTypeItem.getValue().setCauseListVenue(
                     dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT());
         }
 
-        if (listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_JUSTICE_CENTRE) &&
-            dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags() != null) {
-                listingTypeItem.getValue().setCauseListVenue(
-                    dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags());
+        if (listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_JUSTICE_CENTRE)
+            && dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags() != null) {
+            listingTypeItem.getValue().setCauseListVenue(dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags());
         }
     }
 
