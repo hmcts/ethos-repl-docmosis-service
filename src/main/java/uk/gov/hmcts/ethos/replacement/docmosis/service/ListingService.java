@@ -208,21 +208,15 @@ public class ListingService {
         var listingData = listingDetails.getCaseData();
         Map.Entry<String, String> entry =
                 ListingHelper.getListingVenueToSearch(listingData).entrySet().iterator().next();
+        String venueToSearchMapping = entry.getKey();
         String venueToSearch = getCheckedHearingVenueToSearch(entry.getValue());
-        String dateFrom;
-        String dateTo;
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        if (dateRange) {
-            dateFrom = listingData.getListingDateFrom();
-            dateTo = listingData.getListingDateTo();
-        } else {
-            dateFrom = listingData.getListingDate();
-            dateTo = listingData.getListingDate();
-        }
+        String dateFrom = dateRange ? listingData.getListingDateFrom() : listingData.getListingDate();
+        String dateTo = dateRange ? listingData.getListingDateTo() : listingData.getListingDate();
 
         return ccdClient.retrieveCasesVenueAndDateElasticSearch(
                 authToken, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()),
-                dateFrom, dateTo, venueToSearch, managingOffice);
+                dateFrom, dateTo, venueToSearchMapping, venueToSearch, managingOffice);
     }
 
     private String getCheckedHearingVenueToSearch(String venueToCheck) {
