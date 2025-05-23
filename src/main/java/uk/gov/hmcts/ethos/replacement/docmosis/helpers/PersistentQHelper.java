@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -17,6 +16,8 @@ import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.ResetStateDataModel;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.TransferToReformECMDataModel;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.UpdateDataModel;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
+
+import java.util.List;
 
 @Slf4j
 public class PersistentQHelper {

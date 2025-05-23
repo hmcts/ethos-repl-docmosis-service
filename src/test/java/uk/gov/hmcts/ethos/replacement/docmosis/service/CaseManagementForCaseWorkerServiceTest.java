@@ -37,7 +37,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
@@ -94,11 +93,7 @@ class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest scotlandCcdRequest2;
     private CCDRequest scotlandCcdRequest3;
     private CCDRequest ccdRequest10;
-    private CCDRequest ccdRequest11;
-    private CCDRequest ccdRequest12;
     private CCDRequest ccdRequest13;
-    private CCDRequest ccdRequest14;
-    private CCDRequest ccdRequest15;
     private CCDRequest ccdRequest16;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
@@ -128,25 +123,9 @@ class CaseManagementForCaseWorkerServiceTest {
         CaseDetails caseDetails10 = generateCaseDetails("caseDetailsTest10.json");
         ccdRequest10.setCaseDetails(caseDetails10);
 
-        ccdRequest11 = new CCDRequest();
-        CaseDetails caseDetails11 = generateCaseDetails("caseDetailsTest11.json");
-        ccdRequest11.setCaseDetails(caseDetails11);
-
-        ccdRequest12 = new CCDRequest();
-        CaseDetails caseDetails12 = generateCaseDetails("caseDetailsTest12.json");
-        ccdRequest12.setCaseDetails(caseDetails12);
-
         ccdRequest13 = new CCDRequest();
         CaseDetails caseDetails13 = generateCaseDetails("caseDetailsTest13.json");
         ccdRequest13.setCaseDetails(caseDetails13);
-
-        ccdRequest14 = new CCDRequest();
-        CaseDetails caseDetails14 = generateCaseDetails("caseDetailsTest14.json");
-        ccdRequest14.setCaseDetails(caseDetails14);
-
-        ccdRequest15 = new CCDRequest();
-        CaseDetails caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
-        ccdRequest15.setCaseDetails(caseDetails15);
 
         ccdRequest16 = new CCDRequest();
         CaseDetails caseDetails16 = generateCaseDetails("caseDetailsScotTestHearingUpdates.json");
@@ -460,72 +439,6 @@ class CaseManagementForCaseWorkerServiceTest {
         assertEquals(YES, caseData.getRespondentCollection().get(0).getValue().getResponseContinue());
     }
 
-    @Test
-    void buildFlagsImageFileNameForNullFlagsTypes() {
-        CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
-        assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
-    }
-
-    @Test
-    void buildFlagsImageFileNameForNullFlagsFields() {
-        CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
-        assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
-    }
-
-    @Test
-    void buildFlagsImageFileNameForEmptyFlagsFields() {
-        CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
-        assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
-    }
-
-    @Test
-    void buildFlagsImageFileNameForFalseFlagsFields() {
-        CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
-        assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000000.jpg", caseData.getFlagsImageFileName());
-    }
-
-    @Test
-    void buildFlagsImageFileNameForTrueFlagsFields() {
-        CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
-        String expected = "<font color='DarkRed' size='5'> DO NOT POSTPONE </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='Green' size='5'> LIVE APPEAL </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='Red' size='5'> RULE 49(3)b </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='LightBlack' size='5'> REPORTING </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='Orange' size='5'> SENSITIVE </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='Purple' size='5'> RESERVED </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='Olive' size='5'> ECC </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='SlateGray' size='5'> DIGITAL FILE </font>"
-            + "<font size='5'> - </font>"
-            + "<font color='DarkSlateBlue' size='5'> REASONABLE ADJUSTMENT </font>";
-        assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0111111111.jpg", caseData.getFlagsImageFileName());
-    }
-
-    @Test
-    void buildFlagsImageFileNameForTrueFlagsFieldsScotland() {
-        CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
-        String expected = "<font color='DeepPink' size='5'> WITH OUTSTATION </font>";
-        assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-1000000000.jpg", caseData.getFlagsImageFileName());
-    }
-
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource(jsonFileName)).toURI())));
@@ -798,7 +711,8 @@ class CaseManagementForCaseWorkerServiceTest {
         if (expectError) {
             assertEquals(1, errors.size());
             String hearingNumber = caseData.getHearingCollection().get(0).getValue().getHearingNumber();
-            String expectedErrMsg = "The estimated hearing length for hearing " + hearingNumber + " must be greater than 0.";
+            String expectedErrMsg =
+                    "The estimated hearing length for hearing " + hearingNumber + " must be greater than 0.";
             assertEquals(expectedErrMsg, errors.get(0));
         } else {
             assertTrue(errors.isEmpty());

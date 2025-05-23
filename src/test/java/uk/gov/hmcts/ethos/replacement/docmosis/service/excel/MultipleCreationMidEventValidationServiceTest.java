@@ -22,7 +22,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleCreationMidEventValidationServiceTest {

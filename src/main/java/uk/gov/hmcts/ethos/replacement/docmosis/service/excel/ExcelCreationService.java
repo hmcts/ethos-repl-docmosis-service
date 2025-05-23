@@ -1,9 +1,19 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import com.google.common.base.Strings;
-import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Name;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -15,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HIDDEN_SHEET_NAME;

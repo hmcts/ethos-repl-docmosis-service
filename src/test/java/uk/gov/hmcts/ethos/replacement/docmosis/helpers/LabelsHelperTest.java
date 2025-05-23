@@ -10,11 +10,27 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_COPIES_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_COPIES_LESS_10_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_LABELS_LIMIT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_SELECT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_ADDRESS_LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_ADDRESS_LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_ADDRESS__LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_REPS_ADDRESS__LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.ADDRESS_LABELS_RESULT_SELECTION_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 

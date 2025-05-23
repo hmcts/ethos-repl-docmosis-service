@@ -6,6 +6,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 
@@ -35,9 +38,12 @@ public class HearingsHelper {
     public static final String HEARING_BREAK_RESUME_INVALID = "Hearing %s contains a hearing with break and "
             + "resume times of 00:00:00. If the hearing had a break then please update the times. If there was no "
             + "break, please remove the hearing date and times from the break and resume fields before continuing.";
+    public static final String TWO_JUDGES = "Two Judges";
+    public static final String TWO_JUDGES_ERROR = "Please choose a different judge for the second "
+            + "judge as the same judge has been selected for both judges for hearing %s.";
 
     public static String findHearingNumber(CaseData caseData, String hearingDate) {
-        if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
+        if (isNotEmpty(caseData.getHearingCollection())) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
                     var listedDate = dateListedTypeItem.getValue().getListedDate().substring(0, 10);
@@ -57,26 +63,34 @@ public class HearingsHelper {
 
     public static List<String> hearingMidEventValidation(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (caseData.getHearingCollection() != null) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (hearingTypeItem.getValue().getHearingNumber() == null
-                        || hearingTypeItem.getValue().getHearingNumber().isEmpty()) {
-                    errors.add(HEARING_CREATION_NUMBER_ERROR);
-                    return errors;
-                }
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                    for (DateListedTypeItem dateListedTypeItem
-                            : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        if (dateListedTypeItem.getValue().getListedDate() == null
-                                || dateListedTypeItem.getValue().getListedDate().isEmpty()) {
-                            errors.add(HEARING_CREATION_DAY_ERROR);
-                            return  errors;
-                        }
-                    }
-                }
+        if (isEmpty(caseData.getHearingCollection())) {
+            return errors;
+        }
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            HearingType hearingType = hearingTypeItem.getValue();
+            if (isNullOrEmpty(hearingType.getHearingNumber())) {
+                errors.add(HEARING_CREATION_NUMBER_ERROR);
+                return errors;
+            }
+            if (isNotEmpty(hearingType.getHearingDateCollection())) {
+                listedDateAndJudgeValidation(hearingType, errors);
             }
         }
         return errors;
+    }
+
+    private static void listedDateAndJudgeValidation(HearingType hearingType, List<String> errors) {
+        if (TWO_JUDGES.equals(hearingType.getHearingSitAlone())
+            && !isNullOrEmpty(hearingType.getJudge())
+            && !isNullOrEmpty(hearingType.getAdditionalJudge())
+            && hearingType.getJudge().equals(hearingType.getAdditionalJudge())) {
+                errors.add(String.format(TWO_JUDGES_ERROR, hearingType.getHearingNumber()));
+            }
+        for (DateListedTypeItem dateListedTypeItem : hearingType.getHearingDateCollection()) {
+            if (isNullOrEmpty(dateListedTypeItem.getValue().getListedDate())) {
+                errors.add(HEARING_CREATION_DAY_ERROR);
+            }
+        }
     }
 
     public static void updatePostponedDate(CaseData caseData) {

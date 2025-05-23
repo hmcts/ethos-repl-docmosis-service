@@ -267,7 +267,7 @@ public class CaseActionsForCaseWorkerController {
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
-            FlagsImageHelper.buildFlagsImageFileName(caseData);
+            FlagsImageHelper.buildFlagsImageFileName(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
             caseData.setMultipleFlag(caseData.getEcmCaseType() != null
                     && caseData.getEcmCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
             convertLegacyDocsToNewDocNaming(caseData);
@@ -318,7 +318,7 @@ public class CaseActionsForCaseWorkerController {
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
             caseManagementForCaseWorkerService.setNextListedDate(caseData);
-            FlagsImageHelper.buildFlagsImageFileName(caseData);
+            FlagsImageHelper.buildFlagsImageFileName(caseData, caseDetails.getCaseTypeId());
             convertLegacyDocsToNewDocNaming(caseData);
             setDocumentTypeForDocumentCollection(caseData);
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
@@ -398,7 +398,7 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = eventValidationService.validateActiveRespondents(caseData);
         if (errors.isEmpty()) {
             errors = eventValidationService.validateET3ResponseFields(caseData);
-            if(errors.isEmpty()) {
+            if (errors.isEmpty()) {
                 errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(caseData, "respondent");
             }
             if (errors.isEmpty()) {
@@ -409,7 +409,7 @@ public class CaseActionsForCaseWorkerController {
         log.info(EVENT_FIELDS_VALIDATION + errors);
         if (errors.isEmpty() && !isEmpty(caseData.getRepCollection())) {
             //Needed to keep the respondent names in the rep collection sync
-                caseManagementForCaseWorkerService.amendRespondentNameRepresentativeNames(caseData);
+            caseManagementForCaseWorkerService.amendRespondentNameRepresentativeNames(caseData);
         }
         return getCallbackRespEntityErrors(errors, caseData);
     }
@@ -492,7 +492,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseDetails = ccdRequest.getCaseDetails();
-        FlagsImageHelper.buildFlagsImageFileName(caseDetails.getCaseData());
+        FlagsImageHelper.buildFlagsImageFileName(caseDetails.getCaseData(), caseDetails.getCaseTypeId());
         caseManagementForCaseWorkerService.setNextListedDate(caseDetails.getCaseData());
         caseManagementForCaseWorkerService.updateSelectedHearing(caseDetails.getCaseData());
         return getCallbackRespEntityNoErrors(caseDetails.getCaseData());
@@ -529,12 +529,12 @@ public class CaseActionsForCaseWorkerController {
     @Operation(summary = "search hearings by number(single hearing) or custom filter"
             + " criteria for all hearings in case.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> listingHearingsForUpdate(
             @RequestBody CCDRequest ccdRequest,
@@ -555,13 +555,12 @@ public class CaseActionsForCaseWorkerController {
     @PostMapping(value = "/dynamicHearingNumbers", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "populates the dynamic lists for hearing numbers in case data")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> dynamicHearingNumbers(
             @RequestBody CCDRequest ccdRequest,
@@ -575,7 +574,7 @@ public class CaseActionsForCaseWorkerController {
         
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateHearingsForAllocationOrUpdate(caseData);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             log.info(EVENT_FIELDS_VALIDATION + errors);
             return getCallbackRespEntityErrors(errors, caseData);
         }
@@ -595,13 +594,12 @@ public class CaseActionsForCaseWorkerController {
     @PostMapping(value = "/validateHearingAllocation", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "populates the dynamic lists for hearing numbers in case data")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> validateHearingAllocation(
             @RequestBody CCDRequest ccdRequest,
@@ -615,7 +613,7 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateHearingsForAllocationOrUpdate(caseData);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             log.info(EVENT_FIELDS_VALIDATION + errors);
             return getCallbackRespEntityErrors(errors, caseData);
         }
@@ -644,7 +642,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
         eventValidationService.validateRestrictedReportingNames(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -1236,12 +1234,12 @@ public class CaseActionsForCaseWorkerController {
     @PostMapping(value = "/caseTransferToReformECM", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "create a new Case in the Reform ECM")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> transferToReformECM(
             @RequestBody CCDRequest ccdRequest,

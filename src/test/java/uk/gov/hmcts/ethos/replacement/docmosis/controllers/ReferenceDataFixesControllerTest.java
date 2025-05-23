@@ -2,9 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +24,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDat
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.isA;

@@ -78,14 +78,14 @@ class NoPositionChangeReportDataTests {
                 reportSummary.getTotalSingleCases(), reportSummary.getTotalMultipleCases()));
 
         sb.append("\"" + REPORT_DETAILS_SINGLE + "\":[\n");
-        if(CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())
+        if (CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())
                 && reportData.getReportDetailsSingle().get(0) != null) {
             var rdSingle1 = reportData.getReportDetailsSingle().get(0);
             sb.append(buildDetailSingleJsonString(
                     rdSingle1.getCaseReference(), rdSingle1.getYear(), rdSingle1.getCurrentPosition(),
                     rdSingle1.getDateToPosition(), rdSingle1.getRespondent()));
         }
-        if(CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())
+        if (CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())
                 && reportData.getReportDetailsSingle().get(1) != null) {
             var rdSingle2 = reportData.getReportDetailsSingle().get(1);
             sb.append(",\n");
@@ -98,7 +98,7 @@ class NoPositionChangeReportDataTests {
         sb.append("],\n");
 
         sb.append("\"" + REPORT_DETAILS_MULTIPLE + "\":[\n");
-        if(CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())) {
+        if (CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())) {
             var rdMultiple = reportData.getReportDetailsMultiple().get(0);
             sb.append(buildDetailMultipleJsonString(
                     rdMultiple.getCaseReference(), rdMultiple.getYear(), rdMultiple.getCurrentPosition(),

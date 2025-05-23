@@ -14,8 +14,16 @@ import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_3;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleUpdateServiceTest {
