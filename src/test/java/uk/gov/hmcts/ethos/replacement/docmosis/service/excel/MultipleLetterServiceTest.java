@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import org.apache.xpath.operations.Mult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,12 @@ import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 

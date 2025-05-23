@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.HEARING_BREAK_FUTURE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.HEARING_BREAK_RESUME_INVALID;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.HEARING_FINISH_FUTURE;
@@ -31,6 +30,9 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.HEA
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.TWO_JUDGES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.TWO_JUDGES_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.findHearingNumber;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.hearingMidEventValidation;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.hearingTimeValidation;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.isDateInFuture;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_DAY_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_NUMBER_ERROR;
 

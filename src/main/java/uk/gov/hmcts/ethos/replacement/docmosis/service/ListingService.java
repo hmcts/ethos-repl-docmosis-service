@@ -54,6 +54,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysRe
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelReportDocumentInfoService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
