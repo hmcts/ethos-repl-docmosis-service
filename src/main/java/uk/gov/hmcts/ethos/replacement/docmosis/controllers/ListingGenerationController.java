@@ -137,17 +137,17 @@ public class ListingGenerationController {
         var listingData = listingRequest.getCaseDetails().getCaseData();
 
         if (ListingHelper.isListingRangeValid(listingData, errors)) {
+            String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
+                    ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
+
             listingData = listingService.processListingHearingsRequest(
                     listingRequest.getCaseDetails(), userToken);
 
-            String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
-                    ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
             var defaultValues = defaultValuesReaderService.getDefaultValues(
                     managingOffice,
                     UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
             log.info("Post Default values loaded: " + defaultValues);
             listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
-
         }
 
         return getListingCallbackRespEntityErrors(errors, listingData);
@@ -327,7 +327,7 @@ public class ListingGenerationController {
         boolean invalidCharsExist = InvalidCharacterCheck.invalidCharactersExistAllListingTypes(
                 listingRequest.getCaseDetails(), errorsList);
         if (!invalidCharsExist && !hasListings(listingData)) {
-                errorsList.add("No cases with hearings have been found for your search criteria");
+            errorsList.add("No cases with hearings have been found for your search criteria");
         }
         if (errorsList.isEmpty()) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);

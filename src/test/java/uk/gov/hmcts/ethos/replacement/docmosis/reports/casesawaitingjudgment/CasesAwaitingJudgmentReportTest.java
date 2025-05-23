@@ -313,10 +313,14 @@ public class CasesAwaitingJudgmentReportTest {
                 .withEthosCaseReference(caseReference)
                 .withPositionType(validPositionType)
                 .withSingleCaseType()
-                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_POSTPONED, "2", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "3", HEARING_TYPE_JUDICIAL_MEDIATION, judge)
-                .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_WITHDRAWN, "4", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                        HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_POSTPONED, "2",
+                        HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "3",
+                        HEARING_TYPE_JUDICIAL_MEDIATION, judge)
+                .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_WITHDRAWN, "4",
+                        HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
         var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
@@ -356,28 +360,32 @@ public class CasesAwaitingJudgmentReportTest {
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 1")
                 .withSingleCaseType()
-                .withHearing("2021-07-10T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-10T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                        HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
         submitEvents.add(caseDataBuilder
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 2")
                 .withSingleCaseType()
-                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                        HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
         submitEvents.add(caseDataBuilder
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 3")
                 .withSingleCaseType()
-                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                        HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
         submitEvents.add(caseDataBuilder
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 4")
                 .withSingleCaseType()
-                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                        HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
 
