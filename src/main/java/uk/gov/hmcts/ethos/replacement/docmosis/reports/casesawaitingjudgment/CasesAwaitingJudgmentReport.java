@@ -26,6 +26,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEAR
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingJudgeName;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail.NO_MULTIPLE_REFERENCE;
 
 @Slf4j
@@ -206,8 +207,7 @@ public class CasesAwaitingJudgmentReport {
                     heardHearing.listedDate = dateListedType.getListedDate();
                     heardHearing.hearingNumber = hearingType.getHearingNumber();
                     heardHearing.hearingType = hearingType.getHearingType();
-                    heardHearing.judge = hearingType.getJudge();
-
+                    heardHearing.judge = getHearingJudgeName(hearingType);
                     heardHearings.add(heardHearing);
                 }
             }

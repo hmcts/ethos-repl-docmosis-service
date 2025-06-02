@@ -43,7 +43,7 @@ public class ECCHelper {
     private ECCHelper() {
     }
 
-    public static void createECCLogic(CaseData caseData, CaseData originalCaseData) {
+    public static void createECCLogic(CaseData caseData, CaseData originalCaseData, String caseTypeId) {
         if (originalCaseData.getRespondentCollection() != null) {
             Optional<RespondentSumTypeItem> respondentChosen = originalCaseData.getRespondentCollection()
                     .stream()
@@ -61,7 +61,7 @@ public class ECCHelper {
         populateCaseDataDetails(caseData, originalCaseData);
         populateRepresentativeClaimantDetails(caseData, originalCaseData);
         populateRepCollectionDetails(caseData, originalCaseData);
-        FlagsImageHelper.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData, caseTypeId);
     }
 
     public static boolean validCaseForECC(SubmitEvent submitEvent, List<String> errors) {
