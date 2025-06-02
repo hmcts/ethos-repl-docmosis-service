@@ -292,13 +292,18 @@ public class ReportHelper {
         if (!caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
             return caseData.getFileLocation();
         } else {
-            return switch (caseData.getManagingOffice()) {
-                case DUNDEE_OFFICE -> caseData.getFileLocationDundee();
-                case GLASGOW_OFFICE -> caseData.getFileLocationGlasgow();
-                case ABERDEEN_OFFICE -> caseData.getFileLocationAberdeen();
-                case EDINBURGH_OFFICE -> caseData.getFileLocationEdinburgh();
-                default -> "";
-            };
+            switch (caseData.getManagingOffice()) {
+                case DUNDEE_OFFICE:
+                    return caseData.getFileLocationDundee();
+                case GLASGOW_OFFICE:
+                    return caseData.getFileLocationGlasgow();
+                case ABERDEEN_OFFICE:
+                    return caseData.getFileLocationAberdeen();
+                case EDINBURGH_OFFICE:
+                    return caseData.getFileLocationEdinburgh();
+                default:
+                    return "";
+            }
         }
     }
 
