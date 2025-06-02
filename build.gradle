@@ -323,7 +323,7 @@ dependencies {
     implementation group: 'io.netty', name: 'netty-transport-classes-kqueue', version: '4.1.118.Final'
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.4.3'
-    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.1.0'
+    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.1.1'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.10.2'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
