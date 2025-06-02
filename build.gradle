@@ -233,7 +233,7 @@ ext["rest-assured.version"] = '5.1.0'
 
 dependencyManagement {
     dependencies {
-        dependencySet(group: 'com.google.guava', version: '33.4.0-jre') {
+        dependencySet(group: 'com.google.guava', version: '33.4.8-jre') {
             entry 'guava'
         }
         dependencySet(group: 'io.netty', version: '4.1.119.Final') {
@@ -278,7 +278,7 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '2.1.4'
 
     implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '1.14.2'
-    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '3.18.33'
+    implementation group: 'com.github.hmcts', name: 'et-data-model', version: '3.18.34'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
 
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
@@ -323,7 +323,7 @@ dependencies {
     implementation group: 'io.netty', name: 'netty-transport-classes-kqueue', version: '4.1.118.Final'
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.4.3'
-    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.1.0'
+    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.1.1'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.10.2'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
