@@ -91,8 +91,8 @@ public class AcasService {
         return objectMapper.readValue(certificate, AcasCertificate.class);
     }
 
-    private DocumentInfo convertCertificateToPdf(CaseData caseData, AcasCertificate acasCertificate, String authToken
-            , String caseTypeId) {
+    private DocumentInfo convertCertificateToPdf(CaseData caseData, AcasCertificate acasCertificate, String authToken,
+                                                 String caseTypeId) {
         Optional<RespondentSumTypeItem> respondent = caseData.getRespondentCollection().stream()
                 .filter(r -> acasCertificate.getCertificateNumber().equals(
                         defaultIfEmpty(r.getValue().getRespondentACAS(), "")))

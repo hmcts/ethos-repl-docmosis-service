@@ -23,8 +23,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
@@ -60,6 +58,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper.createECCLogic;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper.validCaseForECC;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper.buildFlagsImageFileName;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -632,11 +633,11 @@ public class CaseManagementForCaseWorkerService {
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (isNotEmpty(submitEvents)) {
             var submitEvent = submitEvents.get(0);
-            if (ECCHelper.validCaseForECC(submitEvent, errors)) {
+            if (validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
                     case MID_EVENT_CALLBACK -> Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
                     case ABOUT_TO_SUBMIT_EVENT_CALLBACK -> {
-                        ECCHelper.createECCLogic(currentCaseData, submitEvent.getCaseData());
+                        createECCLogic(currentCaseData, submitEvent.getCaseData(), caseDetails.getCaseTypeId());
                         currentCaseData.setRespondentECC(null);
                         currentCaseData.setCaseSource(FLAG_ECC);
                     }
@@ -675,7 +676,7 @@ public class CaseManagementForCaseWorkerService {
                 returnedRequestCaseData.setEccCases(
                         new ArrayList<>(Collections.singletonList(eccCounterClaimTypeItem)));
             }
-            FlagsImageHelper.buildFlagsImageFileName(returnedRequestCaseData);
+            buildFlagsImageFileName(returnedRequestCaseData, returnedRequest.getCaseDetails().getCaseTypeId());
 
             ccdClient.submitEventForCase(authToken, returnedRequestCaseData, currentCaseDetails.getCaseTypeId(),
                     currentCaseDetails.getJurisdiction(), returnedRequest, caseIdToLink);

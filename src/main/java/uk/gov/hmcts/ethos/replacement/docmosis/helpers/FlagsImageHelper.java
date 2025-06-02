@@ -5,6 +5,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
+import java.util.List;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DIGITAL_FILE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
@@ -18,6 +20,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
 
@@ -37,25 +40,22 @@ public class FlagsImageHelper {
     private static final String COLOR_DARK_SLATE_BLUE = "DarkSlateBlue";
     private static final String FLAG_REASONABLE_ADJUSTMENT = "REASONABLE ADJUSTMENT";
     private static final String FLAG_RULE_493B = "RULE 49(3)b";
+    private static final String SPEAK_TO_VP = "SPEAK TO VP";
+    private static final String SPEAK_TO_REJ = "SPEAK TO REJ";
+
+    private static final List<String> FLAGS = List.of(FLAG_WITH_OUTSTATION,
+            FLAG_DO_NOT_POSTPONE, FLAG_LIVE_APPEAL, FLAG_RULE_493B, FLAG_REPORTING, FLAG_SENSITIVE, FLAG_RESERVED,
+            FLAG_ECC, FLAG_DIGITAL_FILE, FLAG_REASONABLE_ADJUSTMENT, SPEAK_TO_VP, SPEAK_TO_REJ);
 
     private FlagsImageHelper() {
     }
 
-    public static void buildFlagsImageFileName(CaseData caseData) {
+    public static void buildFlagsImageFileName(CaseData caseData, String caseTypeId) {
         var flagsImageFileName = new StringBuilder();
         var flagsImageAltText = new StringBuilder();
 
         flagsImageFileName.append(IMAGE_FILE_PRECEDING);
-        setFlagImageFor(FLAG_WITH_OUTSTATION, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_RULE_493B, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_ECC, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_DIGITAL_FILE, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_REASONABLE_ADJUSTMENT, flagsImageFileName, flagsImageAltText, caseData);
+        FLAGS.forEach(flag -> setFlagImageFor(flag, flagsImageFileName, flagsImageAltText, caseData, caseTypeId));
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
 
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
@@ -63,57 +63,65 @@ public class FlagsImageHelper {
     }
 
     private static void setFlagImageFor(String flagName, StringBuilder flagsImageFileName,
-                                        StringBuilder flagsImageAltText, CaseData caseData) {
+                                        StringBuilder flagsImageAltText, CaseData caseData, String caseTypeId) {
         boolean flagRequired;
-        String flagColor;
-
-        switch (flagName) {
-            case FLAG_WITH_OUTSTATION:
+        String flagColor = switch (flagName) {
+            case FLAG_WITH_OUTSTATION -> {
                 flagRequired = withOutstation(caseData);
-                flagColor = COLOR_DEEP_PINK;
-                break;
-            case FLAG_DO_NOT_POSTPONE:
+                yield COLOR_DEEP_PINK;
+            }
+            case FLAG_DO_NOT_POSTPONE -> {
                 flagRequired = doNotPostpone(caseData);
-                flagColor = COLOR_DARK_RED;
-                break;
-            case FLAG_LIVE_APPEAL:
+                yield COLOR_DARK_RED;
+            }
+            case FLAG_LIVE_APPEAL -> {
                 flagRequired = liveAppeal(caseData);
-                flagColor = COLOR_GREEN;
-                break;
-            case FLAG_RULE_493B:
+                yield COLOR_GREEN;
+            }
+            case FLAG_RULE_493B -> {
                 flagRequired = rule493bApplies(caseData);
-                flagColor = COLOR_RED;
-                break;
-            case FLAG_REPORTING:
+                yield COLOR_RED;
+            }
+            case FLAG_REPORTING -> {
                 flagRequired = rule493dApplies(caseData);
-                flagColor = COLOR_LIGHT_BLACK;
-                break;
-            case FLAG_SENSITIVE:
+                yield COLOR_LIGHT_BLACK;
+            }
+            case FLAG_SENSITIVE -> {
                 flagRequired = sensitiveCase(caseData);
-                flagColor = COLOR_ORANGE;
-                break;
-            case FLAG_RESERVED:
+                yield COLOR_ORANGE;
+            }
+            case FLAG_RESERVED -> {
                 flagRequired = reservedJudgement(caseData);
-                flagColor = COLOR_PURPLE;
-                break;
-            case FLAG_ECC:
+                yield COLOR_PURPLE;
+            }
+            case FLAG_ECC -> {
                 flagRequired = counterClaimMade(caseData);
-                flagColor = COLOR_OLIVE;
-                break;
-            case FLAG_DIGITAL_FILE:
+                yield COLOR_OLIVE;
+            }
+            case FLAG_DIGITAL_FILE -> {
                 flagRequired = digitalFile(caseData);
-                flagColor = COLOR_SLATE_GRAY;
-                break;
-            case FLAG_REASONABLE_ADJUSTMENT:
+                yield COLOR_SLATE_GRAY;
+            }
+            case FLAG_REASONABLE_ADJUSTMENT -> {
                 flagRequired = reasonableAdjustment(caseData);
-                flagColor = COLOR_DARK_SLATE_BLUE;
-                break;
-            default:
+                yield COLOR_DARK_SLATE_BLUE;
+            }
+            case SPEAK_TO_VP -> {
+                flagRequired = speakToVp(caseTypeId, caseData);
+                yield  "#1D70B8";
+            }
+            case SPEAK_TO_REJ -> {
+                flagRequired = speakToRej(caseTypeId, caseData);
+                yield "#1D70B8";
+            }
+            default -> {
                 flagRequired = false;
-                flagColor = COLOR_WHITE;
-        }
+                yield COLOR_WHITE;
+            }
+        };
+
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
-        flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? "<font size='5'> - </font>" : "");
+        flagsImageAltText.append(flagRequired && !flagsImageAltText.isEmpty() ? "<font size='5'> - </font>" : "");
         flagsImageAltText.append(flagRequired ? "<font color='"
                 + flagColor + "' size='5'> " + flagName + " </font>" : "");
     }
@@ -229,4 +237,30 @@ public class FlagsImageHelper {
         return !isNullOrEmpty(caseData.getManagingOffice()) && !caseData.getManagingOffice().equals(GLASGOW_OFFICE);
     }
 
+    private static boolean speakToRej(String caseTypeId, CaseData caseData) {
+        if (SCOTLAND_CASE_TYPE_ID.equals(caseTypeId)) {
+            return false;
+        }
+
+        return isInterventionRequired(caseData);
+    }
+
+    private static boolean speakToVp(String caseTypeId, CaseData caseData) {
+        if (!SCOTLAND_CASE_TYPE_ID.equals(caseTypeId)) {
+            return false;
+        }
+        return isInterventionRequired(caseData);
+    }
+
+    private static boolean isInterventionRequired(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (isNullOrEmpty(caseData.getAdditionalCaseInfoType().getInterventionRequired())) {
+                return false;
+            } else {
+                return YES.equals(caseData.getAdditionalCaseInfoType().getInterventionRequired());
+            }
+        } else {
+            return false;
+        }
+    }
 }

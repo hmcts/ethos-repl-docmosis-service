@@ -25,6 +25,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.TWO_JUDGES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDurationInMinutes;
 
 public class HearingsByHearingTypeReport {
@@ -99,6 +100,7 @@ public class HearingsByHearingTypeReport {
     private void initReportSummary2HdrList(List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList) {
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr(FULL_PANEL));
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr(SIT_ALONE));
+        reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr(TWO_JUDGES));
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr("JM"));
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr("Tel Con"));
         reportSummary2HdrList.add(new HearingsByHearingTypeReportSummary2Hdr(VIDEO));
@@ -116,6 +118,8 @@ public class HearingsByHearingTypeReport {
                 return FULL_PANEL;
             } else if (List.of(SIT_ALONE, YES).contains(hearingTypeItem.getValue().getHearingSitAlone())) {
                 return SIT_ALONE;
+            } else if (TWO_JUDGES.equals(hearingTypeItem.getValue().getHearingSitAlone())) {
+                return TWO_JUDGES;
             }
         }
         return "";

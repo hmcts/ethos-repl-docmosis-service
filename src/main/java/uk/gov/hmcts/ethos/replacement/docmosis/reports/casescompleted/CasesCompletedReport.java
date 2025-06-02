@@ -36,6 +36,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingJudgeName;
 
 @Service
 @Slf4j
@@ -178,7 +179,7 @@ public class CasesCompletedReport {
         adhocReportType.setHearingNumber(hearingType.getHearingNumber());
         adhocReportType.setHearingDate(latestSession.getListedDate());
         adhocReportType.setHearingType(hearingType.getHearingType());
-        adhocReportType.setHearingJudge(hearingType.getJudge());
+        adhocReportType.setHearingJudge(getHearingJudgeName(hearingType));
         adhocReportType.setHearingClerk(latestSession.getHearingClerk());
 
         return adhocReportType;

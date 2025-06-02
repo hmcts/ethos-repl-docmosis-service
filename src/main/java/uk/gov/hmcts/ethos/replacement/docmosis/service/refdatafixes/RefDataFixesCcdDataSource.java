@@ -1,10 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j

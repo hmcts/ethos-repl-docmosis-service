@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -39,8 +40,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
-
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 @Slf4j
 public class ReportHelper {
