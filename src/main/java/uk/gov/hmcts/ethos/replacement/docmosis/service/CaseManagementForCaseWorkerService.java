@@ -23,8 +23,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
@@ -60,6 +58,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_JUSTICE_CENTRE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEESSIDE_MAGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper.createECCLogic;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper.validCaseForECC;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper.buildFlagsImageFileName;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -78,6 +79,8 @@ public class CaseManagementForCaseWorkerService {
             + "please enter a date after today otherwise click Ignore and Continue.";
     public static final String LISTED_DATE_ON_WEEKEND_MESSAGE = "A hearing date you have entered "
             + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of Hearing ";
+    public static final String NEGATIVE_HEARING_LENGTH_MESSAGE = "The estimated hearing length for hearing %s must be "
+        + "greater than 0.";
     private static final String FULL_PANEL = "Full Panel";
     private static final String HEARING_NUMBER = "Hearing Number";
     private static final String SINGLE = "Single";
@@ -537,6 +540,7 @@ public class CaseManagementForCaseWorkerService {
                                      DateListedTypeItem dateListedTypeItm) {
         addHearingsOnWeekendError(dateListedTypeItm, errors, hearingTypeItem.getValue().getHearingNumber());
         addHearingsInPastWarning(dateListedTypeItm, warnings, hearingTypeItem.getValue().getHearingNumber());
+        addNegativeHearingLengthsError(hearingTypeItem, errors, hearingTypeItem.getValue().getHearingNumber());
     }
 
     private void addHearingsInPastWarning(DateListedTypeItem dateListedTypeItem, List<String> warnings,
@@ -558,6 +562,18 @@ public class CaseManagementForCaseWorkerService {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         if (SUNDAY.equals(dayOfWeek) || SATURDAY.equals(dayOfWeek)) {
             errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE + hearingNumber);
+        }
+    }
+
+    private void addNegativeHearingLengthsError(HearingTypeItem hearingTypeItem, List<String> errors,
+                                                String hearingNumber) {
+        try {
+            int parsed = Integer.parseInt(hearingTypeItem.getValue().getHearingEstLengthNum().trim());
+            if (parsed <= 0) {
+                errors.add(String.format(NEGATIVE_HEARING_LENGTH_MESSAGE, hearingNumber));
+            }
+        } catch (NumberFormatException e) {
+            errors.add(String.format(NEGATIVE_HEARING_LENGTH_MESSAGE, hearingNumber));
         }
     }
 
@@ -617,18 +633,15 @@ public class CaseManagementForCaseWorkerService {
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (isNotEmpty(submitEvents)) {
             var submitEvent = submitEvents.get(0);
-            if (ECCHelper.validCaseForECC(submitEvent, errors)) {
+            if (validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
-                    case MID_EVENT_CALLBACK:
-                        Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
-                        break;
-                    case ABOUT_TO_SUBMIT_EVENT_CALLBACK:
-                        ECCHelper.createECCLogic(currentCaseData, submitEvent.getCaseData());
+                    case MID_EVENT_CALLBACK -> Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
+                    case ABOUT_TO_SUBMIT_EVENT_CALLBACK -> {
+                        createECCLogic(currentCaseData, submitEvent.getCaseData(), caseDetails.getCaseTypeId());
                         currentCaseData.setRespondentECC(null);
                         currentCaseData.setCaseSource(FLAG_ECC);
-                        break;
-                    default:
-                        sendUpdateSingleCaseECC(authToken, caseDetails, String.valueOf(submitEvent.getCaseId()));
+                    }
+                    default -> sendUpdateSingleCaseECC(authToken, caseDetails, String.valueOf(submitEvent.getCaseId()));
                 }
             }
         } else {
@@ -663,7 +676,7 @@ public class CaseManagementForCaseWorkerService {
                 returnedRequestCaseData.setEccCases(
                         new ArrayList<>(Collections.singletonList(eccCounterClaimTypeItem)));
             }
-            FlagsImageHelper.buildFlagsImageFileName(returnedRequestCaseData);
+            buildFlagsImageFileName(returnedRequestCaseData, returnedRequest.getCaseDetails().getCaseTypeId());
 
             ccdClient.submitEventForCase(authToken, returnedRequestCaseData, currentCaseDetails.getCaseTypeId(),
                     currentCaseDetails.getJurisdiction(), returnedRequest, caseIdToLink);
