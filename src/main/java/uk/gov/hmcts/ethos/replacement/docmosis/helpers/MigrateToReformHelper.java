@@ -46,6 +46,7 @@ import static org.elasticsearch.common.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET_ENGLAND_AND_WALES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET_SCOTLAND;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
@@ -260,6 +261,19 @@ public class MigrateToReformHelper {
                 reformDateListedType.setHearingTypeReadingDeliberation(
                         ecmDateListedType.getHearingTypeReadingDeliberation());
                 reformDateListedType.setHearingVenueDayScotland(ecmDateListedType.getHearingVenueDay());
+                switch (ecmDateListedType.getHearingVenueDay()) {
+                    case GLASGOW_OFFICE -> reformDateListedType.setHearingGlasgow(
+                            createDynamicListFromFixedList(ecmDateListedType.getHearingGlasgow()));
+                    case "Aberdeen" -> reformDateListedType.setHearingAberdeen(
+                            createDynamicListFromFixedList(ecmDateListedType.getHearingAberdeen()));
+                    case "Dundee" -> reformDateListedType.setHearingDundee(
+                            createDynamicListFromFixedList(ecmDateListedType.getHearingDundee()));
+                    case "Edinburgh" -> reformDateListedType.setHearingEdinburgh(
+                            createDynamicListFromFixedList(ecmDateListedType.getHearingEdinburgh()));
+                    default -> {
+                        // No action needed, as the hearingVenueDayScotland is already set
+                    }
+                }
             } else {
                 reformDateListedType.setHearingVenueDay(
                         createDynamicListFromFixedList(ecmDateListedType.getHearingVenueDay()));
