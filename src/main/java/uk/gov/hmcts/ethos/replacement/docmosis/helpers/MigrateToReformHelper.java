@@ -46,6 +46,7 @@ import static org.elasticsearch.common.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET_ENGLAND_AND_WALES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET_SCOTLAND;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
@@ -260,6 +261,40 @@ public class MigrateToReformHelper {
                 reformDateListedType.setHearingTypeReadingDeliberation(
                         ecmDateListedType.getHearingTypeReadingDeliberation());
                 reformDateListedType.setHearingVenueDayScotland(ecmDateListedType.getHearingVenueDay());
+                switch (ecmDateListedType.getHearingVenueDay()) {
+                    case GLASGOW_OFFICE -> {
+                        reformDateListedType.setHearingGlasgow(
+                                createDynamicListFromFixedList(ecmDateListedType.getHearingGlasgow()));
+                        setGlasgowHearingRoom(ecmDateListedType, reformDateListedType);
+                    }
+                    case "Aberdeen" -> {
+                        reformDateListedType.setHearingAberdeen(
+                                createDynamicListFromFixedList(ecmDateListedType.getHearingAberdeen()));
+                        setAberdeenHearingRoom(ecmDateListedType, reformDateListedType);
+                    }
+                    case "Dundee" -> {
+                        reformDateListedType.setHearingDundee(
+                                createDynamicListFromFixedList(ecmDateListedType.getHearingDundee()));
+                        switch (ecmDateListedType.getHearingDundee()) {
+                            case "Dundee" -> reformDateListedType.setHearingRoom(
+                                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomDundee()));
+                            case "Tribunal" -> reformDateListedType.setHearingRoom(
+                                    createDynamicListFromFixedList(ecmDateListedType.getRoomDundeeTribunal()));
+                            default -> {
+                                // No action needed, as the hearingRoom is already set to null
+                            }
+                        }
+                    }
+                    case "Edinburgh" -> {
+                        reformDateListedType.setHearingEdinburgh(
+                                createDynamicListFromFixedList(ecmDateListedType.getHearingEdinburgh()));
+                        reformDateListedType.setHearingRoom(
+                                createDynamicListFromFixedList(ecmDateListedType.getHearingRoomEdinburgh()));
+                    }
+                    default -> {
+                        // No action needed, as the hearingVenueDayScotland is already set
+                    }
+                }
             } else {
                 reformDateListedType.setHearingVenueDay(
                         createDynamicListFromFixedList(ecmDateListedType.getHearingVenueDay()));
@@ -290,6 +325,65 @@ public class MigrateToReformHelper {
         }
 
         return hd;
+    }
+
+    private static void setAberdeenHearingRoom(uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType ecmDateListedType, DateListedType reformDateListedType) {
+        switch (ecmDateListedType.getHearingAberdeen()) {
+            case "Aberdeen" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomAberdeen()));
+            case "I J C" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomIJC()));
+            case "Inverness" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomInverness()));
+            case "Kirkwall" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomKirkawall()));
+            case "Lerwick" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomLerwick()));
+            case "Portree" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomPortree()));
+            case "Shetland" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomRRShetland()));
+            case "Stornoway" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomStornoway()));
+            case "Wick" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomWick()));
+            default -> {
+                // No action needed, as the hearingRoom is already set to null
+            }
+        }
+    }
+
+    private static void setGlasgowHearingRoom(uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType ecmDateListedType,
+                                              DateListedType reformDateListedType) {
+        switch (ecmDateListedType.getHearingGlasgow()) {
+            case "Glasgow COET" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomGlasgow()));
+            case "GTC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomGTC()));
+            case "Cambeltown HC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomCambeltown()));
+            case "Dumfries HC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomDumfries()));
+            case "Fort William SC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomFortWilliam()));
+            case "Kirkcudbright" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomKirkcubright()));
+            case "Lochmaddy HC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomLockmaddy()));
+            case "Oban HC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomOban()));
+            case "Portree HC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomPortree()));
+            case "Stirling SC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomStirling()));
+            case "Stornoway HC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomStornoway()));
+            case "Stranraer HC" -> reformDateListedType.setHearingRoom(
+                    createDynamicListFromFixedList(ecmDateListedType.getHearingRoomStranraer()));
+            default -> {
+                // No action needed, as the hearingRoom is already set to null
+            }
+        }
     }
 
     private static List<JudgementTypeItem> covertJudgementCollection(
