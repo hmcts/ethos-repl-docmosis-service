@@ -307,7 +307,7 @@ dependencies {
             strictly '7.17.3'
         }
     }
-    implementation 'org.postgresql:postgresql:42.7.5'
+    implementation 'org.postgresql:postgresql:42.7.6'
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.17'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.8.0'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
