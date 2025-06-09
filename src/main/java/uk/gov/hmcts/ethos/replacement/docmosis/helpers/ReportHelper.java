@@ -39,6 +39,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_REJEC
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
 
 @Slf4j
 public class ReportHelper {
@@ -117,14 +118,17 @@ public class ReportHelper {
 
     public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails,
                                                            List<SubmitEvent> submitEvents) {
-        if (submitEvents != null && !submitEvents.isEmpty()) {
-            log.info(CASES_SEARCHED + submitEvents.size());
+        List<SubmitEvent> filteredSubmitEvents = submitEvents.stream()
+            .filter(event -> !TRANSFERRED_STATE.equals(event.getState()))
+            .toList();
+        if (CollectionUtils.isNotEmpty(filteredSubmitEvents)) {
+            log.info(CASES_SEARCHED + filteredSubmitEvents.size());
             var totalCases = 0;
             var totalSingles = 0;
             var totalMultiples = 0;
             var localReportsDetailHdr = new AdhocReportType();
             List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
-            for (SubmitEvent submitEvent : submitEvents) {
+            for (SubmitEvent submitEvent : filteredSubmitEvents) {
                 AdhocReportTypeItem localReportsDetailItem =
                         getClaimsAcceptedDetailItem(listingDetails, submitEvent.getCaseData());
                 if (localReportsDetailItem.getValue() != null) {
