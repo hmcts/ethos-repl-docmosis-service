@@ -21,6 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.utils.JsonMapper;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -108,7 +109,8 @@ class DigitalCaseFileControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.digitalCaseFile.status",
-                        is("DCF Uploaded: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN))));
+                        is("DCF Uploaded: " + LocalDateTime.now(ZoneId.of("Europe/London"))
+                                .format(NEW_DATE_TIME_PATTERN))));
     }
 
     @Test

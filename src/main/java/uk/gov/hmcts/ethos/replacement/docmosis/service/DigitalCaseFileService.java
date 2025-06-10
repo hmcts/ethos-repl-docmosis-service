@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -52,7 +53,8 @@ public class DigitalCaseFileService {
             case UPLOAD -> {
                 DigitalCaseFileType digitalCaseFile = caseData.getDigitalCaseFile();
                 if (isNotEmpty(digitalCaseFile)) {
-                    digitalCaseFile.setStatus("DCF Uploaded: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN));
+                    digitalCaseFile.setStatus("DCF Uploaded: " + LocalDateTime.now(ZoneId.of("Europe/London"))
+                            .format(NEW_DATE_TIME_PATTERN));
                     digitalCaseFile.setError(null);
 
                     // Deprecating old field

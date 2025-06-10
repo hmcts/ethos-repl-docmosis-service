@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,15 +56,15 @@ class DigitalCaseFileHelperTest {
                 .build();
         caseData.setCaseBundles(List.of(Bundle.builder().value(bundleDetails).build()));
         assertDoesNotThrow(() -> DigitalCaseFileHelper.addDcfToDocumentCollection(caseData));
-        assertEquals("DCF Failed to generate: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN),
-                caseData.getDigitalCaseFile().getStatus());
+        assertEquals("DCF Failed to generate: " + LocalDateTime.now(ZoneId.of("Europe/London"))
+                        .format(NEW_DATE_TIME_PATTERN), caseData.getDigitalCaseFile().getStatus());
         assertEquals("Failed to generate", caseData.getDigitalCaseFile().getError());
     }
 
     @Test
     void setDcfUpdatingStatus() {
         DigitalCaseFileHelper.setUpdatingStatus(caseData);
-        assertEquals("DCF Updating: " + LocalDateTime.now().format(NEW_DATE_TIME_PATTERN),
+        assertEquals("DCF Updating: " + LocalDateTime.now(ZoneId.of("Europe/London")).format(NEW_DATE_TIME_PATTERN),
                 caseData.getDigitalCaseFile().getStatus());
     }
 
