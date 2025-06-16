@@ -41,7 +41,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
@@ -159,13 +158,13 @@ public class DocumentHelper {
         sb.append("\"data\":{\n");
 
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE) && multipleData == null) {
-            log.info("Getting address labels data for single case:" + caseData.getEthosCaseReference());
+            log.info("Getting address labels data for single case:{}", caseData.getEthosCaseReference());
             sb.append(getAddressLabelsDataSingleCase(caseData));
         } else if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
-            log.info("Getting address labels data for multiple reference:" + multipleData.getMultipleReference());
+            log.info("Getting address labels data for multiple reference:{}", multipleData.getMultipleReference());
             sb.append(getAddressLabelsDataMultipleCase(multipleData));
         } else {
-            log.info("Getting data for single template for case:" + caseData.getEthosCaseReference());
+            log.info("Getting data for single template for case:{}", caseData.getEthosCaseReference());
             sb.append(getClaimantData(caseData));
             sb.append(getRespondentData(caseData));
             sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream, correspondenceType,
@@ -235,7 +234,7 @@ public class DocumentHelper {
         Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
         if (representedTypeC != null && caseData.getClaimantRepresentedQuestion() != null &&  caseData
                 .getClaimantRepresentedQuestion().equals(YES)) {
-            log.info("Claimant is represented for case reference: " + caseData.getEthosCaseReference());
+            log.info("Claimant is represented for case reference: {}", caseData.getEthosCaseReference());
             sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative()))
                     .append(NEW_LINE);
             sb.append("\"claimant_rep_organisation\":\"").append(nullCheck(representedTypeC.getNameOfOrganisation()))
@@ -250,7 +249,7 @@ public class DocumentHelper {
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
             if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
                     .equals(COMPANY_TYPE_CLAIMANT)) {
-                log.info("Claimant is a company for case reference: " + caseData.getEthosCaseReference());
+                log.info("Claimant is a company for case reference: {}", caseData.getEthosCaseReference());
                 sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
                         .append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
@@ -334,13 +333,12 @@ public class DocumentHelper {
 
     private static StringBuilder getRespondentData(CaseData caseData) {
         log.info("Respondent Data");
-        var sb = new StringBuilder();
         List<RespondentSumTypeItem> respondentSumTypeItemList = CollectionUtils.isNotEmpty(
                 caseData.getRespondentCollection())
                 ? caseData.getRespondentCollection() : new ArrayList<>();
 
         if (CollectionUtils.isEmpty(respondentSumTypeItemList)) {
-            log.error("No respondents present for case: " + caseData.getEthosCaseReference());
+            log.error("No respondents present for case: {}", caseData.getEthosCaseReference());
         }
 
         var responseContinue = false;
@@ -355,25 +353,25 @@ public class DocumentHelper {
                     || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO);
 
             if (responseContinue && responseNotStruckOut) {
-                log.info("Response is continuing and not struck out for case: " + caseData.getEthosCaseReference());
+                log.info("Response is continuing and not struck out for case: {}", caseData.getEthosCaseReference());
                 respondentToBeShown = respondentSumTypeItem.getValue();
                 break;
             }
         }
 
         if (!responseContinue) {
-            log.error("Atleast one respondent should have response continuing for case: "
-                    + caseData.getEthosCaseReference());
+            log.error("At least one respondent should have response continuing for case: {}",
+                    caseData.getEthosCaseReference());
         }
 
         if (!responseNotStruckOut) {
-            log.error("Atleast one respondent should have response not struck out for case: "
-                    + caseData.getEthosCaseReference());
+            log.error("At least one respondent should have response not struck out for case: {}",
+                    caseData.getEthosCaseReference());
         }
 
         if (respondentToBeShown.equals(new RespondentSumType())) {
-            log.error("No respondent found whose response is continuing and is not struck out for case: "
-                    + caseData.getEthosCaseReference());
+            log.error("No respondent found whose response is continuing and is not struck out for case: {}",
+                    caseData.getEthosCaseReference());
         }
 
         List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
@@ -386,6 +384,7 @@ public class DocumentHelper {
                     .filter(a -> a.getValue().getRespRepName().equals(
                             finalRespondentToBeShown.getRespondentName())).findFirst();
         }
+        var sb = new StringBuilder();
 
         if (representedTypeRItem.isPresent()) {
             log.info("Respondent represented");
@@ -431,8 +430,10 @@ public class DocumentHelper {
 
             if (Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
                     || YES.equals(finalRespondentToBeShown.getResponseContinue())) {
-                sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
-                        .append(nullCheck((finalRespondentToBeShown.getRespondentName())))
+                String respondentName = nullCheck(finalRespondentToBeShown.getRespondentName());
+                sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1
+                        ? "1. " + respondentName + ","
+                        : respondentName)
                         .append(NEW_LINE);
             }
 
@@ -461,8 +462,8 @@ public class DocumentHelper {
                         && !respondentSumTypeItem.getValue().getRespondentName().equals(firstRespondentName))
                 .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". "
                         + respondentSumTypeItem.getValue().getRespondentName())
-                .collect(Collectors.toList());
-        sb.append("\"resp_others\":\"").append(nullCheck(String.join("\\n", respOthers))).append(NEW_LINE);
+                .toList();
+        sb.append("\"resp_others\":\"").append(nullCheck(String.join(", ", respOthers))).append(NEW_LINE);
         return sb;
     }
 
@@ -479,7 +480,7 @@ public class DocumentHelper {
                         || YES.equals(respondentSumTypeItem.getValue().getResponseContinue())))
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
                         + getRespondentAddressET3(respondentSumTypeItem.getValue()))
-                .collect(Collectors.toList());
+                .toList();
         sb.append("\"resp_address\":\"").append(nullCheck(String.join("\\n", respAddressList)))
                 .append(NEW_LINE);
         return sb;
@@ -491,11 +492,11 @@ public class DocumentHelper {
                                                 CorrespondenceScotType correspondenceScotType) {
         log.info("Hearing Data");
         var sb = new StringBuilder();
-        //Currently checking collection not the HearingType
+        // Currently checking the collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             String correspondenceHearingNumber = getCorrespondenceHearingNumber(
                     correspondenceType, correspondenceScotType);
-            log.info("Hearing Number: " + correspondenceHearingNumber);
+            log.info("Hearing Number: {}", correspondenceHearingNumber);
             var hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
             log.info("Hearing type info by number");
             if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
@@ -601,18 +602,18 @@ public class DocumentHelper {
                                           InputStream venueAddressInputStream) {
 
         String hearingVenue = getHearingVenue(hearingType, caseTypeId);
-        log.info("HearingVenue: " + hearingVenue);
+        log.info("HearingVenue: {}", hearingVenue);
         try (Workbook workbook = new XSSFWorkbook(venueAddressInputStream)) {
             var datatypeSheet = workbook.getSheet(caseTypeId);
             if (datatypeSheet != null) {
-                log.info("Processing venue addresses for tab : " + caseTypeId + " within file : "
-                        + VENUE_ADDRESS_VALUES_FILE_PATH);
+                log.info("Processing venue addresses for tab : {} within file : "
+                         + VENUE_ADDRESS_VALUES_FILE_PATH, caseTypeId);
                 for (Row currentRow : datatypeSheet) {
                     if (currentRow.getRowNum() == 0) {
                         continue;
                     }
                     String excelHearingVenue = getCellValue(currentRow.getCell(0));
-                    log.info("ExcelHearingVenue: " + excelHearingVenue);
+                    log.info("ExcelHearingVenue: {}", excelHearingVenue);
                     if (!isNullOrEmpty(excelHearingVenue) && excelHearingVenue.equals(hearingVenue)) {
                         return getCellValue(currentRow.getCell(1));
                     }
@@ -620,7 +621,7 @@ public class DocumentHelper {
             }
 
         } catch (Exception ex) {
-            log.error(VENUE_ADDRESS_OPENING_PROCESSING_ERROR + ex.getMessage());
+            log.error(VENUE_ADDRESS_OPENING_PROCESSING_ERROR + "{}", ex.getMessage());
         }
 
         return hearingVenue;
@@ -629,16 +630,12 @@ public class DocumentHelper {
     private static String getHearingVenue(HearingType hearingType, String caseTypeId) {
         String hearingVenueToSearch = hearingType.getHearingVenue();
         if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
-            switch (hearingVenueToSearch) {
-                case ABERDEEN_OFFICE:
-                    return hearingType.getHearingAberdeen();
-                case DUNDEE_OFFICE:
-                    return hearingType.getHearingDundee();
-                case EDINBURGH_OFFICE:
-                    return hearingType.getHearingEdinburgh();
-                default:
-                    return hearingType.getHearingGlasgow();
-            }
+            return switch (hearingVenueToSearch) {
+                case ABERDEEN_OFFICE -> hearingType.getHearingAberdeen();
+                case DUNDEE_OFFICE -> hearingType.getHearingDundee();
+                case EDINBURGH_OFFICE -> hearingType.getHearingEdinburgh();
+                default -> hearingType.getHearingGlasgow();
+            };
         } else {
             return hearingVenueToSearch;
         }
@@ -817,7 +814,7 @@ public class DocumentHelper {
         log.info("Correspondence data");
         String sectionName = getEWSectionName(correspondence);
         var sb = new StringBuilder();
-        if (!sectionName.equals("")) {
+        if (!sectionName.isEmpty()) {
             sb.append("\"").append("t").append(sectionName.replace(".", "_"))
                     .append("\":\"").append("true").append(NEW_LINE);
         }
@@ -828,7 +825,7 @@ public class DocumentHelper {
         log.info("Correspondence scot data");
         String scotSectionName = getScotSectionName(correspondenceScotType);
         var sb = new StringBuilder();
-        if (!scotSectionName.equals("")) {
+        if (!scotSectionName.isEmpty()) {
             sb.append("\"").append("t_Scot_").append(scotSectionName.replace(".", "_"))
                     .append("\":\"").append("true").append(NEW_LINE);
         }
@@ -1067,7 +1064,7 @@ public class DocumentHelper {
                             && addressLabelTypeItem.getValue().getPrintLabel().equals(YES))
                     .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getFullName() != null
                             || addressLabelTypeItem.getValue().getFullAddress() != null)
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         return selectedAddressLabels;
@@ -1107,37 +1104,40 @@ public class DocumentHelper {
     }
 
     public static void setSecondLevelDocumentFromType(DocumentType documentType, String typeOfDocument) {
-        if(typeOfDocument != null && documentType != null) {
+        if (typeOfDocument != null && documentType != null) {
             switch (typeOfDocument) {
-            case ET1, ET1_ATTACHMENT, ACAS_CERTIFICATE, NOTICE_OF_CLAIM, CLAIM_ACCEPTED, CLAIM_REJECTED,
-                    CLAIM_PART_REJECTED, ET1_VETTING -> documentType.setStartingClaimDocuments(typeOfDocument);
-            case ET3, ET3_ATTACHMENT, RESPONSE_ACCEPTED, RESPONSE_REJECTED, APP_TO_EXTEND_TIME_TO_PRESENT_A_RESPONSE,
-                    ET3_PROCESSING -> documentType.setResponseClaimDocuments(typeOfDocument);
-            case INITIAL_CONSIDERATION, RULE_27_NOTICE, RULE_28_NOTICE
-                    -> documentType.setInitialConsiderationDocuments(typeOfDocument);
-            case TRIBUNAL_ORDER, DEPOSIT_ORDER, UNLESS_ORDER, TRIBUNAL_NOTICE, APP_TO_VARY_AN_ORDER_C,
-                    APP_TO_VARY_AN_ORDER_R, APP_TO_REVOKE_AN_ORDER_C, APP_TO_REVOKE_AN_ORDER_R,
-                    APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_C,
-                    APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_R, APP_TO_ORDER_THE_R_TO_DO_SOMETHING,
-                    APP_TO_ORDER_THE_C_TO_DO_SOMETHING, APP_TO_AMEND_CLAIM, APP_TO_AMEND_RESPONSE,
-                    APP_FOR_A_WITNESS_ORDER_C, DISABILITY_IMPACT_STATEMENT, R_HAS_NOT_COMPLIED_WITH_AN_ORDER_C,
-                    C_HAS_NOT_COMPLIED_WITH_AN_ORDER_R, APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_CLAIM,
-                    APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_RESPONSE, REFERRAL_JUDICIAL_DIRECTION,
-                    CHANGE_OF_PARTYS_DETAILS, APP_TO_VARY_OR_REVOKE_AN_ORDER_R, APP_TO_VARY_OR_REVOKE_AN_ORDER_C,
-                    CONTACT_THE_TRIBUNAL_C, CONTACT_THE_TRIBUNAL_R, APP_FOR_A_WITNESS_ORDER_R
-                    -> documentType.setCaseManagementDocuments(typeOfDocument);
-            case WITHDRAWAL_OF_ENTIRE_CLAIM, WITHDRAWAL_OF_PART_OF_CLAIM, COT3, WITHDRAWAL_OF_ALL_OR_PART_CLAIM
-                    -> documentType.setWithdrawalSettledDocuments(typeOfDocument);
-            case APP_TO_RESTRICT_PUBLICITY_C, APP_TO_RESTRICT_PUBLICITY_R, ANONYMITY_ORDER, NOTICE_OF_HEARING,
-                    APP_TO_POSTPONE_C, APP_TO_POSTPONE_R, HEARING_BUNDLE, SCHEDULE_OF_LOSS, COUNTER_SCHEDULE_OF_LOSS
-                    -> documentType.setHearingsDocuments(typeOfDocument);
-            case JUDGMENT, JUDGMENT_WITH_REASONS, REASONS, EXTRACT_OF_JUDGMENT
-                    -> documentType.setJudgmentAndReasonsDocuments(typeOfDocument);
-            case APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_C,
-                    APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_R, APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_C,
-                    APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R -> documentType.setReconsiderationDocuments(typeOfDocument);
-            case CERTIFICATE_OF_CORRECTION, TRIBUNAL_CASE_FILE, OTHER -> documentType.setMiscDocuments(typeOfDocument);
-            default -> documentType.setTypeOfDocument(typeOfDocument);
+                case ET1, ET1_ATTACHMENT, ACAS_CERTIFICATE, NOTICE_OF_CLAIM, CLAIM_ACCEPTED, CLAIM_REJECTED,
+                        CLAIM_PART_REJECTED, ET1_VETTING -> documentType.setStartingClaimDocuments(typeOfDocument);
+                case ET3, ET3_ATTACHMENT, RESPONSE_ACCEPTED, RESPONSE_REJECTED,
+                     APP_TO_EXTEND_TIME_TO_PRESENT_A_RESPONSE,
+                     ET3_PROCESSING -> documentType.setResponseClaimDocuments(typeOfDocument);
+                case INITIAL_CONSIDERATION, RULE_27_NOTICE, RULE_28_NOTICE
+                        -> documentType.setInitialConsiderationDocuments(typeOfDocument);
+                case TRIBUNAL_ORDER, DEPOSIT_ORDER, UNLESS_ORDER, TRIBUNAL_NOTICE, APP_TO_VARY_AN_ORDER_C,
+                        APP_TO_VARY_AN_ORDER_R, APP_TO_REVOKE_AN_ORDER_C, APP_TO_REVOKE_AN_ORDER_R,
+                        APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_C,
+                        APP_TO_EXTEND_TIME_TO_COMPLY_TO_AN_ORDER_DIRECTIONS_R, APP_TO_ORDER_THE_R_TO_DO_SOMETHING,
+                        APP_TO_ORDER_THE_C_TO_DO_SOMETHING, APP_TO_AMEND_CLAIM, APP_TO_AMEND_RESPONSE,
+                        APP_FOR_A_WITNESS_ORDER_C, DISABILITY_IMPACT_STATEMENT, R_HAS_NOT_COMPLIED_WITH_AN_ORDER_C,
+                        C_HAS_NOT_COMPLIED_WITH_AN_ORDER_R, APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_CLAIM,
+                        APP_TO_STRIKE_OUT_ALL_OR_PART_OF_THE_RESPONSE, REFERRAL_JUDICIAL_DIRECTION,
+                        CHANGE_OF_PARTYS_DETAILS, APP_TO_VARY_OR_REVOKE_AN_ORDER_R, APP_TO_VARY_OR_REVOKE_AN_ORDER_C,
+                        CONTACT_THE_TRIBUNAL_C, CONTACT_THE_TRIBUNAL_R, APP_FOR_A_WITNESS_ORDER_R
+                        -> documentType.setCaseManagementDocuments(typeOfDocument);
+                case WITHDRAWAL_OF_ENTIRE_CLAIM, WITHDRAWAL_OF_PART_OF_CLAIM, COT3, WITHDRAWAL_OF_ALL_OR_PART_CLAIM
+                        -> documentType.setWithdrawalSettledDocuments(typeOfDocument);
+                case APP_TO_RESTRICT_PUBLICITY_C, APP_TO_RESTRICT_PUBLICITY_R, ANONYMITY_ORDER, NOTICE_OF_HEARING,
+                        APP_TO_POSTPONE_C, APP_TO_POSTPONE_R, HEARING_BUNDLE, SCHEDULE_OF_LOSS, COUNTER_SCHEDULE_OF_LOSS
+                        -> documentType.setHearingsDocuments(typeOfDocument);
+                case JUDGMENT, JUDGMENT_WITH_REASONS, REASONS, EXTRACT_OF_JUDGMENT
+                        -> documentType.setJudgmentAndReasonsDocuments(typeOfDocument);
+                case APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_C,
+                     APP_TO_HAVE_A_LEGAL_OFFICER_DECISION_CONSIDERED_AFRESH_R,
+                     APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_C, APP_FOR_A_JUDGMENT_TO_BE_RECONSIDERED_R
+                        -> documentType.setReconsiderationDocuments(typeOfDocument);
+                case CERTIFICATE_OF_CORRECTION, TRIBUNAL_CASE_FILE,
+                     OTHER -> documentType.setMiscDocuments(typeOfDocument);
+                default -> documentType.setTypeOfDocument(typeOfDocument);
             }
         }
     }
@@ -1158,7 +1158,7 @@ public class DocumentHelper {
     }
 
     /**
-     * Add document to the document collection based on the provided index.
+     * Add a document to the document collection based on the provided index.
      * @param docTypeItem document type item
      * @param indexToAddString index of the document to be added
      */
@@ -1191,10 +1191,10 @@ public class DocumentHelper {
         DocumentType documentType = documentTypeItem.getValue();
         documentType.setDateOfCorrespondence(LocalDate.now().toString());
 
-        if(!isNullOrEmpty(shortDescription)) {
+        if (!isNullOrEmpty(shortDescription)) {
             documentType.setShortDescription(shortDescription);
         }
-        if(!isNullOrEmpty(topLevel)) {
+        if (!isNullOrEmpty(topLevel)) {
             documentType.setTopLevelDocuments(topLevel);
         }
 
@@ -1222,12 +1222,14 @@ public class DocumentHelper {
         }
         for (DocumentTypeItem documentTypeItem : caseData.getDocumentCollection()) {
             DocumentType documentType = documentTypeItem.getValue();
-            if (isNullOrEmpty(documentType.getTopLevelDocuments()) && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
+            if (isNullOrEmpty(documentType.getTopLevelDocuments())
+                && (!isNullOrEmpty(documentType.getTypeOfDocument()))) {
                 mapLegacyDocTypeToNewDocType(documentType);
 
             }
             if (!isNullOrEmpty(documentType.getDateOfCorrespondence())) {
-                documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence()).toString());
+                documentType.setDateOfCorrespondence(
+                        LocalDate.parse(documentType.getDateOfCorrespondence()).toString());
             }
         }
     }
@@ -1292,11 +1294,11 @@ public class DocumentHelper {
 
     /**
      * Adds all uploaded documents to the case's document collection.
-     * @param caseData case that provides both document collections(uploaded and case doc collections)
+     * @param caseData case that provides both document collections (uploaded and case doc collections)
      */
     public static void addUploadedDocsToCaseDocCollection(CaseData caseData) {
 
-        if(caseData.getAddDocumentCollection() == null) {
+        if (caseData.getAddDocumentCollection() == null) {
             return;
         }
 
@@ -1309,13 +1311,13 @@ public class DocumentHelper {
                     DocumentType uploadedDocType = uploadDoc.getValue();
                     setDocumentTypeForDocument(uploadedDocType);
 
-                    if(!isNullOrEmpty(uploadedDocType.getDocumentType())) {
+                    if (!isNullOrEmpty(uploadedDocType.getDocumentType())) {
                         DocumentHelper.setSecondLevelDocumentFromType(
                                 uploadedDocType, uploadedDocType.getDocumentType());
                     }
 
                     String shortDescription = "";
-                    if(!isNullOrEmpty(uploadedDocType.getShortDescription())) {
+                    if (!isNullOrEmpty(uploadedDocType.getShortDescription())) {
                         shortDescription = uploadedDocType.getShortDescription();
                     }
 
@@ -1332,12 +1334,12 @@ public class DocumentHelper {
     }
 
     private static void setDocumentTypeForDocument(DocumentType documentType) {
-        if(documentType == null ) {
+        if (documentType == null) {
             return;
         }
 
-        if (!isNullOrEmpty(documentType.getTopLevelDocuments()) ||
-            !isNullOrEmpty(documentType.getTypeOfDocument())) {
+        if (!isNullOrEmpty(documentType.getTopLevelDocuments())
+            || !isNullOrEmpty(documentType.getTypeOfDocument())) {
             if (!isNullOrEmpty(documentType.getStartingClaimDocuments())) {
                 documentType.setDocumentType(documentType.getStartingClaimDocuments());
             } else if (!isNullOrEmpty(documentType.getResponseClaimDocuments())) {

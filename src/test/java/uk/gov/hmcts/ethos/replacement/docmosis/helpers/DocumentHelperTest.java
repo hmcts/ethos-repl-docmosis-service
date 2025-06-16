@@ -168,8 +168,8 @@ class DocumentHelperTest {
                 + "\"respondent_town\":\"Manchester\",\n"
                 + "\"respondent_county\":\"North West\",\n"
                 + "\"respondent_postCode\":\"M12 42R\",\n"
-                + "\"Respondent\":\"1. Antonio Vazquez\",\n"
-                + "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n"
+                + "\"Respondent\":\"1. Antonio Vazquez,\",\n"
+                + "\"resp_others\":\"2. Juan Garcia, 3. Mike Jordan\",\n"
                 + "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. "
                 + "12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, "
                 + "Manchester, North West, M12 42R, UK\",\n"
@@ -553,7 +553,7 @@ class DocumentHelperTest {
                 + "\"respondent_town\":\"Manchester\",\n"
                 + "\"respondent_county\":\"North West\",\n"
                 + "\"respondent_postCode\":\"M12 42R\",\n"
-                + "\"Respondent\":\"1. Antonio Vazquez\",\n"
+                + "\"Respondent\":\"1. Antonio Vazquez,\",\n"
                 + "\"resp_others\":\"2. Antonio Vazquez2\",\n"
                 + "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 11 Small"
                 + " Street, 22 House, Manchester, North West, M12 42R, UK\",\n"
@@ -787,7 +787,7 @@ class DocumentHelperTest {
                 + "\"respondent_town\":\"Manchester\",\n"
                 + "\"respondent_county\":\"North West\",\n"
                 + "\"respondent_postCode\":\"M12 42R\",\n"
-                + "\"Respondent\":\"1. Antonio Vazquez\",\n"
+                + "\"Respondent\":\"1. Antonio Vazquez,\",\n"
                 + "\"resp_others\":\"2. Mikey McCollier\",\n"
                 + "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 1333 "
                 + "Small Street, 22222 House, Liverpool, North West, L12 42R, UK\",\n"
@@ -1525,7 +1525,7 @@ class DocumentHelperTest {
                 + "\"respondent_town\":\"Manchester\",\n"
                 + "\"respondent_county\":\"North West\",\n"
                 + "\"respondent_postCode\":\"M12 42R\",\n"
-                + "\"Respondent\":\"1. Antonio Vazquez\",\n"
+                + "\"Respondent\":\"1. Antonio Vazquez,\",\n"
                 + "\"resp_others\":\"2. Roberto Dondini\",\n"
                 + "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 13 Small"
                 + " Street, 26 House, Scotland, North West, SC13 4ED, UK\",\n"
@@ -2100,7 +2100,7 @@ class DocumentHelperTest {
     @Test
     void getHearingByNumber() {
         String expectedHearingNumber = "2";
-        String expectedHearing_type = "Single";
+        String expectedHearingType = "Single";
         String expectedHearingVenue = "Manchester";
 
         String correspondenceHearingNumber = "2";
@@ -2108,7 +2108,7 @@ class DocumentHelperTest {
         assertEquals(expectedHearingNumber,
                 DocumentHelper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(),
                         correspondenceHearingNumber).getHearingNumber());
-        assertEquals(expectedHearing_type,
+        assertEquals(expectedHearingType,
                 DocumentHelper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(),
                         correspondenceHearingNumber).getHearingType());
         assertEquals(expectedHearingVenue,
@@ -2212,7 +2212,7 @@ class DocumentHelperTest {
     @Test
     void setSecondLevelDocumentFromType_MiscDocuments() {
         DocumentType documentType = new DocumentType();
-        setSecondLevelDocumentFromType(documentType,"Certificate of Correction");
+        setSecondLevelDocumentFromType(documentType, "Certificate of Correction");
         assertNotNull(documentType.getMiscDocuments());
     }
 
@@ -2227,7 +2227,7 @@ class DocumentHelperTest {
     @Test
     void createDocumentTypeItemFromTopLevel_ShortDescription_Null() {
         DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
-                new UploadedDocumentType(),"Top Level", ET1_ATTACHMENT, null);
+                new UploadedDocumentType(), "Top Level", ET1_ATTACHMENT, null);
         assertEquals(null, documentTypeItem.getValue().getShortDescription());
     }
 
@@ -2235,10 +2235,9 @@ class DocumentHelperTest {
     void createDocumentTypeItemFromTopLevel_TopLevelDocumentsCategory_Null() {
         DocumentType documentType = new DocumentType();
         DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
-                new UploadedDocumentType(),null, ET1_ATTACHMENT, "short description");
+                new UploadedDocumentType(), null, ET1_ATTACHMENT, "short description");
         assertEquals(null, documentTypeItem.getValue().getTopLevelDocuments());
     }
-
 
     @ParameterizedTest
     @MethodSource
@@ -2425,6 +2424,7 @@ class DocumentHelperTest {
         assertNotNull(caseData.getDocumentCollection());
         assertNull(caseData.getDocumentCollection().get(0).getValue().getDateOfCorrespondence());
     }
+
     @Test
     void addUploadedDocsToCaseDocCollection_AddDocumentCollection_Null() {
         CaseData caseData = new CaseData();
