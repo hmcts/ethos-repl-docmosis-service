@@ -294,6 +294,10 @@
         <packageUrl regex="true">^pkg:maven/org\.apache.*$</packageUrl>
         <cve>CVE-2024-45772</cve>
     </suppress>
+    <!-- Below to be removed when migrated from Springboot 2.7.18 to 3.x https://tools.hmcts.net/jira/browse/RET-5770 -->
+    <suppress>
+        <cve>CVE-2024-22259</cve>
+    </suppress>
     <suppress>
         <notes><![CDATA[
         Suppressing CVE-2024-38820 for all relevant Spring Framework 5.3.31 modules.
