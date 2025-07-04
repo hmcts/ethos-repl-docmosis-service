@@ -225,7 +225,7 @@ ext {
     junitJupiterVersion = '5.11.4'
     log4JVersion = '2.24.3'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '9.0.100'
+    tomcatEmbedVersion = '9.0.107'
     springCloudVersion = '2021.0.9'
 }
 
