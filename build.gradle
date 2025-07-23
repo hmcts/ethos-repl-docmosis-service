@@ -236,7 +236,7 @@ ext {
     junitJupiterVersion = '5.11.4'
     log4JVersion = '2.24.3'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '9.0.98'
+    tomcatEmbedVersion = '9.0.107'
     springCloudVersion = '2021.0.9'
 }
 
@@ -298,7 +298,7 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: '2.18.0'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.27.1'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
-    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
