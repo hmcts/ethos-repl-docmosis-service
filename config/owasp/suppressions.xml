@@ -332,5 +332,8 @@
         <cpe>cpe:2.3:a:apache:tomcat:9.0.100:*:*:*:*:*:*:*</cpe>
         <cpe>cpe:2.3:a:apache_tomcat:apache_tomcat:9.0.100:*:*:*:*:*:*:*</cpe>
     </suppress>
+    <suppress>
+        <cve>CVE-2024-38808</cve>
+    </suppress>
 </suppressions>
 

@@ -6,7 +6,7 @@ This application generates documents from templates using Docmosis -> Tornado.
 
 ### Prerequisites
 
-- [JDK 11](https://www.oracle.com/java)
+- [JDK 21](https://www.oracle.com/java)
 
 ### Building
 
