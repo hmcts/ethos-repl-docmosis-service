@@ -3,6 +3,9 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -11,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.AdditionalCaseInfoType;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,7 +46,7 @@ class FlagsImageHelperTest {
         caseData.setAdditionalCaseInfoType(null);
         FlagsImageHelper.buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -51,7 +55,7 @@ class FlagsImageHelperTest {
         caseData.setAdditionalCaseInfoType(new AdditionalCaseInfoType());
         FlagsImageHelper.buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-000000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -76,7 +80,7 @@ class FlagsImageHelperTest {
                           + "<font size='5'> - </font>"
                           + "<font color='DarkSlateBlue' size='5'> REASONABLE ADJUSTMENT </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-011111111100.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0111111111000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -85,7 +89,7 @@ class FlagsImageHelperTest {
         FlagsImageHelper.buildFlagsImageFileName(caseData, SCOTLAND_CASE_TYPE_ID);
         String expected = "<font color='DeepPink' size='5'> WITH OUTSTATION </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-100000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-1000000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -103,11 +107,30 @@ class FlagsImageHelperTest {
         caseData.setAdditionalCaseInfoType(additionalCaseInfoType);
 
         buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
-        assertEquals("EMP-TRIB-000000000001.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000010.jpg", caseData.getFlagsImageFileName());
         assertTrue(caseData.getFlagsImageAltText().contains("SPEAK TO REJ"));
 
         buildFlagsImageFileName(caseData, SCOTLAND_CASE_TYPE_ID);
-        assertEquals("EMP-TRIB-000000000010.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-0000000000100.jpg", caseData.getFlagsImageFileName());
         assertTrue(caseData.getFlagsImageAltText().contains("SPEAK TO VP"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("reservedToJudgeFlagsProvider")
+    void reservedToJudgeFlag(String flag, String expectedAltText) {
+        AdditionalCaseInfoType additionalCaseInfoType = new AdditionalCaseInfoType();
+        additionalCaseInfoType.setReservedToJudge(flag);
+        CaseData caseData = new CaseData();
+        caseData.setAdditionalCaseInfoType(additionalCaseInfoType);
+        buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
+        assertEquals(expectedAltText, caseData.getFlagsImageAltText());
+    }
+
+    private static Stream<Arguments> reservedToJudgeFlagsProvider() {
+        return Stream.of(
+                Arguments.of("Yes", "<font color='#85994b' size='5'> RESERVED TO JUDGE </font>"),
+                Arguments.of("No", ""),
+                Arguments.of(null, "")
+        );
     }
 }

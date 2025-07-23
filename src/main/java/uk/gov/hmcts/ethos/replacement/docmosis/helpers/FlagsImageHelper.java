@@ -42,10 +42,11 @@ public class FlagsImageHelper {
     private static final String FLAG_RULE_493B = "RULE 49(3)b";
     private static final String SPEAK_TO_VP = "SPEAK TO VP";
     private static final String SPEAK_TO_REJ = "SPEAK TO REJ";
+    private static final String RESERVED_TO_JUDGE = "RESERVED TO JUDGE";
 
     private static final List<String> FLAGS = List.of(FLAG_WITH_OUTSTATION,
             FLAG_DO_NOT_POSTPONE, FLAG_LIVE_APPEAL, FLAG_RULE_493B, FLAG_REPORTING, FLAG_SENSITIVE, FLAG_RESERVED,
-            FLAG_ECC, FLAG_DIGITAL_FILE, FLAG_REASONABLE_ADJUSTMENT, SPEAK_TO_VP, SPEAK_TO_REJ);
+            FLAG_ECC, FLAG_DIGITAL_FILE, FLAG_REASONABLE_ADJUSTMENT, SPEAK_TO_VP, SPEAK_TO_REJ, RESERVED_TO_JUDGE);
 
     private FlagsImageHelper() {
     }
@@ -114,6 +115,10 @@ public class FlagsImageHelper {
                 flagRequired = speakToRej(caseTypeId, caseData);
                 yield "#1D70B8";
             }
+            case RESERVED_TO_JUDGE -> {
+                flagRequired = reservedToJudge(caseData);
+                yield  "#85994b";
+            }
             default -> {
                 flagRequired = false;
                 yield COLOR_WHITE;
@@ -124,6 +129,18 @@ public class FlagsImageHelper {
         flagsImageAltText.append(flagRequired && !flagsImageAltText.isEmpty() ? "<font size='5'> - </font>" : "");
         flagsImageAltText.append(flagRequired ? "<font color='"
                 + flagColor + "' size='5'> " + flagName + " </font>" : "");
+    }
+
+    private static boolean reservedToJudge(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (isNullOrEmpty(caseData.getAdditionalCaseInfoType().getReservedToJudge())) {
+                return false;
+            } else {
+                return YES.equals(caseData.getAdditionalCaseInfoType().getReservedToJudge());
+            }
+        } else {
+            return false;
+        }
     }
 
     private static boolean sensitiveCase(CaseData caseData) {
