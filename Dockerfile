@@ -1,5 +1,5 @@
 ARG APP_INSIGHTS_AGENT_VERSION=3.4.11
-FROM hmctspublic.azurecr.io/base/java:17-distroless as base
+FROM hmctspublic.azurecr.io/base/java:21-distroless as base
 LABEL maintainer="https://github.com/hmcts/ethos-repl-docmosis-service"
 
 COPY lib/applicationinsights.json /opt/app/
