@@ -52,7 +52,7 @@
     "async": "^3.2.4",
     "ansi-regex": "^6.0.0",
     "axios": "1.11.0",
-    "@babel/runtime": "7.26.10",
+    "@babel/runtime": "7.27.6",
     "@babel/helpers": "^7.26.10",
     "braces": "^3.0.2",
     "cross-spawn": "^7.0.5",
