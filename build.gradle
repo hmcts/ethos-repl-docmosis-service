@@ -310,7 +310,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
     implementation group: 'ch.qos.logback', name: 'logback-access', version: '1.4.14'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
-    implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.18', ext: 'pom'
+    implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.19', ext: 'pom'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.10'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.4'
     implementation('org.elasticsearch:elasticsearch') {
