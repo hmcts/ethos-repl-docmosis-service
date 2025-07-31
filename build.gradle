@@ -296,7 +296,7 @@ dependencies {
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.9'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.48'
     implementation group: 'commons-io', name: 'commons-io', version: '2.20.0'
-    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.27.1'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.28.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
@@ -310,7 +310,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
     implementation group: 'ch.qos.logback', name: 'logback-access', version: '1.4.14'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
-    implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.18', ext: 'pom'
+    implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.19', ext: 'pom'
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.10'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.4'
     implementation('org.elasticsearch:elasticsearch') {
@@ -335,7 +335,7 @@ dependencies {
 
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.4.3'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.1.1'
-    implementation group: 'com.squareup.okio', name: 'okio', version: '3.15.0'
+    implementation group: 'com.squareup.okio', name: 'okio', version: '3.16.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
