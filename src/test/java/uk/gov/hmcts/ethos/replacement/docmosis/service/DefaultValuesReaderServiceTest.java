@@ -461,7 +461,8 @@ public class DefaultValuesReaderServiceTest {
                 + "caseBundles=null, "
                 + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
                 + "piiDocumentCollection=null, "
-                + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null)";
+                + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null"
+                + ", caseNotesCollection=null, addCaseNote=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -553,7 +554,8 @@ public class DefaultValuesReaderServiceTest {
                 + "caseBundles=null, "
                 + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
                 + "piiDocumentCollection=null,"
-                + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null)";
+                + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null"
+                + ", caseNotesCollection=null, addCaseNote=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
