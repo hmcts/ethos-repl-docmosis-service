@@ -4716,7 +4716,7 @@ __metadata:
     puppeteer: 24.16.2
     randomstring: 1.3.1
     require-directory: 2.1.1
-    rewire: 9.0.0
+    rewire: 9.0.1
     selenium-standalone: 10.0.2
     sinon: 13.0.2
     sinon-chai: 3.7.0
@@ -9184,6 +9184,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pirates@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "pirates@npm:4.0.7"
+  checksum: 3dcbaff13c8b5bc158416feb6dc9e49e3c6be5fddc1ea078a05a73ef6b85d79324bbb1ef59b954cdeff000dbf000c1d39f32dc69310c7b78fbada5171b583e40
+  languageName: node
+  linkType: hard
+
 "pkg-dir@npm:4.2.0":
   version: 4.2.0
   resolution: "pkg-dir@npm:4.2.0"
@@ -9964,12 +9971,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rewire@npm:9.0.0":
-  version: 9.0.0
-  resolution: "rewire@npm:9.0.0"
+"rewire@npm:9.0.1":
+  version: 9.0.1
+  resolution: "rewire@npm:9.0.1"
   dependencies:
     eslint: ^9.30
-  checksum: a5bc4a15c958b371f5216045dfd325dbc53ac1944958526f3921136f9f541c5d21b32f3661adc05ef44ab00350ef0135a3ce1197732d79275c246195943a3bb3
+    pirates: ^4.0.7
+  checksum: 1503ab33c7d3b95677da1e802cf7a2b9a0ddde27784ab255791e537e4c1f51775c434b9e73c1378a98452b8bdca00d6505173e541414c725651a12b32403d6e0
   languageName: node
   linkType: hard
 
