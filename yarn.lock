@@ -3513,16 +3513,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai@npm:5.2.1":
-  version: 5.2.1
-  resolution: "chai@npm:5.2.1"
+"chai@npm:5.3.3":
+  version: 5.3.3
+  resolution: "chai@npm:5.3.3"
   dependencies:
     assertion-error: ^2.0.1
     check-error: ^2.1.1
     deep-eql: ^5.0.1
     loupe: ^3.1.0
     pathval: ^2.0.0
-  checksum: 15e2923de73bc4a361fa016b3322c8258c1ec7a33794f6dfa8000b4cd7fb64521363e59fcf08b90b9dd2d787b25ac9e2420535ce31c530501296d4bc03b48576
+  checksum: bc4091f1cccfee63f6a3d02ce477fe847f5c57e747916a11bd72675c9459125084e2e55dc2363ee2b82b088a878039ee7ee27c75d6d90f7de9202bf1b12ce573
   languageName: node
   linkType: hard
 
@@ -4695,7 +4695,7 @@ __metadata:
   dependencies:
     "@hmcts/nodejs-logging": 4.0.4
     async: ^3.2.3
-    chai: 5.2.1
+    chai: 5.3.3
     chai-as-promised: 8.0.2
     chai-http: 5.1.2
     codeceptjs: ^3.6.5
