@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
@@ -23,43 +22,6 @@ import java.util.List;
 public class PersistentQHelper {
 
     private PersistentQHelper() {
-    }
-
-    //********************
-    /* BULK DETAILS */
-    //********************
-
-    public static CreateUpdatesDto getCreateUpdatesDto(BulkDetails bulkDetails, List<String> ethosCaseRefCollection,
-                                                       String email, String multipleRef,
-                                                       String multipleRefLinkMarkUp) {
-        return CreateUpdatesDto.builder()
-                .caseTypeId(bulkDetails.getCaseTypeId())
-                .jurisdiction(bulkDetails.getJurisdiction())
-                .multipleRef(multipleRef)
-                .multipleReferenceLinkMarkUp(multipleRefLinkMarkUp)
-                .username(email)
-                .ethosCaseRefCollection(ethosCaseRefCollection)
-                .build();
-    }
-
-    public static void sendUpdatesPersistentQ(BulkDetails bulkDetails, String username,
-                                              List<String> ethosCaseRefCollection,
-                                              DataModelParent dataModelParent, List<String> errors,
-                                              String multipleRef, CreateUpdatesBusSender createUpdatesBusSender,
-                                              String updateSize, String multipleRefLinkMarkUp) {
-        log.info("Case Ref collection: " + ethosCaseRefCollection);
-        if (!ethosCaseRefCollection.isEmpty()) {
-            var createUpdatesDto = PersistentQHelper.getCreateUpdatesDto(bulkDetails,
-                    ethosCaseRefCollection, username, multipleRef, multipleRefLinkMarkUp);
-
-            createUpdatesBusSender.sendUpdatesToQueue(
-                    createUpdatesDto,
-                    dataModelParent,
-                    errors,
-                    updateSize);
-        } else {
-            log.info("Case Ref collection is empty");
-        }
     }
 
     //********************

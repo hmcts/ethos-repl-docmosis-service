@@ -42,4 +42,7 @@ package-lock.json
 yarn-error.log
 *.log
 yarn-error.log*
+.yarn
+.pnp.loader.mjs
+.pnp.cjs
 

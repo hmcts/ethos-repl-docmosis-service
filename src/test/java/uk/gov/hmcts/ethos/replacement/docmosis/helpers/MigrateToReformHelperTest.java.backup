@@ -1,0 +1,341 @@
+package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ENGLAND_LISTING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayName("MigrateToReformHelper Tests")
+class MigrateToReformHelperTest {
+
+    private CaseData minimalCaseData;
+    private CaseData realisticCaseData;
+    private CaseDetails minimalCaseDetails;
+    private CaseDetails realisticCaseDetails;
+
+    @BeforeEach
+    void setUp() {
+        minimalCaseData = buildMinimalCaseData();
+        realisticCaseData = buildRealisticCaseData();
+        minimalCaseDetails = buildMinimalCaseDetails();
+        realisticCaseDetails = buildRealisticCaseDetails();
+    }
+
+    @Test
+    @DisplayName("Test placeholder - verify test setup works")
+    void testSetupWorks() {
+        assertNotNull(minimalCaseData);
+        assertNotNull(realisticCaseData);
+        assertNotNull(minimalCaseDetails);
+        assertNotNull(realisticCaseDetails);
+    }
+
+    /**
+     * Builds minimal test case data with only essential fields populated
+     */
+    private CaseData buildMinimalCaseData() {
+        CaseData caseData = new CaseData();
+        caseData.setEthosCaseReference("220001/2023");
+        caseData.setReceiptDate("2023-01-01");
+        caseData.setClerkResponsible("TestClerk");
+        return caseData;
+    }
+
+    /**
+     * Builds realistic test case data with comprehensive field population
+     */
+    private CaseData buildRealisticCaseData() {
+        CaseData caseData = new CaseData();
+        
+        // Basic case information
+        caseData.setEthosCaseReference("220001/2023");
+        caseData.setReceiptDate("2023-01-01");
+        caseData.setClerkResponsible("TestClerk");
+        caseData.setPositionType("Single case");
+        caseData.setCaseNotes("Test case notes");
+        caseData.setCurrentPosition("Case created");
+        caseData.setDateToPosition("2023-01-01");
+        
+        // Claimant information
+        caseData.setClaimantIndType(buildClaimantIndType());
+        caseData.setClaimantType(buildClaimantType());
+        
+        // Tribunal information
+        caseData.setTribunalCorrespondenceAddress(buildAddress());
+        caseData.setTribunalCorrespondenceTelephone("0161 833 6100");
+        caseData.setTribunalCorrespondenceEmail("tribunalenquiries@justice.gov.uk");
+        
+        // Collections
+        caseData.setJurCodesCollection(buildJurisdictionCollection());
+        caseData.setHearingCollection(buildHearingCollection());
+        caseData.setJudgementCollection(buildJudgementCollection());
+        
+        return caseData;
+    }
+
+    /**
+     * Builds minimal case details for testing
+     */
+    private CaseDetails buildMinimalCaseDetails() {
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1234567890123456");
+        caseDetails.setCaseTypeId(LEEDS_CASE_TYPE_ID);
+        caseDetails.setJurisdiction(ENGLAND_LISTING);
+        caseDetails.setState("Submitted");
+        caseDetails.setCaseData(buildMinimalCaseData());
+        return caseDetails;
+    }
+
+    /**
+     * Builds realistic case details for comprehensive testing
+     */
+    private CaseDetails buildRealisticCaseDetails() {
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1234567890123456");
+        caseDetails.setCaseTypeId(BRISTOL_CASE_TYPE_ID);
+        caseDetails.setJurisdiction(ENGLAND_LISTING);
+        caseDetails.setState("Accepted");
+        caseDetails.setCaseData(buildRealisticCaseData());
+        return caseDetails;
+    }
+
+    /**
+     * Builds a minimal ClaimantIndType for testing
+     */
+    private ClaimantIndType buildClaimantIndType() {
+        ClaimantIndType claimantIndType = new ClaimantIndType();
+        claimantIndType.setClaimantFirstNames("John");
+        claimantIndType.setClaimantLastName("Doe");
+        claimantIndType.setClaimantTitle("Mr");
+        claimantIndType.setClaimantDateOfBirth("1990-01-01");
+        claimantIndType.setClaimantGender("Male");
+        return claimantIndType;
+    }
+
+    /**
+     * Builds a minimal ClaimantType for testing
+     */
+    private ClaimantType buildClaimantType() {
+        ClaimantType claimantType = new ClaimantType();
+        claimantType.setClaimantAddressUK(buildAddress());
+        claimantType.setClaimantEmailAddress("john.doe@email.com");
+        claimantType.setClaimantPhoneNumber("07123456789");
+        return claimantType;
+    }
+
+    /**
+     * Builds a test Address object
+     */
+    private Address buildAddress() {
+        Address address = new Address();
+        address.setAddressLine1("123 Test Street");
+        address.setAddressLine2("Test Area");
+        address.setPostTown("Test Town");
+        address.setCounty("Test County");
+        address.setPostCode("TE1 2ST");
+        address.setCountry("United Kingdom");
+        return address;
+    }
+
+    /**
+     * Builds a list of jurisdiction codes for testing
+     */
+    private List<JurCodesTypeItem> buildJurisdictionCollection() {
+        List<JurCodesTypeItem> jurisdictions = new ArrayList<>();
+        
+        // Add first jurisdiction
+        JurCodesType jurCodesType1 = new JurCodesType();
+        jurCodesType1.setJuridictionCodesList("ADG");
+        jurCodesType1.setJudgmentOutcome("Acas conciliated settlement");
+        jurCodesType1.setDisposalDate("2023-06-01");
+        
+        JurCodesTypeItem jurCodesTypeItem1 = new JurCodesTypeItem();
+        jurCodesTypeItem1.setId(UUID.randomUUID().toString());
+        jurCodesTypeItem1.setValue(jurCodesType1);
+        jurisdictions.add(jurCodesTypeItem1);
+        
+        // Add second jurisdiction
+        JurCodesType jurCodesType2 = new JurCodesType();
+        jurCodesType2.setJuridictionCodesList("BRE");
+        jurCodesType2.setJudgmentOutcome("Successful at hearing");
+        jurCodesType2.setDisposalDate("2023-05-15");
+        
+        JurCodesTypeItem jurCodesTypeItem2 = new JurCodesTypeItem();
+        jurCodesTypeItem2.setId(UUID.randomUUID().toString());
+        jurCodesTypeItem2.setValue(jurCodesType2);
+        jurisdictions.add(jurCodesTypeItem2);
+        
+        return jurisdictions;
+    }
+
+    /**
+     * Builds a list of hearings for testing
+     */
+    private List<HearingTypeItem> buildHearingCollection() {
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        
+        HearingType hearingType = new HearingType();
+        hearingType.setHearingNumber("1");
+        hearingType.setHearingType(HEARING_TYPE_PERLIMINARY_HEARING);
+        hearingType.setHearingPublicPrivate("Public");
+        hearingType.setHearingSitAlone("Sit Alone");
+        hearingType.setJudge("Judge Smith");
+        hearingType.setHearingVenue("Bristol Employment Tribunal");
+        hearingType.setHearingDateCollection(buildHearingDateCollection());
+        
+        HearingTypeItem hearingTypeItem = new HearingTypeItem();
+        hearingTypeItem.setId(UUID.randomUUID().toString());
+        hearingTypeItem.setValue(hearingType);
+        hearings.add(hearingTypeItem);
+        
+        return hearings;
+    }
+
+    /**
+     * Builds a list of hearing dates for testing
+     */
+    private List<DateListedTypeItem> buildHearingDateCollection() {
+        List<DateListedTypeItem> hearingDates = new ArrayList<>();
+        
+        DateListedType dateListedType = new DateListedType();
+        dateListedType.setListedDate("2023-05-15T10:00:00.000");
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
+        dateListedType.setHearingVenueDay("Bristol Employment Tribunal");
+        dateListedType.setHearingCaseDisposed(YES);
+        dateListedType.setHearingTimingStart("10:00");
+        dateListedType.setHearingTimingFinish("16:00");
+        
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        dateListedTypeItem.setId(UUID.randomUUID().toString());
+        dateListedTypeItem.setValue(dateListedType);
+        hearingDates.add(dateListedTypeItem);
+        
+        return hearingDates;
+    }
+
+    /**
+     * Builds a list of judgements for testing
+     */
+    private List<JudgementTypeItem> buildJudgementCollection() {
+        List<JudgementTypeItem> judgements = new ArrayList<>();
+        
+        JudgementType judgementType = new JudgementType();
+        judgementType.setJudgementType("Judgment following a hearing");
+        judgementType.setJudgmentHearingDate("2023-05-15T10:00:00.000");
+        judgementType.setDateJudgmentMade("2023-05-15");
+        judgementType.setDateJudgmentSent("2023-05-20");
+        judgementType.setNonHearingJudgment(NO);
+        judgementType.setJurisdictionCodes(buildJurisdictionCollection());
+        
+        JudgementTypeItem judgementTypeItem = new JudgementTypeItem();
+        judgementTypeItem.setId(UUID.randomUUID().toString());
+        judgementTypeItem.setValue(judgementType);
+        judgements.add(judgementTypeItem);
+        
+        return judgements;
+    }
+
+    /**
+     * Builds Scottish case details for testing Scotland-specific functionality
+     */
+    protected CaseDetails buildScottishCaseDetails() {
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1234567890123456");
+        caseDetails.setCaseTypeId(SCOTLAND_CASE_TYPE_ID);
+        caseDetails.setJurisdiction("Scotland");
+        caseDetails.setState("Accepted");
+        
+        CaseData caseData = buildRealisticCaseData();
+        caseData.setManagingOffice(GLASGOW_OFFICE);
+        caseData.setFileLocationGlasgow("Glasgow");
+        caseDetails.setCaseData(caseData);
+        
+        return caseDetails;
+    }
+
+    /**
+     * Builds case details with multiple jurisdictions for testing complex scenarios
+     */
+    protected CaseDetails buildMultipleJurisdictionCaseDetails() {
+        CaseDetails caseDetails = buildRealisticCaseDetails();
+        CaseData caseData = caseDetails.getCaseData();
+        
+        // Add additional jurisdictions with different outcomes
+        List<JurCodesTypeItem> jurisdictions = new ArrayList<>(caseData.getJurCodesCollection());
+        
+        JurCodesType jurCodesType3 = new JurCodesType();
+        jurCodesType3.setJuridictionCodesList("WTA");
+        jurCodesType3.setJudgmentOutcome("Unsuccessful at hearing");
+        jurCodesType3.setDisposalDate("2023-04-10");
+        
+        JurCodesTypeItem jurCodesTypeItem3 = new JurCodesTypeItem();
+        jurCodesTypeItem3.setId(UUID.randomUUID().toString());
+        jurCodesTypeItem3.setValue(jurCodesType3);
+        jurisdictions.add(jurCodesTypeItem3);
+        
+        caseData.setJurCodesCollection(jurisdictions);
+        return caseDetails;
+    }
+
+    /**
+     * Builds hearing with multiple sessions for testing
+     */
+    protected List<DateListedTypeItem> buildMultipleHearingSessions() {
+        List<DateListedTypeItem> hearingDates = new ArrayList<>();
+        
+        // First hearing session
+        DateListedType dateListedType1 = new DateListedType();
+        dateListedType1.setListedDate("2023-05-15T10:00:00.000");
+        dateListedType1.setHearingStatus(HEARING_STATUS_HEARD);
+        dateListedType1.setHearingCaseDisposed(NO);
+        
+        DateListedTypeItem dateListedTypeItem1 = new DateListedTypeItem();
+        dateListedTypeItem1.setId(UUID.randomUUID().toString());
+        dateListedTypeItem1.setValue(dateListedType1);
+        hearingDates.add(dateListedTypeItem1);
+        
+        // Second hearing session  
+        DateListedType dateListedType2 = new DateListedType();
+        dateListedType2.setListedDate("2023-05-16T10:00:00.000");
+        dateListedType2.setHearingStatus(HEARING_STATUS_LISTED);
+        dateListedType2.setHearingCaseDisposed(YES);
+        
+        DateListedTypeItem dateListedTypeItem2 = new DateListedTypeItem();
+        dateListedTypeItem2.setId(UUID.randomUUID().toString());
+        dateListedTypeItem2.setValue(dateListedType2);
+        hearingDates.add(dateListedTypeItem2);
+        
+        return hearingDates;
+    }
+}
