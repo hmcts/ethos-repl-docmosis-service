@@ -55,6 +55,14 @@ withPipeline(type, product, component) {
   syncBranchesWithMaster(branchesToSync)
   enableSlackNotifications('#ethos-repl-service')
 
+  before('smoketest:preview') {
+    env.ETHOS_URL = "https://ethos-repl-docmosis-backend-pr-${CHANGE_ID}.preview.platform.hmcts.net"
+  }
+
+  before('smoketest:aat') {
+    env.ETHOS_URL = "https://ethos-repl-docmosis-backend-staging.platform.hmcts.net"
+  }
+
   afterAlways('smoketest:preview') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
 

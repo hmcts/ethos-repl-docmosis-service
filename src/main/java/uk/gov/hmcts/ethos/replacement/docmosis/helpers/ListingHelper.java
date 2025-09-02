@@ -126,7 +126,7 @@ public class ListingHelper {
                     ? LocalDate.parse(listedDate, OLD_DATE_TIME_PATTERN).format(CAUSE_LIST_DATE_TIME_PATTERN) : SPACE);
             listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : SPACE);
 
-            listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollectionWithHide(
+            listingType.setJurisdictionCodesList(JurisdictionHelper.getJurCodesCollectionWithHide(
                     caseData.getJurCodesCollection()));
             listingType
                     .setHearingType(!isNullOrEmpty(hearingType.getHearingType()) ? hearingType.getHearingType() : SPACE);

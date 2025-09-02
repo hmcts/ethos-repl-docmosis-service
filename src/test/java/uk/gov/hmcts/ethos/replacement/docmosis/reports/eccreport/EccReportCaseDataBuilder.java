@@ -1,13 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport;
 
-import java.util.Arrays;
-import java.util.UUID;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
+
+import java.util.Arrays;
+import java.util.UUID;
 
 public class EccReportCaseDataBuilder {
     private final EccReportCaseData caseData = new EccReportCaseData();

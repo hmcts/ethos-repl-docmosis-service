@@ -81,13 +81,6 @@ public class TornadoServiceTest {
     }
 
     @Test(expected = IOException.class)
-    public void scheduleGenerationNoTornadoConnectionShouldThrowException() throws IOException {
-        when(tornadoConnection.createConnection()).thenThrow(IOException.class);
-
-        tornadoService.scheduleGeneration(authToken, createBulkData(), MANCHESTER_LISTING_CASE_TYPE_ID);
-    }
-
-    @Test(expected = IOException.class)
     public void shouldThrowExceptionWhenTornadoReturnsErrorResponse() throws IOException {
         mockConnectionError();
         var caseData = new CaseData();
@@ -149,18 +142,6 @@ public class TornadoServiceTest {
         var listingData = createListingData();
 
         var documentInfo = tornadoService.listingGeneration(authToken, listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
-
-        verifyDocumentInfo(documentInfo);
-    }
-
-    @Test
-    public void shouldCreateDocumentInforForScheduleGeneration() throws IOException {
-        mockConnectionSuccess();
-        var bulkData = new BulkData();
-        bulkData.setScheduleDocName(LIST_CASES_CONFIG);
-        bulkData.setSearchCollection(new ArrayList<>());
-
-        var documentInfo = tornadoService.scheduleGeneration(authToken, bulkData, MANCHESTER_LISTING_CASE_TYPE_ID);
 
         verifyDocumentInfo(documentInfo);
     }
