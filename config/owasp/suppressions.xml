@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <!--Below suppressed as the library is no longer getting updates -->
+    <suppress>
+        <cve>CVE-2021-42306</cve>
+    </suppress>
+    <!-- Suppressing due to dependency on other services. Library being pulled from CCD, RPE-->
+    <suppress>
+        <cve>CVE-2024-38820</cve>
+    </suppress>
 </suppressions>
 

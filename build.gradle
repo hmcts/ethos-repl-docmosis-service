@@ -244,7 +244,7 @@ ext {
     junitJupiterVersion = '5.11.4'
     log4JVersion = '2.25.1'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '10.1.43'
+    tomcatEmbedVersion = '10.1.44'
     springCloudVersion = '2023.0.4'
 }
 
@@ -271,6 +271,7 @@ dependencyManagement {
             entry 'netty-transport-native-epoll'
             entry 'netty-transport-native-kqueue'
             entry 'netty-transport-native-unix-common'
+            entry 'netty-resolver-dns-classes-macos'
             entry 'netty-resolver-dns-native-macos'
             entry 'netty-codec-dns'
             entry 'netty-codec-haproxy'
