@@ -41,6 +41,10 @@ public class HearingsHelper {
     public static final String TWO_JUDGES = "Two Judges";
     public static final String TWO_JUDGES_ERROR = "Please choose a different judge for the second "
             + "judge as the same judge has been selected for both judges for hearing %s.";
+    public static final String BREAK_TIME_VALIDATION_MESSAGE =
+            "%s break time must be after the start time and before resume time.";
+    public static final String RESUME_TIME_VALIDATION_MESSAGE =
+            "%s resume time must be after the break time and before finish time.";
 
     public static String findHearingNumber(CaseData caseData, String hearingDate) {
         if (isNotEmpty(caseData.getHearingCollection())) {
@@ -84,35 +88,33 @@ public class HearingsHelper {
             && !isNullOrEmpty(hearingType.getJudge())
             && !isNullOrEmpty(hearingType.getAdditionalJudge())
             && hearingType.getJudge().equals(hearingType.getAdditionalJudge())) {
-                errors.add(String.format(TWO_JUDGES_ERROR, hearingType.getHearingNumber()));
-            }
-        for (DateListedTypeItem dateListedTypeItem : hearingType.getHearingDateCollection()) {
-            if (isNullOrEmpty(dateListedTypeItem.getValue().getListedDate())) {
-                errors.add(HEARING_CREATION_DAY_ERROR);
-            }
+            errors.add(String.format(TWO_JUDGES_ERROR, hearingType.getHearingNumber()));
         }
+        hearingType.getHearingDateCollection().stream()
+                .filter(dateListedTypeItem -> isNullOrEmpty(dateListedTypeItem.getValue().getListedDate()))
+                .map(dateListedTypeItem -> HEARING_CREATION_DAY_ERROR)
+                .forEach(errors::add);
     }
 
     public static void updatePostponedDate(CaseData caseData) {
-        if (caseData.getHearingCollection() != null) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                    for (DateListedTypeItem dateListedTypeItem
-                            : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        var dateListedType = dateListedTypeItem.getValue();
-                        if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
-                            dateListedType.setPostponedDate(UtilHelper.formatCurrentDate2(LocalDate.now()));
-                        }
-                        if (dateListedType.getPostponedDate() != null
-                                &&
-                                (!isHearingStatusPostponed(dateListedType)
-                                        || dateListedType.getHearingStatus() == null)) {
-                            dateListedType.setPostponedDate(null);
-                        }
-                    }
+        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            return;
+        }
+        caseData.getHearingCollection().stream()
+            .filter(hearingTypeItem -> hearingTypeItem.getValue().getHearingDateCollection() != null)
+            .flatMap(hearingTypeItem -> hearingTypeItem.getValue().getHearingDateCollection().stream())
+            .map(DateListedTypeItem::getValue).forEach(dateListedType -> {
+                if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
+                    dateListedType.setPostponedDate(UtilHelper.formatCurrentDate2(LocalDate.now()));
+                }
+                if (dateListedType.getPostponedDate() != null
+                    &&
+                    (!isHearingStatusPostponed(dateListedType)
+                     || dateListedType.getHearingStatus() == null)) {
+                    dateListedType.setPostponedDate(null);
                 }
             }
-        }
+        );
 
     }
 
@@ -128,27 +130,12 @@ public class HearingsHelper {
             for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
                 var dateListedType = dateListedTypeItem.getValue();
                 if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
-                    checkStartFinishTimes(errors, dateListedType,
-                            hearingTypeItem.getValue().getHearingNumber());
+                    checkHearingTimes(errors, dateListedType, hearingTypeItem.getValue().getHearingNumber());
                     checkIfDateInFuture(errors, dateListedType);
-                    checkBreakResumeTimes(errors, dateListedType,
-                            hearingTypeItem.getValue().getHearingNumber());
                 }
             }
         }
         return errors;
-    }
-
-    private static void checkBreakResumeTimes(List<String> errors, DateListedType dateListedType,
-                                              String hearingNumber) {
-        var breakTime = !isNullOrEmpty(dateListedType.getHearingTimingBreak())
-                ? LocalDateTime.parse(dateListedType.getHearingTimingBreak()).toLocalTime() : null;
-        var resumeTime = !isNullOrEmpty(dateListedType.getHearingTimingResume())
-                ? LocalDateTime.parse(dateListedType.getHearingTimingResume()).toLocalTime() : null;
-        var invalidTime = LocalTime.of(0, 0, 0, 0);
-        if (invalidTime.equals(breakTime) || invalidTime.equals(resumeTime)) {
-            errors.add(String.format(HEARING_BREAK_RESUME_INVALID, hearingNumber));
-        }
     }
 
     private static void checkIfDateInFuture(List<String> errors, DateListedType dateListedType) {
@@ -173,12 +160,44 @@ public class HearingsHelper {
                 .isAfter(now.atZone(ZoneId.of("UTC")));
     }
 
-    private static void checkStartFinishTimes(List<String> errors, DateListedType dateListedType,
-                                              String hearingNumber) {
+    private static void checkHearingTimes(List<String> errors, DateListedType dateListedType,
+                                          String hearingNumber) {
         var startTime = LocalDateTime.parse(dateListedType.getHearingTimingStart());
         var finishTime = LocalDateTime.parse(dateListedType.getHearingTimingFinish());
         if (!finishTime.isAfter(startTime)) {
             errors.add(HEARING_FINISH_INVALID + hearingNumber);
         }
+
+        validateBreakResumeTimes(errors, dateListedType, hearingNumber, startTime, finishTime);
+    }
+
+    private static void validateBreakResumeTimes(List<String> errors, DateListedType dateListedType,
+                                                 String hearingNumber, LocalDateTime startTime,
+                                                 LocalDateTime finishTime) {
+        String timingBreak = dateListedType.getHearingTimingBreak();
+        LocalDateTime breakTime = isNullOrEmpty(timingBreak) ? null :
+                LocalDateTime.parse(timingBreak);
+
+        String timingResume = dateListedType.getHearingTimingResume();
+        LocalDateTime resumeTime = isNullOrEmpty(timingResume) ? null :
+                LocalDateTime.parse(timingResume);
+
+        if (breakTime == null || resumeTime == null) {
+            return;
+        }
+
+        LocalTime invalidTime = LocalTime.of(0, 0, 0, 0);
+        if (invalidTime.equals(breakTime.toLocalTime()) || invalidTime.equals(resumeTime.toLocalTime())) {
+            errors.add(String.format(HEARING_BREAK_RESUME_INVALID, hearingNumber));
+            return;
+        }
+
+        if (!breakTime.isAfter(startTime) || !breakTime.isBefore(resumeTime)) {
+            errors.add(String.format(BREAK_TIME_VALIDATION_MESSAGE, hearingNumber));
+        }
+        if (!resumeTime.isAfter(breakTime) || !resumeTime.isBefore(finishTime)) {
+            errors.add(String.format(RESUME_TIME_VALIDATION_MESSAGE, hearingNumber));
+        }
+
     }
 }

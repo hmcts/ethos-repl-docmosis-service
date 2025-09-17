@@ -40,6 +40,5 @@ target
 functional-output/
 package-lock.json
 yarn-error.log
-*.log
 yarn-error.log*
-
+.yarn/
