@@ -23,7 +23,7 @@
     "chai": "5.3.3",
     "chai-as-promised": "8.0.2",
     "chai-http": "5.1.2",
-    "codeceptjs": "^3.6.5",
+    "codeceptjs": "^3.7.5",
     "eslint-plugin-mocha": "11.1.0",
     "mocha": "11.7.1",
     "mocha-jenkins-reporter": "0.4.8",
