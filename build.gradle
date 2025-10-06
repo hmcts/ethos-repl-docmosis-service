@@ -247,7 +247,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '33.4.8-jre') {
             entry 'guava'
         }
-        dependencySet(group: 'io.netty', version: '4.2.4.Final') {
+        dependencySet(group: 'io.netty', version: '4.2.6.Final') {
             entry 'netty-all'
             entry 'netty-buffer'
             entry 'netty-codec'
