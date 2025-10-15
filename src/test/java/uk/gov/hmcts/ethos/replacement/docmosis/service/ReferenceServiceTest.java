@@ -173,7 +173,7 @@ public class ReferenceServiceTest {
             digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, \
             piiDocumentCollection=null, \
             appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEvents);
         CaseData caseDataResult = referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
@@ -224,7 +224,7 @@ public class ReferenceServiceTest {
              digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null,\
              piiDocumentCollection=null,\
              appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEventsNoVenues);
         CaseData caseDataResult = referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
@@ -278,7 +278,7 @@ public class ReferenceServiceTest {
             stateAPI=null, bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, uploadOrRemoveDcf=null, \
             acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, \
             appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         referenceSubmitEvents.clear();
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEvents);
@@ -355,7 +355,7 @@ public class ReferenceServiceTest {
             acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, \
             appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEvents);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
@@ -418,7 +418,7 @@ public class ReferenceServiceTest {
              acasCertificate=null, \
             adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEventsNoVenues);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
@@ -478,7 +478,7 @@ public class ReferenceServiceTest {
              acasCertificate=null, \
             adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEventsNoClerks);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
@@ -544,7 +544,7 @@ public class ReferenceServiceTest {
              acasCertificate=null, \
             adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null, \
             addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEventsNoJudges);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
@@ -600,7 +600,7 @@ public class ReferenceServiceTest {
              acasCertificate=null,\
              adrDocumentCollection=null, piiDocumentCollection=null, appealDocumentCollection=null,\
              addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null)""";
+            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         referenceSubmitEvents.clear();
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEvents);
