@@ -287,7 +287,7 @@ dependencyManagement {
 dependencies {
 
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '3.0.1'
-    implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '2.0.3'
+    implementation group: 'com.github.hmcts', name: 'ecm-data-model', version: '2.0.4'
     implementation group: 'com.github.hmcts', name: 'et-data-model', version: '4.2.22'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
 
