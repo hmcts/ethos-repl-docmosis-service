@@ -1,4 +1,4 @@
-# Ethos Replacement Doc Generation Service
+# Ethos Replacement Doc Generation Service (ECM)
 
 This application generates documents from templates using Docmosis -> Tornado.
 
