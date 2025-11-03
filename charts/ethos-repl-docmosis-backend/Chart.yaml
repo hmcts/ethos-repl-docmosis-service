@@ -1,7 +1,7 @@
 apiVersion: v2
 name: ethos-repl-docmosis-backend
 home: https://github.com/hmcts/ethos-repl-docmosis-service
-version: 0.4.24
+version: 0.4.25
 description: HMCTS Ethos Replacement Docmosis Service
 maintainers:
   - name: HMCTS ETHOS Team
