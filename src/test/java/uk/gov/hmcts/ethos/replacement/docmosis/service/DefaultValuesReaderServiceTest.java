@@ -182,7 +182,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine3("30-34 Kingsway")
                 .tribunalCorrespondenceTown("London")
                 .tribunalCorrespondencePostCode("WC2B 6EX")
-                .tribunalCorrespondenceTelephone("0207 273 8603")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("01264 785 100")
                 .tribunalCorrespondenceDX("DX 141420 Bloomsbury")
                 .tribunalCorrespondenceEmail("londoncentralet@justice.gov.uk")
