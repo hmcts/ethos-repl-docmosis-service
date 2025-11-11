@@ -182,7 +182,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine3("30-34 Kingsway")
                 .tribunalCorrespondenceTown("London")
                 .tribunalCorrespondencePostCode("WC2B 6EX")
-                .tribunalCorrespondenceTelephone("0207 273 8603")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("01264 785 100")
                 .tribunalCorrespondenceDX("DX 141420 Bloomsbury")
                 .tribunalCorrespondenceEmail("londoncentralet@justice.gov.uk")
@@ -462,7 +462,7 @@ public class DefaultValuesReaderServiceTest {
                 + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
                 + "piiDocumentCollection=null, "
                 + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null"
-                + ", caseNotesCollection=null, addCaseNote=null)";
+                + ", caseNotesCollection=null, addCaseNote=null, ttl=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -555,7 +555,7 @@ public class DefaultValuesReaderServiceTest {
                 + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
                 + "piiDocumentCollection=null,"
                 + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null"
-                + ", caseNotesCollection=null, addCaseNote=null)";
+                + ", caseNotesCollection=null, addCaseNote=null, ttl=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
