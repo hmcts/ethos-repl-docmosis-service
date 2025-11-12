@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
@@ -12,7 +11,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
@@ -134,30 +132,6 @@ public class TornadoService {
             sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConnection.getAccessKey(),
                     documentName, userDetails, caseType);
         }
-        try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
-            writeOutputStream(outputStreamWriter, sb);
-        }
-    }
-
-    DocumentInfo scheduleGeneration(String authToken, BulkData bulkData, String caseTypeId) throws IOException {
-        HttpURLConnection conn = null;
-        try {
-            conn = createConnection();
-
-            var documentName = BulkHelper.getScheduleDocName(bulkData.getScheduleDocName());
-            buildScheduleInstruction(conn, bulkData);
-            return checkResponseStatus(authToken, conn, documentName, caseTypeId);
-        } catch (IOException e) {
-            log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
-            throw e;
-        } finally {
-            closeConnection(conn);
-        }
-    }
-
-    private void buildScheduleInstruction(HttpURLConnection conn, BulkData bulkData) throws IOException {
-        var sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConnection.getAccessKey());
-
         try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             writeOutputStream(outputStreamWriter, sb);
         }

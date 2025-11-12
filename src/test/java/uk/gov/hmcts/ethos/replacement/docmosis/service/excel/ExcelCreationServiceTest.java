@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.io.IOException;
-import java.util.List;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -18,8 +16,10 @@ import org.mockito.InjectMocks;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;

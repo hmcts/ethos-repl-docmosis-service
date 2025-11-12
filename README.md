@@ -1,6 +1,23 @@
-# Ethos Replacement Doc Generation Service (ECM)
+# Employment Tribunals CCD Callbacks Service
 
-This application generates documents from templates using Docmosis -> Tornado.
+[![Java](https://img.shields.io/badge/Java-21-blue.svg)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Gradle](https://img.shields.io/badge/Gradle-Wrapper-blue.svg)](https://gradle.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+
+This application is responsible for handling all CCD callback requests for Employment Tribunal cases.
+
+## Supported Versions
+
+| Component | Version | Status |
+|-----------|---------|--------|
+| Java | 21 | ✅ Supported |
+| Spring Boot | 3.3.0 | ✅ Current |
+| Spring Security | 6.x | ✅ Current |
+| Node.js | 18+ | ✅ Supported |
+| Gradle | Wrapper | ✅ Current |
+
+> ⚠️ **Breaking Change**: Java 21 is now required. Java 17 and earlier versions are no longer supported.
 
 ## Getting started
 
