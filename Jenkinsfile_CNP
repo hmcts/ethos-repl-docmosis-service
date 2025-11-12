@@ -60,7 +60,7 @@ withPipeline(type, product, component) {
   }
 
   before('smoketest:aat') {
-    env.ETHOS_URL = "https://ethos-repl-docmosis-backend-staging.platform.hmcts.net"
+    env.ETHOS_URL = "https://ethos-repl-docmosis-backend-staging.aat.platform.hmcts.net"
   }
 
   afterAlways('smoketest:preview') {
