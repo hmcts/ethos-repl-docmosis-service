@@ -241,7 +241,7 @@ ext {
     junitJupiterVersion = '5.11.4'
     log4JVersion = '2.25.1'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '10.1.44'
+    tomcatEmbedVersion = '10.1.49'
     springCloudVersion = '2023.0.4'
 }
 
@@ -357,6 +357,7 @@ dependencies {
     testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: serenity, {
         exclude module: 'jaxb-osgi'
     }
+    testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.12.0'
     testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: serenity
     testImplementation (group: 'org.docx4j', name: 'docx4j', version: '6.1.2') {
         exclude module: 'slf4j-log4j12'
