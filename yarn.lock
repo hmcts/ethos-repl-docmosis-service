@@ -916,10 +916,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keyv/serialize@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@keyv/serialize@npm:1.1.0"
-  checksum: 84533dc994ff1b9585fb7593542f1d7a9746b843c13c9341a8d2feb2e1fc0136d42e0146f8ff751ad9decc64da4792538e270b95a126f6d0dbb48e349ee462ab
+"@keyv/serialize@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@keyv/serialize@npm:1.1.1"
+  checksum: 2963ba90a6ca1cad7e4c1ff2de09326841eba4bca90dc52508fdc92ef88972ffd8ae8be48de80cfa9a864617955f146bb6dca700f5790118fefd74880d432ca7
   languageName: node
   linkType: hard
 
@@ -2370,17 +2370,17 @@ __metadata:
   linkType: hard
 
 "cacheable-request@npm:^13.0.0":
-  version: 13.0.9
-  resolution: "cacheable-request@npm:13.0.9"
+  version: 13.0.15
+  resolution: "cacheable-request@npm:13.0.15"
   dependencies:
     "@types/http-cache-semantics": ^4.0.4
     get-stream: ^9.0.1
     http-cache-semantics: ^4.2.0
-    keyv: ^5.5.0
+    keyv: ^5.5.4
     mimic-response: ^4.0.0
-    normalize-url: ^8.0.2
-    responselike: ^3.0.0
-  checksum: fa89c46e1dfe8578f83b2b57e76e6fb601d73006cf8c6b1039391d946a440e118f08f41323685decd58772b7acf7bba78ef1bf40200f85135654343afcd74aa6
+    normalize-url: ^8.1.0
+    responselike: ^4.0.2
+  checksum: 93e4b4394521ffe5288f706d0b540a617a4cfeda621ec34dfa41e6a3bb9645037a224a0492bfdc82c4c57c23e927a21f259086f7a6188e027fb5eaf7950eb3ff
   languageName: node
   linkType: hard
 
@@ -6000,12 +6000,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keyv@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "keyv@npm:5.5.0"
+"keyv@npm:^5.5.4":
+  version: 5.5.4
+  resolution: "keyv@npm:5.5.4"
   dependencies:
-    "@keyv/serialize": ^1.1.0
-  checksum: 7ab64dbcd6f14995f93baf33a82ca1b35c7c7b810f5c59239772904637546eb7ed9695e535420b50bcd5d2ff365cf7ba3a4f1613920249572c5a2a07e1053820
+    "@keyv/serialize": ^1.1.1
+  checksum: 046f0442721f437d7438584d15ff39aedd4f4979d0e867f83d53372f4b55749b813d6fcd949a2266b644f0d084c3340c2f9dd4e4a1e8a5cb0bfc040674ff16c5
   languageName: node
   linkType: hard
 
@@ -7421,10 +7421,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-url@npm:^8.0.2":
-  version: 8.0.2
-  resolution: "normalize-url@npm:8.0.2"
-  checksum: 66a0d42ae9e360654d8547a73f8c94fc8a39a975c7d3ae0b95e5927bd3bffc6dc4e20282afd6797c4a7ce6cf3847c37ce47125fde7b1a9e83d802c0e74830dee
+"normalize-url@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "normalize-url@npm:8.1.0"
+  checksum: 3800983919a973ab127c59c63706dee60b4b46649fdfb277aa571951795fecffab43e05893f621764adb15a0ed85d3fb880fdeb179e605d1afffc8d7f48d21d2
   languageName: node
   linkType: hard
 
@@ -8614,6 +8614,15 @@ __metadata:
   dependencies:
     lowercase-keys: "npm:^3.0.0"
   checksum: e0cc9be30df4f415d6d83cdede3c5c887cd4a73e7cc1708bcaab1d50a28d15acb68460ac5b02bcc55a42f3d493729c8856427dcf6e57e6e128ad05cba4cfb95e
+  languageName: node
+  linkType: hard
+
+"responselike@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "responselike@npm:4.0.2"
+  dependencies:
+    lowercase-keys: ^3.0.0
+  checksum: 9aabf40177da2c6f57ff24e5c8beae01ee38dd4e74e75795d8ae3578bd840b89cae961417cf120d2056f43e02358182016296ad3dfa5b123fc77925344e2c5df
   languageName: node
   linkType: hard
 
