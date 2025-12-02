@@ -74,7 +74,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
                 .tribunalCorrespondenceAddressLine3("14-22 The Parsonage,")
                 .tribunalCorrespondenceTown("Manchester,")
                 .tribunalCorrespondencePostCode("M3 2JA")
-                .tribunalCorrespondenceTelephone("0161 833 6100")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("7577126570")
                 .tribunalCorrespondenceDX("123456")
                 .tribunalCorrespondenceEmail("manchester@gmail.com")
