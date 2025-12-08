@@ -145,7 +145,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine3("14-22 The Parsonage")
                 .tribunalCorrespondenceTown("Manchester")
                 .tribunalCorrespondencePostCode("M3 2JA")
-                .tribunalCorrespondenceTelephone("0161 833 6100")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("0870 739 4433")
                 .tribunalCorrespondenceDX("DX 743570")
                 .tribunalCorrespondenceEmail("Manchesteret@justice.gov.uk")
