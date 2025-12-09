@@ -42,10 +42,12 @@ import static java.time.DayOfWeek.SUNDAY;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+import static uk.gov.hmcts.ecm.common.helpers.UtilHelper.formatCurrentDate2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
@@ -301,7 +303,7 @@ public class CaseManagementForCaseWorkerService {
                 HearingType sourceHearingType = updatedHearing.getValue();
                 HearingType targetHearingType = hearingTypeItem.getValue();
 
-                // update  fields shared at hearing level like Sit Alone or Full Panel
+                // update fields shared at hearing level like Sit Alone or Full Panel
                 targetHearingType.setHearingSitAlone(sourceHearingType.getHearingSitAlone());
                 targetHearingType.setJudge(sourceHearingType.getJudge());
                 targetHearingType.setHearingNotesDocument(isNotEmpty(sourceHearingType.getRemoveHearingNotesDocument())
@@ -325,13 +327,21 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private void updateHearingDates(HearingTypeItem matchingHearing, HearingType updatedHearing) {
-        // update hearing dates for the selected hearing dates collection entries
-        for (var hearingDate : updatedHearing.getHearingDateCollection()) {
-            Optional<DateListedTypeItem> hdToUpdate = matchingHearing.getValue().getHearingDateCollection()
-                    .stream().filter(uhd -> String.valueOf(uhd.getId())
-                            .equals(hearingDate.getId())).findFirst();
-            hdToUpdate.ifPresent(dateListedTypeItem -> dateListedTypeItem.setValue(hearingDate.getValue()));
-        }
+        updatedHearing.getHearingDateCollection().forEach(hearingDate -> {
+            DateListedType dateListed = hearingDate.getValue();
+            if (HEARING_STATUS_POSTPONED.equals(dateListed.getHearingStatus())
+                && isNullOrEmpty(dateListed.getPostponedDate())) {
+                dateListed.setPostponedDate(formatCurrentDate2(LocalDate.now()));
+            } else {
+                dateListed.setPostponedBy(null);
+                dateListed.setPostponedDate(null);
+            }
+
+            matchingHearing.getValue().getHearingDateCollection().stream()
+                .filter(uhd -> String.valueOf(uhd.getId()).equals(hearingDate.getId()))
+                .findFirst()
+                .ifPresent(dateListedTypeItem -> dateListedTypeItem.setValue(dateListed));
+        });
     }
 
     public void setNextListedDate(CaseData caseData) {

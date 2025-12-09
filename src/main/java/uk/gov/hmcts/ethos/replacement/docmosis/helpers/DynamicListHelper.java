@@ -3,8 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 
 import java.time.LocalDate;
@@ -23,23 +21,21 @@ public class DynamicListHelper {
 
     public static List<DynamicValueType> createDynamicRespondentName(List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
-        if (respondentCollection != null) {
-            for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
-                var dynamicValueType = new DynamicValueType();
-                var respondentSumType = respondentSumTypeItem.getValue();
-                dynamicValueType.setCode("R: " + respondentSumType.getRespondentName());
-                dynamicValueType.setLabel(respondentSumType.getRespondentName());
-                listItems.add(dynamicValueType);
-            }
+        if (respondentCollection == null) {
+            return listItems;
         }
+        respondentCollection.forEach(respondentSumTypeItem -> {
+            var dynamicValueType = new DynamicValueType();
+            var respondentSumType = respondentSumTypeItem.getValue();
+            dynamicValueType.setCode("R: " + respondentSumType.getRespondentName());
+            dynamicValueType.setLabel(respondentSumType.getRespondentName());
+            listItems.add(dynamicValueType);
+        });
         return listItems;
     }
 
     public static DynamicValueType getDynamicValue(String value) {
-        var dynamicValueType = new DynamicValueType();
-        dynamicValueType.setCode(value);
-        dynamicValueType.setLabel(value);
-        return dynamicValueType;
+        return getDynamicCodeLabel(value, value);
     }
 
     public static DynamicValueType getDynamicCodeLabel(String code, String label) {
@@ -65,17 +61,17 @@ public class DynamicListHelper {
     public static List<DynamicValueType> createDynamicHearingList(CaseData caseData) {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            caseData.getHearingCollection().forEach(hearingTypeItem -> {
                 var hearingNumber = hearingTypeItem.getValue().getHearingNumber();
-                var dateListedType = hearingTypeItem.getValue().getHearingDateCollection().get(0).getValue();
+                var dateListedType = hearingTypeItem.getValue().getHearingDateCollection().getFirst().getValue();
                 var listedDate = dateListedType.getListedDate().substring(0, 10);
                 LocalDate date = LocalDate.parse(listedDate);
                 String hearingData = hearingNumber
-                        + " : " + hearingTypeItem.getValue().getHearingType()
-                        + " - " + hearingTypeItem.getValue().getHearingVenue()
-                        + " - " + date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
+                                     + " : " + hearingTypeItem.getValue().getHearingType()
+                                     + " - " + hearingTypeItem.getValue().getHearingVenue()
+                                     + " - " + date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
                 listItems.add(getDynamicCodeLabel(hearingNumber, hearingData));
-            }
+            });
         } else {
             listItems.add(getDynamicValue(NO_HEARINGS));
         }
@@ -85,9 +81,9 @@ public class DynamicListHelper {
     public static List<DynamicValueType> createDynamicJurisdictionCodes(CaseData caseData) {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(caseData.getJurCodesCollection())) {
-            for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
-                listItems.add(getDynamicValue(jurCodesTypeItem.getValue().getJuridictionCodesList()));
-            }
+            listItems = caseData.getJurCodesCollection().stream()
+                .map(jurCodesTypeItem -> getDynamicValue(jurCodesTypeItem.getValue().getJuridictionCodesList()))
+                .toList();
         }
         return listItems;
     }
