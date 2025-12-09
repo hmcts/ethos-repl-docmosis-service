@@ -44,15 +44,15 @@ public class RespondentsReportTest {
         // and report data is requested
         // the case should not be in the report data
 
-            caseDataBuilder.withNoRespondents();
-            submitEvents.add(caseDataBuilder
-                    .buildAsSubmitEvent());
+        caseDataBuilder.withNoRespondents();
+        submitEvents.add(caseDataBuilder
+                .buildAsSubmitEvent());
 
-            var reportData = respondentsReport.generateReport(
-                    new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
-            assertCommonValues(reportData);
-            assertEquals("0", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
-            assertEquals(0, reportData.getReportDetails().size());
+        var reportData = respondentsReport.generateReport(
+                new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        assertCommonValues(reportData);
+        assertEquals("0", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
+        assertEquals(0, reportData.getReportDetails().size());
     }
 
     @Test

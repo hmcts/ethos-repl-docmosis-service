@@ -86,24 +86,24 @@ public class MultipleUploadService {
                                                 List<String> errors,
                                                 MultipleDetails multipleDetails) {
         // to do send them to service bus
-//        SortedMap<String, Object> multipleObjects =  excelReadingService.readExcel(userToken,
-//                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-//                errors,
-//                multipleDetails.getCaseData(),
-//                FilterExcelType.ALL);
-//        multipleObjects.forEach((key, value) -> {
-//            var multipleObject = (MultipleObject) value;
-//            try {
-//
-////                MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
-////                        multipleDetails,
-////                        multipleObject.getEthosCaseRef(),
-////                        multipleObject.getSubMultiple(),
-////                        ccdClient);
-//            } catch (IOException e) {
-//                log.error(String.format("Error in setting subMultiple for case %s:",
-//                        multipleObject.getEthosCaseRef()) + e.toString());
-//            }
+    //        SortedMap<String, Object> multipleObjects =  excelReadingService.readExcel(userToken,
+    //                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
+    //                errors,
+    //                multipleDetails.getCaseData(),
+    //                FilterExcelType.ALL);
+    //        multipleObjects.forEach((key, value) -> {
+    //            var multipleObject = (MultipleObject) value;
+    //            try {
+    //
+    ////                MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
+    ////                        multipleDetails,
+    ////                        multipleObject.getEthosCaseRef(),
+    ////                        multipleObject.getSubMultiple(),
+    ////                        ccdClient);
+    //            } catch (IOException e) {
+    //                log.error(String.format("Error in setting subMultiple for case %s:",
+    //                        multipleObject.getEthosCaseRef()) + e.toString());
+    //            }
        // });
     }
 

@@ -41,6 +41,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
     private SubmitEvent submitEvent;
     private static final String AUTH_TOKEN = "authToken";
     private static final String MESSAGE = "Failed to retrieve case for : ";
+
     @Before
     public void setUp() {
         CaseDetails caseDetails;

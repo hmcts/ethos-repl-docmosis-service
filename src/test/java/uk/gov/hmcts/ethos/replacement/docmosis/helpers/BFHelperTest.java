@@ -48,7 +48,7 @@ public class BFHelperTest {
         caseData.setBfActions(null);
         BFHelper.populateDynamicListBfActions(caseData);
         assertEquals(1, caseData.getBfActions().size());
-     }
+    }
 
     public static DynamicFixedListType getBfActionsDynamicFixedList() {
         DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
@@ -58,7 +58,6 @@ public class BFHelperTest {
     }
 
     public static List<BFActionTypeItem> generateBFActionTypeItems() {
-        BFActionTypeItem bfActionTypeItem = new BFActionTypeItem();
         BFActionType bfActionType = new BFActionType();
         bfActionType.setAction(getBfActionsDynamicFixedList());
         bfActionType.setCleared("Date Cleared");
@@ -66,10 +65,10 @@ public class BFHelperTest {
         bfActionType.setNotes("Notes");
         bfActionType.setAction(getBfActionsDynamicFixedList());
         bfActionType.setDateEntered("01-01-2020 23:00:00");
+        BFActionTypeItem bfActionTypeItem = new BFActionTypeItem();
         bfActionTypeItem.setId(UUID.randomUUID().toString());
         bfActionTypeItem.setValue(bfActionType);
         return new ArrayList<>(Collections.singletonList(bfActionTypeItem));
     }
-
 
 }

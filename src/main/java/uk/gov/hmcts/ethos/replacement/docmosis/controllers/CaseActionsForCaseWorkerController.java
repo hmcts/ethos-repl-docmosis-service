@@ -484,7 +484,7 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> updateHearing(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("UPDATE HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        log.info("{} ---> " + LOG_MESSAGE + "{}", ccdRequest.getEventId(), ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error(INVALID_TOKEN, userToken);

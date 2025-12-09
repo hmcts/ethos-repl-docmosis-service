@@ -218,7 +218,6 @@ public class CasesAwaitingJudgmentReportTest {
         assertEquals(3, reportData.getReportSummary().getPositionTypes().get(2).getPositionTypeCount());
     }
 
-
     @Test
     public void shouldContainCorrectDetailValuesForCaseWithOneHearing() {
         // Given I have a valid case
