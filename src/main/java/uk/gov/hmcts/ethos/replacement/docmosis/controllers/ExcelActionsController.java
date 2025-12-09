@@ -270,7 +270,7 @@ public class ExcelActionsController {
         var multipleDetails = multipleRequest.getCaseDetails();
 
         multipleUpdateService.bulkUpdateLogic(userToken, multipleDetails, errors);
-
+        log.info("BATCH UPDATE SENT ---> MultipleRef: {} Errors: {}", multipleDetails.getCaseId(), errors);
         return getMultipleCallbackRespEntity(errors, multipleDetails);
     }
 
