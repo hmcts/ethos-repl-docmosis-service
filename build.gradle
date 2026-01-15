@@ -239,7 +239,7 @@ repositories {
 
 ext {
     junitJupiterVersion = '5.11.4'
-    log4JVersion = '2.25.1'
+    log4JVersion = '2.25.3'
     serenity = '3.9.8'
     tomcatEmbedVersion = '10.1.49'
     springCloudVersion = '2023.0.6'
@@ -253,7 +253,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '33.4.8-jre') {
             entry 'guava'
         }
-        dependencySet(group: 'io.netty', version: '4.2.6.Final') {
+        dependencySet(group: 'io.netty', version: '4.2.9.Final') {
             entry 'netty-all'
             entry 'netty-buffer'
             entry 'netty-codec'
