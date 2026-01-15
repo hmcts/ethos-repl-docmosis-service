@@ -11,13 +11,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -30,17 +33,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.addUploadedDocsToCaseDocCollection;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.buildDocumentContent;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setSecondLevelDocumentFromType;
@@ -272,13 +279,14 @@ class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        caseDetails2.getCaseData().getRepCollection().get(0).getValue().setRespRepName("Antonio Vazquez");
+        caseDetails2.getCaseData().getRepCollection().getFirst().getValue().setRespRepName("Antonio Vazquez");
         assertEquals(expected, buildDocumentContent(caseDetails2.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails2.getCaseData().getCorrespondenceType(),
                 caseDetails2.getCaseData().getCorrespondenceScotType(), null,
                 null).toString());
-        caseDetails2.getCaseData().getRepCollection().get(0).getValue().setRespRepName("RepresentativeNameRespondent");
+        caseDetails2.getCaseData().getRepCollection().getFirst()
+            .getValue().setRespRepName("RepresentativeNameRespondent");
     }
 
     @Test
@@ -351,14 +359,15 @@ class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        caseDetails2.getCaseData().getRespondentCollection().get(0).getValue().setResponseStruckOut(NO);
-        caseDetails2.getCaseData().getRepCollection().get(0).getValue().setRespRepName("Antonio Vazquez");
+        caseDetails2.getCaseData().getRespondentCollection().getFirst().getValue().setResponseStruckOut(NO);
+        caseDetails2.getCaseData().getRepCollection().getFirst().getValue().setRespRepName("Antonio Vazquez");
         assertEquals(expected, buildDocumentContent(caseDetails2.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetails2.getCaseData().getCorrespondenceType(),
                 caseDetails2.getCaseData().getCorrespondenceScotType(), null,
                 null).toString());
-        caseDetails2.getCaseData().getRepCollection().get(0).getValue().setRespRepName("RepresentativeNameRespondent");
+        caseDetails2.getCaseData().getRepCollection().getFirst()
+            .getValue().setRespRepName("RepresentativeNameRespondent");
     }
 
     @Test
@@ -925,10 +934,9 @@ class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        assertEquals(expected, buildDocumentContent(caseDetails10.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID,
-                        venueAddressInputStream, caseDetails10.getCaseData().getCorrespondenceType(),
-                        caseDetails10.getCaseData().getCorrespondenceScotType(),
-                        null, null).toString());
+        assertEquals(expected, buildDocumentContent(caseDetails10.getCaseData(), "", userDetails,
+            MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails10.getCaseData().getCorrespondenceType(),
+            caseDetails10.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1810,7 +1818,6 @@ class DocumentHelperTest {
 
     @Test
     void buildScotDocumentTemplates() {
-        CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
         CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
         String topLevel = "Part_3_Scot";
@@ -1818,6 +1825,7 @@ class DocumentHelperTest {
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
+        CaseDetails caseDetailsTemplates = new CaseDetails();
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(getJson(topLevel, part), buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
@@ -1900,7 +1908,6 @@ class DocumentHelperTest {
 
     @Test
     void buildDocumentTemplates() {
-        CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
         CorrespondenceType correspondenceType = new CorrespondenceType();
         String topLevel = "Part_18";
@@ -1908,6 +1915,7 @@ class DocumentHelperTest {
         correspondenceType.setTopLevelDocuments(topLevel);
         correspondenceType.setPart18Documents(part);
         caseData.setCorrespondenceType(correspondenceType);
+        CaseDetails caseDetailsTemplates = new CaseDetails();
         caseDetailsTemplates.setCaseData(caseData);
         String result = "{\n"
                 + "\"accessKey\":\"\",\n"
@@ -2043,6 +2051,16 @@ class DocumentHelperTest {
 
     @Test
     void buildDocumentContentMultiples() {
+        AddressLabelsAttributesType addressLabelsAttributesType = new AddressLabelsAttributesType();
+        addressLabelsAttributesType.setNumberOfCopies("1");
+        addressLabelsAttributesType.setStartingLabel("2");
+        addressLabelsAttributesType.setShowTelFax("1232312");
+        MultipleData multipleData = new MultipleData();
+        CorrespondenceType correspondenceType = new CorrespondenceType();
+        correspondenceType.setTopLevelDocuments(ADDRESS_LABELS_TEMPLATE);
+        multipleData.setCorrespondenceType(correspondenceType);
+        multipleData.setAddressLabelsAttributesType(addressLabelsAttributesType);
+        multipleData.setAddressLabelCollection(MultipleUtil.getAddressLabelTypeItemList());
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
                 + "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n"
@@ -2072,16 +2090,6 @@ class DocumentHelperTest {
                 + "\"Case_No\":\"123456\",\n"
                 + "}\n"
                 + "}\n";
-        AddressLabelsAttributesType addressLabelsAttributesType = new AddressLabelsAttributesType();
-        addressLabelsAttributesType.setNumberOfCopies("1");
-        addressLabelsAttributesType.setStartingLabel("2");
-        addressLabelsAttributesType.setShowTelFax("1232312");
-        MultipleData multipleData = new MultipleData();
-        CorrespondenceType correspondenceType = new CorrespondenceType();
-        correspondenceType.setTopLevelDocuments(ADDRESS_LABELS_TEMPLATE);
-        multipleData.setCorrespondenceType(correspondenceType);
-        multipleData.setAddressLabelsAttributesType(addressLabelsAttributesType);
-        multipleData.setAddressLabelCollection(MultipleUtil.getAddressLabelTypeItemList());
         assertEquals(expected, buildDocumentContent(caseDetails2.getCaseData(), "",
                 userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
                 multipleData.getCorrespondenceType(), multipleData.getCorrespondenceScotType(),
@@ -2228,15 +2236,14 @@ class DocumentHelperTest {
     void createDocumentTypeItemFromTopLevel_ShortDescription_Null() {
         DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
                 new UploadedDocumentType(), "Top Level", ET1_ATTACHMENT, null);
-        assertEquals(null, documentTypeItem.getValue().getShortDescription());
+        assertNull(documentTypeItem.getValue().getShortDescription());
     }
 
     @Test
     void createDocumentTypeItemFromTopLevel_TopLevelDocumentsCategory_Null() {
-        DocumentType documentType = new DocumentType();
         DocumentTypeItem documentTypeItem = DocumentHelper.createDocumentTypeItemFromTopLevel(
                 new UploadedDocumentType(), null, ET1_ATTACHMENT, "short description");
-        assertEquals(null, documentTypeItem.getValue().getTopLevelDocuments());
+        assertNull(documentTypeItem.getValue().getTopLevelDocuments());
     }
 
     @ParameterizedTest
@@ -2247,7 +2254,8 @@ class DocumentHelperTest {
                 .build();
         DocumentHelper.convertLegacyDocsToNewDocNaming(caseData);
         assertNotNull(caseData.getDocumentCollection());
-        Assertions.assertEquals(topLevel, caseData.getDocumentCollection().get(0).getValue().getTopLevelDocuments());
+        Assertions.assertEquals(topLevel, caseData.getDocumentCollection()
+            .getFirst().getValue().getTopLevelDocuments());
     }
 
     private static Stream<Arguments> convertLegacyDocsToNewDocNaming() {
@@ -2274,7 +2282,7 @@ class DocumentHelperTest {
         DocumentHelper.convertLegacyDocsToNewDocNaming(caseData);
         DocumentHelper.setDocumentTypeForDocumentCollection(caseData);
         assertNotNull(caseData.getDocumentCollection());
-        Assertions.assertEquals(documentType, caseData.getDocumentCollection().get(0).getValue().getDocumentType());
+        Assertions.assertEquals(documentType, caseData.getDocumentCollection().getFirst().getValue().getDocumentType());
     }
 
     private static Stream<Arguments> setDocumentTypeForDocumentCollection() {
@@ -2333,7 +2341,7 @@ class DocumentHelperTest {
         addUploadedDocsToCaseDocCollection(caseData);
 
         Assertions.assertEquals(2, caseData.getDocumentCollection().size());
-        assertNull(caseData.getDocumentCollection().get(0).getValue().getDateOfCorrespondence());
+        assertNull(caseData.getDocumentCollection().getFirst().getValue().getDateOfCorrespondence());
     }
 
     @Test
@@ -2422,7 +2430,7 @@ class DocumentHelperTest {
 
         Assertions.assertEquals(1, caseData.getDocumentCollection().size());
         assertNotNull(caseData.getDocumentCollection());
-        assertNull(caseData.getDocumentCollection().get(0).getValue().getDateOfCorrespondence());
+        assertNull(caseData.getDocumentCollection().getFirst().getValue().getDateOfCorrespondence());
     }
 
     @Test
@@ -2443,7 +2451,7 @@ class DocumentHelperTest {
         caseData.getAddDocumentCollection().add(documentTypeItem);
         DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
         Assertions.assertEquals(1, caseData.getDocumentCollection().size());
-        assertNull(caseData.getDocumentCollection().get(0).getValue().getDocumentType());
+        assertNull(caseData.getDocumentCollection().getFirst().getValue().getDocumentType());
     }
 
     @Test
@@ -2455,7 +2463,7 @@ class DocumentHelperTest {
         caseData.getAddDocumentCollection().add(documentTypeItem);
         DocumentHelper.addUploadedDocsToCaseDocCollection(caseData);
         Assertions.assertEquals(1, caseData.getDocumentCollection().size());
-        assertNull(caseData.getDocumentCollection().get(0).getValue().getShortDescription());
+        assertNull(caseData.getDocumentCollection().getFirst().getValue().getShortDescription());
     }
 
     private DocumentTypeItem getDocumentTypeItem() {
@@ -2571,6 +2579,295 @@ class DocumentHelperTest {
                 caseData.getDocumentCollection().get(1).getValue().getUploadedDocument().getDocumentFilename());
         Assertions.assertEquals(DOC_FILE_NAME_2,
                 caseData.getDocumentCollection().get(2).getValue().getUploadedDocument().getDocumentFilename());
+    }
+
+    /**
+     * Test with single respondent - should return empty resp_others.
+     */
+    @Test
+    void testGetRespOthersName_SingleRespondent() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // With single respondent, resp_others should be empty
+        assertThat(result).contains("\"resp_others\":\"\"");
+    }
+
+    /**
+     * Test with two respondents - second respondent should appear in resp_others.
+     */
+    @Test
+    void testGetRespOthersName_TwoRespondents() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Second respondent should be numbered as "2. "
+        assertThat(result).contains("\"resp_others\":\"2. Second Respondent\"");
+    }
+
+    /**
+     * Test with three respondents - second and third should appear in resp_others.
+     */
+    @Test
+    void testGetRespOthersName_ThreeRespondents() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", NO, YES),
+                createRespondent("Third Respondent", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Both second and third respondents should appear, comma-separated
+        assertThat(result).contains("\"resp_others\":\"2. Second Respondent, 3. Third Respondent\"");
+    }
+
+    /**
+     * Test that first respondent is always excluded regardless of name.
+     * This tests the key behavior change - now using index-based exclusion.
+     */
+    @Test
+    void testGetRespOthersName_FirstRespondentAlwaysExcluded() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("Antonio Vazquez", NO, YES),
+                createRespondent("Antonio Vazquez", NO, YES),  // Same name as first
+                createRespondent("Juan Garcia", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Even though second respondent has same name, it should appear in resp_others
+        // because it's not at index 0
+        assertThat(result).contains("\"resp_others\":\"2. Antonio Vazquez, 3. Juan Garcia\"");
+    }
+
+    /**
+     * Test with respondent that has responseStruckOut = "Yes" - should be excluded.
+     */
+    @Test
+    void testGetRespOthersName_StruckOutRespondentExcluded() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", YES, YES),  // Struck out
+                createRespondent("Third Respondent", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Second respondent should be excluded due to being struck out
+        // Third respondent gets number 2 (sequential numbering of filtered respondents)
+        assertThat(result).contains("\"resp_others\":\"2. Third Respondent\"");
+    }
+
+    /**
+     * Test with respondent that has responseContinue = "No" - should be excluded.
+     */
+    @Test
+    void testGetRespOthersName_NotContinuingRespondentExcluded() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", NO, NO),  // Not continuing
+                createRespondent("Third Respondent", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Second respondent should be excluded due to not continuing
+        // Third respondent gets number 2 (sequential numbering of filtered respondents)
+        assertThat(result).contains("\"resp_others\":\"2. Third Respondent\"");
+    }
+
+    /**
+     * Test with null responseStruckOut - should be included (treated as not struck out).
+     */
+    @Test
+    void testGetRespOthersName_NullResponseStruckOutIncluded() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", null, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Null responseStruckOut should be treated as not struck out, so included
+        assertThat(result).contains("\"resp_others\":\"2. Second Respondent\"");
+    }
+
+    /**
+     * Test with null responseContinue - should be included (treated as continuing).
+     */
+    @Test
+    void testGetRespOthersName_NullResponseContinueIncluded() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", NO, null)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Null responseContinue should be treated as continuing, so included
+        assertThat(result).contains("\"resp_others\":\"2. Second Respondent\"");
+    }
+
+    /**
+     * Test with multiple respondents where only some meet the criteria.
+     */
+    @Test
+    void testGetRespOthersName_MixedCriteria() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", YES, YES),  // Struck out
+                createRespondent("Third Respondent", NO, NO),     // Not continuing
+                createRespondent("Fourth Respondent", NO, YES),
+                createRespondent("Fifth Respondent", null, null), // Both null
+                createRespondent("Sixth Respondent", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Only Fourth, Fifth, and Sixth respondents should appear with sequential numbering
+        assertThat(result)
+            .contains("\"resp_others\":\"2. Fourth Respondent, 3. Fifth Respondent, 4. Sixth Respondent\"");
+    }
+
+    /**
+     * Test that atomic counter starts at 2 and increments correctly.
+     */
+    @Test
+    void testGetRespOthersName_CounterStartsAtTwo() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", NO, YES),
+                createRespondent("Third Respondent", NO, YES),
+                createRespondent("Fourth Respondent", NO, YES)
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // Counter should start at 2 for the second respondent
+        assertThat(result)
+            .contains("\"resp_others\":\"2. Second Respondent, 3. Third Respondent, 4. Fourth Respondent\"");
+    }
+
+    /**
+     * Test with all respondents except first being filtered out.
+     */
+    @Test
+    void testGetRespOthersName_AllOthersFilteredOut() {
+        CaseData caseData = createCaseDataWithRespondents(
+                createRespondent("First Respondent", NO, YES),
+                createRespondent("Second Respondent", YES, YES),  // Struck out
+                createRespondent("Third Respondent", YES, NO)     // Struck out and not continuing
+        );
+
+        String result = buildDocumentContent(
+                caseData, "", userDetails, MANCHESTER_CASE_TYPE_ID,
+                venueAddressInputStream, caseData.getCorrespondenceType(),
+                caseData.getCorrespondenceScotType(), null, null
+        ).toString();
+
+        // All other respondents filtered out, so resp_others should be empty
+        assertThat(result).contains("\"resp_others\":\"\"");
+    }
+
+    // Helper methods for getRespOthersName tests
+
+    private CaseData createCaseDataWithRespondents(RespondentSumTypeItem... respondents) {
+        CaseData caseData = new CaseData();
+        caseData.setEthosCaseReference("123456");
+
+        List<RespondentSumTypeItem> respondentCollection = new ArrayList<>();
+        Collections.addAll(respondentCollection, respondents);
+        caseData.setRespondentCollection(respondentCollection);
+
+        // Set required fields for document building
+        Address tribunalAddress = new Address();
+        tribunalAddress.setAddressLine1("Manchester Employment Tribunal,");
+        tribunalAddress.setAddressLine2("Alexandra House,");
+        tribunalAddress.setAddressLine3("14-22 The Parsonage,");
+        tribunalAddress.setPostTown("Manchester,");
+        tribunalAddress.setPostCode("M3 2JA");
+        caseData.setTribunalCorrespondenceAddress(tribunalAddress);
+        caseData.setTribunalCorrespondenceTelephone("03577131270");
+        caseData.setTribunalCorrespondenceFax("07577126570");
+        caseData.setTribunalCorrespondenceDX("123456");
+        caseData.setTribunalCorrespondenceEmail("ManchesterOfficeET@hmcts.gov.uk");
+
+        // Set correspondence type for document template
+        CorrespondenceType correspondenceType = new CorrespondenceType();
+        correspondenceType.setTopLevelDocuments("EM-TRB-EGW-ENG-00026");
+        correspondenceType.setPart1Documents("1.2");
+        caseData.setCorrespondenceType(correspondenceType);
+
+        return caseData;
+    }
+
+    private RespondentSumTypeItem createRespondent(String name, String responseStruckOut, String responseContinue) {
+        RespondentSumType respondent = new RespondentSumType();
+        respondent.setRespondentName(name);
+        respondent.setResponseStruckOut(responseStruckOut);
+        respondent.setResponseContinue(responseContinue);
+
+        Address address = new Address();
+        address.setAddressLine1("11 Small Street");
+        address.setAddressLine2("22 House");
+        address.setPostTown("Manchester");
+        address.setCounty("North West");
+        address.setPostCode("M12 42R");
+        address.setCountry("UK");
+        respondent.setRespondentAddress(address);
+        RespondentSumTypeItem item = new RespondentSumTypeItem();
+
+        item.setValue(respondent);
+        item.setId(UUID.randomUUID().toString());
+        return item;
     }
 
 }
