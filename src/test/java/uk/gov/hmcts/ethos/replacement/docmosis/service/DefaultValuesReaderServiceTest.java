@@ -208,7 +208,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine3("West Croydon")
                 .tribunalCorrespondenceTown("London")
                 .tribunalCorrespondencePostCode("CR0 2RF")
-                .tribunalCorrespondenceTelephone("0208 667 9131")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("0870 324 0174")
                 .tribunalCorrespondenceDX("DX 155061 Croydon 39")
                 .tribunalCorrespondenceEmail("londonsouthet@Justice.gov.uk")
