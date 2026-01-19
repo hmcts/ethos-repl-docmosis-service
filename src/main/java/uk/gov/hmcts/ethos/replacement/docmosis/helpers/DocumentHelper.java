@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
@@ -437,7 +438,7 @@ public class DocumentHelper {
                         .append(NEW_LINE);
             }
 
-            sb.append(getRespOthersName(caseData, finalRespondentToBeShown.getRespondentName()));
+            sb.append(getRespOthersName(caseData));
             sb.append(getRespAddress(caseData));
         } else {
             sb.append("\"respondent_full_name\":\"").append(NEW_LINE);
@@ -449,17 +450,16 @@ public class DocumentHelper {
         return sb;
     }
 
-    private static StringBuilder getRespOthersName(CaseData caseData, String firstRespondentName) {
+    private static StringBuilder getRespOthersName(CaseData caseData) {
         log.info("Respondent Others Name");
         var sb = new StringBuilder();
         var atomicInteger = new AtomicInteger(2);
-        List<String> respOthers = caseData.getRespondentCollection()
-                .stream()
+        List<String> respOthers = IntStream.range(1, caseData.getRespondentCollection().size())
+            .mapToObj(idx -> caseData.getRespondentCollection().get(idx))
                 .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
                         || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO)
                         && (respondentSumTypeItem.getValue().getResponseContinue() == null
-                        || respondentSumTypeItem.getValue().getResponseContinue().equals(YES))
-                        && !respondentSumTypeItem.getValue().getRespondentName().equals(firstRespondentName))
+                        || respondentSumTypeItem.getValue().getResponseContinue().equals(YES)))
                 .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". "
                         + respondentSumTypeItem.getValue().getRespondentName())
                 .toList();
