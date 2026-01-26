@@ -195,7 +195,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine3("2 Clove Crescent")
                 .tribunalCorrespondenceTown("London")
                 .tribunalCorrespondencePostCode("E14 2BE")
-                .tribunalCorrespondenceTelephone("0207 538 6161")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("08703 240 200")
                 .tribunalCorrespondenceEmail("eastlondon@justice.gov.uk")
                 .tribunalCorrespondenceDX("DX 374401 East India Dock 1")
