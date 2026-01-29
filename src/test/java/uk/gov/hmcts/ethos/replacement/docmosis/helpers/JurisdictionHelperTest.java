@@ -11,6 +11,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.JurisdictionHelper.containsAllJurCodes;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.JurisdictionHelper.getJurCodesCollection;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.JurisdictionHelper.getJurCodesCollectionWithHide;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.JurisdictionHelper.getJurCodesListFromString;
 
 public class JurisdictionHelperTest {
 
@@ -40,57 +44,57 @@ public class JurisdictionHelperTest {
     }
 
     @Test
-    public void containsAllJurCodes() {
+    public void containsAllJurCodesTest() {
         List<JurCodesTypeItem> jurCodesTypeItemsInput = getJurCodesTypeItems("A", "B", "C");
         List<JurCodesTypeItem> jurCodesTypeItems2 = getJurCodesTypeItems("A", "B", "C");
-        assertTrue(JurisdictionHelper.containsAllJurCodes(jurCodesTypeItemsInput, jurCodesTypeItems2));
+        assertTrue(containsAllJurCodes(jurCodesTypeItemsInput, jurCodesTypeItems2));
         jurCodesTypeItemsInput = getJurCodesTypeItems("A", "B", "D");
         jurCodesTypeItems2 = getJurCodesTypeItems("A", "C", "B");
-        assertFalse(JurisdictionHelper.containsAllJurCodes(jurCodesTypeItemsInput, jurCodesTypeItems2));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(null, jurCodesTypeItems2));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), jurCodesTypeItems2));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), new ArrayList<>()));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(null, null));
+        assertFalse(containsAllJurCodes(jurCodesTypeItemsInput, jurCodesTypeItems2));
+        assertFalse(containsAllJurCodes(null, jurCodesTypeItems2));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), jurCodesTypeItems2));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), new ArrayList<>()));
+        assertFalse(containsAllJurCodes(null, null));
     }
 
     @Test
-    public void getJurCodesListFromString() {
+    public void getJurCodesListFromStringTest() {
         List<JurCodesTypeItem> jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "C");
         List<JurCodesTypeItem> jurCodesTypeItems2 = getJurCodesTypeItems("A", "B", "C");
-        String jurCodes = JurisdictionHelper.getJurCodesCollection(jurCodesTypeItems2);
-        assertTrue(JurisdictionHelper.containsAllJurCodes(jurCodesTypeItems1, JurisdictionHelper.getJurCodesListFromString(jurCodes)));
+        String jurCodes = getJurCodesCollection(jurCodesTypeItems2);
+        assertTrue(containsAllJurCodes(jurCodesTypeItems1, getJurCodesListFromString(jurCodes)));
 
         jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "D");
         jurCodesTypeItems2 = getJurCodesTypeItems("A", "C", "B");
-        jurCodes = JurisdictionHelper.getJurCodesCollection(jurCodesTypeItems2);
-        assertFalse(JurisdictionHelper.containsAllJurCodes(jurCodesTypeItems1, JurisdictionHelper.getJurCodesListFromString(jurCodes)));
+        jurCodes = getJurCodesCollection(jurCodesTypeItems2);
+        assertFalse(containsAllJurCodes(jurCodesTypeItems1, getJurCodesListFromString(jurCodes)));
 
-        assertFalse(JurisdictionHelper.containsAllJurCodes(null, JurisdictionHelper.getJurCodesListFromString(jurCodes)));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString(jurCodes)));
+        assertFalse(containsAllJurCodes(null, getJurCodesListFromString(jurCodes)));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString(jurCodes)));
 
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString(null)));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString("")));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString(" ")));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString(null)));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString("")));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString(" ")));
     }
 
     @Test
     public void getJurCodesCollectionWithHide_ListFromString() {
         List<JurCodesTypeItem> jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "C");
         List<JurCodesTypeItem> jurCodesTypeItems2 = getJurCodesTypeItems("A", "B", "C");
-        String jurCodes = JurisdictionHelper.getJurCodesCollectionWithHide(jurCodesTypeItems2);
-        assertTrue(JurisdictionHelper.containsAllJurCodes(jurCodesTypeItems1, JurisdictionHelper.getJurCodesListFromString(jurCodes)));
+        String jurCodes = getJurCodesCollectionWithHide(jurCodesTypeItems2);
+        assertTrue(containsAllJurCodes(jurCodesTypeItems1, getJurCodesListFromString(jurCodes)));
 
         jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "D");
         jurCodesTypeItems2 = getJurCodesTypeItems("A", "C", "B");
-        jurCodes = JurisdictionHelper.getJurCodesCollectionWithHide(jurCodesTypeItems2);
-        assertFalse(JurisdictionHelper.containsAllJurCodes(jurCodesTypeItems1, JurisdictionHelper.getJurCodesListFromString(jurCodes)));
+        jurCodes = getJurCodesCollectionWithHide(jurCodesTypeItems2);
+        assertFalse(containsAllJurCodes(jurCodesTypeItems1, getJurCodesListFromString(jurCodes)));
 
-        assertFalse(JurisdictionHelper.containsAllJurCodes(null, JurisdictionHelper.getJurCodesListFromString(jurCodes)));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString(jurCodes)));
+        assertFalse(containsAllJurCodes(null, getJurCodesListFromString(jurCodes)));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString(jurCodes)));
 
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString(null)));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString("")));
-        assertFalse(JurisdictionHelper.containsAllJurCodes(new ArrayList<>(), JurisdictionHelper.getJurCodesListFromString(" ")));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString(null)));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString("")));
+        assertFalse(containsAllJurCodes(new ArrayList<>(), getJurCodesListFromString(" ")));
     }
 
     @Test
@@ -101,7 +105,7 @@ public class JurisdictionHelperTest {
         JurCodesTypeItem jurCodesTypeItem4 = getJurCodesWithOutcome("D", "Dismissed on withdrawal");
         List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(jurCodesTypeItem1, jurCodesTypeItem2,
                 jurCodesTypeItem3, jurCodesTypeItem4));
-        assertEquals(" ", JurisdictionHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
+        assertEquals(" ", getJurCodesCollectionWithHide(jurCodesTypeItems));
     }
 
     @Test
@@ -112,7 +116,7 @@ public class JurisdictionHelperTest {
         JurCodesTypeItem jurCodesTypeItem4 = getJurCodesWithOutcome("D", "Dismissed on withdrawal");
         List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(jurCodesTypeItem1,
                 jurCodesTypeItem2, jurCodesTypeItem3, jurCodesTypeItem4));
-        assertEquals("A, B, C", JurisdictionHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
+        assertEquals("A, B, C", getJurCodesCollectionWithHide(jurCodesTypeItems));
     }
 
     @Test
@@ -123,7 +127,7 @@ public class JurisdictionHelperTest {
         JurCodesTypeItem jurCodesTypeItem4 = getJurCodesWithOutcome("D", "Dismissed on withdrawal");
         List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(jurCodesTypeItem1,
                 jurCodesTypeItem2, jurCodesTypeItem3, jurCodesTypeItem4));
-        assertEquals("B", JurisdictionHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
+        assertEquals("B", getJurCodesCollectionWithHide(jurCodesTypeItems));
     }
 
 }

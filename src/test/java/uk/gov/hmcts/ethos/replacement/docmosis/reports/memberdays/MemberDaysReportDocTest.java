@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
@@ -27,10 +28,11 @@ public class MemberDaysReportDocTest {
         memberDaysReportDoc = new MemberDaysReportDoc();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test()
     public void shouldThrowException() throws IllegalStateException {
         var nonMemberDaysReportDocListingData = new ListingData();
-        var resultListingData = memberDaysReportDoc.getReportDocPart(nonMemberDaysReportDocListingData);
+        assertThrows(IllegalStateException.class,
+            () -> memberDaysReportDoc.getReportDocPart(nonMemberDaysReportDocListingData));
     }
 
     @Test
@@ -47,7 +49,6 @@ public class MemberDaysReportDocTest {
         detailItem.setHearingDuration("420");
         listingData.getReportDetails().add(detailItem);
 
-        var resultListingData = memberDaysReportDoc.getReportDocPart(listingData);
         var expectedDetailRowContent = new StringBuilder();
 
         expectedDetailRowContent.append("\"Listed_date\":\"").append(NEW_LINE);
@@ -80,8 +81,8 @@ public class MemberDaysReportDocTest {
             .append(nullCheck(String.valueOf(new DecimalFormat("#").format(durationInMinutes))))
             .append("\"\n");
         expectedDetailRowContent.append("}]").append(",\n");
-
-        assertEquals(false, resultListingData.toString().isEmpty());
+        var resultListingData = memberDaysReportDoc.getReportDocPart(listingData);
+        assertFalse(resultListingData.toString().isEmpty());
         assertEquals(expectedDetailRowContent.toString(), resultListingData.toString());
     }
 
@@ -116,8 +117,6 @@ public class MemberDaysReportDocTest {
 
         listingData.getMemberDaySummaryItems().add(memberDaySummaryItem);
 
-        var resultListingData = memberDaysReportDoc.getReportDocPart(listingData);
-
         expectedDetailRowContent.append("\"memberDaySummaryItems\":[").append("\n");
         expectedDetailRowContent.append("{").append("\n");
         expectedDetailRowContent.append("\"Hearing_Date\":\"15 September 2021").append(NEW_LINE);
@@ -147,7 +146,7 @@ public class MemberDaysReportDocTest {
             .append(nullCheck(String.valueOf(new DecimalFormat("#").format(durationInMinutes))))
             .append("\"\n");
         expectedDetailRowContent.append("}]").append(",\n");
-
+        var resultListingData = memberDaysReportDoc.getReportDocPart(listingData);
         assertFalse(resultListingData.toString().isEmpty());
         assertEquals(expectedDetailRowContent.toString(), resultListingData.toString());
     }
@@ -179,7 +178,6 @@ public class MemberDaysReportDocTest {
         listingData.setTotalDays("2.0");
         listingData.getMemberDaySummaryItems().add(memberDaySummaryItem);
 
-        var resultListingData = memberDaysReportDoc.getReportDocPart(listingData);
         var expectedDetailRowContent = new StringBuilder();
         expectedDetailRowContent.append("\"Listed_date\":\"18 September 2021").append(NEW_LINE);
         expectedDetailRowContent.append("\"Report_Office\":\"MukeraCity").append(NEW_LINE);
@@ -216,7 +214,7 @@ public class MemberDaysReportDocTest {
             .append(nullCheck(String.valueOf(new DecimalFormat("#").format(durationInMinutes))))
             .append("\"\n");
         expectedDetailRowContent.append("}]").append(",\n");
-
+        var resultListingData = memberDaysReportDoc.getReportDocPart(listingData);
         assertFalse(resultListingData.toString().isEmpty());
         assertEquals(expectedDetailRowContent.toString(), resultListingData.toString());
     }
