@@ -59,7 +59,8 @@ public class BulkAddSinglesControllerTest {
         var errors = List.of("Error 1", "Error 2", "Error 3");
         when(bulkAddSinglesValidator.validate(multipleDetails, authToken)).thenReturn(errors);
 
-        var response = bulkAddSinglesController.bulkAddSingleCasesImportFileMidEventValidation(multipleRequest, authToken);
+        var response = bulkAddSinglesController
+            .bulkAddSingleCasesImportFileMidEventValidation(multipleRequest, authToken);
         verifyResponse(response);
     }
 

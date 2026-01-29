@@ -38,7 +38,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1;
 
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest({DigitalCaseFileController.class, JsonMapper.class})
 class DigitalCaseFileControllerTest {
@@ -46,7 +45,6 @@ class DigitalCaseFileControllerTest {
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String ASYNC_ABOUT_TO_SUBMIT_URL = "/dcf/asyncAboutToSubmit";
     private static final String ASYNC_COMPLETE_ABOUT_TO_SUBMIT_URL = "/dcf/asyncCompleteAboutToSubmit";
-
 
     @MockBean
     private BundleApiClient bundleApiClient;
@@ -61,7 +59,7 @@ class DigitalCaseFileControllerTest {
     private CCDRequest ccdRequest;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         CaseDataBuilder caseDetailsBuilder = new CaseDataBuilder();
         CaseDetails caseDetails = caseDetailsBuilder
                 .withEthosCaseReference("123456/2021")

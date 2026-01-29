@@ -10,8 +10,8 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.CCDAdminCallbackResponse;
 
 import java.util.List;
 
@@ -39,6 +39,15 @@ public class CallbackRespHelper {
     }
 
     @NotNull
+    public static ResponseEntity<CCDAdminCallbackResponse> getCallbackRespEntityNoErrors(
+            AdminData caseData) {
+
+        return ResponseEntity.ok(CCDAdminCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
+    @NotNull
     public static ResponseEntity<CCDCallbackResponse> getCallbackRespEntityErrorsAndWarnings(
             List<String> warnings, List<String> errors, CaseData caseData) {
 
@@ -46,15 +55,6 @@ public class CallbackRespHelper {
                 .data(caseData)
                 .errors(errors)
                 .warnings(warnings)
-                .build());
-    }
-
-    @NotNull
-    public static ResponseEntity<CCDAdminCallbackResponse> getCallbackRespEntityNoErrors(
-            AdminData caseData) {
-
-        return ResponseEntity.ok(CCDAdminCallbackResponse.builder()
-                .data(caseData)
                 .build());
     }
 

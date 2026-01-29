@@ -129,8 +129,9 @@ public class ListingHelper {
             listingType.setJurisdictionCodesList(JurisdictionHelper.getJurCodesCollectionWithHide(
                     caseData.getJurCodesCollection()));
             listingType
-                    .setHearingType(!isNullOrEmpty(hearingType.getHearingType()) ? hearingType.getHearingType() : SPACE);
-            listingType.setPositionType(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : SPACE);
+                .setHearingType(!isNullOrEmpty(hearingType.getHearingType()) ? hearingType.getHearingType() : SPACE);
+            listingType
+                .setPositionType(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : SPACE);
             listingType.setHearingJudgeName(getHearingJudgeName(hearingType));
             listingType.setHearingEEMember(!isNullOrEmpty(hearingType.getHearingEEMember())
                     ? hearingType.getHearingEEMember()

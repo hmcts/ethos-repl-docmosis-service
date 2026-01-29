@@ -41,7 +41,7 @@ public class InvalidCharacterCheck {
                 }
             }
         }
-       return errors;
+        return errors;
     }
 
     private static List<String> findAllParties(CaseData caseData) {

@@ -199,7 +199,7 @@ public class MultipleBatchUpdate2Service {
     private String checkIfNewMultipleWasEmpty(String updatedLeadCase, List<String> multipleObjectsFiltered) {
 
         if (updatedLeadCase.isEmpty() && !multipleObjectsFiltered.isEmpty()) {
-            return multipleObjectsFiltered.get(0);
+            return multipleObjectsFiltered.getFirst();
         }
 
         return updatedLeadCase;
@@ -243,7 +243,8 @@ public class MultipleBatchUpdate2Service {
                             ccdClient);
                 } catch (IOException e) {
                     log.error(String.format("Error in setting subMultiple for case %s:",
-                            multipleObject.getEthosCaseRef()) + e.toString());                }
+                            multipleObject.getEthosCaseRef()) + e);
+                }
             }
             newMultipleObjectsUpdated.add(multipleObject);
         });
@@ -291,7 +292,7 @@ public class MultipleBatchUpdate2Service {
         return multipleCasesReadingService.retrieveMultipleCasesWithRetries(
                 userToken,
                 caseTypeId,
-                updatedMultipleRef).get(0);
+                updatedMultipleRef).getFirst();
 
     }
 

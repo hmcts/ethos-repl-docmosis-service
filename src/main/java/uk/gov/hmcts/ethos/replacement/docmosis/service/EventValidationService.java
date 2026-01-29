@@ -343,7 +343,7 @@ public class EventValidationService {
                 .stream()
                 .filter(element -> element.getValue() > 1)
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+                .toList();
         if (!duplicatedJurCodes.isEmpty()) {
             duplicatedJurCodesMap.put(key, duplicatedJurCodes);
         }
@@ -379,7 +379,7 @@ public class EventValidationService {
                 log.info("Check if jurCodes collection within judgement exist in jurCodesCollection");
                 jurCodesDoesNotExist.addAll(jurCodesCollectionWithinJudgement.stream()
                         .filter(element -> !jurCodesCollection.contains(element))
-                        .collect(Collectors.toList()));
+                        .toList());
 
                 log.info("Check if jurCodes collection has duplicates");
                 populateJurCodesDuplicatedWithinJudgement(jurCodesCollectionWithinJudgement,
@@ -458,10 +458,10 @@ public class EventValidationService {
 
     public List<String> validateHearingsForAllocationOrUpdate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if(caseData != null && (caseData.getHearingCollection() == null || caseData.getHearingCollection().isEmpty())) {
-             errors.add(NO_HEARINGS_LISTED_ERROR_MESSAGE);
-             return errors;
-         }
+        if (caseData != null && (CollectionUtils.isEmpty(caseData.getHearingCollection()))) {
+            errors.add(NO_HEARINGS_LISTED_ERROR_MESSAGE);
+            return errors;
+        }
         return errors;
     }
 

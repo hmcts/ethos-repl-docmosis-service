@@ -14,9 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import uk.gov.hmcts.ethos.replacement.docmosis.controllers.refdatafixes.CreateController;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.CreateService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.AdminDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.JsonMapper;
 
@@ -36,7 +36,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.controllers.refdatafixes.C
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest({CreateController.class, JsonMapper.class})
-public class CreateControllerTest {
+class CreateControllerTest {
     private String token;
 
     @MockBean

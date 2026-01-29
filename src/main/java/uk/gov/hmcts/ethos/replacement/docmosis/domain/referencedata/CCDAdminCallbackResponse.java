@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData;
+package uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
