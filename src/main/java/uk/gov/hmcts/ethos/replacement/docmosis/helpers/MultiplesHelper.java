@@ -273,7 +273,7 @@ public class MultiplesHelper {
             return multipleData.getSubMultipleCollection().stream()
                     .map(subMultipleTypeItem -> subMultipleTypeItem.getValue().getSubMultipleName())
                     .distinct()
-                .collect(Collectors.toList());
+                    .collect(Collectors.toList());
 
         } else {
 
