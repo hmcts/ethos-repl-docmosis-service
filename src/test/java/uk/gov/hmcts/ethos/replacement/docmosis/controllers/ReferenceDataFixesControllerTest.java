@@ -21,8 +21,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.controllers.refdatafixes.Referenc
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.File;

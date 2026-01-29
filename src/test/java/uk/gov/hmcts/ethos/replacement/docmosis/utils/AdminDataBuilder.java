@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.utils;
 
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.CCDAdminRequest;
 
 public class AdminDataBuilder {
 

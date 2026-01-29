@@ -327,7 +327,7 @@ public class ListingGenerationController {
         boolean invalidCharsExist = InvalidCharacterCheck.invalidCharactersExistAllListingTypes(
                 listingRequest.getCaseDetails(), errorsList);
         if (!invalidCharsExist && !hasListings(listingData)) {
-                errorsList.add("No cases with hearings have been found for your search criteria");
+            errorsList.add("No cases with hearings have been found for your search criteria");
         }
         if (errorsList.isEmpty()) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);

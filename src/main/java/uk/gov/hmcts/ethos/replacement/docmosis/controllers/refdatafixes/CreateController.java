@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.CCDAdminCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.CCDAdminRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.CreateService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminRequest;
+
 import java.util.List;
+
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrorsAdmin;
@@ -26,7 +28,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 @RequestMapping("/admin/create")
 @RequiredArgsConstructor
 public class CreateController {
-  public static final String ADMIN_CASE_NAME = "Admin";
+    public static final String ADMIN_CASE_NAME = "Admin";
 
     private final VerifyTokenService verifyTokenService;
     private final CreateService createService;
@@ -34,12 +36,12 @@ public class CreateController {
     @PostMapping(value = "/aboutToSubmitEvent", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "Create Admin Case: About to Submit Event")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accessed successfully",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDAdminCallbackResponse> handleAboutToSubmitEvent(
             @RequestHeader("Authorization") String userToken,

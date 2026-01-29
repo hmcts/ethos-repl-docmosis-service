@@ -84,8 +84,8 @@ public class HearingsHelper {
             && !isNullOrEmpty(hearingType.getJudge())
             && !isNullOrEmpty(hearingType.getAdditionalJudge())
             && hearingType.getJudge().equals(hearingType.getAdditionalJudge())) {
-                errors.add(String.format(TWO_JUDGES_ERROR, hearingType.getHearingNumber()));
-            }
+            errors.add(String.format(TWO_JUDGES_ERROR, hearingType.getHearingNumber()));
+        }
         for (DateListedTypeItem dateListedTypeItem : hearingType.getHearingDateCollection()) {
             if (isNullOrEmpty(dateListedTypeItem.getValue().getListedDate())) {
                 errors.add(HEARING_CREATION_DAY_ERROR);
@@ -94,26 +94,21 @@ public class HearingsHelper {
     }
 
     public static void updatePostponedDate(CaseData caseData) {
-        if (caseData.getHearingCollection() != null) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                    for (DateListedTypeItem dateListedTypeItem
-                            : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        var dateListedType = dateListedTypeItem.getValue();
-                        if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
-                            dateListedType.setPostponedDate(UtilHelper.formatCurrentDate2(LocalDate.now()));
-                        }
-                        if (dateListedType.getPostponedDate() != null
-                                &&
-                                (!isHearingStatusPostponed(dateListedType)
-                                        || dateListedType.getHearingStatus() == null)) {
-                            dateListedType.setPostponedDate(null);
-                        }
-                    }
-                }
-            }
+        if (caseData.getHearingCollection() == null) {
+            return;
         }
-
+        caseData.getHearingCollection().stream()
+            .filter(hearingTypeItem -> hearingTypeItem.getValue().getHearingDateCollection() != null)
+            .flatMap(hearingTypeItem -> hearingTypeItem.getValue().getHearingDateCollection().stream())
+            .map(DateListedTypeItem::getValue).forEach(dateListedType -> {
+                if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
+                    dateListedType.setPostponedDate(UtilHelper.formatCurrentDate2(LocalDate.now()));
+                }
+                if (dateListedType.getPostponedDate() != null
+                    && (!isHearingStatusPostponed(dateListedType) || dateListedType.getHearingStatus() == null)) {
+                    dateListedType.setPostponedDate(null);
+                }
+            });
     }
 
     public static List<String> hearingTimeValidation(CaseData caseData) {

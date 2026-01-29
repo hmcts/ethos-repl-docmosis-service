@@ -14,14 +14,16 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.CCDAdminCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.CCDAdminRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.CCDAdminRequest;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrorsAdmin;

@@ -53,7 +53,8 @@ public class MigrateToReformService {
                 .map(JudgementTypeItem::getValue)
                 .filter(j -> !isNullOrEmpty(j.getDateJudgmentMade())
                              && !isNullOrEmpty(j.getDateJudgmentSent()))
-                .filter(j -> LocalDate.parse(j.getDateJudgmentSent()).isBefore(LocalDate.parse(j.getDateJudgmentMade())))
+                .filter(j -> LocalDate.parse(j.getDateJudgmentSent()).isBefore(
+                    LocalDate.parse(j.getDateJudgmentMade())))
                 .forEach(j -> j.setDateJudgmentSent(j.getDateJudgmentMade()));
     }
 

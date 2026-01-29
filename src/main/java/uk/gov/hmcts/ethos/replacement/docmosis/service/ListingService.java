@@ -105,7 +105,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPO
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 
-
 @RequiredArgsConstructor
 @Slf4j
 @Service("listingService")
@@ -246,7 +245,6 @@ public class ListingService {
             int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
             for (var i = 0; i < hearingDateCollectionSize; i++) {
                 log.info("EthosCaseRef Listing: " + caseData.getEthosCaseReference());
-                hearingTypeItem.getValue().getHearingNumber();
                 log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
                 var dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
                 boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
@@ -279,15 +277,15 @@ public class ListingService {
 
     private void setCauseListVenueForNewcastle(DateListedTypeItem dateListedTypeItem,
                                                ListingTypeItem listingTypeItem) {
-        if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFCTC) &&
-            dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT() != null) {
-                listingTypeItem.getValue().setCauseListVenue(
+        if (listingTypeItem.getValue().getCauseListVenue().contains(NEWCASTLE_CFCTC)
+            && dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT() != null) {
+            listingTypeItem.getValue().setCauseListVenue(
                     dateListedTypeItem.getValue().getHearingVenueNameForNewcastleCFT());
         }
 
-        if (listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_JUSTICE_CENTRE) &&
-            dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags() != null) {
-                listingTypeItem.getValue().setCauseListVenue(
+        if (listingTypeItem.getValue().getCauseListVenue().contains(TEESSIDE_JUSTICE_CENTRE)
+            && dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags() != null) {
+            listingTypeItem.getValue().setCauseListVenue(
                     dateListedTypeItem.getValue().getHearingVenueNameForTeessideMags());
         }
     }

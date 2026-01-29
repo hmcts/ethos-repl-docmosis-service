@@ -26,7 +26,8 @@ public class RefDataFixesCcdDataSource implements RefDataFixesDataSource {
     }
 
     @Override
-    public List<SubmitEvent> getDataForInsertClaimDate(String caseTypeId, String dateFrom, String dateTo, CcdClient ccdClient) {
+    public List<SubmitEvent> getDataForInsertClaimDate(String caseTypeId, String dateFrom, String dateTo,
+                                                       CcdClient ccdClient) {
         try {
             String query = RefDataFixesElasticSearchQuery.createForInsertClaimDate(
                     dateFrom, dateTo);

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
@@ -35,6 +34,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
@@ -58,116 +58,74 @@ public class MultiplesHelper {
     }
 
     public static List<String> getCaseIds(MultipleData multipleData) {
-
-        if (multipleData.getCaseIdCollection() != null
-                && !multipleData.getCaseIdCollection().isEmpty()) {
-
+        if (isNotEmpty(multipleData.getCaseIdCollection())) {
             return multipleData.getCaseIdCollection().stream()
                     .filter(key -> key.getId() != null && !key.getId().equals("null"))
                     .map(caseId -> caseId.getValue().getEthosCaseReference())
                     .distinct()
                     .collect(Collectors.toList());
-
         } else {
-
             return new ArrayList<>();
-
         }
     }
 
     // MID EVENTS COLLECTIONS HAVE KEY AS NULL BUT WITH VALUES!
     public static List<String> getCaseIdsForMidEvent(MultipleData multipleData) {
-
-        if (multipleData.getCaseIdCollection() != null
-                && !multipleData.getCaseIdCollection().isEmpty()) {
-
+        if (isNotEmpty(multipleData.getCaseIdCollection())) {
             return multipleData.getCaseIdCollection().stream()
                     .filter(caseId -> caseId.getValue().getEthosCaseReference() != null)
                     .map(caseId -> caseId.getValue().getEthosCaseReference())
                     .distinct()
                     .collect(Collectors.toList());
-
         } else {
-
             return new ArrayList<>();
-
         }
     }
 
     public static List<CaseIdTypeItem> filterDuplicatedAndEmptyCaseIds(MultipleData multipleData) {
-
-        if (multipleData.getCaseIdCollection() != null
-                && !multipleData.getCaseIdCollection().isEmpty()) {
-
+        if (isNotEmpty(multipleData.getCaseIdCollection())) {
             return multipleData.getCaseIdCollection().stream()
                     .filter(caseId ->
                             caseId.getValue().getEthosCaseReference() != null
-                                    && !caseId.getValue().getEthosCaseReference().trim().equals(""))
+                            && !caseId.getValue().getEthosCaseReference().trim().isEmpty())
                     .filter(distinctByValue(CaseIdTypeItem::getValue))
                     .distinct()
                     .collect(Collectors.toList());
-
         } else {
-
             return new ArrayList<>();
-
         }
     }
 
     private static <T> Predicate<T> distinctByValue(Function<? super T, Object> keyExtractor) {
-
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
-
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-
     }
 
     public static String getLeadFromCaseIds(MultipleData multipleData) {
-
         List<String> caseIds = getCaseIds(multipleData);
-
         if (caseIds.isEmpty()) {
-
             return "";
-
         } else {
-
-            return caseIds.get(0);
-
+            return caseIds.getFirst();
         }
-
     }
 
     public static String getLeadFromCaseMultipleCollection(MultipleData multipleData) {
-
         List<CaseMultipleTypeItem> caseMultipleTypeItemList = multipleData.getCaseMultipleCollection();
-
         if (caseMultipleTypeItemList.isEmpty()) {
-
             return "";
-
         } else {
-
-            return caseMultipleTypeItemList.get(0).getValue().getEthosCaseRef();
-
+            return caseMultipleTypeItemList.getFirst().getValue().getEthosCaseRef();
         }
-
     }
 
     public static void addLeadToCaseIds(MultipleData multipleData, String leadCase) {
-
         var caseIdTypeItem = createCaseIdTypeItem(leadCase);
-
         if (multipleData.getCaseIdCollection() == null) {
-
             multipleData.setCaseIdCollection(new ArrayList<>(Collections.singletonList(caseIdTypeItem)));
-
         } else {
-
-            multipleData.getCaseIdCollection().add(0, caseIdTypeItem);
-
+            multipleData.getCaseIdCollection().addFirst(caseIdTypeItem);
         }
-
     }
 
     public static CaseIdTypeItem createCaseIdTypeItem(String ethosCaseReference) {
@@ -211,15 +169,22 @@ public class MultiplesHelper {
                                                     CcdClient ccdClient) throws IOException {
         List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
                 UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()), List.of(ethosRef));
-        if (CollectionUtils.isNotEmpty(submitEvents)) {
-            submitEvents.get(0).getCaseData().setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
-            CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
-                    multipleDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
+        if (isNotEmpty(submitEvents)) {
+            submitEvents.getFirst().getCaseData()
+                .setSubMultipleName(Strings.isNullOrEmpty(subMultiple) ? " " : subMultiple);
+            CCDRequest returnedRequest = ccdClient.startEventForCase(userToken,
+                UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+                multipleDetails.getJurisdiction(),
+                String.valueOf(submitEvents.getFirst().getCaseId()));
 
             CaseData returnedRequestCaseData = returnedRequest.getCaseDetails().getCaseData();
 
-            ccdClient.submitEventForCase(userToken, returnedRequestCaseData, UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
-                    multipleDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
+            ccdClient.submitEventForCase(userToken,
+                returnedRequestCaseData,
+                UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+                multipleDetails.getJurisdiction(),
+                returnedRequest,
+                String.valueOf(submitEvents.getFirst().getCaseId()));
         }
     }
 

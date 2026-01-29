@@ -327,7 +327,8 @@ public class MigrateToReformHelper {
         return hd;
     }
 
-    private static void setAberdeenHearingRoom(uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType ecmDateListedType, DateListedType reformDateListedType) {
+    private static void setAberdeenHearingRoom(uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType ecmDateListedType,
+                                               DateListedType reformDateListedType) {
         switch (ecmDateListedType.getHearingAberdeen()) {
             case "Aberdeen" -> reformDateListedType.setHearingRoom(
                     createDynamicListFromFixedList(ecmDateListedType.getHearingRoomAberdeen()));
@@ -476,7 +477,7 @@ public class MigrateToReformHelper {
         reformClaimantIndType.setClaimantDateOfBirth(claimantIndType.getClaimantDateOfBirth());
         switch (defaultIfEmpty(claimantIndType.getClaimantTitle(), "")) {
             case "Mr", "Mrs", "Miss", "Ms", "Mx" ->
-                    reformClaimantIndType.setClaimantPreferredTitle(claimantIndType.getClaimantTitle());
+                reformClaimantIndType.setClaimantPreferredTitle(claimantIndType.getClaimantTitle());
             case OTHER -> {
                 reformClaimantIndType.setClaimantPreferredTitle(OTHER);
                 reformClaimantIndType.setClaimantTitleOther(claimantIndType.getClaimantTitleOther());
@@ -513,8 +514,8 @@ public class MigrateToReformHelper {
                     documentTypeItem.getValue().setMiscDocuments("Needs updating");
                     documentTypeItem.getValue().setDocumentType("Needs updating");
                 }
-            list.add(documentTypeItem);
-        });
+                list.add(documentTypeItem);
+            });
         return list;
     }
 
@@ -535,7 +536,7 @@ public class MigrateToReformHelper {
             case BRISTOL_CASE_TYPE_ID, LEEDS_CASE_TYPE_ID, LONDON_CENTRAL_CASE_TYPE_ID, LONDON_EAST_CASE_TYPE_ID,
                  LONDON_SOUTH_CASE_TYPE_ID, MANCHESTER_CASE_TYPE_ID, MIDLANDS_EAST_CASE_TYPE_ID,
                  MIDLANDS_WEST_CASE_TYPE_ID, NEWCASTLE_CASE_TYPE_ID, WALES_CASE_TYPE_ID, WATFORD_CASE_TYPE_ID ->
-                    ET_ENGLAND_AND_WALES;
+                ET_ENGLAND_AND_WALES;
             case SCOTLAND_CASE_TYPE_ID -> ET_SCOTLAND;
             default -> throw new IllegalArgumentException("Case type not supported");
         };
@@ -547,7 +548,8 @@ public class MigrateToReformHelper {
         return mapper.convertValue(object, classType);
     }
 
-    private static void calculateJurisdictionDisposalDate(JudgementType judgement, String jurCode, Map<String, LocalDate> judgmentDisposalDate) {
+    private static void calculateJurisdictionDisposalDate(JudgementType judgement, String jurCode,
+                                                          Map<String, LocalDate> judgmentDisposalDate) {
         if (!judgmentDisposalDate.containsKey(jurCode)) {
             judgmentDisposalDate.put(jurCode, LocalDate.parse(judgement.getDateJudgmentSent()));
         } else {
@@ -570,7 +572,8 @@ public class MigrateToReformHelper {
                                      && !isNullOrEmpty(judgement.getDateJudgmentSent()))
                 .forEach(judgement -> judgement.getJurisdictionCodes().stream()
                         .map(jur -> jur.getValue().getJuridictionCodesList())
-                        .forEach(jurCode -> calculateJurisdictionDisposalDate(judgement, jurCode, judgmentDisposalDate)));
+                        .forEach(jurCode -> calculateJurisdictionDisposalDate(judgement, jurCode,
+                            judgmentDisposalDate)));
 
         caseData.getJurCodesCollection().stream()
             .map(JurCodesTypeItem::getValue)

@@ -117,7 +117,8 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_DEPOSIT_ORDER_URL = "/dynamicDepositOrder";
     private static final String DYNAMIC_JUDGMENT_URL = "/dynamicJudgments";
     private static final String JUDGEMENT_SUBMITTED_URL = "/judgementSubmitted";
-    private static final String REINSTATE_CLOSED_CASE_MID_EVENT_VALIDATION_URL = "/reinstateClosedCaseMidEventValidation";
+    private static final String REINSTATE_CLOSED_CASE_MID_EVENT_VALIDATION_URL =
+        "/reinstateClosedCaseMidEventValidation";
     private static final String CASE_TRANSFER_TO_REFORM_ECM_URL = "/caseTransferToReformECM";
 
     @Autowired
@@ -181,7 +182,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     private JsonNode requestContent2;
     private JsonNode requestContent3;
     private JsonNode requestContentWithNoHearings;
-    private JsonNode validHearingStatusCaseDetails;
     private SubmitEvent submitEvent;
     private DefaultValues defaultValues;
 
@@ -195,8 +195,6 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .getResource("/exampleV3.json")).toURI()));
         requestContentWithNoHearings = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
                 .getResource("/exampleV4.json")).toURI()));
-        validHearingStatusCaseDetails = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
-                .getResource("/CaseCloseEvent_ValidHearingStatusCaseDetails.json")).toURI()));
     }
 
     @Before

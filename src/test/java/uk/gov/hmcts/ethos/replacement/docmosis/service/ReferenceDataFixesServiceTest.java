@@ -18,8 +18,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.helper.CaseEventDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminData;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.refData.AdminDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminDetails;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
