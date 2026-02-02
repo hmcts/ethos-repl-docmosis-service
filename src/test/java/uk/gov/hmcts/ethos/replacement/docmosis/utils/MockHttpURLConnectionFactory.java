@@ -8,6 +8,7 @@ import java.net.URLStreamHandlerFactory;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+@SuppressWarnings("HideUtilityClassConstructor")
 public class MockHttpURLConnectionFactory {
 
     private static final HttpUrlStreamHandler httpUrlStreamHandler;

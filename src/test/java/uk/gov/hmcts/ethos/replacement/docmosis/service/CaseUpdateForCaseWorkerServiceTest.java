@@ -97,27 +97,36 @@ public class CaseUpdateForCaseWorkerServiceTest {
 
     @Test(expected = Exception.class)
     public void caseCreationManchesterRequestException() throws IOException {
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        when(defaultValuesReaderService.getDefaultValues( "", manchesterCaseDetails.getCaseTypeId())).thenReturn(manchesterDefaultValues);
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString()))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString()))
+            .thenReturn(submitEvent);
+        when(defaultValuesReaderService.getDefaultValues("", manchesterCaseDetails.getCaseTypeId()))
+            .thenReturn(manchesterDefaultValues);
         caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");
     }
 
     @Test
     public void caseCreationManchesterRequest() throws IOException {
         manchesterCcdRequest.getCaseDetails().getCaseData().setManagingOffice("Manchester");
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(manchesterCcdRequest);
-        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        when(defaultValuesReaderService.getDefaultValues("Manchester", manchesterCaseDetails.getCaseTypeId())).thenReturn(manchesterDefaultValues);
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(manchesterCcdRequest);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString()))
+            .thenReturn(submitEvent);
+        when(defaultValuesReaderService.getDefaultValues("Manchester", manchesterCaseDetails.getCaseTypeId()))
+            .thenReturn(manchesterDefaultValues);
         SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");
         assertEquals(submitEvent, submitEvent1);
     }
 
     @Test
     public void caseCreationGlasgowRequest() throws IOException {
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(glasgowCcdRequest);
-        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        when(defaultValuesReaderService.getDefaultValues( "", glasgowCaseDetails.getCaseTypeId())).thenReturn(glasgowDefaultValues);
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(glasgowCcdRequest);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString()))
+            .thenReturn(submitEvent);
+        when(defaultValuesReaderService.getDefaultValues("", glasgowCaseDetails.getCaseTypeId()))
+            .thenReturn(glasgowDefaultValues);
         SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(glasgowCcdRequest, "authToken");
         assertEquals(submitEvent, submitEvent1);
     }

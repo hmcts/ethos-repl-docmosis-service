@@ -49,7 +49,7 @@ public class MultipleAmendLeadCaseServiceTest {
                 errors,
                 multipleObjects);
         assertEquals(1, errors.size());
-        assertEquals(CASE_IS_NOT_IN_MULTIPLE_ERROR, errors.get(0));
+        assertEquals(CASE_IS_NOT_IN_MULTIPLE_ERROR, errors.getFirst());
     }
 
     @Test

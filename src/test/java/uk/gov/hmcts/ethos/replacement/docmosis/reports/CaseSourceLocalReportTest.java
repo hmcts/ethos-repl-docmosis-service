@@ -34,7 +34,7 @@ public class CaseSourceLocalReportTest {
     }
 
     private void verifyReportHeaderIsZero(ListingData listingData) {
-        AdhocReportType adhocReportType = listingData.getLocalReportsSummary().get(0).getValue();
+        AdhocReportType adhocReportType = listingData.getLocalReportsSummary().getFirst().getValue();
         assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getEt1OnlineTotalCases()) ? 0 :
             Integer.parseInt(adhocReportType.getEt1OnlineTotalCases()));
         assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getMigratedTotalCases()) ? 0 :
@@ -71,7 +71,7 @@ public class CaseSourceLocalReportTest {
         CaseSourceLocalReport caseSourceLocalReport = new CaseSourceLocalReport();
         ListingData reportListingData = caseSourceLocalReport.generateReportData(listingDetails, submitEvents);
 
-        AdhocReportType adhocReportType = reportListingData.getLocalReportsSummary().get(0).getValue();
+        AdhocReportType adhocReportType = reportListingData.getLocalReportsSummary().getFirst().getValue();
         assertEquals(4, Strings.isNullOrEmpty(adhocReportType.getTotalCases()) ? 0 : Integer.parseInt(
             adhocReportType.getTotalCases()));
         assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getMigratedTotalCases()) ? 0 : Integer.parseInt(

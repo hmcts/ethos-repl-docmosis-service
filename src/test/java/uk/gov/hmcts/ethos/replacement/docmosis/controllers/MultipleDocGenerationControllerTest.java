@@ -89,7 +89,8 @@ public class MultipleDocGenerationControllerTest {
     @Test
     public void printSchedule() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        when(multipleScheduleService.bulkScheduleLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class))).thenReturn(documentInfo);
+        when(multipleScheduleService.bulkScheduleLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class),
+            isA(List.class))).thenReturn(documentInfo);
         mvc.perform(post(PRINT_SCHEDULE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

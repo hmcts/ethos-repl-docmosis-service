@@ -8,6 +8,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
@@ -17,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
@@ -50,7 +50,7 @@ public class TimeToFirstHearingReportTest {
         assertEquals(0.00, Strings.isNullOrEmpty(adhocReportType.getTotal26wkPerCent())
                 ? 0.00 : Float.parseFloat(adhocReportType.getTotal26wkPerCent()), .00);
         assertEquals(0.00, Strings.isNullOrEmpty(adhocReportType.getTotalx26wkPerCent())
-                ? 0.00 : Float.parseFloat(adhocReportType.getTotalx26wkPerCent()),.00);
+                ? 0.00 : Float.parseFloat(adhocReportType.getTotalx26wkPerCent()), .00);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class TimeToFirstHearingReportTest {
 
         listingDetails.setCaseData(caseData);
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        submitEvents.add(createSubmitEvent(Collections.emptyList(), CONCILIATION_TRACK_FAST_TRACK, "1970-01-01"));
+        submitEvents.add(createSubmitEvent(Collections.emptyList(), "1970-01-01"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData listingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
@@ -78,11 +78,11 @@ public class TimeToFirstHearingReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2020-01-01T00:00:00",
-                HEARING_STATUS_HEARD);
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2020-01-01T00:00:00"
+        );
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings, CONCILIATION_TRACK_FAST_TRACK, "2021-01-01T00:00:00"));
+        submitEvents.add(createSubmitEvent(hearings, "2021-01-01T00:00:00"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
@@ -99,11 +99,11 @@ public class TimeToFirstHearingReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000",
-                HEARING_STATUS_HEARD);
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000"
+        );
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "1970-04-01"));
+        submitEvents.add(createSubmitEvent(hearings, "1970-04-01"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
@@ -130,11 +130,11 @@ public class TimeToFirstHearingReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-01-01T00:00:00.000",
-                HEARING_STATUS_HEARD);
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-01-01T00:00:00.000"
+        );
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2020-04-01"));
+        submitEvents.add(createSubmitEvent(hearings, "2020-04-01"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
@@ -148,29 +148,28 @@ public class TimeToFirstHearingReportTest {
     }
 
     private SubmitEvent createSubmitEvent(List<HearingTypeItem> hearingCollection,
-                                          String conciliationTrack, String receiptDate) {
-        SubmitEvent submitEvent = new SubmitEvent();
+                                          String receiptDate) {
         CaseData caseData = new CaseData();
-        caseData.setConciliationTrack(conciliationTrack);
+        caseData.setConciliationTrack(Constants.CONCILIATION_TRACK_FAST_TRACK);
         caseData.setReceiptDate(receiptDate);
         caseData.setHearingCollection(hearingCollection);
+        SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseData(caseData);
         return submitEvent;
     }
 
-    private DateListedTypeItem createHearingDateListed(String listedDate, String status) {
-        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+    private DateListedTypeItem createHearingDateListed(String listedDate) {
         DateListedType dateListedType = new DateListedType();
         dateListedType.setListedDate(listedDate);
-        dateListedType.setHearingStatus(status);
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType.setHearingCaseDisposed(YES);
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         dateListedTypeItem.setValue(dateListedType);
 
         return dateListedTypeItem;
     }
 
     private HearingTypeItem createHearing(String type, DateListedTypeItem... dateListedTypeItems) {
-        HearingTypeItem hearingTypeItem = new HearingTypeItem();
         HearingType hearingType = new HearingType();
         hearingType.setHearingType(type);
 
@@ -178,6 +177,7 @@ public class TimeToFirstHearingReportTest {
         Collections.addAll(hearingDateCollection, dateListedTypeItems);
 
         hearingType.setHearingDateCollection(hearingDateCollection);
+        HearingTypeItem hearingTypeItem = new HearingTypeItem();
         hearingTypeItem.setValue(hearingType);
         return hearingTypeItem;
     }

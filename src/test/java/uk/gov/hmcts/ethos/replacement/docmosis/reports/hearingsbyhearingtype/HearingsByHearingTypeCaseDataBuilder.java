@@ -166,18 +166,11 @@ public class HearingsByHearingTypeCaseDataBuilder {
         List<HearingTypeItem> hearings = new ArrayList<>();
         var dateListedTypeItem = createHearingDateListed("2022-01-17T00:00:00.000", HEARING_STATUS_HEARD);
         switch (propertyToBeNull) {
-            case "Start":
-                dateListedTypeItem.getValue().setHearingTimingStart(null);
-                break;
-            case "Finish":
-                dateListedTypeItem.getValue().setHearingTimingFinish(null);
-                break;
-            case "Break":
-                dateListedTypeItem.getValue().setHearingTimingBreak(null);
-                break;
-            case "Resume":
-                dateListedTypeItem.getValue().setHearingTimingResume(null);
-                break;
+            case "Start" -> dateListedTypeItem.getValue().setHearingTimingStart(null);
+            case "Finish" -> dateListedTypeItem.getValue().setHearingTimingFinish(null);
+            case "Break" -> dateListedTypeItem.getValue().setHearingTimingBreak(null);
+            case "Resume" -> dateListedTypeItem.getValue().setHearingTimingResume(null);
+            default -> throw new IllegalArgumentException("Invalid property to set to null: " + propertyToBeNull);
         }
         var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Tel Con", dateListedTypeItem);
         hearings.add(hearingTypeItem);
@@ -197,6 +190,5 @@ public class HearingsByHearingTypeCaseDataBuilder {
         submitEventsWithoutDates.add(createSubmitEvent(hearings, "2", "lead2", "multiRef", "subMulti"));
         return submitEventsWithoutDates;
     }
-
 
 }

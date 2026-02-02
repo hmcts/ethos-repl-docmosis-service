@@ -61,7 +61,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_USERS_CASE_
 
 @RunWith(Parameterized.class)
 @SpringBootTest(classes = {
-        TribunalOfficesService.class,
+    TribunalOfficesService.class,
 })
 @EnableConfigurationProperties({CaseDefaultValuesConfiguration.class, TribunalOfficesConfiguration.class})
 public class TribunalOfficeServiceTest {
@@ -72,7 +72,7 @@ public class TribunalOfficeServiceTest {
     @Autowired
     TribunalOfficesService tribunalOfficesService;
 
-    private final static Object[][] TEST_CASES = new Object[][] {
+    private static final Object[][] TEST_CASES = new Object[][] {
             { MANCHESTER_DEV_CASE_TYPE_ID, null, "M3 2JA" },
             { MANCHESTER_USERS_CASE_TYPE_ID, null, "M3 2JA" },
             { MANCHESTER_CASE_TYPE_ID, null, "M3 2JA" },

@@ -82,6 +82,7 @@ public class MultipleUpdateServiceTest {
                 multipleObjectsFlags);
         verifyNoMoreInteractions(multipleBatchUpdate2Service);
     }
+
     @Test
     public void bulkUpdate3Logic() {
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))

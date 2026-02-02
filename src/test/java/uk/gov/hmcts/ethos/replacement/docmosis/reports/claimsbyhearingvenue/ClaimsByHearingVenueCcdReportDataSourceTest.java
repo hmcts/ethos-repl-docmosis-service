@@ -30,7 +30,7 @@ public class ClaimsByHearingVenueCcdReportDataSourceTest {
         var ccdReportDataSource = new ClaimsByHearingVenueCcdReportDataSource(authToken, ccdClient);
         var results = ccdReportDataSource.getData(caseTypeId, fromDate, toDate);
         assertEquals(2, results.size());
-        assertEquals(submitEventOne, results.get(0));
+        assertEquals(submitEventOne, results.getFirst());
         assertEquals(submitEventTwo, results.get(1));
     }
 

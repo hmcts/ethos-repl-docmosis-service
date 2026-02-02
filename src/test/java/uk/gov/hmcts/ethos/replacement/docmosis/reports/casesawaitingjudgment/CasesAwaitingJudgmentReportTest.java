@@ -210,8 +210,8 @@ public class CasesAwaitingJudgmentReportTest {
         assertEquals(6, reportData.getReportDetails().size());
         assertEquals(3, reportData.getReportSummary().getPositionTypes().size());
 
-        assertEquals(positionType3, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeName());
-        assertEquals(1, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeCount());
+        assertEquals(positionType3, reportData.getReportSummary().getPositionTypes().getFirst().getPositionTypeName());
+        assertEquals(1, reportData.getReportSummary().getPositionTypes().getFirst().getPositionTypeCount());
         assertEquals(positionType2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeName());
         assertEquals(2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeCount());
         assertEquals(positionType1, reportData.getReportSummary().getPositionTypes().get(2).getPositionTypeName());
@@ -385,7 +385,7 @@ public class CasesAwaitingJudgmentReportTest {
         assertCommonValues(reportData);
         assertEquals(4, reportData.getReportDetails().size());
 
-        assertEquals("Case 4", reportData.getReportDetails().get(0).getCaseNumber());
+        assertEquals("Case 4", reportData.getReportDetails().getFirst().getCaseNumber());
         assertEquals("Case 2", reportData.getReportDetails().get(1).getCaseNumber());
         assertEquals("Case 3", reportData.getReportDetails().get(2).getCaseNumber());
         assertEquals("Case 1", reportData.getReportDetails().get(3).getCaseNumber());

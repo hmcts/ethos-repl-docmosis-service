@@ -12,7 +12,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
@@ -32,6 +31,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper.createDynamicHearingList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleLetterServiceTest {
@@ -76,7 +76,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenReturn(new DocumentInfo());
         multipleLetterService.bulkLetterLogic(userToken,
@@ -98,7 +98,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenThrow(new IOException());
         multipleLetterService.bulkLetterLogic(userToken,
@@ -120,7 +120,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails,
                 errors,
                 false);
-        assertEquals(NO_CASES_SEARCHED, errors.get(0));
+        assertEquals(NO_CASES_SEARCHED, errors.getFirst());
     }
 
     @Test
@@ -138,7 +138,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenReturn(new DocumentInfo());
         multipleLetterService.bulkLetterLogic(userToken,
@@ -170,7 +170,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenReturn(new DocumentInfo());
         multipleLetterService.bulkLetterLogic(userToken,
@@ -210,15 +210,14 @@ public class MultipleLetterServiceTest {
 
     @Test
     public void dynamicMultipleLetters() {
-        MultipleUtil.addHearingToCaseData(submitEvents.get(0).getCaseData());
-        var hearingFromCase = DynamicListHelper.createDynamicHearingList(submitEvents.get(0).getCaseData()).get(0);
+        MultipleUtil.addHearingToCaseData(submitEvents.getFirst().getCaseData());
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
         multipleLetterService.dynamicMultipleLetters(userToken, multipleDetails, errors);
         verify(singleCasesReadingService, times(1)).retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -226,8 +225,9 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseData().getMultipleSource());
         assertEquals(1, multipleDetails.getCaseData().getCorrespondenceType().getDynamicHearingNumber()
                 .getListItems().size());
+        var hearingFromCase = createDynamicHearingList(submitEvents.getFirst().getCaseData()).getFirst();
         assertEquals(hearingFromCase, multipleDetails.getCaseData().getCorrespondenceType().getDynamicHearingNumber()
-                .getListItems().get(0));
+                .getListItems().getFirst());
     }
 
 }

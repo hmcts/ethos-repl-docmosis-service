@@ -23,7 +23,7 @@ public class EccReportTest {
     EccReport eccReport;
     EccReportCaseDataBuilder caseDataBuilder = new EccReportCaseDataBuilder();
     List<EccReportSubmitEvent> submitEvents = new ArrayList<>();
-    static final LocalDateTime BASE_DATE = LocalDateTime.of(2022, 1, 1, 0, 0,0);
+    static final LocalDateTime BASE_DATE = LocalDateTime.of(2022, 1, 1, 0, 0, 0);
     static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
     static final String DATE_TO = BASE_DATE.plusDays(15).format(OLD_DATE_TIME_PATTERN);
 
@@ -60,12 +60,13 @@ public class EccReportTest {
         caseDataBuilder.withEccs();
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        var reportData = eccReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        var reportData = eccReport.generateReport(
+            new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
-        assertEquals("2", reportData.getReportDetails().get(0).getRespondentsCount());
-        assertEquals("Accepted", reportData.getReportDetails().get(0).getState());
-        assertEquals("2", reportData.getReportDetails().get(0).getEccCasesCount());
-        assertEquals("ecc1\necc2", reportData.getReportDetails().get(0).getEccCaseList());
+        assertEquals("2", reportData.getReportDetails().getFirst().getRespondentsCount());
+        assertEquals("Accepted", reportData.getReportDetails().getFirst().getState());
+        assertEquals("2", reportData.getReportDetails().getFirst().getEccCasesCount());
+        assertEquals("ecc1\necc2", reportData.getReportDetails().getFirst().getEccCaseList());
     }
 
     private void assertCommonValues(EccReportData reportData) {

@@ -37,21 +37,24 @@ public class CreateUpdatesBusSenderTest {
     @Before
     public void setUp() {
         createUpdatesBusSender = new CreateUpdatesBusSender(serviceBusSender);
-        ethosCaseRefCollection = Arrays.asList("4150001/2020", "4150002/2020", "4150003/2020", "4150004/2020", "4150005/2020");
+        ethosCaseRefCollection = Arrays.asList("4150001/2020", "4150002/2020", "4150003/2020",
+            "4150004/2020", "4150005/2020");
         createUpdatesDto = getCreateUpdatesDto(ethosCaseRefCollection);
         creationDataModel = getCreationDataModel(ethosCaseRefCollection);
     }
 
     @Test
     public void runMainMethodTest() {
-        createUpdatesBusSender.sendUpdatesToQueue(createUpdatesDto, creationDataModel, new ArrayList<>(), String.valueOf(ethosCaseRefCollection.size()));
+        createUpdatesBusSender.sendUpdatesToQueue(createUpdatesDto, creationDataModel, new ArrayList<>(),
+            String.valueOf(ethosCaseRefCollection.size()));
     }
 
     @Test
     public void runMainMethodTestException() {
         doThrow(new InternalException(ERROR_MESSAGE))
                 .when(serviceBusSender).sendMessage(any());
-        createUpdatesBusSender.sendUpdatesToQueue(createUpdatesDto, creationDataModel, new ArrayList<>(), String.valueOf(ethosCaseRefCollection.size()));
+        createUpdatesBusSender.sendUpdatesToQueue(createUpdatesDto, creationDataModel, new ArrayList<>(),
+            String.valueOf(ethosCaseRefCollection.size()));
     }
 
     private CreateUpdatesDto getCreateUpdatesDto(List<String> ethosCaseRefCollection) {
@@ -66,7 +69,7 @@ public class CreateUpdatesBusSenderTest {
 
     private CreationDataModel getCreationDataModel(List<String> ethosCaseRefCollection) {
         return CreationDataModel.builder()
-                .lead(ethosCaseRefCollection.get(0))
+                .lead(ethosCaseRefCollection.getFirst())
                 .multipleRef("4150001")
                 .build();
     }

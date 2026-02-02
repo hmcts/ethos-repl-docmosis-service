@@ -33,6 +33,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.ADDRESS_LABELS_RESULT_SELECTION_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.customiseSelectedAddressesMultiples;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.midValidateAddressLabelsErrors;
 
 public class LabelsHelperTest {
 
@@ -51,41 +53,40 @@ public class LabelsHelperTest {
 
     @Test
     public void customiseSelectedAddressesMultiplesEmptySelectedAddresses() {
-        assertNull(LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents,
-                multipleDetails.getCaseData()));
+        assertNull(customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData()));
     }
 
     @Test
-    public void customiseSelectedAddressesMultiples() {
+    public void customiseSelectedAddressesMultiplesTwoSelectedAddresses() {
         multipleDetails.getCaseData().setAddressLabelsSelectionTypeMSL(
                 new ArrayList<>(Arrays.asList(CLAIMANT_ADDRESS_LABEL, CLAIMANT_REP_ADDRESS_LABEL)));
         assertEquals(2, Objects.requireNonNull(
-                LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
+                customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
     }
 
     @Test
     public void customiseSelectedAddressesMultiplesClaimant() {
-        labelPayloadEvents.get(0).getLabelPayloadES().setClaimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT);
-        labelPayloadEvents.get(0).getLabelPayloadES().setClaimantType(null);
+        labelPayloadEvents.getFirst().getLabelPayloadES().setClaimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT);
+        labelPayloadEvents.getFirst().getLabelPayloadES().setClaimantType(null);
         multipleDetails.getCaseData().setAddressLabelsSelectionTypeMSL(
                 new ArrayList<>(Arrays.asList(CLAIMANT_ADDRESS_LABEL, CLAIMANT_REP_ADDRESS_LABEL)));
         assertEquals(2,
                 Objects.requireNonNull(
-                        LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
+                        customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
     }
 
     @Test
     public void customiseSelectedAddressesMultiplesClaimantRep() {
-        labelPayloadEvents.get(0).getLabelPayloadES().setClaimantRepresentedQuestion(YES);
+        labelPayloadEvents.getFirst().getLabelPayloadES().setClaimantRepresentedQuestion(YES);
         RepresentedTypeC representedTypeC = new RepresentedTypeC();
         representedTypeC.setNameOfRepresentative("Name");
         representedTypeC.setRepresentativeReference("1234");
-        labelPayloadEvents.get(0).getLabelPayloadES().setRepresentativeClaimantType(representedTypeC);
+        labelPayloadEvents.getFirst().getLabelPayloadES().setRepresentativeClaimantType(representedTypeC);
         multipleDetails.getCaseData().setAddressLabelsSelectionTypeMSL(
                 new ArrayList<>(Arrays.asList(CLAIMANT_ADDRESS_LABEL, CLAIMANT_REP_ADDRESS_LABEL)));
         assertEquals(3,
                 Objects.requireNonNull(
-                        LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
+                        customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
     }
 
     @Test
@@ -94,7 +95,7 @@ public class LabelsHelperTest {
                 new ArrayList<>(Collections.singletonList(RESPONDENTS_ADDRESS__LABEL)));
         assertEquals(2,
                 Objects.requireNonNull(
-                        LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
+                        customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
     }
 
     @Test
@@ -107,32 +108,32 @@ public class LabelsHelperTest {
         representedTypeRItem.setValue(representedTypeR);
         List<RepresentedTypeRItem> repCollection = new ArrayList<>();
         repCollection.add(representedTypeRItem);
-        labelPayloadEvents.get(0).getLabelPayloadES().setRepCollection(repCollection);
+        labelPayloadEvents.getFirst().getLabelPayloadES().setRepCollection(repCollection);
         multipleDetails.getCaseData().setAddressLabelsSelectionTypeMSL(
                 new ArrayList<>(Arrays.asList(CLAIMANT_ADDRESS_LABEL, RESPONDENTS_REPS_ADDRESS__LABEL)));
         assertEquals(3,
                 Objects.requireNonNull(
-                        LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
+                        customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
     }
 
     @Test
     public void validateNumberOfSelectedLabels() {
-        List<String> errors = new ArrayList<>();
         CorrespondenceType correspondenceType = new CorrespondenceType();
         correspondenceType.setTopLevelDocuments(ADDRESS_LABELS_TEMPLATE);
         multipleDetails.getCaseData().setCorrespondenceType(correspondenceType);
         addressLabelsAttributesType.setNumberOfSelectedLabels("0");
         multipleDetails.getCaseData().setAddressLabelsAttributesType(addressLabelsAttributesType);
+        List<String> errors = new ArrayList<>();
         LabelsHelper.validateNumberOfSelectedLabels(multipleDetails.getCaseData(), errors);
         assertEquals(1, errors.size());
-        assertEquals(ADDRESS_LABELS_RESULT_SELECTION_ERROR, errors.get(0));
+        assertEquals(ADDRESS_LABELS_RESULT_SELECTION_ERROR, errors.getFirst());
     }
 
     @Test
     public void midValidateAddressLabelsMultiple() {
         addressLabelsAttributesType.setNumberOfSelectedLabels("2");
         addressLabelsAttributesType.setNumberOfCopies("1");
-        List<String> errors = LabelsHelper.midValidateAddressLabelsErrors(addressLabelsAttributesType, MULTIPLE_CASE_TYPE);
+        List<String> errors = midValidateAddressLabelsErrors(addressLabelsAttributesType, MULTIPLE_CASE_TYPE);
         assertEquals(0, errors.size());
     }
 
@@ -140,34 +141,34 @@ public class LabelsHelperTest {
     public void midValidateAddressLabelsMultipleErrors() {
         addressLabelsAttributesType.setNumberOfSelectedLabels("20000");
         addressLabelsAttributesType.setNumberOfCopies("3");
-        List<String> errors = LabelsHelper.midValidateAddressLabelsErrors(addressLabelsAttributesType, MULTIPLE_CASE_TYPE);
+        List<String> errors = midValidateAddressLabelsErrors(addressLabelsAttributesType, MULTIPLE_CASE_TYPE);
         assertEquals(1, errors.size());
-        assertEquals(ADDRESS_LABELS_LABELS_LIMIT_ERROR + " of " + MAX_NUMBER_LABELS, errors.get(0));
+        assertEquals(ADDRESS_LABELS_LABELS_LIMIT_ERROR + " of " + MAX_NUMBER_LABELS, errors.getFirst());
     }
 
     @Test
     public void midValidateAddressLabelsSelectErrors() {
         addressLabelsAttributesType.setNumberOfSelectedLabels("0");
-        List<String> errors = LabelsHelper.midValidateAddressLabelsErrors(addressLabelsAttributesType, SINGLE_CASE_TYPE);
+        List<String> errors = midValidateAddressLabelsErrors(addressLabelsAttributesType, SINGLE_CASE_TYPE);
         assertEquals(1, errors.size());
-        assertEquals(ADDRESS_LABELS_SELECT_ERROR, errors.get(0));
+        assertEquals(ADDRESS_LABELS_SELECT_ERROR, errors.getFirst());
     }
 
     @Test
     public void midValidateAddressLabelsCopiesErrors() {
         addressLabelsAttributesType.setNumberOfSelectedLabels("2");
         addressLabelsAttributesType.setNumberOfCopies(".");
-        List<String> errors = LabelsHelper.midValidateAddressLabelsErrors(addressLabelsAttributesType, SINGLE_CASE_TYPE);
+        List<String> errors = midValidateAddressLabelsErrors(addressLabelsAttributesType, SINGLE_CASE_TYPE);
         assertEquals(1, errors.size());
-        assertEquals(ADDRESS_LABELS_COPIES_ERROR, errors.get(0));
+        assertEquals(ADDRESS_LABELS_COPIES_ERROR, errors.getFirst());
     }
 
     @Test
     public void midValidateAddressLabelsLimitNumberCopiesErrors() {
         addressLabelsAttributesType.setNumberOfSelectedLabels("2");
         addressLabelsAttributesType.setNumberOfCopies("11");
-        List<String> errors = LabelsHelper.midValidateAddressLabelsErrors(addressLabelsAttributesType, SINGLE_CASE_TYPE);
+        List<String> errors = midValidateAddressLabelsErrors(addressLabelsAttributesType, SINGLE_CASE_TYPE);
         assertEquals(1, errors.size());
-        assertEquals(ADDRESS_LABELS_COPIES_LESS_10_ERROR, errors.get(0));
+        assertEquals(ADDRESS_LABELS_COPIES_LESS_10_ERROR, errors.getFirst());
     }
 }

@@ -41,7 +41,7 @@ public class SubMultipleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Sub Multiple SubMultiple already exists", errors.get(0));
+        assertEquals("Sub Multiple SubMultiple already exists", errors.getFirst());
 
     }
 
@@ -57,7 +57,7 @@ public class SubMultipleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(2, errors.size());
-        assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.get(0));
+        assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.getFirst());
         assertEquals("Sub Multiple SubMultiple already exists", errors.get(1));
 
     }
@@ -75,7 +75,7 @@ public class SubMultipleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.get(0));
+        assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.getFirst());
 
     }
 
@@ -90,7 +90,7 @@ public class SubMultipleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.get(0));
+        assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.getFirst());
 
     }
 

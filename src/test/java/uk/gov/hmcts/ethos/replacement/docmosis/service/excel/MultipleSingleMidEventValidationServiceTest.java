@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
@@ -52,16 +53,17 @@ public class MultipleSingleMidEventValidationServiceTest {
     @Test
     public void multipleSingleValidationLogic() {
 
-        multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
+        MultipleData multipleData = multipleDetails.getCaseData();
+        multipleData.setBatchUpdateCase("245000/2020");
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getBatchUpdateCase(),
-                multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEventList.get(0));
+                multipleData.getBatchUpdateCase(),
+                multipleData.getMultipleSource()))
+                .thenReturn(submitEventList.getFirst());
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,
-                multipleDetails.getCaseData(),
+            multipleData,
                 errors))
                 .thenReturn(caseIdCollection);
 
@@ -71,10 +73,10 @@ public class MultipleSingleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(0, errors.size());
-        assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateClaimantRep().getValue().getCode());
-        assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateJurisdiction().getValue().getLabel());
-        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
-        assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateRespondentRep().getValue().getLabel());
+        assertEquals(SELECT_NONE_VALUE, multipleData.getBatchUpdateClaimantRep().getValue().getCode());
+        assertEquals(SELECT_NONE_VALUE, multipleData.getBatchUpdateJurisdiction().getValue().getLabel());
+        assertEquals(2, multipleData.getBatchUpdateRespondent().getListItems().size());
+        assertEquals(SELECT_NONE_VALUE, multipleData.getBatchUpdateRespondentRep().getValue().getLabel());
 
     }
 
@@ -94,7 +96,7 @@ public class MultipleSingleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Multiple does not have the case: 245010/2020", errors.get(0));
+        assertEquals("Multiple does not have the case: 245010/2020", errors.getFirst());
 
     }
 
@@ -110,7 +112,7 @@ public class MultipleSingleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Multiple does not have cases", errors.get(0));
+        assertEquals("Multiple does not have cases", errors.getFirst());
 
     }
 
@@ -135,19 +137,20 @@ public class MultipleSingleMidEventValidationServiceTest {
 
         RepresentedTypeC representedTypeC = new RepresentedTypeC();
         representedTypeC.setNameOfRepresentative("Rep");
-        submitEventList.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
+        submitEventList.getFirst().getCaseData().setRepresentativeClaimantType(representedTypeC);
 
         JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
         JurCodesType jurCodesType = new JurCodesType();
         jurCodesType.setJuridictionCodesList("AA");
         jurCodesTypeItem.setValue(jurCodesType);
-        submitEventList.get(0).getCaseData().setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+        submitEventList.getFirst().getCaseData().setJurCodesCollection(
+            new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEventList.get(0));
+                .thenReturn(submitEventList.getFirst());
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,
                 multipleDetails.getCaseData(),
@@ -169,26 +172,27 @@ public class MultipleSingleMidEventValidationServiceTest {
 
     /**
      * This test is for the scenario where CCD returns the case data with a
-     * representativeClaimantType as a RepresentedTypeC object with no values set
+     * representativeClaimantType as a RepresentedTypeC object with no values set.
      */
     @Test
     public void shouldHandleRepresentativeClaimantWithNoValues() {
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
 
         RepresentedTypeC representedTypeC = new RepresentedTypeC();
-        submitEventList.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
+        submitEventList.getFirst().getCaseData().setRepresentativeClaimantType(representedTypeC);
 
         JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
         JurCodesType jurCodesType = new JurCodesType();
         jurCodesType.setJuridictionCodesList("AA");
         jurCodesTypeItem.setValue(jurCodesType);
-        submitEventList.get(0).getCaseData().setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+        submitEventList.getFirst().getCaseData().setJurCodesCollection(
+            new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEventList.get(0));
+                .thenReturn(submitEventList.getFirst());
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,
                 multipleDetails.getCaseData(),

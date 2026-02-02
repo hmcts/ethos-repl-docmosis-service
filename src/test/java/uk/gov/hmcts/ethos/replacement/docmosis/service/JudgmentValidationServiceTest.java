@@ -23,14 +23,14 @@ class JudgmentValidationServiceTest {
     private CaseDetails caseDetails1;
 
     @BeforeEach
-    public void setup() throws Exception {
+    void setup() throws Exception {
         judgmentValidationService = new JudgmentValidationService();
-        caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
+        caseDetails1 = generateCaseDetails();
     }
 
-    private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
+    private CaseDetails generateCaseDetails() throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource(jsonFileName)).toURI())));
+                .getResource("caseDetailsTest1.json")).toURI())));
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, CaseDetails.class);
     }
@@ -38,9 +38,13 @@ class JudgmentValidationServiceTest {
     @Test
     void populateJudgmentDateOfHearingTest() throws ParseException {
         DynamicJudgements.dynamicJudgements(caseDetails1.getCaseData());
-        caseDetails1.getCaseData().getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().setValue(caseDetails1.getCaseData().getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().getListItems().get(0));
+        caseDetails1.getCaseData().getJudgementCollection().getFirst().getValue()
+            .getDynamicJudgementHearing().setValue(
+                caseDetails1.getCaseData().getJudgementCollection().getFirst().getValue().getDynamicJudgementHearing()
+                    .getListItems().getFirst());
         judgmentValidationService.validateJudgments(caseDetails1.getCaseData());
-        assertEquals("2019-11-01", caseDetails1.getCaseData().getJudgementCollection().get(0).getValue().getJudgmentHearingDate());
+        assertEquals("2019-11-01", caseDetails1.getCaseData().getJudgementCollection().getFirst()
+            .getValue().getJudgmentHearingDate());
     }
 
     @Test
@@ -49,10 +53,11 @@ class JudgmentValidationServiceTest {
         caseData.setHearingCollection(null);
         DynamicJudgements.dynamicJudgements(caseData);
         var dynamicValue = DynamicListHelper.getDynamicValue(NO_HEARINGS);
-        assertEquals(dynamicValue, caseData.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().getListItems().get(0));
+        assertEquals(dynamicValue, caseData.getJudgementCollection().getFirst().getValue().getDynamicJudgementHearing()
+            .getListItems().getFirst());
 
         judgmentValidationService.validateJudgments(caseDetails1.getCaseData());
-        assertNull(caseData.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing());
-        assertNull(caseData.getJudgementCollection().get(0).getValue().getJudgmentHearingDate());
+        assertNull(caseData.getJudgementCollection().getFirst().getValue().getDynamicJudgementHearing());
+        assertNull(caseData.getJudgementCollection().getFirst().getValue().getJudgmentHearingDate());
     }
 }

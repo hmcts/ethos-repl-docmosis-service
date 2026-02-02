@@ -108,10 +108,11 @@ public class SingleCasesReadingServiceTest {
                 anyString(),
                 anyList()))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
-        HashSet<SchedulePayloadEvent> schedulePayloadEventList = singleCasesReadingService.retrieveScheduleCases(userToken,
+        HashSet<SchedulePayloadEvent> schedulePayloadEventList =
+            singleCasesReadingService.retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020")));
-        assertEquals(schedulePayloadEventList, new HashSet<>());
+        assertEquals(new HashSet<>(), schedulePayloadEventList);
     }
 
     @Test
@@ -135,10 +136,10 @@ public class SingleCasesReadingServiceTest {
                 anyString(),
                 anyList()))
                 .thenThrow(new InternalException(ERROR_MESSAGE));
-        List<LabelPayloadEvent> labelPayloadEvents = singleCasesReadingService.retrieveLabelCases(userToken,
+        labelPayloadEvents = singleCasesReadingService.retrieveLabelCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020")));
-        assertEquals(labelPayloadEvents, new ArrayList<>());
+        assertEquals(new ArrayList<>(), labelPayloadEvents);
     }
 
 }

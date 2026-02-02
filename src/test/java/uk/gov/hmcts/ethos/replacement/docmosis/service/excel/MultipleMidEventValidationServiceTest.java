@@ -40,15 +40,13 @@ public class MultipleMidEventValidationServiceTest {
 
     @Test
     public void multipleValidationLogicCurrentMultiple() {
-
-        List<String> errors = new ArrayList<>();
-
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246000");
         moveCasesType.setUpdatedSubMultipleRef("SubMultiple");
         moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
+        List<String> errors = new ArrayList<>();
         multipleMidEventValidationService.multipleValidationLogic(userToken,
                 multipleDetails,
                 errors);
@@ -65,13 +63,12 @@ public class MultipleMidEventValidationServiceTest {
     @Test
     public void multipleValidationLogicExternalMultiple() {
 
-        List<String> errors = new ArrayList<>();
-
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246001");
         moveCasesType.setUpdatedSubMultipleRef("SubMultiple");
         moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
+        List<String> errors = new ArrayList<>();
 
         multipleMidEventValidationService.multipleValidationLogic(userToken,
                 multipleDetails,
@@ -90,13 +87,12 @@ public class MultipleMidEventValidationServiceTest {
     @Test
     public void multipleValidationLogicConvertToSingle() {
 
-        List<String> errors = new ArrayList<>();
-
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("");
         moveCasesType.setUpdatedSubMultipleRef("");
         moveCasesType.setConvertToSingle(YES);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
+        List<String> errors = new ArrayList<>();
 
         multipleMidEventValidationService.multipleValidationLogic(userToken,
                 multipleDetails,

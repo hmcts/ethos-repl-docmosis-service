@@ -99,8 +99,8 @@ public class MultipleTransferServiceTest {
 
         assertEquals(0, errors.size());
         assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
-        verify(persistentQHelperService,
-                times(1)).sendCreationEventToSingles(
+        verify(persistentQHelperService, times(1))
+            .sendCreationEventToSingles(
                 userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),
@@ -114,8 +114,7 @@ public class MultipleTransferServiceTest {
                 YES,
                 MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl,
                         multipleDetails.getCaseId(),
-                        multipleDetails.getCaseData().getMultipleReference())
-                );
+                        multipleDetails.getCaseData().getMultipleReference()));
 
         verifyNoMoreInteractions(persistentQHelperService);
 
@@ -154,7 +153,7 @@ public class MultipleTransferServiceTest {
                 multipleDetails.getCaseData().getLinkedMultipleCT());
         List<CaseMultipleTypeItem> caseMultipleTypeItemList = multipleDetails.getCaseData().getCaseMultipleCollection();
         assertEquals("MultipleObjectType(ethosCaseRef=245000/2020, subMultiple=245000, flag1=null, "
-                + "flag2=null, flag3=null, flag4=null)", caseMultipleTypeItemList.get(0).getValue().toString());
+                + "flag2=null, flag3=null, flag4=null)", caseMultipleTypeItemList.getFirst().getValue().toString());
         assertEquals("MultipleObjectType(ethosCaseRef=245003/2020, subMultiple=245003, flag1=null, "
                 + "flag2=null, flag3=null, flag4=null)", caseMultipleTypeItemList.get(1).getValue().toString());
         assertEquals("MultipleObjectType(ethosCaseRef=245004/2020, subMultiple=245002, flag1=null, "
@@ -198,7 +197,7 @@ public class MultipleTransferServiceTest {
 
         caseTransferService.validateCase(caseData, errors);
         assertEquals(2, errors.size());
-        assertEquals(String.format(BF_ACTIONS_ERROR_MSG, caseData.getEthosCaseReference()), errors.get(0));
+        assertEquals(String.format(BF_ACTIONS_ERROR_MSG, caseData.getEthosCaseReference()), errors.getFirst());
         assertEquals(String.format(HEARINGS_ERROR_MSG, caseData.getEthosCaseReference()), errors.get(1));
 
     }

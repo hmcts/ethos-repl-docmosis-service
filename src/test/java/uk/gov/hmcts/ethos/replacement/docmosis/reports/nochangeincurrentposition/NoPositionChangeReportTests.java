@@ -133,7 +133,7 @@ class NoPositionChangeReportTests {
         assertEquals("0", reportData.getReportSummary().getTotalMultipleCases());
         assertEquals(1, reportData.getReportDetailsSingle().size());
         assertTrue(reportData.getReportDetailsMultiple().isEmpty());
-        var reportDetail = reportData.getReportDetailsSingle().get(0);
+        var reportDetail = reportData.getReportDetailsSingle().getFirst();
         assertEquals("2500123/2021", reportDetail.getCaseReference());
         assertEquals(BASE_DATE.format(OLD_DATE_TIME_PATTERN2), reportDetail.getDateToPosition());
         assertEquals("test2", reportDetail.getCurrentPosition());
@@ -171,7 +171,7 @@ class NoPositionChangeReportTests {
         assertEquals("1", reportData.getReportSummary().getTotalMultipleCases());
         assertTrue(reportData.getReportDetailsSingle().isEmpty());
         assertEquals(1, reportData.getReportDetailsMultiple().size());
-        var reportDetail = reportData.getReportDetailsMultiple().get(0);
+        var reportDetail = reportData.getReportDetailsMultiple().getFirst();
         assertEquals("2500123/2021", reportDetail.getCaseReference());
         assertEquals(DATE_BEFORE_3MONTHS, reportDetail.getDateToPosition());
         assertEquals("test4", reportDetail.getCurrentPosition());
@@ -202,7 +202,7 @@ class NoPositionChangeReportTests {
         assertEquals("0", reportData.getReportSummary().getTotalMultipleCases());
         assertEquals(1, reportData.getReportDetailsSingle().size());
         assertTrue(reportData.getReportDetailsMultiple().isEmpty());
-        var reportDetail = reportData.getReportDetailsSingle().get(0);
+        var reportDetail = reportData.getReportDetailsSingle().getFirst();
         assertEquals("2500123/2021", reportDetail.getCaseReference());
         assertEquals(DATE_BEFORE_3MONTHS, reportDetail.getDateToPosition());
         assertEquals("test7", reportDetail.getCurrentPosition());

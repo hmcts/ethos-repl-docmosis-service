@@ -30,7 +30,7 @@ class HearingsByHearingTypeReportTest {
     static final String DATE_TO = BASE_DATE.plusDays(24).format(OLD_DATE_TIME_PATTERN);
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         submitEvents.clear();
         caseDataBuilder = new HearingsByHearingTypeCaseDataBuilder();
         reportDataSource = mock(HearingsByHearingTypeReportDataSource.class);
@@ -90,8 +90,10 @@ class HearingsByHearingTypeReportTest {
      void testConsiderCaseIfValidHearingStatusReportHdr() {
         submitEvents.clear();
         submitEvents.addAll(caseDataBuilder.createSubmitEvents(
-                HEARING_STATUS_HEARD, "multiRef","subMulti"));
-        HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+                HEARING_STATUS_HEARD, "multiRef", "subMulti"));
+        HearingsByHearingTypeReportData reportData = 
+            hearingsByHearingTypeReport.generateReport(
+                new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         HearingsByHearingTypeReportSummaryHdr reportSummaryHdr = reportData.getReportSummaryHdr();
         assertEquals("6", reportSummaryHdr.getFields().getTotal());
         assertEquals("1", reportSummaryHdr.getFields().getHearingCount());
@@ -110,7 +112,7 @@ class HearingsByHearingTypeReportTest {
         HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
                 new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         List<HearingsByHearingTypeReportSummary> reportSummaryList = reportData.getReportSummaryList();
-        HearingsByHearingTypeReportSummary reportSummary = reportSummaryList.get(0);
+        HearingsByHearingTypeReportSummary reportSummary = reportSummaryList.getFirst();
         assertEquals("1", reportSummary.getFields().getTotal());
         assertEquals("1", reportSummary.getFields().getHearingCount());
         assertEquals("0", reportSummary.getFields().getCmCount());
@@ -125,9 +127,10 @@ class HearingsByHearingTypeReportTest {
      void testConsiderCaseIfValidHearingStatusReportSummaryHdr2() {
         submitEvents.clear();
         submitEvents.addAll(caseDataBuilder.createSubmitEvents(HEARING_STATUS_HEARD, "multiRef", "subMulti"));
-        HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport
+            .generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         List<HearingsByHearingTypeReportSummary2Hdr> reportSummary2HdrList = reportData.getReportSummary2HdrList();
-        HearingsByHearingTypeReportSummary2Hdr reportSummary2Hdr = reportSummary2HdrList.get(0);
+        HearingsByHearingTypeReportSummary2Hdr reportSummary2Hdr = reportSummary2HdrList.getFirst();
         assertEquals("1", reportSummary2Hdr.getFields().getTotal());
         assertEquals("0", reportSummary2Hdr.getFields().getHearingCount());
         assertEquals("1", reportSummary2Hdr.getFields().getCmCount());
@@ -146,7 +149,7 @@ class HearingsByHearingTypeReportTest {
         HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
                 new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         List<HearingsByHearingTypeReportSummary2> reportSummary2List = reportData.getReportSummary2List();
-        HearingsByHearingTypeReportSummary2 reportSummary2 = reportSummary2List.get(0);
+        HearingsByHearingTypeReportSummary2 reportSummary2 = reportSummary2List.getFirst();
         assertEquals("1", reportSummary2.getFields().getTotal());
         assertEquals("1", reportSummary2.getFields().getHearingCount());
         assertEquals("0", reportSummary2.getFields().getCmCount());
@@ -163,16 +166,16 @@ class HearingsByHearingTypeReportTest {
     void testIfDatesAreInOrder() {
         submitEvents.clear();
         submitEvents.addAll(caseDataBuilder.createSubmitEvents(HEARING_STATUS_HEARD, "", ""));
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setListedDate("2022-01-02T00:00:00.000");
-        submitEvents.get(1).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setListedDate("2022-01-01T00:00:00.000");
-        submitEvents.get(2).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setListedDate("2022-01-03T00:00:00.000");
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getHearingDateCollection()
+                .getFirst().getValue().setListedDate("2022-01-02T00:00:00.000");
+        submitEvents.get(1).getCaseData().getHearingCollection().getFirst().getValue().getHearingDateCollection()
+                .getFirst().getValue().setListedDate("2022-01-01T00:00:00.000");
+        submitEvents.get(2).getCaseData().getHearingCollection().getFirst().getValue().getHearingDateCollection()
+                .getFirst().getValue().setListedDate("2022-01-03T00:00:00.000");
         HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
                 new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         List<HearingsByHearingTypeReportSummary> reportSummaryList = reportData.getReportSummaryList();
-        assertEquals("2022-01-01", reportSummaryList.get(0).getFields().getDate());
+        assertEquals("2022-01-01", reportSummaryList.getFirst().getFields().getDate());
         assertEquals("2022-01-02", reportSummaryList.get(1).getFields().getDate());
         assertEquals("2022-01-03", reportSummaryList.get(2).getFields().getDate());
 
@@ -185,7 +188,7 @@ class HearingsByHearingTypeReportTest {
         HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
                 new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         List<HearingsByHearingTypeReportSummary2> reportSummary2List = reportData.getReportSummary2List();
-        assertEquals("JM", reportSummary2List.get(0).getFields().getSubSplit());
+        assertEquals("JM", reportSummary2List.getFirst().getFields().getSubSplit());
         assertEquals("Hybrid", reportSummary2List.get(1).getFields().getSubSplit());
         assertEquals("Video", reportSummary2List.get(2).getFields().getSubSplit());
         assertEquals("Stage 1", reportSummary2List.get(3).getFields().getSubSplit());
@@ -199,7 +202,7 @@ class HearingsByHearingTypeReportTest {
         HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
                 new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         List<HearingsByHearingTypeReportDetail> reportDetailList = reportData.getReportDetails();
-        HearingsByHearingTypeReportDetail reportDetail = reportDetailList.get(0);
+        HearingsByHearingTypeReportDetail reportDetail = reportDetailList.getFirst();
         assertEquals("111", reportDetail.getCaseReference());
         assertEquals("Y", reportDetail.getLead());
         assertEquals("330", reportDetail.getDuration());
@@ -217,7 +220,7 @@ class HearingsByHearingTypeReportTest {
         HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
                 new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         List<HearingsByHearingTypeReportDetail> reportDetailList = reportData.getReportDetails();
-        HearingsByHearingTypeReportDetail reportDetail = reportDetailList.get(0);
+        HearingsByHearingTypeReportDetail reportDetail = reportDetailList.getFirst();
         assertEquals("0 -  Not Allocated, 0 -  Not Allocated", reportDetail.getMultiSub());
     }
 
@@ -239,7 +242,7 @@ class HearingsByHearingTypeReportTest {
         submitEvents.add(caseDataBuilder.createSubmitEventNullTime(time));
         HearingsByHearingTypeReportData reportData = hearingsByHearingTypeReport.generateReport(
                 new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
-        var reportDetail = reportData.getReportDetails().get(0);
+        var reportDetail = reportData.getReportDetails().getFirst();
         assertEquals(result, reportDetail.getDuration());
     }
 

@@ -37,7 +37,7 @@ public class InvalidCharacterCheckTest {
         var casedata = caseDetails1.getCaseData();
         casedata.setClaimant("Double  Space");
         casedata.getRepresentativeClaimantType().setNameOfRepresentative("New\nLine");
-        casedata.getRespondentCollection().get(0).getValue().setRespondentName("Double  Space and New\nLine");
+        casedata.getRespondentCollection().getFirst().getValue().setRespondentName("Double  Space and New\nLine");
 
         var representedTypeR = new RepresentedTypeR();
         representedTypeR.setNameOfRepresentative("No Errors In Name");
@@ -48,7 +48,7 @@ public class InvalidCharacterCheckTest {
         List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata, "letter");
         assertEquals(4, errors.size());
         assertEquals(String.format(DOUBLE_SPACE_ERROR, "Claimant Double  Space",
-                casedata.getEthosCaseReference(), "letter"), errors.get(0));
+                casedata.getEthosCaseReference(), "letter"), errors.getFirst());
         assertEquals(String.format(NEW_LINE_ERROR, "Claimant Rep New\nLine",
                 casedata.getEthosCaseReference(), "letter"), errors.get(1));
         assertEquals(String.format(DOUBLE_SPACE_ERROR, "Respondent Double  Space and New\nLine",

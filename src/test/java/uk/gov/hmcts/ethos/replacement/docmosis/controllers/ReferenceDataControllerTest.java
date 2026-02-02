@@ -25,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -60,8 +61,8 @@ public class ReferenceDataControllerTest {
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
-        requestContent = objectMapper.readTree(new File(getClass()
-                .getResource("/exampleV1.json").toURI()));
+        requestContent = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
+            .getResource("/exampleV1.json")).toURI()));
     }
 
     @Before
@@ -74,7 +75,8 @@ public class ReferenceDataControllerTest {
 
     @Test
     public void hearingVenueReferenceData() throws Exception {
-        when(referenceService.fetchHearingVenueRefData(isA(CaseDetails.class), eq(AUTH_TOKEN))).thenReturn(submitEvent.getCaseData());
+        when(referenceService.fetchHearingVenueRefData(isA(CaseDetails.class), eq(AUTH_TOKEN)))
+            .thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(HEARING_VENUE_REFERENCE_DATA)
                 .content(requestContent.toString())
@@ -88,7 +90,8 @@ public class ReferenceDataControllerTest {
 
     @Test
     public void dateListedReferenceData() throws Exception {
-        when(referenceService.fetchDateListedRefData(isA(CaseDetails.class), eq(AUTH_TOKEN))).thenReturn(submitEvent.getCaseData());
+        when(referenceService.fetchDateListedRefData(isA(CaseDetails.class), eq(AUTH_TOKEN)))
+            .thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(DATE_LISTED_REFERENCE_DATA)
                 .content(requestContent.toString())
@@ -120,7 +123,8 @@ public class ReferenceDataControllerTest {
 
     @Test
     public void hearingVenueReferenceDataError500() throws Exception {
-        when(referenceService.fetchHearingVenueRefData(isA(CaseDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(referenceService.fetchHearingVenueRefData(isA(CaseDetails.class), eq(AUTH_TOKEN)))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(HEARING_VENUE_REFERENCE_DATA)
                 .content(requestContent.toString())
@@ -131,7 +135,8 @@ public class ReferenceDataControllerTest {
 
     @Test
     public void dateListedReferenceDataError500() throws Exception {
-        when(referenceService.fetchDateListedRefData(isA(CaseDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(referenceService.fetchDateListedRefData(isA(CaseDetails.class), eq(AUTH_TOKEN)))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(DATE_LISTED_REFERENCE_DATA)
                 .content(requestContent.toString())

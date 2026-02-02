@@ -90,7 +90,7 @@ public class MultipleUploadServiceTest {
                 errors);
 
         assertEquals(ERROR_SHEET_NUMBER_ROWS + multipleDetails.getCaseData().getCaseIdCollection().size(),
-                errors.get(0));
+                errors.getFirst());
         assertEquals(ERROR_SHEET_NUMBER_COLUMNS + MultiplesHelper.HEADERS.size(),
                 errors.get(1));
     }
@@ -110,7 +110,7 @@ public class MultipleUploadServiceTest {
                 multipleDetails,
                 errors);
 
-        assertEquals(ERROR_SHEET_EMPTY, errors.get(0));
+        assertEquals(ERROR_SHEET_EMPTY, errors.getFirst());
     }
 
     @Test(expected = Exception.class)

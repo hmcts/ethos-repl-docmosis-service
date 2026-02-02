@@ -39,6 +39,6 @@ public class CreateServiceTest {
         when(ccdClient.executeElasticSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
         List<String> errors = createService.initCreateAdmin(userToken);
         assertEquals(1, errors.size());
-        assertEquals(CREATE_EXIST_ERROR_MESSAGE, errors.get(0));
+        assertEquals(CREATE_EXIST_ERROR_MESSAGE, errors.getFirst());
     }
 }

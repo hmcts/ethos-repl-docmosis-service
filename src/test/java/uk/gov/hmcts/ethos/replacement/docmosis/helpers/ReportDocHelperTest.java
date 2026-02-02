@@ -414,7 +414,6 @@ public class ReportDocHelperTest {
         listingData.setLocalReportsDetailHdr(adHocReportType);
 
         listingData.setLocalReportsDetail(new ArrayList<>());
-        var adhocReportTypeItem = new AdhocReportTypeItem();
         var adhocReportType = new AdhocReportType();
 
         adhocReportType.setClaimServed6PlusDaysTotal("3");
@@ -459,6 +458,7 @@ public class ReportDocHelperTest {
         adhocReportType.getClaimServedItems().add(claimServedTypeItem3);
         adhocReportType.setTotal("3");
 
+        var adhocReportTypeItem = new AdhocReportTypeItem();
         adhocReportTypeItem.setId(String.valueOf(UUID.randomUUID()));
         adhocReportTypeItem.setValue(adhocReportType);
 
@@ -589,7 +589,6 @@ public class ReportDocHelperTest {
     }
 
     private HearingsByHearingTypeReportData getHearingsByHearingTypeReportData() {
-        var reportSummaryHdr = new HearingsByHearingTypeReportSummaryHdr();
         ReportFields fields = new ReportFields();
         fields.setTotal("6");
         fields.setHearingCount("1");
@@ -598,6 +597,7 @@ public class ReportDocHelperTest {
         fields.setCostsCount("1");
         fields.setCmCount("1");
         fields.setHearingPrelimCount("1");
+        var reportSummaryHdr = new HearingsByHearingTypeReportSummaryHdr();
         reportSummaryHdr.setFields(fields);
         reportSummaryHdr.setOffice("Manchester");
         var reportData = new HearingsByHearingTypeReportData(reportSummaryHdr);

@@ -79,7 +79,7 @@ public class BulkAddSinglesControllerTest {
     private void verifyResponse(ResponseEntity<MultipleCallbackResponse> response) {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(3, response.getBody().getErrors().size());
-        assertEquals("Error 1", response.getBody().getErrors().get(0));
+        assertEquals("Error 1", response.getBody().getErrors().getFirst());
         assertEquals("Error 2", response.getBody().getErrors().get(1));
         assertEquals("Error 3", response.getBody().getErrors().get(2));
     }

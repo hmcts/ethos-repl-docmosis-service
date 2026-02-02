@@ -30,7 +30,7 @@ public class ExcelFileSingleCasesImporterTest {
 
         var cases = excelFileSingleCasesImporter.importCases(multipleData, authToken);
         assertEquals(3, cases.size());
-        assertEquals("case1", cases.get(0));
+        assertEquals("case1", cases.getFirst());
         assertEquals("case2", cases.get(1));
         assertEquals("case3", cases.get(2));
     }
@@ -61,12 +61,11 @@ public class ExcelFileSingleCasesImporterTest {
     private XSSFWorkbook createWorkbook(List<String> ethosCaseReferences) {
         var workbook = new XSSFWorkbook();
         var sheet = workbook.createSheet();
-        for (var i=0; i<ethosCaseReferences.size(); i++) {
+        for (var i = 0; i < ethosCaseReferences.size(); i++) {
             var ethosCaseReference = ethosCaseReferences.get(i);
             sheet.createRow(i).createCell(0).setCellValue(ethosCaseReference);
         }
         return workbook;
     }
-
 
 }

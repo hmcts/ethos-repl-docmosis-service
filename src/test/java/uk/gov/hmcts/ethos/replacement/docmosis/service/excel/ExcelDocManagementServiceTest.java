@@ -10,8 +10,6 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
@@ -29,6 +27,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.generateExcelDocumentName;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.generateSubMultipleStringCollection;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.generateScheduleDocumentName;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.APPLICATION_EXCEL_VALUE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -59,23 +60,23 @@ public class ExcelDocManagementServiceTest {
         bytes = "Bytes to return".getBytes();
     }
 
-        @Test
-        public void uploadExcelDocument() {
-            URI uri = URI.create("http://google.com");
-            when(documentManagementService.uploadDocument(userToken,
-                    bytes,
-                    MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
-                    multipleDetails.getCaseTypeId()))
-                    .thenReturn(uri);
-            excelDocManagementService.uploadExcelDocument(userToken,
-                    multipleDetails,
-                    bytes);
-            verify(documentManagementService, times(1)).uploadDocument(userToken,
-                    bytes,
-                    MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
-                    multipleDetails.getCaseTypeId());
-            verifyNoMoreInteractions(documentManagementService);
-        }
+    @Test
+    public void uploadExcelDocument() {
+        URI uri = URI.create("http://google.com");
+        when(documentManagementService.uploadDocument(userToken,
+                bytes,
+                generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
+                multipleDetails.getCaseTypeId()))
+                .thenReturn(uri);
+        excelDocManagementService.uploadExcelDocument(userToken,
+                multipleDetails,
+                bytes);
+        verify(documentManagementService, times(1)).uploadDocument(userToken,
+                bytes,
+                generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
+                multipleDetails.getCaseTypeId());
+        verifyNoMoreInteractions(documentManagementService);
+    }
 
     @Test
     public void downloadExcelDocument() throws IOException {
@@ -90,11 +91,13 @@ public class ExcelDocManagementServiceTest {
     public void generateAndUploadExcel() {
         URI uri = URI.create("http://google.com");
         List<String> multipleCollection = new ArrayList<>(Arrays.asList("245000/2020", "245001/2020", "245002/2020"));
-        List<String> subMultipleCollection = MultiplesHelper.generateSubMultipleStringCollection(multipleDetails.getCaseData());
+        List<String> subMultipleCollection = generateSubMultipleStringCollection(multipleDetails.getCaseData());
         when(documentManagementService.uploadDocument(userToken,
-                bytes,
-                MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE, multipleDetails.getCaseTypeId()))
-                .thenReturn(uri);
+            bytes,
+            generateExcelDocumentName(multipleDetails.getCaseData()),
+                APPLICATION_EXCEL_VALUE,
+                multipleDetails.getCaseTypeId()))
+            .thenReturn(uri);
         when(excelCreationService.writeExcel(multipleCollection,
                 subMultipleCollection,
                 multipleDetails.getCaseData().getLeadCase()))
@@ -103,7 +106,7 @@ public class ExcelDocManagementServiceTest {
                 userToken, multipleDetails);
         verify(documentManagementService, times(1)).uploadDocument(userToken,
                 bytes,
-                MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
+                generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
                 multipleDetails.getCaseTypeId());
         verifyNoMoreInteractions(documentManagementService);
         verify(excelCreationService, times(1)).writeExcel(multipleCollection,
@@ -120,7 +123,7 @@ public class ExcelDocManagementServiceTest {
         multipleDetails.getCaseData().setSubMultipleCollection(null);
         when(documentManagementService.uploadDocument(userToken,
                 bytes,
-                MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
+                generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
                 multipleDetails.getCaseTypeId()))
                 .thenReturn(uri);
         when(excelCreationService.writeExcel(multipleCollection,
@@ -131,7 +134,7 @@ public class ExcelDocManagementServiceTest {
                 userToken, multipleDetails);
         verify(documentManagementService, times(1)).uploadDocument(userToken,
                 bytes,
-                MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
+                generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
                 multipleDetails.getCaseTypeId());
         verifyNoMoreInteractions(documentManagementService);
         verify(excelCreationService, times(1)).writeExcel(
@@ -150,14 +153,14 @@ public class ExcelDocManagementServiceTest {
                 .thenReturn(bytes);
         when(documentManagementService.uploadDocument(userToken,
                 bytes,
-                MultiplesScheduleHelper.generateScheduleDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
+                generateScheduleDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
                 multipleDetails.getCaseTypeId()))
                 .thenReturn(uri);
         excelDocManagementService.writeAndUploadScheduleDocument(userToken, new TreeMap<>(),
                 multipleDetails, new ArrayList<>());
         verify(documentManagementService, times(1)).uploadDocument(userToken,
                 bytes,
-                MultiplesScheduleHelper.generateScheduleDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
+                generateScheduleDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE,
                 multipleDetails.getCaseTypeId());
         verify(scheduleCreationService, times(1)).writeSchedule(multipleDetails.getCaseData(),
                 new ArrayList<>(),

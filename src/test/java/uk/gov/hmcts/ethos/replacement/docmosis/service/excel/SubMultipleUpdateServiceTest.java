@@ -89,7 +89,7 @@ public class SubMultipleUpdateServiceTest {
 
         assertEquals(1, multipleDetails.getCaseData().getSubMultipleCollection().size());
         assertEquals("NewSubMultiple",
-                multipleDetails.getCaseData().getSubMultipleCollection().get(0).getValue().getSubMultipleName());
+                multipleDetails.getCaseData().getSubMultipleCollection().getFirst().getValue().getSubMultipleName());
 
         verify(subMultipleReferenceService, times(1)).createReference(
                 multipleDetails.getCaseTypeId(),
@@ -112,7 +112,7 @@ public class SubMultipleUpdateServiceTest {
 
         assertEquals(2, multipleDetails.getCaseData().getSubMultipleCollection().size());
         assertEquals(multipleDetails.getCaseData().getSubMultipleAction().getAmendSubMultipleNameExisting(),
-                multipleDetails.getCaseData().getSubMultipleCollection().get(0).getValue().getSubMultipleName());
+                multipleDetails.getCaseData().getSubMultipleCollection().getFirst().getValue().getSubMultipleName());
 
         subMultipleUpdateService.subMultipleUpdateLogic(userToken,
                 multipleDetails,
@@ -120,7 +120,7 @@ public class SubMultipleUpdateServiceTest {
 
         assertEquals(2, multipleDetails.getCaseData().getSubMultipleCollection().size());
         assertEquals("SubMultipleAmended",
-                multipleDetails.getCaseData().getSubMultipleCollection().get(0).getValue().getSubMultipleName());
+                multipleDetails.getCaseData().getSubMultipleCollection().getFirst().getValue().getSubMultipleName());
 
         verify(excelDocManagementService, times(1)).generateAndUploadExcel(
                 anyList(),

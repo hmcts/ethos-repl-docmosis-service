@@ -58,7 +58,7 @@ public class MultipleDynamicListFlagsServiceTest {
         assertEquals(3, multipleDetails.getCaseData().getFlag2().getListItems().size());
         assertEquals("BB", multipleDetails.getCaseData().getFlag2().getListItems().get(1).getCode());
         assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag3().getValue().getCode());
-        assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag4().getListItems().get(0).getCode());
+        assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag4().getListItems().getFirst().getCode());
     }
 
 }

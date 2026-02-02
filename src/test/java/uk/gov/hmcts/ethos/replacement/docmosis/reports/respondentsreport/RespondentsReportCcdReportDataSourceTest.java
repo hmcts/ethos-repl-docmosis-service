@@ -29,9 +29,9 @@ public class RespondentsReportCcdReportDataSourceTest {
 
         var ccdReportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
 
-        var results = ccdReportDataSource.getData(caseTypeId,fromDate, toDate);
+        var results = ccdReportDataSource.getData(caseTypeId, fromDate, toDate);
         assertEquals(1, results.size());
-        assertEquals(submitEvent, results.get(0));
+        assertEquals(submitEvent, results.getFirst());
     }
 
     @Test(expected = ReportException.class)

@@ -420,49 +420,49 @@ public class DefaultValuesReaderServiceTest {
     @Test
     public void getCaseData() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Glasgow Tribunals Centre, 3 Atlantic Quay, "
-                + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
-                + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
-                + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, ecmCaseType=Single, "
-                + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null,"
-                + " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
-                + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
-                + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
-                + "feeGroupReference=null, "
-                + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
-                + "representativeClaimantType=null, respondentCollection=null, repCollection=null, "
-                + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
-                + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
-                + "fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, "
-                + "hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, "
-                + "hearingUpdateFilterType=null, depositCollection=null, judgementCollection=null, "
-                + "jurCodesCollection=null, bfActions=null, clerkResponsible=null, userLocation=null, "
-                + "documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, "
-                + "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, "
-                + "addressLabelsAttributesType=null, caseNotes=null, nextListedDate=null, claimantWorkAddress=null, "
-                + "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, "
-                + "caseSource=Manually Created, conciliationTrack=null, counterClaim=null, eccCases=null, "
-                + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
-                + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
-                + "docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, "
-                + "caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, "
-                + "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, "
-                + "hearingEstLengthNum=null, hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, "
-                + "listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, "
-                + "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, "
-                + "hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, "
-                + "hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, "
-                + "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, "
-                + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
-                + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
-                + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
-                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, "
-                + "transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, "
-                + "transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, "
-                + "caseBundles=null, "
-                + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
-                + "piiDocumentCollection=null, "
-                + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null"
-                + ", caseNotesCollection=null, addCaseNote=null, ttl=null)";
+            + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
+            + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
+            + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, ecmCaseType=Single, "
+            + "multipleReference=null, multipleReferenceLinkMarkUp=null, parentMultipleCaseId=null,"
+            + " subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+            + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
+            + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
+            + "feeGroupReference=null, "
+            + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
+            + "representativeClaimantType=null, respondentCollection=null, repCollection=null, "
+            + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
+            + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
+            + "fileLocationEdinburgh=null, updateHearingDetails=null, hearingCollection=null, "
+            + "hearingsCollectionForUpdate=[], selectedHearingNumberForUpdate=null, "
+            + "hearingUpdateFilterType=null, depositCollection=null, judgementCollection=null, "
+            + "jurCodesCollection=null, bfActions=null, clerkResponsible=null, userLocation=null, "
+            + "documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, "
+            + "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, "
+            + "addressLabelsAttributesType=null, caseNotes=null, nextListedDate=null, claimantWorkAddress=null, "
+            + "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, "
+            + "caseSource=Manually Created, conciliationTrack=null, counterClaim=null, eccCases=null, "
+            + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
+            + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
+            + "docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, "
+            + "caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, "
+            + "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, "
+            + "hearingEstLengthNum=null, hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, "
+            + "listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, "
+            + "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, "
+            + "hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, "
+            + "hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, "
+            + "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, "
+            + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
+            + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
+            + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
+            + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, "
+            + "transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, "
+            + "transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, "
+            + "caseBundles=null, "
+            + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
+            + "piiDocumentCollection=null, "
+            + "appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, "
+            + "reformCaseLink=null, caseNotesCollection=null, addCaseNote=null, ttl=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -554,8 +554,8 @@ public class DefaultValuesReaderServiceTest {
                 + "caseBundles=null, "
                 + "digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, "
                 + "piiDocumentCollection=null,"
-                + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null"
-                + ", caseNotesCollection=null, addCaseNote=null, ttl=null)";
+                + " appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, "
+                + "reformCaseLink=null, caseNotesCollection=null, addCaseNote=null, ttl=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -612,7 +612,7 @@ public class DefaultValuesReaderServiceTest {
     @ParameterizedTest
     @MethodSource
     void setSubmissionReference(String submissionReference, String caseId) {
-        CaseData caseData = new CaseData();
+        caseData = new CaseData();
         caseData.setFeeGroupReference(submissionReference);
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseId(caseId);

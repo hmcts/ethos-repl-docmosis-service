@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -98,7 +99,7 @@ class EventValidationServiceTest {
     private MultipleData multipleData;
 
     @BeforeEach
-    public void setup() throws Exception {
+    void setup() throws Exception {
         eventValidationService = new EventValidationService();
 
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
@@ -155,9 +156,10 @@ class EventValidationServiceTest {
             assertEquals(0, errors.size());
         }
         if (rejectedDate.equals("2019-01-01")) {
-            assertEquals(RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE, errors.get(0));
+            assertEquals(RECEIPT_DATE_LATER_THAN_REJECTED_ERROR_MESSAGE, errors.getFirst());
         }
     }
+    
     @Test
     void shouldValidateCurrentReceiptDate() {
         caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
@@ -178,7 +180,7 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateReceiptDate(caseDetails);
 
         assertEquals(1, errors.size());
-        assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
+        assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.getFirst());
     }
 
     @ParameterizedTest
@@ -213,7 +215,7 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateReceiptDate(caseDetails);
 
         assertEquals(1, errors.size());
-        assertEquals(RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE, errors.get(0));
+        assertEquals(RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE, errors.getFirst());
     }
 
     @Test
@@ -232,7 +234,7 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleData);
 
         assertEquals(1, errors.size());
-        assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
+        assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.getFirst());
     }
 
     @Test
@@ -247,7 +249,7 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateActiveRespondents(caseDetails2.getCaseData());
 
         assertEquals(1, errors.size());
-        assertEquals(EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE, errors.get(0));
+        assertEquals(EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE, errors.getFirst());
     }
 
     @Test
@@ -256,7 +258,7 @@ class EventValidationServiceTest {
 
         assertEquals(1, errors.size());
         assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE
-                + " for respondent 1 (Antonio Vazquez)", errors.get(0));
+                + " for respondent 1 (Antonio Vazquez)", errors.getFirst());
     }
 
     @Test
@@ -268,9 +270,9 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateResponseReceivedDateIsFutureDate() {
-        CaseData caseData = caseDetails1.getCaseData();
+        caseData = caseDetails1.getCaseData();
 
-        caseData.getRespondentCollection().get(0).getValue()
+        caseData.getRespondentCollection().getFirst().getValue()
                 .setResponseReceivedDate(PAST_RESPONSE_RECEIVED_DATE.toString());
         caseData.getRespondentCollection().get(1).getValue()
                 .setResponseReceivedDate(CURRENT_RESPONSE_RECEIVED_DATE.toString());
@@ -286,7 +288,7 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateResponseReceivedDateForMissingDate() {
-        CaseData caseData = caseDetails3.getCaseData();
+        caseData = caseDetails3.getCaseData();
 
         List<String> errors = eventValidationService.validateET3ResponseFields(caseData);
 
@@ -295,7 +297,7 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateRespRepNamesWithEmptyRepCollection() {
-        CaseData caseData = caseDetails1.getCaseData();
+        caseData = caseDetails1.getCaseData();
 
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
@@ -304,7 +306,7 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateRespRepNamesWithMismatch() {
-        CaseData caseData = caseDetails2.getCaseData();
+        caseData = caseDetails2.getCaseData();
 
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
@@ -313,7 +315,7 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateRespRepNamesWithMatch() {
-        CaseData caseData = caseDetails3.getCaseData();
+        caseData = caseDetails3.getCaseData();
 
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
@@ -322,7 +324,7 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateRespRepNamesWithNullRepCollection() {
-        CaseData caseData = caseDetails4.getCaseData();
+        caseData = caseDetails4.getCaseData();
 
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
@@ -331,7 +333,7 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateRespRepNamesWithMatchResponseName() {
-        CaseData caseData = caseDetails5.getCaseData();
+        caseData = caseDetails5.getCaseData();
 
         List<String> errors = eventValidationService.validateAndSetRespRepNames(caseData);
 
@@ -354,7 +356,7 @@ class EventValidationServiceTest {
                 caseDetails2.getCaseData().getCorrespondenceScotType());
 
         assertEquals(1, errors.size());
-        assertEquals(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE, errors.get(0));
+        assertEquals(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE, errors.getFirst());
     }
 
     @Test
@@ -373,7 +375,7 @@ class EventValidationServiceTest {
                 caseDetails4.getCaseData().getCorrespondenceScotType());
 
         assertEquals(1, errors.size());
-        assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.get(0));
+        assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.getFirst());
     }
 
     @Test
@@ -383,7 +385,7 @@ class EventValidationServiceTest {
 
         assertEquals(2, errors.size());
         assertEquals(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + " \"COM\" in Jurisdiction 3 "
-                + "- \"DOD\" in Jurisdiction 5 ", errors.get(0));
+                + "- \"DOD\" in Jurisdiction 5 ", errors.getFirst());
         assertEquals(JURISDICTION_CODES_DELETED_ERROR + "[CCP, ADG]", errors.get(1));
     }
 
@@ -396,11 +398,12 @@ class EventValidationServiceTest {
     }
 
     @ParameterizedTest
-    @CsvSource({SUBMITTED_STATE + ",false", ACCEPTED_STATE + ",false", REJECTED_STATE + ",false", CLOSED_STATE + ",true"})
+    @CsvSource({SUBMITTED_STATE + ",false", ACCEPTED_STATE + ",false",
+        REJECTED_STATE + ",false", CLOSED_STATE + ",true"})
     void validateCurrentPositionCaseClosed(String state, boolean expected) {
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setState(state);
-        CaseData caseData = new CaseData();
+        caseData = new CaseData();
         caseData.setPositionType(CASE_CLOSED_POSITION);
         caseDetails.setCaseData(caseData);
         boolean validated = eventValidationService.validateCurrentPosition(caseDetails);
@@ -426,9 +429,9 @@ class EventValidationServiceTest {
         assertEquals(1, errors.size());
         if (partOfMultiple) {
             assertEquals(caseDetails1.getCaseData().getEthosCaseReference() + " - "
-                    + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+                    + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.getFirst());
         } else {
-            assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+            assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.getFirst());
         }
     }
 
@@ -442,9 +445,9 @@ class EventValidationServiceTest {
         assertEquals(1, errors.size());
         if (partOfMultiple) {
             assertEquals(outcomeNotAllocatedCaseDetails.getCaseData().getEthosCaseReference() + " - "
-                    + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.get(0));
+                    + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.getFirst());
         } else {
-            assertEquals(JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.get(0));
+            assertEquals(JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.getFirst());
         }
     }
 
@@ -472,9 +475,9 @@ class EventValidationServiceTest {
 
             if (partOfMultiple) {
                 assertEquals(caseDetails1.getCaseData().getEthosCaseReference() + " - "
-                        + MISSING_JURISDICTION_MESSAGE, errors.get(0));
+                        + MISSING_JURISDICTION_MESSAGE, errors.getFirst());
             } else {
-                assertEquals(MISSING_JURISDICTION_MESSAGE, errors.get(0));
+                assertEquals(MISSING_JURISDICTION_MESSAGE, errors.getFirst());
             }
         }
     }
@@ -488,9 +491,9 @@ class EventValidationServiceTest {
         assertEquals(1, errors.size());
         if (partOfMultiple) {
             assertEquals(caseDetails18.getCaseData().getEthosCaseReference() + " - "
-                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.getFirst());
         } else {
-            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.getFirst());
         }
     }
 
@@ -512,33 +515,36 @@ class EventValidationServiceTest {
         assertEquals(1, errors.size());
         if (partOfMultiple) {
             assertEquals(caseDetails16.getCaseData().getEthosCaseReference() + " - "
-                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.getFirst());
         } else {
-            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.getFirst());
         }
     }
 
     @ParameterizedTest
     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
     void shouldValidateCaseBeforeCloseEventWithErrors(boolean isRejected, boolean partOfMultiple) {
+        caseData = caseDetails18.getCaseData();
+        caseData.setBfActions(BFHelperTest.generateBFActionTypeItems());
+        caseData.getBfActions().getFirst().getValue().setCleared(null);
         List<String> errors = new ArrayList<>();
-        caseDetails18.getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
-        caseDetails18.getCaseData().getBfActions().get(0).getValue().setCleared(null);
-        eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),
-                isRejected, partOfMultiple, errors);
+        eventValidationService.validateCaseBeforeCloseEvent(caseData, isRejected, partOfMultiple, errors);
 
         assertEquals(4, errors.size());
-        assertThat(errors).asList().contains(String.format(CLOSING_CASE_WITH_BF_OPEN_ERROR,
-                caseDetails18.getCaseData().getEthosCaseReference()));
+        assertThat(errors).asInstanceOf(InstanceOfAssertFactories.LIST)
+            .contains(String.format(CLOSING_CASE_WITH_BF_OPEN_ERROR, caseData.getEthosCaseReference()));
         if (partOfMultiple) {
-            assertThat(errors).asList().contains(caseDetails18.getCaseData().getEthosCaseReference()
-                    + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
-            assertThat(errors).asList().doesNotContain(caseDetails18.getCaseData().getEthosCaseReference()
-                    + " - " + CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+            assertThat(errors).asInstanceOf(InstanceOfAssertFactories.LIST)
+                .contains(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
+            assertThat(errors).asInstanceOf(InstanceOfAssertFactories.LIST)
+                .doesNotContain(caseData.getEthosCaseReference() + " - " + CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
         } else {
-            assertThat(errors).asList().contains(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
-            assertThat(errors).asList().doesNotContain(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
-            assertThat(errors).asList().contains(CLOSING_LISTED_CASE_ERROR);
+            assertThat(errors).asInstanceOf(InstanceOfAssertFactories.LIST)
+                .contains(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+            assertThat(errors).asInstanceOf(InstanceOfAssertFactories.LIST)
+                .doesNotContain(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+            assertThat(errors).asInstanceOf(InstanceOfAssertFactories.LIST)
+                .contains(CLOSING_LISTED_CASE_ERROR);
         }
     }
 
@@ -558,14 +564,14 @@ class EventValidationServiceTest {
                 caseDetails1.getCaseData());
 
         assertEquals(2, errors.size());
-        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.getFirst());
         assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved "
                 + "- [CCP, ADG]", errors.get(1));
     }
 
     @Test
     void shouldCreateErrorMessageWithDatesInFutureWithinJudgement() {
-        var caseData = new CaseData();
+        caseData = new CaseData();
         var judgementTypeItem = new JudgementTypeItem();
         var judgementType = new JudgementType();
         judgementTypeItem.setId(UUID.randomUUID().toString());
@@ -574,13 +580,13 @@ class EventValidationServiceTest {
         judgementTypeItem.setValue(judgementType);
         caseData.setJudgementCollection(List.of(judgementTypeItem));
         List<String> errors = eventValidationService.validateJudgementDates(caseData);
-        assertEquals("Date of Judgement Made can't be in future", errors.get(0));
+        assertEquals("Date of Judgement Made can't be in future", errors.getFirst());
         assertEquals("Date of Judgement Sent can't be in future", errors.get(1));
     }
 
     @Test
     void shouldNotCreateErrorMessageWithDatesBeforeTodayWithinJudgement() {
-        var caseData = new CaseData();
+        caseData = new CaseData();
         var judgementTypeItem = new JudgementTypeItem();
         var judgementType = new JudgementType();
         judgementTypeItem.setId(UUID.randomUUID().toString());
@@ -598,7 +604,7 @@ class EventValidationServiceTest {
                 caseDetails3.getCaseData());
 
         assertEquals(1, errors.size());
-        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.getFirst());
     }
 
     @Test
@@ -632,7 +638,7 @@ class EventValidationServiceTest {
                 listingsCase.getListingDateTo()
         );
         assertEquals(1, errors.size());
-        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.get(0));
+        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.getFirst());
     }
 
     @Test
@@ -644,7 +650,7 @@ class EventValidationServiceTest {
                 listingsCase.getListingDateTo()
         );
         assertEquals(1, errors.size());
-        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.get(0));
+        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.getFirst());
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -694,7 +700,7 @@ class EventValidationServiceTest {
         var invalidCase = invalidHearingStatusCaseCloseEventCaseDetails.getCaseData();
         eventValidationService.validateHearingStatusForCaseCloseEvent(invalidCase, errors);
         assertEquals(1, errors.size());
-        assertEquals(CLOSING_LISTED_CASE_ERROR, errors.get(0));
+        assertEquals(CLOSING_LISTED_CASE_ERROR, errors.getFirst());
     }
 
     @Test
@@ -711,7 +717,7 @@ class EventValidationServiceTest {
         var invalidCase = invalidJudgeAllocationCaseDetails.getCaseData();
         eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(invalidCase, errors);
         assertEquals(1, errors.size());
-        assertEquals(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR, errors.get(0));
+        assertEquals(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR, errors.getFirst());
     }
 
     @Test

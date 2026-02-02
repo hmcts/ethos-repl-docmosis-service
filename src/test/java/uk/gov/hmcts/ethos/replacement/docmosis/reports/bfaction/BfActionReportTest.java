@@ -193,7 +193,7 @@ public class BfActionReportTest {
         // bfActionReport.runReport method call should be ordered by bfDate, bfActionType3
         // should be the first element
         var bfActionType3 = items.get(2).getValue();
-        var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(0).getValue();
+        var firstBFDateTypeItem = resultListingData.getBfDateCollection().getFirst().getValue();
         assertEquals("2019-12-08", firstBFDateTypeItem.getBroughtForwardDate());
         assertEquals(bfActionType3.getCwActions(), firstBFDateTypeItem.getBroughtForwardAction());
         assertEquals(bfActionType3.getNotes(), firstBFDateTypeItem.getBroughtForwardDateReason());
@@ -227,7 +227,7 @@ public class BfActionReportTest {
         var resultListingData = bfActionReport.runReport(listingDetails, submitEvents, "userName");
         //Because the Bf entries are sorted by bf date, bfActionTypeItemFour is the first entry in the
         //result listing data
-        var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(0).getValue();
+        var firstBFDateTypeItem = resultListingData.getBfDateCollection().getFirst().getValue();
         var correctedComment = bfActionTypeItemFour.getValue().getNotes()
             .replace("\n", ". ");
         assertEquals(correctedComment, firstBFDateTypeItem.getBroughtForwardDateReason());

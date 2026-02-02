@@ -74,14 +74,14 @@ public class MultipleCreationMidEventValidationServiceTest {
                 false);
 
         assertEquals(1, errors.size());
-        assertEquals("[245000/2020, 245001/2020] cases do not exist.", errors.get(0));
+        assertEquals("[245000/2020, 245001/2020] cases do not exist.", errors.getFirst());
 
     }
 
     @Test
     public void multipleCreationValidationLogicMaxSizeAndLeadCaseDoesNotExist() {
 
-        createCaseIdCollection(multipleDetails.getCaseData(), 60);
+        createCaseIdCollection(multipleDetails.getCaseData());
 
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
                 userToken,
@@ -90,7 +90,7 @@ public class MultipleCreationMidEventValidationServiceTest {
                 false);
 
         assertEquals(2, errors.size());
-        assertEquals("[21006/2020] lead case does not exist.", errors.get(0));
+        assertEquals("[21006/2020] lead case does not exist.", errors.getFirst());
         assertEquals("There are 60 cases in the multiple. The limit is 50.", errors.get(1));
 
     }
@@ -113,7 +113,7 @@ public class MultipleCreationMidEventValidationServiceTest {
                 false);
 
         assertEquals(2, errors.size());
-        assertEquals("[245000/2020, 245001/2020] cases have not been Accepted.", errors.get(0));
+        assertEquals("[245000/2020, 245001/2020] cases have not been Accepted.", errors.getFirst());
         assertEquals("[245000/2020] cases already belong to a different multiple", errors.get(1));
 
     }
@@ -174,18 +174,16 @@ public class MultipleCreationMidEventValidationServiceTest {
                 true);
 
         assertEquals(1, errors.size());
-        assertEquals("[245000/2020, 245001/2020] cases do not exist.", errors.get(0));
+        assertEquals("[245000/2020, 245001/2020] cases do not exist.", errors.getFirst());
 
     }
 
-    private void createCaseIdCollection(MultipleData multipleData, int numberCases) {
+    private void createCaseIdCollection(MultipleData multipleData) {
 
         List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();
 
-        for (int i = 0 ; i < numberCases ; i++) {
-
+        for (int i = 0; i < 60; i++) {
             caseIdCollection.add(createCaseIdType(String.valueOf(i)));
-
         }
 
         multipleData.setCaseIdCollection(caseIdCollection);
