@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -158,7 +159,7 @@ class CaseManagementForCaseWorkerServiceTest {
         submitCaseData.setRespondentCollection(createRespondentCollection(true));
         submitCaseData.setClaimantIndType(createClaimantIndType());
         submitCaseData.setRepresentativeClaimantType(createRepresentedTypeC());
-        submitCaseData.setRepCollection(createRepCollection(false));
+        submitCaseData.setRepCollection(createRepCollection());
         submitCaseData.setClaimantRepresentedQuestion(YES);
         Address address = new Address();
         address.setAddressLine1("AddressLine1");
@@ -1207,15 +1208,11 @@ class CaseManagementForCaseWorkerServiceTest {
         return representativeClaimantType;
     }
 
-    private List<RepresentedTypeRItem> createRepCollection(boolean single) {
+    private List<RepresentedTypeRItem> createRepCollection() {
         RepresentedTypeRItem representedTypeRItem1 = createRepresentedTypeR("", "RepresentativeNameAAA");
         RepresentedTypeRItem representedTypeRItem2 = createRepresentedTypeR("dummy", "RepresentativeNameBBB");
         RepresentedTypeRItem representedTypeRItem3 = createRepresentedTypeR("RespondentName1", "RepresentativeNameCCC");
-        if (single) {
-            return new ArrayList<>(Collections.singletonList(representedTypeRItem1));
-        } else {
-            return new ArrayList<>(Arrays.asList(representedTypeRItem1, representedTypeRItem2, representedTypeRItem3));
-        }
+        return new ArrayList<>(Arrays.asList(representedTypeRItem1, representedTypeRItem2, representedTypeRItem3));
     }
 
     private RepresentedTypeRItem createRepresentedTypeR(String respondentName, String representativeName) {
@@ -1235,5 +1232,127 @@ class CaseManagementForCaseWorkerServiceTest {
         dynamicValueType.setLabel("RespondentName1");
         respondentECC.setValue(dynamicValueType);
         return respondentECC;
+    }
+
+    @Test
+    void amendHearing_sortsHearingDateBranchesChronologically() {
+
+        HearingType hearingType1 = new HearingType();
+        hearingType1.setHearingNumber("1");
+        List<DateListedTypeItem> hearing1Dates = new ArrayList<>();
+        hearing1Dates.add(listing("2024-01-12T10:00:00.000"));
+        hearing1Dates.add(listing("2024-01-10T10:00:00.000"));
+        hearing1Dates.add(listing("2024-01-11T10:00:00.000"));
+        hearingType1.setHearingDateCollection(hearing1Dates);
+        HearingTypeItem hearing1 = new HearingTypeItem();
+        hearing1.setValue(hearingType1);
+
+        HearingType hearingType2 = new HearingType();
+        hearingType2.setHearingNumber("2");
+        List<DateListedTypeItem> hearing2Dates = new ArrayList<>();
+        hearing2Dates.add(listing("2025-03-05T14:00:00.000"));
+        hearing2Dates.add(listing("2025-03-01T09:00:00.000"));
+        hearingType2.setHearingDateCollection(hearing2Dates);
+        HearingTypeItem hearing2 = new HearingTypeItem();
+        hearing2.setValue(hearingType2);
+
+        // Build a minimal case with two hearings, each with unsorted listings
+        CaseData caseData = new CaseData();
+        caseData.setHearingCollection(List.of(hearing1, hearing2));
+
+        // Act
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID);
+
+        // Assert: hearing1 sorted 10th, 11th, 12th
+        List<DateListedTypeItem> sorted1 =
+            caseData.getHearingCollection().getFirst().getValue().getHearingDateCollection();
+        assertThat(sorted1.getFirst().getValue().getListedDate()).isEqualTo("2024-01-10T10:00:00.000");
+        assertThat(sorted1.get(1).getValue().getListedDate()).isEqualTo("2024-01-11T10:00:00.000");
+        assertThat(sorted1.get(2).getValue().getListedDate()).isEqualTo("2024-01-12T10:00:00.000");
+
+        // Assert: hearing2 sorted 1st then 5th
+        List<DateListedTypeItem> sorted2 = caseData.getHearingCollection().get(1).getValue().getHearingDateCollection();
+        assertThat(sorted2.getFirst().getValue().getListedDate()).isEqualTo("2025-03-01T09:00:00.000");
+        assertThat(sorted2.get(1).getValue().getListedDate()).isEqualTo("2025-03-05T14:00:00.000");
+
+        // Status should default to LISTED after amend
+        assertThat(sorted1.getFirst().getValue().getHearingStatus()).isEqualTo(HEARING_STATUS_LISTED);
+        assertThat(sorted2.getFirst().getValue().getHearingStatus()).isEqualTo(HEARING_STATUS_LISTED);
+    }
+
+    @Test
+    void amendHearing_sortsMixedDateFormatsAndNullsLast() {
+        // Given a hearing with mixed date formats and invalid entries
+        List<DateListedTypeItem> items = new ArrayList<>();
+        DateListedTypeItem oldFmt = listing("2025-01-01T09:00:00.000");
+        DateListedTypeItem isoNoMillis = listing("2024-12-31T09:00:00");
+        DateListedTypeItem nullDate = new DateListedTypeItem();
+        nullDate.setValue(new DateListedType());
+        DateListedTypeItem invalid = listing("not-a-date");
+        DateListedTypeItem empty = listing("");
+
+        // Deliberately add in non-chronological order
+        items.add(oldFmt);
+        items.add(isoNoMillis);
+        items.add(empty);
+        items.add(invalid);
+        items.add(nullDate);
+        HearingType hearingType = new HearingType();
+        hearingType.setHearingDateCollection(items);
+        HearingTypeItem hearing = new HearingTypeItem();
+        hearing.setValue(hearingType);
+
+        CaseData caseData = new CaseData();
+        caseData.setHearingCollection(List.of(hearing));
+
+        // When
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID);
+
+        // Then: valid dates sorted ascending, null/invalid at the end preserving stable order
+        List<DateListedTypeItem> sorted =
+            caseData.getHearingCollection().getFirst().getValue().getHearingDateCollection();
+        assertThat(sorted.get(0).getValue().getListedDate()).isEqualTo("2024-12-31T09:00:00");
+        assertThat(sorted.get(1).getValue().getListedDate()).isEqualTo("2025-01-01T09:00:00.000");
+        assertThat(sorted.get(2).getValue().getListedDate()).isEmpty();
+        assertThat(sorted.get(3).getValue().getListedDate()).isEqualTo("not-a-date");
+        assertThat(sorted.get(4).getValue().getListedDate()).isNull();
+
+        // And status defaulted to LISTED for processed items
+        assertThat(sorted.get(0).getValue().getHearingStatus()).isEqualTo(HEARING_STATUS_LISTED);
+        assertThat(sorted.get(1).getValue().getHearingStatus()).isEqualTo(HEARING_STATUS_LISTED);
+    }
+
+    @Test
+    void amendHearing_respectsFractionalSecondsOrder() {
+        // Given two entries at the same second, one with millis, one without
+        HearingType hearingType = new HearingType();
+        List<DateListedTypeItem> items = new ArrayList<>();
+        DateListedTypeItem laterNanos = listing("2025-03-01T09:00:00.123");
+        DateListedTypeItem base = listing("2025-03-01T09:00:00");
+        // Add out of order to verify sort
+        items.add(laterNanos);
+        items.add(base);
+        hearingType.setHearingDateCollection(items);
+        HearingTypeItem hearing = new HearingTypeItem();
+        hearing.setValue(hearingType);
+        CaseData caseData = new CaseData();
+        caseData.setHearingCollection(List.of(hearing));
+
+        // When
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID);
+
+        // Then: base second precedes the nanos variant after sort
+        List<DateListedTypeItem> sorted =
+            caseData.getHearingCollection().getFirst().getValue().getHearingDateCollection();
+        assertThat(sorted.get(0).getValue().getListedDate()).isEqualTo("2025-03-01T09:00:00");
+        assertThat(sorted.get(1).getValue().getListedDate()).isEqualTo("2025-03-01T09:00:00.123");
+    }
+
+    private static DateListedTypeItem listing(String listedDate) {
+        DateListedType dateListedType = new DateListedType();
+        dateListedType.setListedDate(listedDate);
+        DateListedTypeItem item = new DateListedTypeItem();
+        item.setValue(dateListedType);
+        return item;
     }
 }
