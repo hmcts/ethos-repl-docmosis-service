@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -67,6 +68,7 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 
+@SuppressWarnings("HideUtilityClassConstructor")
 public class MultipleUtil {
 
     public static final String TESTING_FILE_NAME = "MyFirstExcel.xlsx";
@@ -191,21 +193,21 @@ public class MultipleUtil {
     }
 
     public static void addHearingToCaseData(CaseData caseData) {
-        HearingTypeItem hearingTypeItem = new HearingTypeItem();
         HearingType hearingType = new HearingType();
-        DateListedType dateListedType = new DateListedType();
-        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         hearingType.setHearingNumber("1");
         hearingType.setHearingType("Hearing");
         hearingType.setHearingEstLengthNumType("1");
         hearingType.setHearingFormat(List.of("Video", "Hybrid"));
         hearingType.setHearingSitAlone("Sit Alone");
         hearingType.setHearingEstLengthNumType("Days");
+        DateListedType dateListedType = new DateListedType();
         dateListedType.setHearingVenueDay("Manchester");
         dateListedType.setListedDate("2021-11-01T:00:00:00.000");
         dateListedType.setHearingStatus("Listed");
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         dateListedTypeItem.setValue(dateListedType);
         hearingType.setHearingDateCollection(List.of(dateListedTypeItem));
+        HearingTypeItem hearingTypeItem = new HearingTypeItem();
         hearingTypeItem.setValue(hearingType);
         caseData.setHearingCollection(List.of(hearingTypeItem));
     }
@@ -213,13 +215,13 @@ public class MultipleUtil {
     public static SchedulePayloadEvent getSchedulePayloadEventData(String ethosCaseReference) {
         SchedulePayloadES schedulePayloadES = new SchedulePayloadES();
         schedulePayloadES.setClaimantCompany("JuanFran");
-        ScheduleClaimantType claimantType = new ScheduleClaimantType();
         Address address = new Address();
         address.setPostCode("M2 45GD");
         address.setAddressLine1("12 Sillavan Way");
         address.setAddressLine2("Address2");
         address.setAddressLine3("Address3");
         address.setPostTown("PostTown");
+        ScheduleClaimantType claimantType = new ScheduleClaimantType();
         claimantType.setClaimantAddressUK(address);
         schedulePayloadES.setClaimantType(claimantType);
         ScheduleClaimantIndType claimantIndType = new ScheduleClaimantIndType();
@@ -309,12 +311,13 @@ public class MultipleUtil {
         return caseMultipleTypeItemList;
     }
 
-    private static CaseMultipleTypeItem generateMultipleObjectType(String id, String ethosCaseRef, String subMultiple, String flag1) {
-        CaseMultipleTypeItem caseMultipleTypeItem = new CaseMultipleTypeItem();
+    private static CaseMultipleTypeItem generateMultipleObjectType(String id, String ethosCaseRef, 
+                                                                   String subMultiple, String flag1) {
         MultipleObjectType multipleObjectType = new MultipleObjectType();
         multipleObjectType.setEthosCaseRef(ethosCaseRef);
         multipleObjectType.setSubMultiple(subMultiple);
         multipleObjectType.setFlag1(flag1);
+        CaseMultipleTypeItem caseMultipleTypeItem = new CaseMultipleTypeItem();
         caseMultipleTypeItem.setId(id);
         caseMultipleTypeItem.setValue(multipleObjectType);
         return caseMultipleTypeItem;
@@ -340,22 +343,9 @@ public class MultipleUtil {
     }
 
     public static MultipleData getMultipleData() {
+        List<CaseIdTypeItem> caseIdCollection = getCaseIdTypeItems();
+
         MultipleData multipleData = new MultipleData();
-        List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();
-        CaseType caseType1 = new CaseType();
-        caseType1.setEthosCaseReference("245000/2020");
-        CaseIdTypeItem caseIdTypeItem1 = new CaseIdTypeItem();
-        caseIdTypeItem1.setId("1");
-        caseIdTypeItem1.setValue(caseType1);
-        caseIdCollection.add(caseIdTypeItem1);
-
-        CaseType caseType2 = new CaseType();
-        caseType2.setEthosCaseReference("245001/2020");
-        CaseIdTypeItem caseIdTypeItem2 = new CaseIdTypeItem();
-        caseIdTypeItem2.setId("2");
-        caseIdTypeItem2.setValue(caseType2);
-        caseIdCollection.add(caseIdTypeItem2);
-
         multipleData.setSubMultiple(generateDynamicList("All"));
         multipleData.setFlag1(generateDynamicList("AA"));
         multipleData.setFlag2(generateDynamicList(""));
@@ -376,6 +366,24 @@ public class MultipleUtil {
         multipleData.setReasonForCT("ReasonForCT");
 
         return multipleData;
+    }
+
+    private static @NonNull List<CaseIdTypeItem> getCaseIdTypeItems() {
+        CaseType caseType1 = new CaseType();
+        caseType1.setEthosCaseReference("245000/2020");
+        CaseIdTypeItem caseIdTypeItem1 = new CaseIdTypeItem();
+        caseIdTypeItem1.setId("1");
+        caseIdTypeItem1.setValue(caseType1);
+        List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();
+        caseIdCollection.add(caseIdTypeItem1);
+
+        CaseType caseType2 = new CaseType();
+        caseType2.setEthosCaseReference("245001/2020");
+        CaseIdTypeItem caseIdTypeItem2 = new CaseIdTypeItem();
+        caseIdTypeItem2.setId("2");
+        caseIdTypeItem2.setValue(caseType2);
+        caseIdCollection.add(caseIdTypeItem2);
+        return caseIdCollection;
     }
 
     public static void getDocumentCollection(MultipleData multipleData) {
@@ -399,8 +407,8 @@ public class MultipleUtil {
 
         return UploadedDocument.builder()
                 .content(response.getBody())
-                .name(Objects.requireNonNull(response.getHeaders().get("originalfilename")).get(0))
-                .contentType(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_TYPE)).get(0))
+                .name(Objects.requireNonNull(response.getHeaders().get("originalfilename")).getFirst())
+                .contentType(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_TYPE)).getFirst())
                 .build();
     }
 
@@ -448,15 +456,24 @@ public class MultipleUtil {
 
     public static List<AddressLabelTypeItem> getAddressLabelTypeItemList() {
 
-        AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
         AddressLabelType addressLabelType = new AddressLabelType();
         addressLabelType.setFullAddress("Full Address");
         addressLabelType.setPrintLabel(YES);
         addressLabelType.setLabelEntityAddress(new Address());
+        AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
         addressLabelTypeItem.setId("123");
         addressLabelTypeItem.setValue(addressLabelType);
 
+        AddressLabelType addressLabelType1 = getAddressLabelType();
         AddressLabelTypeItem addressLabelTypeItem1 = new AddressLabelTypeItem();
+        addressLabelTypeItem1.setId("1234");
+        addressLabelTypeItem1.setValue(addressLabelType1);
+
+        return new ArrayList<>(Arrays.asList(addressLabelTypeItem, addressLabelTypeItem1));
+
+    }
+
+    private static @NonNull AddressLabelType getAddressLabelType() {
         AddressLabelType addressLabelType1 = new AddressLabelType();
         addressLabelType1.setFullName("Full Name1");
         addressLabelType1.setFullAddress("Full Address1");
@@ -472,11 +489,7 @@ public class MultipleUtil {
         address.setAddressLine2("Address Line2");
         address.setCountry("Country");
         addressLabelType1.setLabelEntityAddress(address);
-        addressLabelTypeItem1.setId("1234");
-        addressLabelTypeItem1.setValue(addressLabelType1);
-
-        return new ArrayList<>(Arrays.asList(addressLabelTypeItem, addressLabelTypeItem1));
-
+        return addressLabelType1;
     }
 
 }

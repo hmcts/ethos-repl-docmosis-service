@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -73,7 +72,8 @@ public class ExcelActionsControllerTest {
     private static final String MULTIPLE_MID_EVENT_VALIDATION_URL = "/multipleMidEventValidation";
     private static final String SUB_MULTIPLE_MID_EVENT_VALIDATION_URL = "/subMultipleMidEventValidation";
     private static final String MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL = "/multipleCreationMidEventValidation";
-    private static final String MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL = "/multipleAmendCaseIdsMidEventValidation";
+    private static final String
+        MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL = "/multipleAmendCaseIdsMidEventValidation";
     private static final String MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL = "/multipleSingleMidEventValidation";
     private static final String MULTIPLE_MID_BATCH_1_VALIDATION_URL = "/multipleMidBatch1Validation";
     private static final String CLOSE_MULTIPLE_URL = "/closeMultiple";
@@ -148,16 +148,14 @@ public class ExcelActionsControllerTest {
                 .getResource("/exampleMultiplesV1.json")).toURI()));
 
         ObjectMapper dateValidationObjectMapper = new ObjectMapper();
-        listingsValidationRequestContent = dateValidationObjectMapper.readTree(new File(Objects.requireNonNull(getClass()
-                .getResource("/exampleListingV3.json")).toURI()));
+        listingsValidationRequestContent = dateValidationObjectMapper.readTree(
+            new File(Objects.requireNonNull(getClass().getResource("/exampleListingV3.json")).toURI()));
     }
 
     @Before
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
-        DocumentInfo documentInfo = new DocumentInfo();
-        documentInfo.setMarkUp("<a target=\"_blank\" href=\"null/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>");
     }
 
     @Test
@@ -691,8 +689,8 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void dynamicListFlagsError500() throws Exception {
-        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleDynamicListFlagsService).populateDynamicListFlagsLogic(
-                eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList());
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleDynamicListFlagsService)
+            .populateDynamicListFlagsLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(DYNAMIC_LIST_FLAGS_URL)
                 .content(requestContent.toString())
@@ -715,8 +713,8 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void subMultipleMidEventValidationError500() throws Exception {
-        doThrow(new InternalException(ERROR_MESSAGE)).when(subMultipleMidEventValidationService).subMultipleValidationLogic(
-                isA(MultipleDetails.class), anyList());
+        doThrow(new InternalException(ERROR_MESSAGE)).when(subMultipleMidEventValidationService)
+            .subMultipleValidationLogic(isA(MultipleDetails.class), anyList());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(SUB_MULTIPLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
@@ -727,8 +725,8 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void multipleCreationMidEventValidationError500() throws Exception {
-        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
-                eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList(), isA(Boolean.class));
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleCreationMidEventValidationService)
+            .multipleCreationValidationLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList(), isA(Boolean.class));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
@@ -739,8 +737,8 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void multipleAmendCaseIdsMidEventValidationError500() throws Exception {
-        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
-                eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList(), isA(Boolean.class));
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleCreationMidEventValidationService)
+            .multipleCreationValidationLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList(), isA(Boolean.class));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
@@ -751,8 +749,8 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void multipleSingleMidEventValidationError500() throws Exception {
-        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleSingleMidEventValidationService).multipleSingleValidationLogic(
-                eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList());
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleSingleMidEventValidationService)
+            .multipleSingleValidationLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), anyList());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())

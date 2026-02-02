@@ -88,9 +88,4 @@ public class HelperTest {
 
         assertEquals(activeRespondentsFound, activeRespondents.size());
     }
-
-
-
-
-
 }

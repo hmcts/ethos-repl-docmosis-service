@@ -54,7 +54,7 @@ public class BulkAddSinglesServiceTest {
         var errors = bulkAddSinglesService.execute(multipleDetails, authToken);
 
         assertEquals(1, errors.size());
-        assertEquals("Unexpected error when importing single cases", errors.get(0));
+        assertEquals("Unexpected error when importing single cases", errors.getFirst());
     }
 
     private MultipleDetails createMultipleDetails() {

@@ -47,7 +47,7 @@ public class ReportHelperTest {
     }
 
     private String getActual(String inputDateTime) {
-       return ReportHelper.getFormattedLocalDate(inputDateTime);
+        return ReportHelper.getFormattedLocalDate(inputDateTime);
     }
 
     @Test

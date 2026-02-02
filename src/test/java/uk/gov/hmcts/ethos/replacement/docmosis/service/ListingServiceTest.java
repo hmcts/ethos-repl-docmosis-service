@@ -147,7 +147,6 @@ public class ListingServiceTest {
     private ListingDetails listingDetailsRange;
     private DocumentInfo documentInfo;
     private List<SubmitEvent> submitEvents;
-    private UserDetails userDetails;
 
     @Before
     public void setUp() {
@@ -239,7 +238,7 @@ public class ListingServiceTest {
 
         HearingType hearingType = new HearingType();
         hearingType.setHearingDateCollection(new ArrayList<>(Arrays.asList(dateListedTypeItem,
-                dateListedTypeItem1, dateListedTypeItem2)));
+            dateListedTypeItem1, dateListedTypeItem2)));
         hearingType.setHearingVenue("Aberdeen");
         hearingType.setHearingEstLengthNum("2");
         hearingType.setHearingEstLengthNumType("hours");
@@ -307,7 +306,7 @@ public class ListingServiceTest {
         caseData.setEthosCaseReference("4210000/2019");
         caseData.setHearingCollection(new ArrayList<>(Collections.singleton(hearingTypeItem)));
         caseData.setBfActions(new ArrayList<>(Arrays.asList(bfActionTypeItem,
-                bfActionTypeItem1, bfActionTypeItem2, bfActionTypeItem3, bfActionTypeItem4)));
+            bfActionTypeItem1, bfActionTypeItem2, bfActionTypeItem3, bfActionTypeItem4)));
         caseData.setHearingCollection(new ArrayList<>(Arrays.asList(hearingTypeItem, hearingTypeItem1)));
         caseData.setJurCodesCollection(new ArrayList<>(Collections.singleton(jurCodesTypeItem)));
         caseData.setClerkResponsible("Steve Jones");
@@ -330,24 +329,27 @@ public class ListingServiceTest {
         caseDetails.setCaseData(caseData);
         caseDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         caseDetails.setJurisdiction("EMPLOYMENT");
-        userDetails = HelperTest.getUserDetails();
+        UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
     }
 
     @Test
     public void listingCaseCreationWithHearingDocType() {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null,"
-                + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
-                + "tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=AberdeenVenue, venueDundee=null,"
-                + " venueEdinburgh=null, hearingDocType=ETL Test, hearingDocETCL=null, roomOrNoRoom=null,"
-                + " docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=Brought Forward Report, documentName=ETL Test, showAll=null, "
-                + "localReportsSummaryHdr=null, "
-                + "localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+                        + " tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, "
+                        + "tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
+                        + "listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=AberdeenVenue, venueDundee=null,"
+                        + " venueEdinburgh=null, hearingDocType=ETL Test, hearingDocETCL=null, roomOrNoRoom=null,"
+                        + " docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report, documentName=ETL Test, showAll=null, "
+                        + "localReportsSummaryHdr=null, "
+                        + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         listingDetails.getCaseData().setHearingDocType("ETL Test");
         ListingData listingData = listingService.listingCaseCreation(listingDetails);
         assertEquals(result, listingData.toString());
@@ -357,20 +359,26 @@ public class ListingServiceTest {
     @Test
     public void listingCaseCreationWithReportType() {
         String result = "ListingData(tribunalCorrespondenceAddress=null,"
-                + " tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
-                + "tribunalCorrespondenceEmail=null,"
-                + " reportDate=null, hearingDateType=Single," + " listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
-                + "listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=AberdeenVenue, "
-                + "venueDundee=null, "
-                + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
-                + "docMarkUp=null," + " bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=Brought Forward Report,"
-                + " documentName=Brought Forward Report, showAll=null, localReportsSummaryHdr=null,"
-                + " localReportsSummary=null, " + "localReportsSummaryHdr2=null, localReportsSummary2=null, "
-                + "localReportsDetailHdr=null, localReportsDetail=null)";
+                        + " tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, "
+                        + "tribunalCorrespondenceEmail=null,"
+                        + " reportDate=null, hearingDateType=Single,"
+                        + " listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
+                        + "listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=AberdeenVenue, "
+                        + "venueDundee=null, "
+                        + "venueEdinburgh=null, "
+                        + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
+                        + "docMarkUp=null,"
+                        + " bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report,"
+                        + " documentName=Brought Forward Report, showAll=null, localReportsSummaryHdr=null,"
+                        + " localReportsSummary=null, "
+                        + "localReportsSummaryHdr2=null, localReportsSummary2=null, "
+                        + "localReportsDetailHdr=null, localReportsDetail=null)";
         ListingData listingData = listingService.listingCaseCreation(listingDetails);
         assertEquals(result, listingData.toString());
     }
@@ -378,17 +386,18 @@ public class ListingServiceTest {
     @Test
     public void listingCaseCreationWithoutDocumentName() {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null,"
-                + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
-                + "tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
-                + "listingVenueOfficeGlas=null," + " listingVenueOfficeAber=null, " + "venueGlasgow=null,"
-                + " venueAberdeen=AberdeenVenue, " + "venueDundee=null, "
-                + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, "
-                + "roomOrNoRoom=null, docMarkUp=null," + " bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=null, documentName=Missing document name, "
-                + "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+                        + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
+                        + "tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
+                        + "listingVenueOfficeGlas=null," + " listingVenueOfficeAber=null, " + "venueGlasgow=null,"
+                        + " venueAberdeen=AberdeenVenue, " + "venueDundee=null, "
+                        + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, "
+                        + "roomOrNoRoom=null, docMarkUp=null," + " bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=null, documentName=Missing document name, "
+                        + "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, "
+                        + "localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         listingDetails.getCaseData().setReportType(null);
         ListingData listingData = listingService.listingCaseCreation(listingDetails);
         assertEquals(result, listingData.toString());
@@ -398,29 +407,37 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeen() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, "
-                + "tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
-                + "tribunalCorrespondenceEmail=null," + " reportDate=null, hearingDateType=Single, "
-                + "listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123,"
-                + " value=ListingType(causeListDate=12 December 2019, " + "causeListTime=12:11,"
-                + " causeListVenue=AberdeenVenue, "
-                + "elmoCaseReference=4210000/2019, " + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing,"
-                + " positionType=Awaiting ET3, " + "hearingJudgeName= , hearingEEMember= , hearingERMember= , "
-                + "hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
-                + "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , "
-                + "estHearingLength=2 hours, hearingPanel= , " + "hearingRoom=Tribunal 4, respondentOthers= , "
-                + "hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], "
-                + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, "
-                + "venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
-                + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
-                + "bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, "
-                + "localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+                        + "tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, "
+                        + "tribunalCorrespondenceEmail=null,"
+                        + " reportDate=null, hearingDateType=Single, "
+                        + "listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123,"
+                        + " value=ListingType(causeListDate=12 December 2019, "
+                        + "causeListTime=12:11,"
+                        + " causeListVenue=AberdeenVenue, "
+                        + "elmoCaseReference=4210000/2019, "
+                        + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing,"
+                        + " positionType=Awaiting ET3, "
+                        + "hearingJudgeName= , hearingEEMember= , hearingERMember= , "
+                        + "hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+                        + "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , "
+                        + "estHearingLength=2 hours, hearingPanel= , "
+                        + "hearingRoom=Tribunal 4, respondentOthers= , "
+                        + "hearingNotes= , judicialMediation= , hearingFormat= ,"
+                        + " hearingReadingDeliberationMembersChambers= ))], "
+                        + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, "
+                        + "venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
+                        + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
+                        + "bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report, documentName=null, showAll=null, "
+                        + "localReportsSummaryHdr=null, "
+                        + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -431,18 +448,24 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueGlasgow("GlasgowVenue");
         listingDetails.getCaseData().setListingVenue("Glasgow");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null,"
-                + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null,"
-                + " reportDate=null, " + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Glasgow, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
-                + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, "
-                + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=Brought Forward Report, documentName=null, showAll=null, "
-                + "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+                        + " tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null,"
+                        + " reportDate=null, "
+                        + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Glasgow, listingCollection=[], "
+                        + "listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null, "
+                        + "hearingDocType=null, hearingDocETCL=null, "
+                        + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report, documentName=null, showAll=null, "
+                        + "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, "
+                        + "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -452,18 +475,24 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueAberdeen(null);
         listingDetails.getCaseData().setVenueEdinburgh("EdinburghVenue");
         listingDetails.getCaseData().setListingVenue("Edinburgh");
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, " +
-                "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null," +
-                " reportDate=null, hearingDateType=Single, " + "listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Edinburgh, listingCollection=[], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, " +
-                "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
-                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Brought Forward Report, documentName=null, showAll=null, " +
-                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null,"
+                        + " reportDate=null, hearingDateType=Single, "
+                        + "listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Edinburgh, listingCollection=[], "
+                        + "listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, "
+                        + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report, documentName=null, showAll=null, "
+                        + "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, "
+                        + "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -474,41 +503,49 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueDundee("DundeeVenue");
         listingDetails.getCaseData().setListingVenue("Dundee");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single," + " listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Dundee, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
-                + "venueEdinburgh=null, hearingDocType=null, " + "hearingDocETCL=null, "
-                + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report,"
-                + " documentName=null, showAll=null, " + "localReportsSummaryHdr=null, localReportsSummary=null, "
-                + "localReportsSummaryHdr2=null, localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single,"
+                        + " listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Dundee, listingCollection=[], listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null, hearingDocType=null, "
+                        + "hearingDocETCL=null, "
+                        + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report,"
+                        + " documentName=null, showAll=null, "
+                        + "localReportsSummaryHdr=null, localReportsSummary=null, "
+                        + "localReportsSummaryHdr2=null, localReportsSummary2=null, "
+                        + "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
-    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NonNullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NonNullHearingVenueName()
+        throws IOException {
         String expectedHearingVenueName = NEWCASTLE_CFCTC;
-        String expectedHearingVenue = NEWCASTLE_CFT;
 
         setNewcastleTestCaseDetails(NEWCASTLE_CFT, expectedHearingVenueName);
 
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
             anyString(), anyString())).thenReturn(submitEvents);
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
-        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
-            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().getFirst().getValue()
+            .getHearingDateCollection().getFirst().getValue().getHearingVenueNameForNewcastleCFT();
         String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
         assertNotNull(actualHearingVenueNameForNewcastleCFT);
         assertEquals(expectedHearingVenueName, actualHearingVenueNameForNewcastleCFT);
-        assertEquals(expectedHearingVenue, actualHearingVenue);
+        assertEquals(NEWCASTLE_CFT, actualHearingVenue);
     }
 
     @Test
-    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForNewcastleCft_NullHearingVenueName()
+        throws IOException {
         String expectedHearingVenueName = null;
         String expectedHearingVenue = "Kings Court";
 
@@ -517,15 +554,16 @@ public class ListingServiceTest {
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
             anyString(), anyString())).thenReturn(submitEvents);
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
-        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
-            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().getFirst().getValue()
+            .getHearingDateCollection().getFirst().getValue().getHearingVenueNameForNewcastleCFT();
         String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
         assertNull(actualHearingVenueNameForNewcastleCFT);
         assertEquals(expectedHearingVenue, actualHearingVenue);
     }
 
     @Test
-    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags_NonNullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags_NonNullHearingVenueName()
+        throws IOException {
         String expectedHearingVenueName = TEESSIDE_JUSTICE_CENTRE;
         String expectedHearingVenue = TEESSIDE_MAGS;
 
@@ -534,8 +572,8 @@ public class ListingServiceTest {
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
             anyString(), anyString())).thenReturn(submitEvents);
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
-        String actualHearingVenueName = caseData.getHearingCollection().get(0).getValue()
-            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForTeessideMags();
+        String actualHearingVenueName = caseData.getHearingCollection().getFirst().getValue()
+            .getHearingDateCollection().getFirst().getValue().getHearingVenueNameForTeessideMags();
         String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
         assertNotNull(actualHearingVenueName);
         assertEquals(expectedHearingVenueName, actualHearingVenueName);
@@ -543,15 +581,16 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags__NullHearingVenueName() throws IOException {
+    public void processListingHearingsRequest_SetCauseListVenueForTeessideMags__NullHearingVenueName()
+        throws IOException {
         String expectedHearingVenueName = null;
         String expectedHearingVenue = TEESSIDE_MAGS;
         setNewcastleTestCaseDetails(expectedHearingVenue, expectedHearingVenueName);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
             anyString(), anyString())).thenReturn(submitEvents);
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
-        String actualHearingVenueNameForTeessideMags = caseData.getHearingCollection().get(0).getValue()
-            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForTeessideMags();
+        String actualHearingVenueNameForTeessideMags = caseData.getHearingCollection().getFirst().getValue()
+            .getHearingDateCollection().getFirst().getValue().getHearingVenueNameForTeessideMags();
         String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
         assertNull(actualHearingVenueNameForTeessideMags);
         assertEquals(expectedHearingVenue, actualHearingVenue);
@@ -566,10 +605,10 @@ public class ListingServiceTest {
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
             anyString(), anyString())).thenReturn(submitEvents);
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
-        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().get(0).getValue()
-            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForNewcastleCFT();
-        String actualHearingVenueNameForTeessideMags = caseData.getHearingCollection().get(0).getValue()
-            .getHearingDateCollection().get(0).getValue().getHearingVenueNameForTeessideMags();
+        String actualHearingVenueNameForNewcastleCFT = caseData.getHearingCollection().getFirst().getValue()
+            .getHearingDateCollection().getFirst().getValue().getHearingVenueNameForNewcastleCFT();
+        String actualHearingVenueNameForTeessideMags = caseData.getHearingCollection().getFirst().getValue()
+            .getHearingDateCollection().getFirst().getValue().getHearingVenueNameForTeessideMags();
         String actualHearingVenue = caseData.getPrintHearingCollection().getListingVenue();
         assertNull(actualHearingVenueNameForNewcastleCFT);
         assertNull(actualHearingVenueNameForTeessideMags);
@@ -582,8 +621,8 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDateTo("2022-12-28");
         listingDetails.getCaseData().setListingDate("2022-12-15");
 
-        submitEvents.get(0).getCaseData().getHearingCollection()
-            .subList(0, submitEvents.get(0).getCaseData().getHearingCollection().size()).clear();
+        submitEvents.getFirst().getCaseData().getHearingCollection()
+            .subList(0, submitEvents.getFirst().getCaseData().getHearingCollection().size()).clear();
         HearingType hearingTypeOne = new HearingType();
         hearingTypeOne.setHearingVenue(hearingVenue);
         hearingTypeOne.setHearingType("Hearing");
@@ -623,262 +662,365 @@ public class ListingServiceTest {
         hearingTypeItemOne.setValue(hearingTypeOne);
         List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
         hearingTypeItems.add(hearingTypeItemOne);
-        submitEvents.get(0).getCaseData().setHearingCollection(hearingTypeItems);
+        submitEvents.getFirst().getCaseData().setHearingCollection(hearingTypeItems);
     }
 
     @Test
     public void processListingHearingsRequestNonScottish() throws IOException {
         listingDetails.getCaseData().setVenueAberdeen(null);
         listingDetails.getCaseData().setListingVenue("Leeds");
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, " +
-                "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, " +
-                "reportDate=null," + " hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Leeds, listingCollection=[], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, " +
-                "venueEdinburgh=null," + " hearingDocType=null, hearingDocETCL=null, " +
-                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Brought Forward Report, documentName=null, showAll=null, " +
-                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null," +
-                " localReportsSummary2=null, " + "localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null,"
+                        + " hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Leeds, listingCollection=[], listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null,"
+                        + " hearingDocType=null, hearingDocETCL=null, "
+                        + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report, documentName=null, showAll=null, "
+                        + "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null,"
+                        + " localReportsSummary2=null, "
+                        + "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingHearingsRequestAberdeenWithValidHearingType() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, " +
-                "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, " +
-                "reportDate=null, hearingDateType=Single, " + "listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, " +
-                "value=ListingType(causeListDate=12 December 2019, " +
-                "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, " +
-                "jurisdictionCodesList=ABC, hearingType=Valid Hearing, " +
-                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , " +
-                "hearingClerk=Clerk, hearingDay=1 of 3, " + "claimantName=RYAN AIR LTD, claimantTown= , " +
-                "claimantRepresentative= , respondent= , respondentTown= , " +
-                "respondentRepresentative= , " +
-                "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , " +
-                "judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, " +
-                "venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=ETCL - Cause List, hearingDocETCL=Public, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=null, " + "clerkResponsible=null, reportType=Brought Forward Report, " +
-                "documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, " +
-                "localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType("Valid Hearing");
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst()
+            .getValue().setHearingType("Valid Hearing");
         listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
         listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PUBLIC);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, "
+                        + "listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, "
+                        + "value=ListingType(causeListDate=12 December 2019, "
+                        + "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, "
+                        + "jurisdictionCodesList=ABC, hearingType=Valid Hearing, "
+                        + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , "
+                        + "hearingClerk=Clerk, hearingDay=1 of 3, "
+                        + "claimantName=RYAN AIR LTD, claimantTown= , "
+                        + "claimantRepresentative= , respondent= , respondentTown= , "
+                        + "respondentRepresentative= , "
+                        + "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , "
+                        + "hearingNotes= , "
+                        + "judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], "
+                        + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, "
+                        + "venueAberdeen=null, "
+                        + "venueDundee=null, venueEdinburgh=null, "
+                        + "hearingDocType=ETCL - Cause List, hearingDocETCL=Public, roomOrNoRoom=null, docMarkUp=null, "
+                        + "bfDateCollection=null, "
+                        + "clerkResponsible=null, reportType=Brought Forward Report, "
+                        + "documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, "
+                        + "localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, "
+                        + "localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingHearingsRequestAberdeenWithInValidHearingType() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
-                + "hearingDocType=ETCL - Cause List, hearingDocETCL=Public, roomOrNoRoom=null, docMarkUp=null, "
-                + "bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, "
-                + "localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType(HEARING_TYPE_JUDICIAL_MEDIATION);
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
+        submitEvents.getFirst().getCaseData().getHearingCollection()
+            .getFirst().getValue().setHearingType(HEARING_TYPE_JUDICIAL_MEDIATION);
         listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
         listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PUBLIC);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(),
+            anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
+                        + "listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
+                        + "hearingDocType=ETCL - Cause List, hearingDocETCL=Public, roomOrNoRoom=null, docMarkUp=null, "
+                        + "bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report, documentName=null, showAll=null, "
+                        + "localReportsSummaryHdr=null, "
+                        + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingHearingsRequestAberdeenWithPrivateHearingType() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null,"
-                + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
-                + "venueEdinburgh=null, " + "hearingDocType=ETCL - Cause List, hearingDocETCL=Press List, "
-                + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, "
-                + "localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType(
-                HEARING_TYPE_PERLIMINARY_HEARING);
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingPublicPrivate(
-                HEARING_TYPE_PRIVATE);
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().setHearingType(
+            HEARING_TYPE_PERLIMINARY_HEARING);
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().setHearingPublicPrivate(
+            HEARING_TYPE_PRIVATE);
         listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
         listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PRESS_LIST);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null,"
+                        + " tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
+                        + "listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null, "
+                        + "hearingDocType=ETCL - Cause List, hearingDocETCL=Press List, "
+                        + "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+                        + "reportType=Brought Forward Report, documentName=null, showAll=null, "
+                        + "localReportsSummaryHdr=null, "
+                        + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingHearingsRequestAberdeenWithALL() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, "
-                + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single,"
-                + " listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=["
-                + "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11,"
-                + " causeListVenue=AberdeenVenue, " + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, "
-                + "hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , "
-                + "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
-                + "claimantRepresentative= , " + "respondent= , respondentTown= , respondentRepresentative= , "
-                + "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, "
-                + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
-                + "hearingReadingDeliberationMembersChambers= )), " + "ListingTypeItem(id=124, "
-                + "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, "
-                + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
-                + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , "
-                + "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, "
-                + "claimantTown= , claimantRepresentative= , "
-                + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, "
-                + "hearingPanel= , hearingRoom=Tribunal 5, "
-                + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
-                + "hearingReadingDeliberationMembersChambers= )), "
-                + "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, "
-                + "causeListTime=12:11, "
-                + "causeListVenue=AberdeenVenue2, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, "
-                + "hearingType=Preliminary Hearing, positionType=Awaiting ET3, "
-                + "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk3, "
-                + "hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , "
-                + "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , "
-                +  "estHearingLength=null null, hearingPanel= , hearingRoom=Tribunal 5, "
-                + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
-                + "hearingReadingDeliberationMembersChambers= ))], " + "listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, venueGlasgow=null," + " venueAberdeen=null, venueDundee=null, "
-                + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
-                + "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null,"
-                + " showAll=null, localReportsSummaryHdr=null, " + "localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetails.getCaseData().setVenueAberdeen(ALL_VENUES);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, "
+                        + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, "
+                        + "hearingDateType=Single,"
+                        + " listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=["
+                        + "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, "
+                        + "causeListTime=12:11,"
+                        + " causeListVenue=AberdeenVenue, "
+                        + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, "
+                        + "hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , "
+                        + "hearingEEMember= , "
+                        + "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, "
+                        + "claimantTown= , "
+                        + "claimantRepresentative= , "
+                        + "respondent= , respondentTown= , respondentRepresentative= , "
+                        + "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, "
+                        + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+                        + "hearingReadingDeliberationMembersChambers= )), "
+                        + "ListingTypeItem(id=124, "
+                        + "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, "
+                        + "causeListVenue=AberdeenVenue2, "
+                        + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
+                        + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , "
+                        + "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, "
+                        + "claimantTown= , claimantRepresentative= , "
+                        + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, "
+                        + "hearingPanel= , hearingRoom=Tribunal 5, "
+                        + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+                        + "hearingReadingDeliberationMembersChambers= )), "
+                        + "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, "
+                        + "causeListTime=12:11, "
+                        + "causeListVenue=AberdeenVenue2, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, "
+                        + "hearingType=Preliminary Hearing, positionType=Awaiting ET3, "
+                        + "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk3, "
+                        + "hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , "
+                        + "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , "
+                        + "estHearingLength=null null, hearingPanel= , hearingRoom=Tribunal 5, "
+                        + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+                        + "hearingReadingDeliberationMembersChambers= ))], "
+                        + "listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, venueGlasgow=null,"
+                        + " venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null, "
+                        + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
+                        + "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, "
+                        + "documentName=null,"
+                        + " showAll=null, localReportsSummaryHdr=null, "
+                        + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingHearingsRequestDateRange() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
-                "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=" +
-                "[ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
-                "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), " +
-                "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
-                "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", "Manchester", listingDetailsRange.getCaseData().getListingDateFrom(),
-                listingDetailsRange.getCaseData().getListingDateTo(), "AberdeenVenue",
-                "data.hearingCollection.value.hearingDateCollection.value.Hearing_Aberdeen.keyword")).thenReturn(submitEvents);
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range,"
+            + " listingDate=null, listingDateFrom=2019-12-09, "
+            + "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection="
+            + "[ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, "
+            + "causeListVenue=AberdeenVenue, "
+            + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , "
+            + "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+            + "claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , "
+            + "hearingRoom=Tribunal 4, "
+            + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= )), "
+            + "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, "
+            + "causeListVenue=AberdeenVenue, "
+            + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , "
+            + "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+            + "claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , "
+            + "hearingRoom=Tribunal 4, "
+            + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= ))], "
+            + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, "
+            + "venueDundee=null, venueEdinburgh=null, "
+            + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
+            + "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, "
+            + "showAll=null, localReportsSummaryHdr=null, "
+            + "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, "
+            + "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", "Manchester",
+            listingDetailsRange.getCaseData().getListingDateFrom(),
+            listingDetailsRange.getCaseData().getListingDateTo(), "AberdeenVenue",
+            "data.hearingCollection.value.hearingDateCollection.value.Hearing_Aberdeen.keyword"))
+            .thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingHearingsRequestSingleDate() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[" +
-                "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
-                "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), " +
-                "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, " +
-                "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=124, " +
-                "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, " +
-                "causeListVenue=AberdeenVenue2, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, " +
-                "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk3, hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , " +
-                "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=null null, hearingPanel= , hearingRoom=Tribunal 5, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetails.getCaseData().setVenueAberdeen(ALL_VENUES);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", "Manchester", listingDetails.getCaseData().getListingDate(),
-                listingDetails.getCaseData().getListingDate(), "Aberdeen",
-                "data.hearingCollection.value.hearingDateCollection.value.hearingVenueDay.keyword")).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", "Manchester",
+            listingDetails.getCaseData().getListingDate(),
+            listingDetails.getCaseData().getListingDate(), "Aberdeen",
+            "data.hearingCollection.value.hearingDateCollection.value.hearingVenueDay.keyword"))
+            .thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, "
+            + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+            + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=["
+            + "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, "
+            + "causeListVenue=AberdeenVenue, "
+            + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , "
+            + "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+            + "claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , "
+            + "hearingRoom=Tribunal 4, "
+            + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= )), "
+            + "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, "
+            + "causeListVenue=AberdeenVenue2, "
+            + "elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , "
+            + "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+            + "claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , "
+            + "hearingRoom=Tribunal 5, "
+            + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=124, "
+            + "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, "
+            + "causeListVenue=AberdeenVenue2, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, "
+            + "hearingType=Preliminary Hearing, positionType=Awaiting ET3, "
+            + "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk3, hearingDay=1 of 1, "
+            + "claimantName=RYAN AIR LTD, claimantTown= , "
+            + "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , "
+            + "estHearingLength=null null, hearingPanel= , hearingRoom=Tribunal 5, "
+            + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= ))], "
+            + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, "
+            + "venueDundee=null, venueEdinburgh=null, "
+            + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
+            + "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, "
+            + "showAll=null, localReportsSummaryHdr=null, "
+            + "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, "
+            + "localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingHearingsRequestRangeAndAllVenues() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range, listingDate=null, " +
-                "listingDateFrom=2019-12-09, listingDateTo=2019-12-12, listingVenue=All, listingCollection=[ListingTypeItem(id=124, " +
-                "value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, j" +
-                "urisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), " +
-                "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, " +
-                "causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, " +
-                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, " +
-                "claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , " +
-                "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , " +
-                "hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=124, " +
-                "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, elmoCaseReference=4210000/2019, " +
-                "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
-                "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=124, " +
-                "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, " +
-                "causeListVenue=AberdeenVenue2, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, " +
-                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk3, hearingDay=1 of 1, " +
-                "claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , " +
-                "estHearingLength=null null, hearingPanel= , hearingRoom=Tribunal 5, respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , " +
-                "hearingReadingDeliberationMembersChambers= ))], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, " +
-                "hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, " +
-                "documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
-                "localReportsDetailHdr=null, localReportsDetail=null)";
-        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        submitEvents.getFirst().getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range,"
+            + " listingDate=null, "
+            + "listingDateFrom=2019-12-09, listingDateTo=2019-12-12, listingVenue=All, "
+            + "listingCollection=[ListingTypeItem(id=124, "
+            + "value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, "
+            + "elmoCaseReference=4210000/2019, j"
+            + "urisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName= "
+            + ", hearingEEMember= , "
+            + "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+            + "claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , "
+            + "hearingRoom=Tribunal 4, "
+            + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= )), "
+            + "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, "
+            + "causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, "
+            + "hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk,"
+            + " hearingDay=1 of 3, "
+            + "claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , respondent= , respondentTown= , "
+            + "respondentRepresentative= , "
+            + "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , "
+            + "judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=124, "
+            + "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, "
+            + "elmoCaseReference=4210000/2019, "
+            + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, hearingJudgeName="
+            + " , hearingEEMember= , "
+            + "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , "
+            + "claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , "
+            + "hearingRoom=Tribunal 5, "
+            + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=124, "
+            + "value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, "
+            + "causeListVenue=AberdeenVenue2, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, "
+            + "hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , "
+            + "hearingClerk=Clerk3, hearingDay=1 of 1, "
+            + "claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , respondent= , respondentTown= , "
+            + "respondentRepresentative= , "
+            + "estHearingLength=null null, hearingPanel= , hearingRoom=Tribunal 5, respondentOthers= , hearingNotes= , "
+            + "judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= ))], listingVenueOfficeGlas=null, "
+            + "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+            + "venueEdinburgh=null, hearingDocType=null, "
+            + "hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
+            + "reportType=Brought Forward Report, "
+            + "documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, "
+            + "localReportsSummaryHdr2=null, localReportsSummary2=null, "
+            + "localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test(expected = Exception.class)
     public void processListingHearings_listedDateNullOrEmpty() throws IOException {
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(1).getValue().setListedDate(null);
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(1).getValue().setListedDate("");
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getHearingDateCollection()
+            .get(1).getValue().setListedDate(null);
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getHearingDateCollection()
+            .get(1).getValue().setListedDate("");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString())).thenReturn(submitEvents);
         listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
     }
 
@@ -886,324 +1028,460 @@ public class ListingServiceTest {
     public void processListingHearings_causeListDateNull() throws IOException {
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString())).thenReturn(submitEvents);
         var listingData = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
         var listingCollection = listingData.getListingCollection();
-        listingCollection.get(0).getValue().setCauseListDate(null);
+        listingCollection.getFirst().getValue().setCauseListDate(null);
         listingCollection.sort(Comparator.comparing(o -> LocalDate.parse(o.getValue().getCauseListDate(),
-                CAUSE_LIST_DATE_TIME_PATTERN)));
+            CAUSE_LIST_DATE_TIME_PATTERN)));
     }
 
     @Test
     public void processListingHearings_SameDayAndTimeDifferentMonth() throws IOException {
-        var result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, " +
-                "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, " +
-                "reportDate=null, hearingDateType=Range, listingDate=null, listingDateFrom=2021-01-01, " +
-                "listingDateTo=2021-12-01, listingVenue=All, listingCollection=[ListingTypeItem(id=124, " +
-                "value=ListingType(causeListDate=01 January 2021, causeListTime=12:00, causeListVenue=AberdeenVenue," +
-                " elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, " +
-                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , " +
-                "hearingClerk=Clerk, hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
-                "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= ," +
-                " hearingFormat= , hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=123, " +
-                "value=ListingType(causeListDate=01 December 2021, causeListTime=12:00, causeListVenue=AberdeenVenue," +
-                " elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing," +
-                " positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , " +
-                "hearingClerk=Clerk, hearingDay=1 of 3, claimantName= , claimantTown= , claimantRepresentative= , " +
-                "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
-                "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= , " +
-                "hearingFormat= , hearingReadingDeliberationMembersChambers= ))], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, " +
-                "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
-                "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setListedDate("2021-12-01T12:00:00.000");
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(1).getValue().setListedDate("2021-01-01T12:00:00.000");
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getHearingDateCollection()
+            .getFirst().getValue().setListedDate("2021-12-01T12:00:00.000");
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getHearingDateCollection()
+            .get(1).getValue().setListedDate("2021-01-01T12:00:00.000");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
         listingDetailsRange.getCaseData().setListingDateFrom("2021-01-01");
         listingDetailsRange.getCaseData().setListingDateTo("2021-12-01");
-
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString())).thenReturn(submitEvents);
+            anyString(), anyString())).thenReturn(submitEvents);
         var listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
+        var result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+            + "reportDate=null, hearingDateType=Range, listingDate=null, listingDateFrom=2021-01-01, "
+            + "listingDateTo=2021-12-01, listingVenue=All, listingCollection=[ListingTypeItem(id=124, "
+            + "value=ListingType(causeListDate=01 January 2021, causeListTime=12:00, "
+            + "causeListVenue=AberdeenVenue,"
+            + " elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , "
+            + "hearingClerk=Clerk, hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, "
+            + "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= ,"
+            + " hearingFormat= , hearingReadingDeliberationMembersChambers= )), ListingTypeItem(id=123, "
+            + "value=ListingType(causeListDate=01 December 2021, causeListTime=12:00, "
+            + "causeListVenue=AberdeenVenue,"
+            + " elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing,"
+            + " positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , "
+            + "hearingClerk=Clerk, hearingDay=1 of 3, claimantName= , claimantTown= , claimantRepresentative= , "
+            + "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, "
+            + "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= , "
+            + "hearingFormat= , hearingReadingDeliberationMembersChambers= ))], listingVenueOfficeGlas=null, "
+            + "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+            + "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
+            + "docMarkUp=null, "
+            + "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, "
+            + "documentName=null, "
+            + "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, "
+            + "localReportsSummaryHdr2=null, "
+            + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test(expected = Exception.class)
     public void processListingHearingsRequestWithException() throws IOException {
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         listingService.processListingHearingsRequest(listingDetails, "authToken");
     }
 
     @Test
     public void processHearingDocument() throws IOException {
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
-        when(tornadoService.listingGeneration(anyString(), ArgumentMatchers.any(), anyString())).thenReturn(documentInfo);
-        DocumentInfo documentInfo1 = listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
+        when(tornadoService.listingGeneration(anyString(), ArgumentMatchers.any(), anyString()))
+            .thenReturn(documentInfo);
+        DocumentInfo documentInfo1 = listingService.processHearingDocument(listingDetails.getCaseData(),
+            listingDetails.getCaseTypeId(), "authToken");
         assertEquals(documentInfo, documentInfo1);
     }
 
     @Test(expected = Exception.class)
     public void processHearingDocumentWithException() throws IOException {
-        when(tornadoService.listingGeneration(anyString(), ArgumentMatchers.any(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
-        listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
+        when(tornadoService.listingGeneration(anyString(), ArgumentMatchers.any(), anyString()))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
+        listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(),
+            "authToken");
     }
 
     @Test
     public void processListingHearingsRequestWithAdditionalInfo() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
-                "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, " +
-                "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=Juan Pedro, " +
-                "claimantTown=Aberdeen, claimantRepresentative=ONG, respondent=Royal McDonal, respondentTown=Aberdeen, respondentRepresentative=ITV, " +
-                "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers=Royal McDonal, hearingNotes= , judicialMediation= , hearingFormat= , " +
-                "hearingReadingDeliberationMembersChambers= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, " +
-                "clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, " +
-                "localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         ClaimantType claimantType = new ClaimantType();
         Address address = new Address();
         address.setPostTown("Aberdeen");
         claimantType.setClaimantAddressUK(address);
-        submitEvents.get(0).getCaseData().setClaimantType(claimantType);
+        submitEvents.getFirst().getCaseData().setClaimantType(claimantType);
         ClaimantIndType claimantIndType = new ClaimantIndType();
         claimantIndType.setClaimantLastName("Juan Pedro");
-        submitEvents.get(0).getCaseData().setClaimantIndType(claimantIndType);
+        submitEvents.getFirst().getCaseData().setClaimantIndType(claimantIndType);
         RepresentedTypeC representedTypeC = new RepresentedTypeC();
         representedTypeC.setNameOfOrganisation("ONG");
-        submitEvents.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
-        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        submitEvents.getFirst().getCaseData().setRepresentativeClaimantType(representedTypeC);
         RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentAddress(address);
         respondentSumType.setRespondentName("Royal McDonal");
         respondentSumType.setResponseStruckOut(NO);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setId("111");
         respondentSumTypeItem.setValue(respondentSumType);
         RespondentSumTypeItem respondentSumTypeItem1 = new RespondentSumTypeItem();
-        RespondentSumType respondentSumType1 = new RespondentSumType();
-        respondentSumType1.setRespondentAddress(address);
-        respondentSumType1.setRespondentName("Burger King");
         respondentSumTypeItem1.setId("112");
         respondentSumTypeItem1.setValue(respondentSumType);
-        submitEvents.get(0).getCaseData().setRespondentCollection(new ArrayList<>(Arrays.asList(respondentSumTypeItem, respondentSumTypeItem1)));
+        submitEvents.getFirst().getCaseData().setRespondentCollection(
+            new ArrayList<>(Arrays.asList(respondentSumTypeItem, respondentSumTypeItem1)));
         RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
         RepresentedTypeR representedTypeR = new RepresentedTypeR();
         representedTypeR.setNameOfOrganisation("ITV");
         representedTypeRItem.setId("222");
         representedTypeRItem.setValue(representedTypeR);
-        submitEvents.get(0).getCaseData().setRepCollection(new ArrayList<>(Collections.singleton(representedTypeRItem)));
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        submitEvents.getFirst().getCaseData()
+            .setRepCollection(new ArrayList<>(Collections.singleton(representedTypeRItem)));
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, "
+            + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+            + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType"
+            + "(causeListDate=12 December 2019, "
+            + "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, "
+            + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, "
+            + "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, "
+            + "claimantName=Juan Pedro, "
+            + "claimantTown=Aberdeen, claimantRepresentative=ONG, respondent=Royal McDonal, respondentTown=Aberdeen, "
+            + "respondentRepresentative=ITV, "
+            + "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers=Royal McDonal, "
+            + "hearingNotes= , judicialMediation= , hearingFormat= , "
+            + "hearingReadingDeliberationMembersChambers= ))], listingVenueOfficeGlas=null, "
+            + "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+            + "venueEdinburgh=null, "
+            + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, "
+            + "clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, "
+            + "localReportsSummaryHdr=null, localReportsSummary=null, "
+            + "localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, "
+            + "localReportsDetail=null)";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void processListingSingleCasesRequest() {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
-                "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, " +
-                "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName= , " +
-                "claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
-                "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        caseDetails.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection().get(2).getValue().setHearingStatus("Settled");
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, "
+            + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+            + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType"
+            + "(causeListDate=12 December 2019, "
+            + "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, "
+            + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, "
+            + "positionType=Awaiting ET3, hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk,"
+            + " hearingDay=1 of 3, claimantName= , "
+            + "claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , "
+            + "estHearingLength=2 hours, "
+            + "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= , judicialMediation= , "
+            + "hearingFormat= , hearingReadingDeliberationMembersChambers= ))], "
+            + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, "
+            + "venueDundee=null, venueEdinburgh=null, "
+            + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, "
+            + "clerkResponsible=null, "
+            + "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, "
+            + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+            + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+        caseDetails.getCaseData().getHearingCollection().getFirst()
+            .getValue().getHearingDateCollection().get(2).getValue().setHearingStatus("Settled");
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
         assertEquals(result, caseData.getPrintHearingDetails().toString());
-        caseDetails.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection().get(2).getValue().setHearingStatus(null);
+        caseDetails.getCaseData().getHearingCollection().getFirst()
+            .getValue().getHearingDateCollection().get(2).getValue().setHearingStatus(null);
     }
 
     @Test
     public void processListingSingleCasesRequestNotShowAll() {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, listingDateTo=null, "
-                + "listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 "
-                + "December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, "
-                + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, "
-                + "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, "
-                + "claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , "
-                + "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, "
-                + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , hearingReadingDeliberationMembersChambers= ))], "
-                + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, "
-                + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
-                + "hearingDocType=ETCL - Cause List, hearingDocETCL=Staff, roomOrNoRoom=null, docMarkUp=null, "
-                + "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, "
-                + "showAll=No, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         caseDetails.getCaseData().getPrintHearingDetails().setShowAll(NO);
         caseDetails.getCaseData().getPrintHearingDetails().setHearingDocType(HEARING_DOC_ETCL);
         caseDetails.getCaseData().getPrintHearingDetails().setHearingDocETCL(HEARING_ETCL_STAFF);
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
+                        + "tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, "
+                        + "listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType"
+                        + "(causeListDate=12 "
+                        + "December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, "
+                        + "elmoCaseReference=4210000/2019, "
+                        + "jurisdictionCodesList=ABC, hearingType=Preliminary Hearing, positionType=Awaiting ET3, "
+                        + "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1"
+                        + " of 3, "
+                        + "claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , "
+                        + "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal"
+                        + " 4, "
+                        + "respondentOthers= , hearingNotes= , judicialMediation= , hearingFormat= , "
+                        + "hearingReadingDeliberationMembersChambers= ))], "
+                        + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, "
+                        + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
+                        + "hearingDocType=ETCL - Cause List, hearingDocETCL=Staff, roomOrNoRoom=null, docMarkUp=null, "
+                        + "bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, "
+                        + "documentName=null, "
+                        + "showAll=No, localReportsSummaryHdr=null, localReportsSummary=null, "
+                        + "localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(result, caseData.getPrintHearingDetails().toString());
     }
 
     @Test
     public void setCourtAddressFromCaseData() {
-        String result = "ListingData(tribunalCorrespondenceAddress=Manchester Avenue, Manchester, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=AberdeenVenue, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=Manchester Avenue, Manchester, "
+            + "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, "
+            + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+            + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
+            + "listingVenueOfficeAber=null, "
+            + "venueGlasgow=null, venueAberdeen=AberdeenVenue, venueDundee=null, venueEdinburgh=null, "
+            + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, "
+            + "clerkResponsible=null, "
+            + "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, "
+            + "localReportsSummary=null, localReportsSummaryHdr2=null, "
+            + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         ListingData listingData = listingService.setCourtAddressFromCaseData(caseDetails.getCaseData());
         assertEquals(result, listingData.toString());
     }
 
     @Test
     public void generateClaimsAcceptedReportDataForEngland() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, " +
-                "clerkResponsible=null, reportType=Claims Accepted, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
-                "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, " +
-                "full=null, half=null, mins=null, total=1, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, " +
-                "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, hearingSitAlone=null, " +
-                "hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, " +
-                "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=null, " +
-                "casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, completedPerSession=null, " +
-                "completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, " +
-                "otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, " +
-                "ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, " +
-                "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, " +
-                "ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, " +
-                "Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, " +
-                "hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, " +
-                "hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, " +
-                "singlesTotal=1, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, " +
-                "ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, " +
-                "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, " +
-                "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-                + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
-                + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
-                + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
-                + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
-                + "), "
-                + "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, " +
-                "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, " +
-                "multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, " +
-                "clerk=Steve Jones, hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, " +
-                "fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, " +
-                "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, " +
-                "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, " +
-                "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, " +
-                "conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, " +
-                "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, " +
-                "ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, " +
-                "Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, " +
-                "Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, " +
-                "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, " +
-                "hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, " +
-                "leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=Single, singlesTotal=null, multiplesTotal=null, " +
-                "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, " +
-                "ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, " +
-                "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, " +
-                "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, "
-                + "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-                + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
-                "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
-                "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, " +
-                "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
-                +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, "
+            + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+            + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
+            + "listingVenueOfficeAber=null, "
+            + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
+            + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, "
+            + "clerkResponsible=null, reportType=Claims Accepted, documentName=null, showAll=null, "
+            + "localReportsSummaryHdr=null, "
+            + "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, "
+            + "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, "
+            + "hearingDate=null, date=null, "
+            + "full=null, half=null, mins=null, total=1, eeMember=null, erMember=null, caseReference=null, "
+            + "multipleRef=null, multSub=null, "
+            + "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, "
+            + "clerk=null, hearingSitAlone=null, "
+            + "hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, "
+            + "fileLocation=null, "
+            + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
+            + "fileLocationEdinburgh=null, casesCompletedHearingTotal=null, "
+            + "casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, "
+            + "sessionDaysTotalDetail=null, completedPerSession=null, "
+            + "completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, "
+            + "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, "
+            + "otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
+            + "ConNoneCasesCompletedHearing=null, "
+            + "ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, "
+            + "ConFastSessionDays=null, ConFastCompletedPerSession=null, "
+            + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
+            + "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, "
+            + "ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, "
+            + "Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, "
+            + "Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, "
+            + "bfDate=null, bfDateCleared=null, reservedHearing=null, "
+            + "hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, "
+            + "hearingStage1=null, hearingStage2=null, hearingFull=null, "
+            + "hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, "
+            + "et3ReceivedDate=null, judicialMediation=null, caseType=null, "
+            + "singlesTotal=1, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, respondentET4=null, "
+            + "listingHistory=null, ConNoneTotal=null, ConStdTotal=null, "
+            + "ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, "
+            + "ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, "
+            + "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, "
+            + "xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, "
+            + "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, "
+            + "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+            + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+            + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+            + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+            + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
+            + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+            + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+            + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
+            + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
+            + "), "
+            + "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, "
+            + "reportOffice=null, receiptDate=null, "
+            + "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, "
+            + "caseReference=4210000/2019, "
+            + "multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, "
+            + "hearingDuration=null, hearingClerk=null, "
+            + "clerk=Steve Jones, hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, "
+            + "position=null, dateToPosition=null, "
+            + "fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
+            + "fileLocationEdinburgh=null, "
+            + "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=null, "
+            + "sessionDaysTotal=null, "
+            + "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, "
+            + "ftSessionDays=null, ftSessionDaysTotal=null, "
+            + "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
+            + "otherSessionDays=null, "
+            + "conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, "
+            + "ConNoneSessionDays=null, ConNoneCompletedPerSession=null, "
+            + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, "
+            + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, "
+            + "ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, "
+            + "ConOpenCompletedPerSession=null, totalCases=null, "
+            + "Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, "
+            + "Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, "
+            + "respondentName=null, actioned=null, "
+            + "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null,"
+            + " hearingPH=null, hearingPrelim=null, stage=null, "
+            + "hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, "
+            + "reconsider=null, subSplit=null, "
+            + "leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=Single, singlesTotal=null, "
+            + "multiplesTotal=null, "
+            + "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, "
+            + "ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, "
+            + "ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, "
+            + "ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, "
+            + "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, "
+            + "xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, "
+            + "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, "
+            + "xConFast26wkTotalPerCent=null, "
+            + "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+            + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+            + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+            + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+            + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
+            + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+            + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+            + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
+            + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
+            + "))])";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void generateClaimsAcceptedReportDataForGlasgow() throws IOException {
-         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, " +
-                "clerkResponsible=null, reportType=Claims Accepted, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
-                "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Scotland, receiptDate=null, hearingDate=null, date=null, " +
-                "full=null, half=null, mins=null, total=1, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, " +
-                "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, hearingSitAlone=null, " +
-                "hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=null, casesCompletedHearing=null, " +
-                "sessionType=null, sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, " +
-                "ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, " +
-                "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, " +
-                "ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, " +
-                "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, " +
-                "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, " +
-                "Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, " +
-                "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, " +
-                "hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, " +
-                "et3ReceivedDate=null, judicialMediation=null, caseType=null, singlesTotal=1, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, " +
-                "respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, " +
-                "ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, " +
-                "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, " +
-                "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-                 + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                 + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
-                 "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
-                 "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null," +
-                 " eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
-                 + "), " +
-                "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, " +
-                "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, " +
-                "multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, " +
-                "clerk=Steve Jones, hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, " +
-                "fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, " +
-                "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, " +
-                "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, " +
-                "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, " +
-                "conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, " +
-                "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, " +
-                "ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, " +
-                "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, " +
-                "Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, " +
-                "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, " +
-                "hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, " +
-                "leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=Single, singlesTotal=null, multiplesTotal=null, " +
-                "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, " +
-                "ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, " +
-                "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, " +
-                "xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-                 + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                 + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
-                 "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
-                 "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, " +
-                 "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
-                 +"))])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        submitEvents.get(0).getCaseData().setManagingOffice("Glasgow");
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
+        submitEvents.getFirst().getCaseData().setManagingOffice("Glasgow");
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        String result =
+            "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+            + "tribunalCorrespondenceFax=null, "
+            + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, "
+            + "hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+            + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
+            + "listingVenueOfficeAber=null, "
+            + "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, "
+            + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, "
+            + "clerkResponsible=null, reportType=Claims Accepted, documentName=null, showAll=null, "
+            + "localReportsSummaryHdr=null, "
+            + "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, "
+            + "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Scotland, receiptDate=null, "
+            + "hearingDate=null, date=null, "
+            + "full=null, half=null, mins=null, total=1, eeMember=null, erMember=null, caseReference=null, "
+            + "multipleRef=null, multSub=null, "
+            + "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, "
+            + "clerk=null, hearingSitAlone=null, "
+            + "hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, "
+            + "fileLocation=null, fileLocationGlasgow=null, "
+            + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
+            + "casesCompletedHearingTotal=null, casesCompletedHearing=null, "
+            + "sessionType=null, sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, "
+            + "completedPerSession=null, completedPerSessionTotal=null, "
+            + "ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, ptSessionDaysTotal=null, "
+            + "ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
+            + "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
+            + "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, "
+            + "ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, "
+            + "ConFastCompletedPerSession=null, "
+            + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
+            + "ConOpenCasesCompletedHearing=null, "
+            + "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, "
+            + "Total26wkPerCent=null, Totalx26wk=null, "
+            + "Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, "
+            + "respondentName=null, actioned=null, "
+            + "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null,"
+            + " hearingPH=null, hearingPrelim=null, stage=null, "
+            + "hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, "
+            + "reconsider=null, subSplit=null, leadCase=null, "
+            + "et3ReceivedDate=null, judicialMediation=null, caseType=null, singlesTotal=1, multiplesTotal=0, "
+            + "dateOfAcceptance=null, respondentET3=null, "
+            + "respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, "
+            + "ConOpenTotal=null, ConNone26wkTotal=null, "
+            + "ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, "
+            + "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
+            + "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, "
+            + "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, "
+            + "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, "
+            + "delayedDaysForFirstHearing=null, "
+            + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+            + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+            + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+            + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
+            + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+            + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+            + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null,"
+            + " eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
+            + "), "
+            + "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, "
+            + "reportOffice=null, receiptDate=null, "
+            + "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, "
+            + "caseReference=4210000/2019, "
+            + "multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, "
+            + "hearingDuration=null, hearingClerk=null, "
+            + "clerk=Steve Jones, hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, "
+            + "position=null, dateToPosition=null, "
+            + "fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
+            + "fileLocationEdinburgh=null, "
+            + "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=null, "
+            + "sessionDaysTotal=null, "
+            + "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, "
+            + "ftSessionDays=null, ftSessionDaysTotal=null, "
+            + "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
+            + "otherSessionDays=null, "
+            + "conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, "
+            + "ConNoneSessionDays=null, ConNoneCompletedPerSession=null, "
+            + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, "
+            + "ConStdCasesCompletedHearing=null, "
+            + "ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, "
+            + "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, "
+            + "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, "
+            + "Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, "
+            + "respondentName=null, actioned=null, "
+            + "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null,"
+            + " hearingPH=null, hearingPrelim=null, stage=null, "
+            + "hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, "
+            + "reconsider=null, subSplit=null, "
+            + "leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=Single, singlesTotal=null, "
+            + "multiplesTotal=null, "
+            + "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, "
+            + "ConNoneTotal=null, ConStdTotal=null, "
+            + "ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, "
+            + "ConFast26wkTotal=null, ConOpen26wkTotal=null, "
+            + "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
+            + "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, "
+            + "xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, "
+            + "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, "
+            + "delayedDaysForFirstHearing=null, "
+            + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+            + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+            + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+            + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
+            + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+            + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+            + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
+            + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
+            + "))])";
         assertEquals(result, listingDataResult.toString());
     }
 
@@ -1223,9 +1501,10 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setLocalReportsSummary(localReportsSummary);
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
-        submitEvents.remove(0);
-        
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        submitEvents.removeFirst();
+
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
 
         assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsDetail()));
@@ -1239,241 +1518,321 @@ public class ListingServiceTest {
 
     @Test
     public void generateLiveCaseloadReportDataForEnglandWithValidPositionType() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, listingDateTo=null, "
-                + "listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
-                + "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, "
-                + "bfDateCollection=null, clerkResponsible=null, reportType=Live Caseload, documentName=null, "
-                + "showAll=null, localReportsSummaryHdr=AdhocReportType(reportDate=null, "
-                + "reportOffice=null, receiptDate=null, hearingDate=null, date=null, full=null, half=null, mins=null, "
-                + "total=1, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, "
-                + "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, "
-                + "clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, "
-                + "position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, "
-                + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
-                + "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, "
-                + "sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, completedPerSession=null, "
-                + "completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, "
-                + "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
-                + "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
-                + "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, "
-                + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, "
-                + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
-                + "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, "
-                + "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, "
-                + "Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, "
-                + "actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, "
-                + "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, "
-                + "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, "
-                + "subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, "
-                + "singlesTotal=1, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, respondentET4=null, "
-                + "listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, "
-                + "ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, "
-                + "ConNone26wkTotalPerCent=null, "
-                + "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, "
-                + "xConNone26wkTotal=null, xConStd26wkTotal=null,"
-                + " xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, "
-                + "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, "
-                + "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-                + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null,"
-                + " et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
-                + "manuallyCreatedTotalCasesPercent=null, "
-                + "et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, "
-                + "migratedTotalCasesPercent=null"
-                + "), localReportsSummary=null, "
-                + "localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
-                + "reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, full=null, half=null, "
-                + "mins=null, total=null, eeMember=null, erMember=null, caseReference=null, multipleRef=null, "
-                + "multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, "
-                + "hearingClerk=null, clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, "
-                + "judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, "
-                + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
-                + "fileLocationEdinburgh=null, casesCompletedHearingTotal=null, casesCompletedHearing=null, "
-                + "sessionType=null, sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, "
-                + "completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, "
-                + "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
-                + "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
-                + "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, "
-                + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, "
-                + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
-                + "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, "
-                + "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, "
-                + "Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, "
-                + "actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, "
-                + "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, "
-                + "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, "
-                + "subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, "
-                + "singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, respondentET3=null, "
-                + "respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, "
-                + "ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, "
-                + "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null,"
-                + " xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, " +
-                "xConNone26wkTotalPerCent=null, "
-                + "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, " +
-                "delayedDaysForFirstHearing=null, "
-                + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
-                + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
-                + "manuallyCreatedTotalCasesPercent=null, "
-                + "et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
-                + "), "
-                + "localReportsDetail=[AdhocReportTypeItem(id=null, "
-                + "value=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, "
-                + "date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, "
-                + "caseReference=4210000/2019, multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, "
-                + "hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=Steve Jones, "
-                + "hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, "
-                + "dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, "
-                + "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=null, "
-                + "casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, "
-                + "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, "
-                + "ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, ptSessionDaysTotal=null, "
-                + "ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, "
-                + "conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, "
-                + "ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, "
-                + "ConFastSessionDays=null, ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, "
-                + "ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, "
-                + "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, "
-                + "Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, "
-                + "Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, "
-                + "bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, "
-                + "hearingPrelim=null, stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, "
-                + "hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, "
-                + "et3ReceivedDate=null, judicialMediation=null, caseType=Single, singlesTotal=null, multiplesTotal=null, "
-                + "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, "
-                + "ConNoneTotal=null, "
-                + "ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, "
-                + "ConFast26wkTotal=null," + " ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null,"
-                + " ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
-                + "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, "
-                + "xConFast26wkTotal=null, xConOpen26wkTotal=null, "
-                + "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-                + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
-                + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
-                + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
-                + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
-                +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
+                        + "tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, "
+                        + "listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
+                        + "docMarkUp=null, "
+                        + "bfDateCollection=null, clerkResponsible=null, reportType=Live Caseload, documentName=null, "
+                        + "showAll=null, localReportsSummaryHdr=AdhocReportType(reportDate=null, "
+                        + "reportOffice=null, receiptDate=null, hearingDate=null, date=null, full=null, half=null, "
+                        + "mins=null, "
+                        + "total=1, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, "
+                        + "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, "
+                        + "hearingClerk=null, "
+                        + "clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, "
+                        + "judgementDateSent=null, "
+                        + "position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, "
+                        + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
+                        + "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, "
+                        + "sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, "
+                        + "completedPerSession=null, "
+                        + "completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, "
+                        + "ptSessionDays=null, "
+                        + "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
+                        + "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
+                        + "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, "
+                        + "ConNoneCompletedPerSession=null, "
+                        + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, "
+                        + "ConFastCompletedPerSession=null, "
+                        + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
+                        + "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, "
+                        + "ConOpenCompletedPerSession=null, "
+                        + "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, "
+                        + "Totalx26wkPerCent=null, "
+                        + "Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, "
+                        + "respondentName=null, "
+                        + "actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, "
+                        + "costs=null, "
+                        + "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, "
+                        + "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, "
+                        + "reconsider=null, "
+                        + "subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, "
+                        + "singlesTotal=1, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, "
+                        + "respondentET4=null, "
+                        + "listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, "
+                        + "ConOpenTotal=null, "
+                        + "ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, "
+                        + "ConNone26wkTotalPerCent=null, "
+                        + "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, "
+                        + "xConNone26wkTotal=null, xConStd26wkTotal=null,"
+                        + " xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, "
+                        + "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, "
+                        + "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                        + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+                        + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+                        + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+                        + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, "
+                        + "claimServed6PlusDaysPercent=null, "
+                        + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null,"
+                        + " et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+                        + "manuallyCreatedTotalCasesPercent=null, "
+                        + "et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, "
+                        + "migratedTotalCasesPercent=null"
+                        + "), localReportsSummary=null, "
+                        + "localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
+                        + "reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, full=null, "
+                        + "half=null, "
+                        + "mins=null, total=null, eeMember=null, erMember=null, caseReference=null, multipleRef=null, "
+                        + "multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, "
+                        + "hearingDuration=null, "
+                        + "hearingClerk=null, clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, "
+                        + "judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, "
+                        + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
+                        + "fileLocationEdinburgh=null, casesCompletedHearingTotal=null, casesCompletedHearing=null, "
+                        + "sessionType=null, sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, "
+                        + "completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, "
+                        + "ftSessionDaysTotal=null, "
+                        + "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, "
+                        + "otherSessionDaysTotal=null, "
+                        + "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
+                        + "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, "
+                        + "ConNoneCompletedPerSession=null, "
+                        + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, "
+                        + "ConFastCompletedPerSession=null, "
+                        + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
+                        + "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, "
+                        + "ConOpenCompletedPerSession=null, "
+                        + "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, "
+                        + "Totalx26wkPerCent=null, "
+                        + "Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, "
+                        + "respondentName=null, "
+                        + "actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, "
+                        + "costs=null, "
+                        + "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, "
+                        + "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, "
+                        + "reconsider=null, "
+                        + "subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, "
+                        + "singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, respondentET3=null, "
+                        + "respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, "
+                        + "ConFastTotal=null, "
+                        + "ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, "
+                        + "ConOpen26wkTotal=null, "
+                        + "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
+                        + "ConOpen26wkTotalPerCent=null,"
+                        + " xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, "
+                        + "xConOpen26wkTotal=null, "
+                        + "xConNone26wkTotalPerCent=null, "
+                        + "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, "
+                        + "delayedDaysForFirstHearing=null, "
+                        + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+                        + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+                        + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+                        + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, "
+                        + "claimServed6PlusDaysPercent=null, "
+                        + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+                        + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+                        + "manuallyCreatedTotalCasesPercent=null, "
+                        + "et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
+                        + "), "
+                        + "localReportsDetail=[AdhocReportTypeItem(id=null, "
+                        + "value=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, "
+                        + "hearingDate=null, "
+                        + "date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, "
+                        + "caseReference=4210000/2019, multipleRef=null, multSub=null, hearingNumber=null, "
+                        + "hearingType=null, "
+                        + "hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=Steve Jones, "
+                        + "hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, "
+                        + "position=null, "
+                        + "dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, "
+                        + "fileLocationAberdeen=null, "
+                        + "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=null, "
+                        + "casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, "
+                        + "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, "
+                        + "ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, ptSessionDaysTotal=null, "
+                        + "ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, "
+                        + "conciliationTrack=null, conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, "
+                        + "ConNoneSessionDays=null, ConNoneCompletedPerSession=null, "
+                        + "ConFastCasesCompletedHearing=null, "
+                        + "ConFastSessionDays=null, ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, "
+                        + "ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, "
+                        + "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, "
+                        + "Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, "
+                        + "Total4wkPerCent=null, "
+                        + "Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, "
+                        + "bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, "
+                        + "hearingInterloc=null, hearingPH=null, "
+                        + "hearingPrelim=null, stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, "
+                        + "hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, "
+                        + "et3ReceivedDate=null, judicialMediation=null, caseType=Single, singlesTotal=null, "
+                        + "multiplesTotal=null, "
+                        + "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, "
+                        + "ConNoneTotal=null, "
+                        + "ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, "
+                        + "ConStd26wkTotal=null, "
+                        + "ConFast26wkTotal=null,"
+                        + " ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null,"
+                        + " ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
+                        + "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, "
+                        + "xConFast26wkTotal=null, xConOpen26wkTotal=null, "
+                        + "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, "
+                        + "xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, "
+                        + "delayedDaysForFirstHearing=null, "
+                        + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+                        + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+                        + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+                        + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, "
+                        + "claimServed6PlusDaysPercent=null, "
+                        + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+                        + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+                        + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
+                        + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
+                        + "))])";
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test
     public void generateLiveCaseloadReportDataForGlasgowWithInvalidPositionType() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
-                + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, listingDateTo=null, "
-                + "listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
-                + "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
-                + "docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Live Caseload, "
-                + "documentName=null, showAll=null, localReportsSummaryHdr=AdhocReportType(reportDate=null, "
-                + "reportOffice=null, receiptDate=null, hearingDate=null, date=null, full=null, half=null, "
-                + "mins=null, total=0, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, "
-                + "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, "
-                + "clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, "
-                + "position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, "
-                + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
-                + "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, "
-                + "sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, completedPerSession=null, "
-                + "completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, "
-                + "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
-                + "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
-                + "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, "
-                + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, ConFastCompletedPerSession=null, "
-                + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
-                + "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, "
-                + "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, "
-                + "Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, "
-                + "actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, costs=null, "
-                + "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, "
-                + "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, "
-                + "subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, "
-                + "singlesTotal=0, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, respondentET4=null, "
-                + "listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, "
-                + "ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, "
-                + "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
-                + "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, "
-                + "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, "
-                + "xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-                + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-                + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-                + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-                + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, et1OnlineTotalCases=null," +
-                " eccTotalCases=null, migratedTotalCases=null, manuallyCreatedTotalCasesPercent=null," +
-                " et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
-                + "), localReportsSummary=null, "
-                + "localReportsSummaryHdr2=null, "
-                + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
-                + "reportOffice=Scotland, receiptDate=null, "
-                + "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, "
-                + "erMember=null, caseReference=null, multipleRef=null, multSub=null, hearingNumber=null, "
-                + "hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, "
-                + "hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, "
-                + "dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, "
-                + "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=null, "
-                + "casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, "
-                + "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, f"
-                + "tSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, ptSessionDaysTotal=null, "
-                + "ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, "
-                + "conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, "
-                + "ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, "
-                + "ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, "
-                + "ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, "
-                + "ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, "
-                + "Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, "
-                + "Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, bfDateCleared=null, "
-                + "reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, "
-                + "stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, "
-                + "review=null, reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, "
-                + "judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, "
-                + "dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null, " +
-                "ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null," +
-                " ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, " +
-                "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, " +
-                "xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, " +
-                "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, " +
-                "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
-        + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
-        + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
-        + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
-        + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-        + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
-                "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
-                "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, " +
-                "eccTotalCasesPercent=null, migratedTotalCasesPercent=null), localReportsDetail=[])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        submitEvents.get(0).getCaseData().setManagingOffice("Aberdeen");
-        submitEvents.get(0).getCaseData().setPositionType(POSITION_TYPE_CASE_CLOSED);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
+        submitEvents.getFirst().getCaseData().setManagingOffice("Aberdeen");
+        submitEvents.getFirst().getCaseData().setPositionType(POSITION_TYPE_CASE_CLOSED);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
+                        + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
+                        + "tribunalCorrespondenceEmail=null, "
+                        + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
+                        + "listingDateTo=null, "
+                        + "listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
+                        + "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, "
+                        + "venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
+                        + "docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Live Caseload, "
+                        + "documentName=null, showAll=null, localReportsSummaryHdr=AdhocReportType(reportDate=null, "
+                        + "reportOffice=null, receiptDate=null, hearingDate=null, date=null, full=null, half=null, "
+                        + "mins=null, total=0, eeMember=null, erMember=null, caseReference=null, multipleRef=null, "
+                        + "multSub=null, "
+                        + "hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, "
+                        + "hearingClerk=null, "
+                        + "clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, "
+                        + "judgementDateSent=null, "
+                        + "position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, "
+                        + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
+                        + "casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, "
+                        + "sessionDays=null, sessionDaysTotal=null, sessionDaysTotalDetail=null, "
+                        + "completedPerSession=null, "
+                        + "completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, "
+                        + "ptSessionDays=null, "
+                        + "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, "
+                        + "otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=null, "
+                        + "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, "
+                        + "ConNoneCompletedPerSession=null, "
+                        + "ConFastCasesCompletedHearing=null, ConFastSessionDays=null, "
+                        + "ConFastCompletedPerSession=null, "
+                        + "ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, "
+                        + "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, "
+                        + "ConOpenCompletedPerSession=null, "
+                        + "totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, "
+                        + "Totalx26wkPerCent=null, "
+                        + "Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, "
+                        + "respondentName=null, "
+                        + "actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, "
+                        + "costs=null, "
+                        + "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, "
+                        + "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, "
+                        + "reconsider=null, "
+                        + "subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, "
+                        + "singlesTotal=0, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, "
+                        + "respondentET4=null, "
+                        + "listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, "
+                        + "ConOpenTotal=null, "
+                        + "ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, "
+                        + "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
+                        + "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, "
+                        + "xConFast26wkTotal=null, "
+                        + "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, "
+                        + "xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, "
+                        + "delayedDaysForFirstHearing=null, "
+                        + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+                        + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+                        + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+                        + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, "
+                        + "claimServed6PlusDaysPercent=null, "
+                        + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+                        + "et1OnlineTotalCases=null,"
+                        + " eccTotalCases=null, migratedTotalCases=null, manuallyCreatedTotalCasesPercent=null,"
+                        + " et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
+                        + "), localReportsSummary=null, "
+                        + "localReportsSummaryHdr2=null, "
+                        + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
+                        + "reportOffice=Scotland, receiptDate=null, "
+                        + "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, "
+                        + "erMember=null, caseReference=null, multipleRef=null, multSub=null, hearingNumber=null, "
+                        + "hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, "
+                        + "hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, "
+                        + "position=null, "
+                        + "dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, "
+                        + "fileLocationAberdeen=null, "
+                        + "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=null, "
+                        + "casesCompletedHearing=null, sessionType=null, sessionDays=null, sessionDaysTotal=null, "
+                        + "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, f"
+                        + "tSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, ptSessionDaysTotal=null, "
+                        + "ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, "
+                        + "conciliationTrack=null, "
+                        + "conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, "
+                        + "ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, "
+                        + "ConFastSessionDays=null, "
+                        + "ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, "
+                        + "ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, "
+                        + "ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, "
+                        + "Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, "
+                        + "Totalx4wk=null, "
+                        + "Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, bfDateCleared=null, "
+                        + "reservedHearing=null, hearingCM=null, costs=null, hearingInterloc=null, hearingPH=null, "
+                        + "hearingPrelim=null, "
+                        + "stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, "
+                        + "remedy=null, "
+                        + "review=null, reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, "
+                        + "judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, "
+                        + "dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null, "
+                        + "ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, "
+                        + "ConNone26wkTotal=null,"
+                        + " ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, "
+                        + "ConNone26wkTotalPerCent=null, "
+                        + "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, "
+                        + "xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, "
+                        + "xConOpen26wkTotal=null, "
+                        + "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, "
+                        + "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                        + "claimServedDay1Total=null, claimServedDay1Percent=null, claimServedDay2Total=null, "
+                        + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
+                        + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
+                        + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, "
+                        + "claimServed6PlusDaysPercent=null, "
+                        + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+                        + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+                        + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
+                        + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null), localReportsDetail=[])";
         assertEquals(result, listingDataResult.toString());
-        submitEvents.get(0).getCaseData().setPositionType("Awaiting ET3");
     }
 
     @Test
     public void generateCasesCompletedReportDataForEnglandWithConTrackNone() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
         assertEquals(1, listingDataResult.getLocalReportsDetail().size());
@@ -1483,36 +1842,39 @@ public class ListingServiceTest {
     public void generateCasesCompletedReportDataForEnglandWithConTrackFast() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
+        submitEvents.getFirst().getCaseData().setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
         assertEquals(1, listingDataResult.getLocalReportsDetail().size());
-        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
+        submitEvents.getFirst().getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
     }
 
     @Test
     public void generateCasesCompletedReportDataForEnglandWithConTrackStandard() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
+        submitEvents.getFirst().getCaseData().setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
         assertEquals(1, listingDataResult.getLocalReportsDetail().size());
-        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
+        submitEvents.getFirst().getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
     }
 
     @Test
     public void generateCasesCompletedReportDataForEnglandWithConTrackOpen() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(submitEvents);
+        submitEvents.getFirst().getCaseData().setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
         assertEquals(1, listingDataResult.getLocalReportsDetail().size());
-        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
+        submitEvents.getFirst().getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
     }
 
     @Test
@@ -1524,8 +1886,10 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDate("2021-07-13");
         listingDetails.getCaseData().setListingDateFrom("2021-07-12");
         listingDetails.getCaseData().setListingDateTo("2021-07-14");
-        when(ccdClient.hearingsToJudgementsSearch(anyString(), anyString(), anyString())).thenReturn(List.of(new HearingsToJudgmentsSubmitEvent()));
-        var listingDataResult = (HearingsToJudgmentsReportData) listingService.generateReportData(listingDetails, "authToken");
+        when(ccdClient.hearingsToJudgementsSearch(anyString(), anyString(), anyString()))
+            .thenReturn(List.of(new HearingsToJudgmentsSubmitEvent()));
+        var listingDataResult = (HearingsToJudgmentsReportData) listingService.generateReportData(listingDetails,
+            "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(HEARINGS_TO_JUDGEMENTS_REPORT, listingDataResult.getReportType());
         assertEquals("Ranged", listingDataResult.getHearingDateType());
@@ -1600,8 +1964,7 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void generateClaimsByHearingVenueReport() throws IOException
-    {
+    public void generateClaimsByHearingVenueReport() throws IOException {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         listingDetails.setCaseId("caseId");
         listingDetails.getCaseData().setReportType(CLAIMS_BY_HEARING_VENUE_REPORT);
@@ -1615,12 +1978,12 @@ public class ListingServiceTest {
         submitEvent.setCaseData(new ClaimsByHearingVenueCaseData());
 
         when(ccdClient.claimsByHearingVenueSearch(anyString(), anyString(), anyString()))
-                .thenReturn(List.of(submitEvent));
+            .thenReturn(List.of(submitEvent));
         var userDetails = new UserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
 
         var listingDataResult = (ClaimsByHearingVenueReportData) listingService.generateReportData(listingDetails,
-                "authToken");
+            "authToken");
         assertEquals(CLAIMS_BY_HEARING_VENUE_REPORT, listingDataResult.getDocumentName());
         assertEquals(CLAIMS_BY_HEARING_VENUE_REPORT, listingDataResult.getReportType());
         assertEquals(RANGE_HEARING_DATE_TYPE, listingDataResult.getHearingDateType());
@@ -1641,8 +2004,10 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDateTo("2021-07-14");
         var submitEvent = new HearingsByHearingTypeSubmitEvent();
         submitEvent.setCaseData(new HearingsByHearingTypeCaseData());
-        when(ccdClient.hearingsByHearingTypeSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
-        var listingDataResult = (HearingsByHearingTypeReportData) listingService.generateReportData(listingDetails, "authToken");
+        when(ccdClient.hearingsByHearingTypeSearch(anyString(), anyString(), anyString()))
+            .thenReturn(List.of(submitEvent));
+        var listingDataResult = (HearingsByHearingTypeReportData) listingService.generateReportData(listingDetails,
+            "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(HEARINGS_BY_HEARING_TYPE_REPORT, listingDataResult.getReportType());
         assertEquals("Ranged", listingDataResult.getHearingDateType());
@@ -1653,7 +2018,6 @@ public class ListingServiceTest {
 
     @Test
     public void generateMemberDaysReportData() throws IOException {
-        var localSubmitEvents = submitEvents;
         String docName = "Member Days Report - Test";
         listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetailsRange.getCaseData().setReportType(MEMBER_DAYS_REPORT);
@@ -1671,8 +2035,8 @@ public class ListingServiceTest {
         memberDaysReportData.setDocumentName(docName);
 
         var memberDaysReport = Mockito.mock(MemberDaysReport.class);
-
-        doReturn(localSubmitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
+        
+        doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
             anyString(), anyString(), anyString(), anyString());
 
         doReturn(memberDaysReportData).when(memberDaysReport).runReport(ArgumentMatchers.any(ListingDetails.class),
@@ -1691,10 +2055,11 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setDocumentName("name");
         var caseDataBuilder = new CaseDataBuilder();
         when(ccdClient.casesAwaitingJudgmentSearch(anyString(), anyString(), anyString())).thenReturn(
-                List.of(caseDataBuilder.withPositionType("Draft with members")
-                        .withHearing("1970-01-01T00:00:00.000", HEARING_STATUS_HEARD)
-                        .buildAsSubmitEvent(ACCEPTED_STATE)));
-        var listingDataResult = (CasesAwaitingJudgmentReportData) listingService.generateReportData(listingDetails, "authToken");
+            List.of(caseDataBuilder.withPositionType("Draft with members")
+                .withHearing("1970-01-01T00:00:00.000", HEARING_STATUS_HEARD)
+                .buildAsSubmitEvent(ACCEPTED_STATE)));
+        var listingDataResult = (CasesAwaitingJudgmentReportData) listingService.generateReportData(listingDetails,
+            "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(CASES_AWAITING_JUDGMENT_REPORT, listingDataResult.getReportType());
     }
@@ -1706,17 +2071,19 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setDocumentName("name");
         listingDetails.getCaseData().setReportDate("2021-12-12");
         var caseDataBuilder = new NoPositionChangeCaseDataBuilder();
-        var result =  new NoPositionChangeSearchResult();
+        var result = new NoPositionChangeSearchResult();
         result.setCases(List.of(caseDataBuilder.withCaseType("SINGLE")
-                                    .withCurrentPosition("Position")
-                                    .withDateToPosition("2021-04-03")
-                                    .withReceiptDate("2021-03-03")
-                                    .buildAsSubmitEvent(ACCEPTED_STATE)));
-        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), ArgumentMatchers.eq(NoPositionChangeSearchResult.class)))
-                .thenReturn(result);
+            .withCurrentPosition("Position")
+            .withDateToPosition("2021-04-03")
+            .withReceiptDate("2021-03-03")
+            .buildAsSubmitEvent(ACCEPTED_STATE)));
+        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(),
+            ArgumentMatchers.eq(NoPositionChangeSearchResult.class)))
+            .thenReturn(result);
         when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
-                .thenReturn(new ArrayList<>());
-        var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails, "authToken");
+            .thenReturn(new ArrayList<>());
+        var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails,
+            "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(NO_CHANGE_IN_CURRENT_POSITION_REPORT, listingDataResult.getReportType());
         assertEquals("2021-12-12", listingDataResult.getReportDate());
@@ -1729,23 +2096,25 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setDocumentName("name");
         listingDetails.getCaseData().setReportDate("2021-12-12");
         var caseDataBuilder = new NoPositionChangeCaseDataBuilder();
-        var result =  new NoPositionChangeSearchResult();
+        var result = new NoPositionChangeSearchResult();
         result.setCases(List.of(caseDataBuilder.withCaseType(MULTIPLE_CASE_TYPE)
-                .withCurrentPosition("Position")
-                .withDateToPosition("2021-04-03")
-                .withMultipleReference("multipleRef")
-                .withReceiptDate("2021-03-03")
-                .buildAsSubmitEvent(ACCEPTED_STATE)));
+            .withCurrentPosition("Position")
+            .withDateToPosition("2021-04-03")
+            .withMultipleReference("multipleRef")
+            .withReceiptDate("2021-03-03")
+            .buildAsSubmitEvent(ACCEPTED_STATE)));
         var multipleData = new MultipleData();
         multipleData.setMultipleReference("multipleRef");
         multipleData.setMultipleName("Multiple Name");
         var submitMultipleData = new SubmitMultipleEvent();
         submitMultipleData.setCaseData(multipleData);
-        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), ArgumentMatchers.eq(NoPositionChangeSearchResult.class)))
-                .thenReturn(result);
+        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(),
+            ArgumentMatchers.eq(NoPositionChangeSearchResult.class)))
+            .thenReturn(result);
         when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
-                .thenReturn(List.of(submitMultipleData));
-        var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails, "authToken");
+            .thenReturn(List.of(submitMultipleData));
+        var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails,
+            "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(NO_CHANGE_IN_CURRENT_POSITION_REPORT, listingDataResult.getReportType());
         assertEquals("2021-12-12", listingDataResult.getReportDate());
@@ -1753,7 +2122,8 @@ public class ListingServiceTest {
 
     @Test(expected = Exception.class)
     public void generateReportDataWithException() throws IOException {
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         listingService.generateReportData(listingDetails, "authToken");
     }
 }

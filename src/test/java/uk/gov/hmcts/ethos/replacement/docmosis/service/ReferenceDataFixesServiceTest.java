@@ -16,10 +16,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.helper.CaseEventDetail;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -91,10 +91,11 @@ public class ReferenceDataFixesServiceTest {
         submitEvent1.setCaseId(1);
         submitEvents = new ArrayList<>(List.of(submitEvent1));
         when(dataSource.getDataForJudges(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
-        when(dataSource.getDataForInsertClaimDate(anyString(), anyString(), anyString(), any())).thenReturn(submitEvents);
+        when(dataSource.getDataForInsertClaimDate(anyString(), anyString(), anyString(), any()))
+            .thenReturn(submitEvents);
         CCDRequest ccdRequest = new CCDRequest();
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        caseDetails.setCaseData(submitEvents.getFirst().getCaseData());
         ccdRequest.setCaseDetails(caseDetails);
         doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
                 anyString());
@@ -106,7 +107,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -116,7 +117,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -125,7 +126,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -134,7 +135,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -143,7 +144,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -152,7 +153,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -161,7 +162,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -171,7 +172,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -180,7 +181,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.updateJudgesItcoReferences(
                 adminDetails, "authToken", dataSource);
         assertNotEquals(REQUIRED_CODE_1,
-                submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().getJudge());
+                submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue().getJudge());
     }
 
     @Test
@@ -210,7 +211,7 @@ public class ReferenceDataFixesServiceTest {
         referenceDataFixesService.insertClaimServedDate(
                 adminDetails, "authToken", dataSource, new ArrayList<>());
         assertEquals("2022-09-20",
-                submitEvents.get(0).getCaseData().getClaimServedDate());
+                submitEvents.getFirst().getCaseData().getClaimServedDate());
     }
 
     @Test
@@ -220,7 +221,7 @@ public class ReferenceDataFixesServiceTest {
         caseEventDetail.setCreatedDate(LocalDateTime.parse("2022-09-20T00:00:00"));
         when(ccdClient.retrieveCaseEventDetails(anyString(),
                 anyString(), anyString(), anyString())).thenReturn(Collections.singletonList(caseEventDetail));
-        assertNull(submitEvents.get(0).getCaseData().getClaimServedDate());
+        assertNull(submitEvents.getFirst().getCaseData().getClaimServedDate());
     }
 
     @Test
@@ -228,9 +229,9 @@ public class ReferenceDataFixesServiceTest {
         CaseEventDetail caseEventDetail = CaseEventDetail.builder().build();
         caseEventDetail.setId(GENERATE_CORRESPONDENCE);
         caseEventDetail.setCreatedDate(LocalDateTime.parse("2022-09-20T00:00:00"));
-        submitEvents.get(0).getCaseData().setClaimServedDate("2022-10-01");
+        submitEvents.getFirst().getCaseData().setClaimServedDate("2022-10-01");
         when(ccdClient.retrieveCaseEventDetails(anyString(),
                 anyString(), anyString(), anyString())).thenReturn(Collections.singletonList(caseEventDetail));
-        assertEquals("2022-10-01", submitEvents.get(0).getCaseData().getClaimServedDate());
+        assertEquals("2022-10-01", submitEvents.getFirst().getCaseData().getClaimServedDate());
     }
 }

@@ -29,11 +29,11 @@ public class BFHelperTest {
 
     @Test
     public void updateBfActionItems() {
-        bfActionTypeItemList.get(0).getValue().setDateEntered(null);
+        bfActionTypeItemList.getFirst().getValue().setDateEntered(null);
         caseData.setBfActions(bfActionTypeItemList);
         BFHelper.updateBfActionItems(caseData);
         assertEquals(1, caseData.getBfActions().size());
-        assertNotNull(caseData.getBfActions().get(0).getValue().getDateEntered());
+        assertNotNull(caseData.getBfActions().getFirst().getValue().getDateEntered());
     }
 
     @Test

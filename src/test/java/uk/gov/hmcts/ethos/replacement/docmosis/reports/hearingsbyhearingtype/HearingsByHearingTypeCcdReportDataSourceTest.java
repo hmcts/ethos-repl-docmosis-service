@@ -30,9 +30,9 @@ public class HearingsByHearingTypeCcdReportDataSourceTest {
 
         var ccdReportDataSource = new HearingsByHearingTypeCcdReportDataSource(authToken, ccdClient);
 
-        var results = ccdReportDataSource.getData(new ReportParams(caseTypeId,fromDate, toDate));
+        var results = ccdReportDataSource.getData(new ReportParams(caseTypeId, fromDate, toDate));
         assertEquals(1, results.size());
-        assertEquals(submitEvent, results.get(0));
+        assertEquals(submitEvent, results.getFirst());
     }
 
     @Test(expected = ReportException.class)

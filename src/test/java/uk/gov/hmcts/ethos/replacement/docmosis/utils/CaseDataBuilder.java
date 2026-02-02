@@ -76,8 +76,8 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder withHearingSession(int hearingIndex, String number, String listedDate, String hearingStatus, boolean disposed) {
-        var hearing = caseData.getHearingCollection().get(hearingIndex);
+    public CaseDataBuilder withHearingSession(int hearingIndex, String listedDate, String hearingStatus,
+                                              boolean disposed) {
 
         var dateListedType = new DateListedType();
         dateListedType.setListedDate(listedDate);
@@ -86,10 +86,11 @@ public class CaseDataBuilder {
         var dateListedTypeItem = new DateListedTypeItem();
         dateListedTypeItem.setValue(dateListedType);
 
+        var hearing = caseData.getHearingCollection().get(hearingIndex);
         if (hearing.getValue().getHearingDateCollection() == null) {
             hearing.getValue().setHearingDateCollection(new ArrayList<>());
         }
-        var hearingDates = new ArrayList<DateListedTypeItem>();
+
         hearing.getValue().getHearingDateCollection().add(dateListedTypeItem);
 
         return this;
@@ -145,7 +146,7 @@ public class CaseDataBuilder {
         return caseDetails;
     }
 
-    public CaseDataBuilder withDocumentCollection (String docType) {
+    public CaseDataBuilder withDocumentCollection(String docType) {
         if (caseData.getDocumentCollection() == null) {
             caseData.setDocumentCollection(new ArrayList<>());
         }

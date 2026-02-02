@@ -54,7 +54,6 @@ public class CaseTransferServiceTest {
     @Before
     public void setUp() {
         ccdRequest = new CCDRequest();
-        CaseDetails caseDetails = new CaseDetails();
         CaseData caseData = MultipleUtil.getCaseData("2123456/2020");
         caseData.setCaseRefNumberCount("2");
         caseData.setPositionTypeCT("PositionTypeCT");
@@ -63,6 +62,7 @@ public class CaseTransferServiceTest {
         valueType.setCode(LEEDS_CASE_TYPE_ID);
         officeCT.setValue(valueType);
         caseData.setOfficeCT(officeCT);
+        CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseData(caseData);
         caseDetails.setCaseTypeId("Manchester");
         caseDetails.setJurisdiction("Employment");
@@ -96,8 +96,6 @@ public class CaseTransferServiceTest {
         SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseId(12345);
         submitEvent.getCaseData().setReasonForCT("New Reason");
-        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
-        List<SubmitEvent> submitEventList1 = new ArrayList<>(Collections.singletonList(submitEvent1));
         ccdRequest.getCaseDetails().getCaseData().setCounterClaim("3434232323");
         EccCounterClaimTypeItem item = new EccCounterClaimTypeItem();
         EccCounterClaimType type = new EccCounterClaimType();
@@ -106,9 +104,11 @@ public class CaseTransferServiceTest {
         item.setValue(type);
         caseData.setEccCases(List.of(item));
         submitEvent1.setCaseData(caseData);
-        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(),
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
+        List<SubmitEvent> submitEventList1 = new ArrayList<>(Collections.singletonList(submitEvent1));
+        when(ccdClient.retrieveCasesElasticSearch(authToken, ccdRequest.getCaseDetails().getCaseTypeId(),
                 List.of("3434232323"))).thenReturn(submitEventList1);
-        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(),
+        when(ccdClient.retrieveCasesElasticSearch(authToken, ccdRequest.getCaseDetails().getCaseTypeId(),
                 List.of("2123456/2020"))).thenReturn(submitEventList);
         when(ccdClient.startEventForCase(authToken, "Manchester", "Employment", "12345")).thenReturn(ccdRequest);
 
@@ -136,13 +136,13 @@ public class CaseTransferServiceTest {
     @Test
     public void createCaseTransferBfNotCleared() {
         ccdRequest.getCaseDetails().getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
-        ccdRequest.getCaseDetails().getCaseData().getBfActions().get(0).getValue().setCleared(null);
+        ccdRequest.getCaseDetails().getCaseData().getBfActions().getFirst().getValue().setCleared(null);
 
         var errors = caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), authToken);
 
         var expectedBfActionsError = String.format(CaseTransferService.BF_ACTIONS_ERROR_MSG,
                 ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference());
-        assertEquals(expectedBfActionsError, errors.get(0));
+        assertEquals(expectedBfActionsError, errors.getFirst());
     }
 
     @Test
@@ -154,13 +154,13 @@ public class CaseTransferServiceTest {
         assertEquals(1, errors.size());
         var expectedHearingsError = String.format(CaseTransferService.HEARINGS_ERROR_MSG,
                 ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference());
-        assertEquals(expectedHearingsError, errors.get(0));
+        assertEquals(expectedHearingsError, errors.getFirst());
     }
 
     @Test
     public void createCaseTransferHearingListedAndBfNotCleared() {
         ccdRequest.getCaseDetails().getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
-        ccdRequest.getCaseDetails().getCaseData().getBfActions().get(0).getValue().setCleared(null);
+        ccdRequest.getCaseDetails().getCaseData().getBfActions().getFirst().getValue().setCleared(null);
         ccdRequest.getCaseDetails().getCaseData().setHearingCollection(getHearingTypeCollection(HEARING_STATUS_LISTED));
 
         var errors = caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), authToken);
@@ -168,7 +168,7 @@ public class CaseTransferServiceTest {
         assertEquals(2, errors.size());
         var expectedBfActionsError = String.format(CaseTransferService.BF_ACTIONS_ERROR_MSG,
                 ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference());
-        assertEquals(expectedBfActionsError, errors.get(0));
+        assertEquals(expectedBfActionsError, errors.getFirst());
         var expectedHearingsError = String.format(CaseTransferService.HEARINGS_ERROR_MSG,
                 ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference());
         assertEquals(expectedHearingsError, errors.get(1));
@@ -184,13 +184,13 @@ public class CaseTransferServiceTest {
         assertEquals(0, errors.size());
     }
 
-    private List<HearingTypeItem> getHearingTypeCollection(String hearingState){
-        HearingType hearingType = new HearingType();
+    private List<HearingTypeItem> getHearingTypeCollection(String hearingState) {
         DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         DateListedType dateListedType = new DateListedType();
         dateListedType.setHearingStatus(hearingState);
         dateListedTypeItem.setId("123");
         dateListedTypeItem.setValue(dateListedType);
+        HearingType hearingType = new HearingType();
         hearingType.setHearingDateCollection(new ArrayList<>(Collections.singleton(dateListedTypeItem)));
 
         HearingTypeItem hearingTypeItem = new HearingTypeItem();

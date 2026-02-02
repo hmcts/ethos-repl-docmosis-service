@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
@@ -38,7 +37,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LETTER_ADDRESS_ALLOCATED_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
@@ -61,7 +59,8 @@ public class TornadoServiceTest {
         mockDocumentManagement();
         mockDefaultValuesReaderService();
 
-        tornadoService = new TornadoService(tornadoConnection, documentManagementService, userService, defaultValuesReaderService);
+        tornadoService = new TornadoService(tornadoConnection, documentManagementService,
+            userService, defaultValuesReaderService);
     }
 
     @Test(expected = IOException.class)
@@ -104,7 +103,8 @@ public class TornadoServiceTest {
     public void shouldCreateDocumentInfoForDocumentGenerationAllocatedOffice() throws IOException {
         mockConnectionSuccess();
         var defaultValues = mock(DefaultValues.class);
-        when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID))
+            .thenReturn(defaultValues);
         var caseData = new CaseData();
         caseData.setAllocatedOffice(GLASGOW_OFFICE);
         var correspondenceScotType = new CorrespondenceScotType();
@@ -122,7 +122,8 @@ public class TornadoServiceTest {
     public void shouldCreateDocumentInfoForDocumentGenerationAllocatedOfficeMultiples() throws IOException {
         mockConnectionSuccess();
         var defaultValues = mock(DefaultValues.class);
-        when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID))
+            .thenReturn(defaultValues);
         var caseData = new CaseData();
         caseData.setAllocatedOffice(GLASGOW_OFFICE);
         var correspondenceScotType = new CorrespondenceScotType();
@@ -183,7 +184,9 @@ public class TornadoServiceTest {
         documentManagementService = mock(DocumentManagementService.class);
         var documentUrl = "http://testdocumentserver/testdocument";
         var uri = URI.create(documentUrl);
-        when(documentManagementService.uploadDocument(anyString(), any(byte[].class), anyString(), anyString(), anyString())).thenReturn(uri);
+        when(documentManagementService
+            .uploadDocument(anyString(), any(byte[].class), anyString(), anyString(), anyString()))
+            .thenReturn(uri);
         when(documentManagementService.generateDownloadableURL(uri)).thenReturn(documentUrl);
         when(documentManagementService.generateMarkupDocument(anyString())).thenReturn(documentInfoMarkup);
     }
@@ -212,12 +215,12 @@ public class TornadoServiceTest {
     }
 
     private ListingData createListingData() {
-        var listingData = new ListingData();
         var listingTypeItem = new ListingTypeItem();
         var listingType = new ListingType();
         listingType.setCauseListDate("2019-12-12");
         listingTypeItem.setId("1111");
         listingTypeItem.setValue(listingType);
+        var listingData = new ListingData();
         listingData.setHearingDocType(HEARING_DOC_ETCL);
         listingData.setHearingDocETCL(HEARING_ETCL_STAFF);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -225,13 +228,6 @@ public class TornadoServiceTest {
         listingData.setListingCollection(new ArrayList<>(Collections.singleton(listingTypeItem)));
 
         return listingData;
-    }
-
-    private BulkData createBulkData() {
-        var bulkData = new BulkData();
-        bulkData.setScheduleDocName(LIST_CASES_CONFIG);
-        bulkData.setSearchCollection(new ArrayList<>());
-        return bulkData;
     }
 
     private void verifyDocumentInfo(DocumentInfo documentInfo) {

@@ -58,7 +58,7 @@ public class AddSingleCaseToMultipleServiceTest {
         caseDetails.setCaseData(MultipleUtil.getCaseDataForSinglesToBeMoved());
         caseDetails.setCaseId("12321321");
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
-        submitMultipleEvents.get(0).setCaseId(12121212);
+        submitMultipleEvents.getFirst().setCaseId(12121212);
         caseIdCollection = new ArrayList<>(Arrays.asList("21006/2020", "245000/2020", "245001/2020"));
         userToken = "authString";
 
@@ -68,7 +68,6 @@ public class AddSingleCaseToMultipleServiceTest {
     public void addSingleCaseToMultipleLogicLead() {
 
         List<String> errors = new ArrayList<>();
-        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleName();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -76,7 +75,7 @@ public class AddSingleCaseToMultipleServiceTest {
         ).thenReturn(submitMultipleEvents);
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 errors)
         ).thenReturn(caseIdCollection);
 
@@ -89,15 +88,15 @@ public class AddSingleCaseToMultipleServiceTest {
 
         verify(multipleHelperService, times(1)).getEthosCaseRefCollection(
                 userToken,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 errors);
 
         verify(multipleHelperService, times(1))
-                .sendCreationUpdatesToSinglesWithoutConfirmation(
+            .sendCreationUpdatesToSinglesWithoutConfirmation(
                 userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 errors,
                 new ArrayList<>(Collections.singletonList("21006/2020")),
                 "",
@@ -106,17 +105,17 @@ public class AddSingleCaseToMultipleServiceTest {
         verify(multipleHelperService, times(1)).addLeadMarkUp(
                 userToken,
                 multipleCaseTypeId,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 caseDetails.getCaseData().getEthosCaseReference(),
                 caseDetails.getCaseId());
-
+        
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
-                updatedSubMultipleName,
+            caseDetails.getCaseData().getSubMultipleName(),
                 caseDetails.getJurisdiction(),
                 multipleCaseTypeId,
-                String.valueOf(submitMultipleEvents.get(0).getCaseId()),
-                submitMultipleEvents.get(0).getCaseData(),
+                String.valueOf(submitMultipleEvents.getFirst().getCaseId()),
+                submitMultipleEvents.getFirst().getCaseData(),
                 new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
                 new ArrayList<>());
 
@@ -131,7 +130,6 @@ public class AddSingleCaseToMultipleServiceTest {
         caseDetails.getCaseData().setLeadClaimant(NO);
 
         List<String> errors = new ArrayList<>();
-        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleName();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -139,7 +137,7 @@ public class AddSingleCaseToMultipleServiceTest {
         ).thenReturn(submitMultipleEvents);
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 errors)
         ).thenReturn(caseIdCollection);
 
@@ -152,16 +150,16 @@ public class AddSingleCaseToMultipleServiceTest {
 
         verify(multipleHelperService, times(1)).getEthosCaseRefCollection(
                 userToken,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 errors);
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
-                updatedSubMultipleName,
+                caseDetails.getCaseData().getSubMultipleName(),
                 caseDetails.getJurisdiction(),
                 multipleCaseTypeId,
-                String.valueOf(submitMultipleEvents.get(0).getCaseId()),
-                submitMultipleEvents.get(0).getCaseData(),
+                String.valueOf(submitMultipleEvents.getFirst().getCaseId()),
+                submitMultipleEvents.getFirst().getCaseData(),
                 new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
                 new ArrayList<>());
 
@@ -176,9 +174,8 @@ public class AddSingleCaseToMultipleServiceTest {
     public void addSingleCaseToMultipleLogicNoLeadButWithEmptyMultiple() {
 
         caseDetails.getCaseData().setLeadClaimant(NO);
-        submitMultipleEvents.get(0).getCaseData().setCaseIdCollection(null);
-        submitMultipleEvents.get(0).getCaseData().setLeadCase(null);
-        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleName();
+        submitMultipleEvents.getFirst().getCaseData().setCaseIdCollection(null);
+        submitMultipleEvents.getFirst().getCaseData().setLeadCase(null);
 
         List<String> errors = new ArrayList<>();
 
@@ -188,7 +185,7 @@ public class AddSingleCaseToMultipleServiceTest {
         ).thenReturn(submitMultipleEvents);
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 errors)
         ).thenReturn(new ArrayList<>());
 
@@ -201,23 +198,23 @@ public class AddSingleCaseToMultipleServiceTest {
 
         verify(multipleHelperService, times(1)).getEthosCaseRefCollection(
                 userToken,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 errors);
 
         verify(multipleHelperService, times(1)).addLeadMarkUp(
                 userToken,
                 multipleCaseTypeId,
-                submitMultipleEvents.get(0).getCaseData(),
+                submitMultipleEvents.getFirst().getCaseData(),
                 caseDetails.getCaseData().getEthosCaseReference(),
                 caseDetails.getCaseId());
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
-                updatedSubMultipleName,
+                caseDetails.getCaseData().getSubMultipleName(),
                 caseDetails.getJurisdiction(),
                 multipleCaseTypeId,
-                String.valueOf(submitMultipleEvents.get(0).getCaseId()),
-                submitMultipleEvents.get(0).getCaseData(),
+                String.valueOf(submitMultipleEvents.getFirst().getCaseId()),
+                submitMultipleEvents.getFirst().getCaseData(),
                 new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
                 new ArrayList<>());
 

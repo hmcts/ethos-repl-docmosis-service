@@ -50,7 +50,7 @@ class HearingsToJudgmentsReportTest {
     HearingsToJudgmentsCaseDataBuilder caseDataBuilder;
     List<HearingsToJudgmentsSubmitEvent> submitEvents = new ArrayList<>();
 
-    static final LocalDateTime BASE_DATE = LocalDateTime.of(2021, 7, 1, 0, 0,0);
+    static final LocalDateTime BASE_DATE = LocalDateTime.of(2021, 7, 1, 0, 0, 0);
     static final String HEARING_LISTING_DATE = BASE_DATE.format(OLD_DATE_TIME_PATTERN);
     static final String DATE_WITHIN_4WKS = BASE_DATE.plusWeeks(1).format(OLD_DATE_TIME_PATTERN2);
     static final String DATE_NOT_WITHIN_4WKS = BASE_DATE.plusWeeks(5).format(OLD_DATE_TIME_PATTERN2);
@@ -65,13 +65,14 @@ class HearingsToJudgmentsReportTest {
     }
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         submitEvents.clear();
         var params = new ReportParams(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         hearingsToJudgmentsReportDataSource = mock(HearingsToJudgmentsReportDataSource.class);
-        when(hearingsToJudgmentsReportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        when(hearingsToJudgmentsReportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO))
+            .thenReturn(submitEvents);
 
-        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(hearingsToJudgmentsReportDataSource,params);
+        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(hearingsToJudgmentsReportDataSource, params);
     }
 
     @Test
@@ -269,7 +270,7 @@ class HearingsToJudgmentsReportTest {
         HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + YES,
         HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + NO,
     })
-    void shouldNotShowInvalidHearings(String hearingStatus, String HearingType, String disposed) {
+    void shouldNotShowInvalidHearings(String hearingStatus, String hearingType, String disposed) {
         // Given a case is accepted
         // And has been heard
         // And has a judgment made
@@ -277,7 +278,7 @@ class HearingsToJudgmentsReportTest {
         // Then the case is not in the report data
 
         submitEvents.add(caseDataBuilder
-                .withHearing(HEARING_LISTING_DATE, hearingStatus, HearingType, disposed)
+                .withHearing(HEARING_LISTING_DATE, hearingStatus, hearingType, disposed)
                 .withJudgment(JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
@@ -346,7 +347,8 @@ class HearingsToJudgmentsReportTest {
         // And has a judgment made
         // When I request report data
         // Then the case is in the report data
-        when(hearingsToJudgmentsReportDataSource.getData(SCOTLAND_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        when(hearingsToJudgmentsReportDataSource.getData(SCOTLAND_CASE_TYPE_ID, DATE_FROM, DATE_TO))
+            .thenReturn(submitEvents);
         var managingOffice = "Test Office";
 
         submitEvents.add(caseDataBuilder
@@ -360,7 +362,7 @@ class HearingsToJudgmentsReportTest {
         assertEquals(SCOTLAND_CASE_TYPE_ID, reportData.getReportSummary().getOffice());
         assertEquals(1, reportData.getReportDetails().size());
 
-        var reportDetail = reportData.getReportDetails().get(0);
+        var reportDetail = reportData.getReportDetails().getFirst();
         assertEquals(managingOffice, reportDetail.getReportOffice());
     }
 
@@ -397,31 +399,30 @@ class HearingsToJudgmentsReportTest {
         submitEvents.add(createValidSubmitEventNotWithin4Wks());
 
         // Will set the first cases total days to a number larger than the second cases
-        submitEvents.get(0).getCaseData().getJudgementCollection().get(0).getValue().setDateJudgmentSent("2021-12-31");
+        submitEvents.getFirst().getCaseData().getJudgementCollection().getFirst().getValue()
+            .setDateJudgmentSent("2021-12-31");
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
         assertEquals(2, reportData.getReportDetails().size());
-        assertTrue(Integer.parseInt(reportData.getReportDetails().get(0).getTotalDays())
+        assertTrue(Integer.parseInt(reportData.getReportDetails().getFirst().getTotalDays())
                 < Integer.parseInt(reportData.getReportDetails().get(1).getTotalDays()));
     }
 
     @ParameterizedTest
     @CsvSource({
-            "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-08-26,42,2500121/2021,1,One Test,"
-                    + HEARING_TYPE_JUDICIAL_HEARING + "," + YES + "," + ACCEPTED_STATE,
-            "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-08-26,41,2500122/2021,2,Two Test,"
-                    + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO + "," + ACCEPTED_STATE,
-            "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-08-26,40,2500123/2021,3,Three Test,"
-                    + HEARING_TYPE_PERLIMINARY_HEARING_CM + ",," + CLOSED_STATE,
-            "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-08-26,39,2500124/2021,4,Four Test,"
-                    + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES + "," + CLOSED_STATE})
-    void shouldContainCorrectDetailValuesForHearingsWithValidJudgment(String hearingListedDate, String judgmentHearingDate,
-                                                                      String dateJudgmentMade, String dateJudgmentSent,
-                                                                      String expectedTotalDays, String caseReference,
-                                                                      String hearingNumber, String hearingJudge,
-                                                                      String hearingType, String hearingReserved,
-                                                                      String caseState) {
+        "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-08-26,42,2500121/2021,1,One Test,"
+            + HEARING_TYPE_JUDICIAL_HEARING + "," + YES + "," + ACCEPTED_STATE,
+        "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-08-26,41,2500122/2021,2,Two Test,"
+            + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO + "," + ACCEPTED_STATE,
+        "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-08-26,40,2500123/2021,3,Three Test,"
+            + HEARING_TYPE_PERLIMINARY_HEARING_CM + ",," + CLOSED_STATE,
+        "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-08-26,39,2500124/2021,4,Four Test,"
+            + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES + "," + CLOSED_STATE})
+    void shouldContainCorrectDetailValuesForHearingsWithValidJudgment(String hearingListedDate,
+        String judgmentHearingDate, String dateJudgmentMade, String dateJudgmentSent, String expectedTotalDays,
+        String caseReference, String hearingNumber, String hearingJudge, String hearingType,
+        String hearingReserved, String caseState) {
         // Given I have a case in a valid state
         // And the case has a valid hearing and judgment
         // When I request report data
@@ -438,7 +439,7 @@ class HearingsToJudgmentsReportTest {
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
 
-        var reportDetail = reportData.getReportDetails().get(0);
+        var reportDetail = reportData.getReportDetails().getFirst();
         assertEquals(hearingJudge, reportDetail.getHearingJudge());
         assertEquals(NEWCASTLE_CASE_TYPE_ID, reportDetail.getReportOffice());
         assertEquals(caseReference, reportDetail.getCaseReference());
@@ -457,7 +458,6 @@ class HearingsToJudgmentsReportTest {
         // | 2021-07-05 | 2 | 2021-08-03 | 2021-08-04
         // When I request report data
         // Then I have correct hearing values for hearing #2
-        var expectedTotalDays = "31";
         var caseReference = "2500123/2021";
         var judge = "3756_Hugh Garfield"; // Amended to mimic Judge's ITCO reference
         var judgmentHearingDate = "2021-07-05";
@@ -478,28 +478,30 @@ class HearingsToJudgmentsReportTest {
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
 
-        var reportDetail = reportData.getReportDetails().get(0);
+        var reportDetail = reportData.getReportDetails().getFirst();
         assertEquals(judge.substring(judge.indexOf("_") + 1), reportDetail.getHearingJudge());
         assertEquals(NEWCASTLE_CASE_TYPE_ID, reportDetail.getReportOffice());
         assertEquals(caseReference, reportDetail.getCaseReference());
         assertEquals(NO, reportDetail.getReservedHearing());
-        assertEquals(expectedTotalDays, reportDetail.getTotalDays());
+        assertEquals("31", reportDetail.getTotalDays());
         assertEquals(judgmentHearingDate, reportDetail.getHearingDate());
         assertEquals(dateJudgmentSent, reportDetail.getJudgementDateSent());
     }
 
     private HearingsToJudgmentsSubmitEvent createValidSubmitEventWithin4Wks() {
         caseDataBuilder = new HearingsToJudgmentsCaseDataBuilder();
-        return caseDataBuilder.withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
-                .withJudgment(JUDGMENT_HEARING_DATE, DATE_WITHIN_4WKS, DATE_WITHIN_4WKS)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+        return caseDataBuilder
+            .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
+            .withJudgment(JUDGMENT_HEARING_DATE, DATE_WITHIN_4WKS, DATE_WITHIN_4WKS)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
     }
 
     private HearingsToJudgmentsSubmitEvent createValidSubmitEventNotWithin4Wks() {
         caseDataBuilder = new HearingsToJudgmentsCaseDataBuilder();
-        return caseDataBuilder.withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
-                .withJudgment(JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
+        return caseDataBuilder
+            .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
+            .withJudgment(JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
+            .buildAsSubmitEvent(ACCEPTED_STATE);
     }
 
     private void assertCommonValues(HearingsToJudgmentsReportData reportData) {

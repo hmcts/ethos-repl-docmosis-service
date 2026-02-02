@@ -98,7 +98,8 @@ public class MultipleScheduleServiceTest {
     public void bulkScheduleLogicFlagsMultipleRespondents() {
         RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setValue(new RespondentSumType());
-        schedulePayloadEvents.iterator().next().getSchedulePayloadES().getRespondentCollection().add(respondentSumTypeItem);
+        schedulePayloadEvents.iterator().next().getSchedulePayloadES().getRespondentCollection()
+            .add(respondentSumTypeItem);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveScheduleCases(userToken,
@@ -157,15 +158,15 @@ public class MultipleScheduleServiceTest {
                 multipleDetails,
                 errors);
         assertEquals(1, errors.size());
-        assertEquals("Number of cases exceed the limit of " + SCHEDULE_LIMIT_CASES, errors.get(0));
+        assertEquals("Number of cases exceed the limit of " + SCHEDULE_LIMIT_CASES, errors.getFirst());
 
     }
 
     private TreeMap<String, Object> createBigTreeMap() {
 
-        TreeMap<String, Object> treeMap= new TreeMap<>();
+        TreeMap<String, Object> treeMap = new TreeMap<>();
 
-        for (int i = 0; i < SCHEDULE_LIMIT_CASES+1 ; i++) {
+        for (int i = 0; i < SCHEDULE_LIMIT_CASES + 1; i++) {
             treeMap.put(String.valueOf(i), "Dummy");
         }
 

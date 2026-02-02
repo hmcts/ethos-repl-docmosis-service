@@ -47,7 +47,7 @@ public class MultiplesHelperTest {
         multipleData.setCaseIdCollection(null);
         MultiplesHelper.addLeadToCaseIds(multipleData, "245003/2020");
         assertEquals(1, multipleData.getCaseIdCollection().size());
-        assertEquals("245003/2020", multipleData.getCaseIdCollection().get(0).getValue().getEthosCaseReference());
+        assertEquals("245003/2020", multipleData.getCaseIdCollection().getFirst().getValue().getEthosCaseReference());
     }
 
     @Test
@@ -138,14 +138,13 @@ public class MultiplesHelperTest {
     public void setSubMultipleFieldInSingleCaseDataTest() throws IOException {
         MultipleDetails multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        String userToken = "authString";
         SubmitEvent submitEvent = new SubmitEvent();
         CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("1234");
         submitEvent.setCaseData(caseData);
         multipleDetails.setJurisdiction("EMPLOYMENT");
         multipleDetails.setCaseTypeId("Leeds_Multiple");
-        MultipleData multipleData = new MultipleData();
+        multipleData = new MultipleData();
         multipleData.setCaseCounter("1");
         CaseImporterFile caseImporterFile = new CaseImporterFile();
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
@@ -164,7 +163,7 @@ public class MultiplesHelperTest {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(),
                         anyString()))
                 .thenReturn(ccdRequest);
-        MultiplesHelper.setSubMultipleFieldInSingleCaseData(userToken,
+        MultiplesHelper.setSubMultipleFieldInSingleCaseData("authToken",
                 multipleDetails,
                 "1234",
                 "subMultiple",
@@ -172,8 +171,8 @@ public class MultiplesHelperTest {
 
         assertEquals("subMultiple", caseData.getSubMultipleName());
     }
-    private CaseIdTypeItem createCaseIdTypeItem(String id, String value) {
 
+    private CaseIdTypeItem createCaseIdTypeItem(String id, String value) {
         CaseType caseType = new CaseType();
         caseType.setEthosCaseReference(value);
         CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();

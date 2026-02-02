@@ -29,7 +29,7 @@ public class RefDataFixesCcdDataSourceTest {
         RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
         List<SubmitEvent> results = dataSource.getDataForJudges(caseTypeId, fromDate, toDate, ccdClient);
         assertEquals(1, results.size());
-        assertEquals(submitEvent, results.get(0));
+        assertEquals(submitEvent, results.getFirst());
     }
 
     @Test(expected = RefDataFixesException.class)
@@ -59,7 +59,7 @@ public class RefDataFixesCcdDataSourceTest {
         RefDataFixesCcdDataSource dataSource = new RefDataFixesCcdDataSource(authToken);
         List<SubmitEvent> results = dataSource.getDataForInsertClaimDate(caseTypeId, fromDate, toDate, ccdClient);
         assertEquals(1, results.size());
-        assertEquals(submitEvent, results.get(0));
+        assertEquals(submitEvent, results.getFirst());
     }
 
     @Test(expected = RefDataFixesException.class)

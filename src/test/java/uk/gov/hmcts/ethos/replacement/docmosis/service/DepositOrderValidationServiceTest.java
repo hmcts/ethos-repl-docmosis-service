@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 
-public class DepositOrderValidationServiceTest {
+class DepositOrderValidationServiceTest {
 
     private DepositOrderValidationService depositOrderValidationService;
     private JudgmentValidationService judgmentValidationService;
@@ -25,9 +25,8 @@ public class DepositOrderValidationServiceTest {
     private CaseDetails caseDetails3;
     private CaseDetails caseDetails5;
 
-
     @BeforeEach
-    public void setup() throws Exception {
+    void setup() throws Exception {
         depositOrderValidationService = new DepositOrderValidationService();
         judgmentValidationService = new JudgmentValidationService();
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
@@ -49,7 +48,7 @@ public class DepositOrderValidationServiceTest {
         List<String> errors = depositOrderValidationService.validateDepositOrder(caseDetails3.getCaseData());
 
         assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
+        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.getFirst());
     }
 
     @Test
@@ -64,18 +63,18 @@ public class DepositOrderValidationServiceTest {
         List<String> errors = depositOrderValidationService.validateDepositOrder(caseDetails1.getCaseData());
 
         assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
+        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.getFirst());
     }
-
 
     @Test
     void shouldReturnNoErrorsForDepositValidation() {
         var caseData = caseDetails1.getCaseData();
-        caseData.getDepositCollection().get(0).getValue().setDepositAmount("300");
+        caseData.getDepositCollection().getFirst().getValue().setDepositAmount("300");
         DynamicDepositOrder.dynamicDepositOrder(caseData);
         List<String> errors = depositOrderValidationService.validateDepositOrder(caseData);
         assertEquals(0, errors.size());
-        assertEquals("Tribunal", caseDetails1.getCaseData().getDepositCollection().get(0).getValue().getDepositRequestedBy());
+        assertEquals("Tribunal", caseDetails1.getCaseData().getDepositCollection().getFirst()
+            .getValue().getDepositRequestedBy());
     }
 
     @Test
@@ -83,6 +82,6 @@ public class DepositOrderValidationServiceTest {
         var caseData = caseDetails5.getCaseData();
         List<String> errors = depositOrderValidationService.validateDepositOrder(caseData);
         assertEquals(1, errors.size());
-        assertEquals(UNABLE_TO_FIND_PARTY, errors.get(0));
+        assertEquals(UNABLE_TO_FIND_PARTY, errors.getFirst());
     }
 }

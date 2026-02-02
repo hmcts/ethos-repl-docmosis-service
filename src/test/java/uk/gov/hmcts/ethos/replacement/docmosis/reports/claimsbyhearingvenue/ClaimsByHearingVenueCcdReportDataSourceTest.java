@@ -28,9 +28,9 @@ public class ClaimsByHearingVenueCcdReportDataSourceTest {
         var submitEvents = List.of(submitEventOne, submitEventTwo);
         when(ccdClient.claimsByHearingVenueSearch(anyString(), anyString(), anyString())).thenReturn(submitEvents);
         var ccdReportDataSource = new ClaimsByHearingVenueCcdReportDataSource(authToken, ccdClient);
-        var results = ccdReportDataSource.getData(caseTypeId,fromDate, toDate);
+        var results = ccdReportDataSource.getData(caseTypeId, fromDate, toDate);
         assertEquals(2, results.size());
-        assertEquals(submitEventOne, results.get(0));
+        assertEquals(submitEventOne, results.getFirst());
         assertEquals(submitEventTwo, results.get(1));
     }
 
@@ -44,12 +44,11 @@ public class ClaimsByHearingVenueCcdReportDataSourceTest {
         when(ccdClient.claimsByHearingVenueSearch(anyString(), anyString(), anyString()))
             .thenThrow(new IOException());
         var ccdReportDataSource = new ClaimsByHearingVenueCcdReportDataSource(authToken, ccdClient);
-        var exception = assertThrows(ReportException.class, () -> {
-            ccdReportDataSource.getData(caseTypeId, fromDate, toDate);
-        });
+        var exception = assertThrows(ReportException.class,
+            () -> ccdReportDataSource.getData(caseTypeId, fromDate, toDate));
 
         String expectedMessage = "Failed to get claims by hearing venue search results "
-        + "for case type id Test_caseTypeId";
+            + "for case type id Test_caseTypeId";
         String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }

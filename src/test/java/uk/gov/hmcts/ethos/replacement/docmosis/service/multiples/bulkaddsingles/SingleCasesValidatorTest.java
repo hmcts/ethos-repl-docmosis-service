@@ -65,9 +65,9 @@ class SingleCasesValidatorTest {
         List<ValidatedSingleCase> validatedCases = singleCasesValidator.getValidatedCases(caseIds,
                 NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         assertEquals(1, validatedCases.size());
-        assertFalse(validatedCases.get(0).isValid());
-        assertEquals(ethosReference, validatedCases.get(0).getEthosReference());
-        assertEquals("Case is in state " + caseState, validatedCases.get(0).getInvalidReason());
+        assertFalse(validatedCases.getFirst().isValid());
+        assertEquals(ethosReference, validatedCases.getFirst().getEthosReference());
+        assertEquals("Case is in state " + caseState, validatedCases.getFirst().getInvalidReason());
     }
 
     @Test
@@ -142,7 +142,7 @@ class SingleCasesValidatorTest {
         var validatedCases = singleCasesValidator.getValidatedCases(caseIds,
                 NEWCASTLE_BULK_CASE_TYPE_ID, authToken);
         assertEquals(4, validatedCases.size());
-        verify(validatedCases.get(0), "case1", true, null);
+        verify(validatedCases.getFirst(), "case1", true, null);
         verify(validatedCases.get(1), "case2", true, null);
         verify(validatedCases.get(2), "case3", true, null);
         verify(validatedCases.get(3), "case4", false, "Case not found");
@@ -164,7 +164,7 @@ class SingleCasesValidatorTest {
     private void verify(List<ValidatedSingleCase> validatedCases, String expectedEthosReference,
                         boolean expectedValid, String expectedInvalidReason) {
         assertEquals(1, validatedCases.size());
-        verify(validatedCases.get(0), expectedEthosReference, expectedValid, expectedInvalidReason);
+        verify(validatedCases.getFirst(), expectedEthosReference, expectedValid, expectedInvalidReason);
     }
 
     private void verify(ValidatedSingleCase validatedCase, String expectedEthosReference,

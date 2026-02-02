@@ -180,8 +180,8 @@ public class CasesAwaitingJudgmentReportTest {
         assertCommonValues(reportData);
         assertEquals(3, reportData.getReportDetails().size());
         assertEquals(1, reportData.getReportSummary().getPositionTypes().size());
-        assertEquals(positionType, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeName());
-        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeCount());
+        assertEquals(positionType, reportData.getReportSummary().getPositionTypes().getFirst().getPositionTypeName());
+        assertEquals(3, reportData.getReportSummary().getPositionTypes().getFirst().getPositionTypeCount());
     }
 
     @Test
@@ -210,8 +210,8 @@ public class CasesAwaitingJudgmentReportTest {
         assertEquals(6, reportData.getReportDetails().size());
         assertEquals(3, reportData.getReportSummary().getPositionTypes().size());
 
-        assertEquals(positionType3, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeName());
-        assertEquals(1, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeCount());
+        assertEquals(positionType3, reportData.getReportSummary().getPositionTypes().getFirst().getPositionTypeName());
+        assertEquals(1, reportData.getReportSummary().getPositionTypes().getFirst().getPositionTypeCount());
         assertEquals(positionType2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeName());
         assertEquals(2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeCount());
         assertEquals(positionType1, reportData.getReportSummary().getPositionTypes().get(2).getPositionTypeName());
@@ -224,13 +224,9 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then I have correct report detail values for the case
         var listedDate = "2021-07-16T10:00:00.000";
-        var expectedWeeksSinceHearing = 2;
-        var expectedDaysSinceHearing = 15;
         var caseReference = "2500123/2021";
         var currentPosition = MANUALLY_CREATED_POSITION;
         var dateToPosition = "2021-07-10";
-        var expectedDateToPosition = "10/07/2021";
-        var expectedLastHeardHearingDate = "16/07/2021";
         var conciliationTrack = CONCILIATION_TRACK_FAST_TRACK;
         var hearingNumber = "1";
         var hearingType = HEARING_TYPE_JUDICIAL_COSTS_HEARING;
@@ -250,19 +246,19 @@ public class CasesAwaitingJudgmentReportTest {
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
 
-        var reportDetail = reportData.getReportDetails().get(0);
+        var reportDetail = reportData.getReportDetails().getFirst();
         assertEquals(validPositionType, reportDetail.getPositionType());
 
-        assertEquals(expectedWeeksSinceHearing, reportDetail.getWeeksSinceHearing());
-        assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
+        assertEquals(2, reportDetail.getWeeksSinceHearing());
+        assertEquals(15, reportDetail.getDaysSinceHearing());
         assertEquals(caseReference, reportDetail.getCaseNumber());
         assertEquals(ReportDetail.NO_MULTIPLE_REFERENCE, reportDetail.getMultipleReference());
-        assertEquals(expectedLastHeardHearingDate, reportDetail.getLastHeardHearingDate());
+        assertEquals("16/07/2021", reportDetail.getLastHeardHearingDate());
         assertEquals(hearingNumber, reportDetail.getHearingNumber());
         assertEquals(hearingType, reportDetail.getHearingType());
         assertEquals(judge, reportDetail.getJudge());
         assertEquals(currentPosition, reportDetail.getCurrentPosition());
-        assertEquals(expectedDateToPosition, reportDetail.getDateToPosition());
+        assertEquals("10/07/2021", reportDetail.getDateToPosition());
         assertEquals(conciliationTrack, reportDetail.getConciliationTrack());
     }
 
@@ -287,7 +283,7 @@ public class CasesAwaitingJudgmentReportTest {
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
 
-        var reportDetail = reportData.getReportDetails().get(0);
+        var reportDetail = reportData.getReportDetails().getFirst();
         assertEquals(multipleReference, reportDetail.getMultipleReference());
     }
 
@@ -302,33 +298,34 @@ public class CasesAwaitingJudgmentReportTest {
         // | 2021-07-06 | 4 | Withdrawn |
         // When I request report data
         // Then I have correct hearing values for hearing #3
-        var expectedWeeksSinceHearing = 3;
-        var expectedDaysSinceHearing = 26;
-        var expectedLastHeardHearingDate = "05/07/2021";
         var caseReference = "2500123/2021";
         var judge = "Hugh Parkfield";
 
         submitEvents.add(caseDataBuilder
-                .withEthosCaseReference(caseReference)
-                .withPositionType(validPositionType)
-                .withSingleCaseType()
-                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_POSTPONED, "2", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "3", HEARING_TYPE_JUDICIAL_MEDIATION, judge)
-                .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_WITHDRAWN, "4", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .buildAsSubmitEvent(ACCEPTED_STATE));
+            .withEthosCaseReference(caseReference)
+            .withPositionType(validPositionType)
+            .withSingleCaseType()
+            .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+            .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_POSTPONED, "2",
+                HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+            .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "3",
+                HEARING_TYPE_JUDICIAL_MEDIATION, judge)
+            .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_WITHDRAWN, "4",
+                HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+            .buildAsSubmitEvent(ACCEPTED_STATE));
 
         var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
 
-        var reportDetail = reportData.getReportDetails().get(0);
+        var reportDetail = reportData.getReportDetails().getFirst();
         assertEquals(validPositionType, reportDetail.getPositionType());
 
-        assertEquals(expectedWeeksSinceHearing, reportDetail.getWeeksSinceHearing());
-        assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
+        assertEquals(3, reportDetail.getWeeksSinceHearing());
+        assertEquals(26, reportDetail.getDaysSinceHearing());
         assertEquals(caseReference, reportDetail.getCaseNumber());
-        assertEquals(expectedLastHeardHearingDate, reportDetail.getLastHeardHearingDate());
+        assertEquals("05/07/2021", reportDetail.getLastHeardHearingDate());
         assertEquals("3", reportDetail.getHearingNumber());
         assertEquals(HEARING_TYPE_JUDICIAL_MEDIATION, reportDetail.getHearingType());
         assertEquals(judge, reportDetail.getJudge());
@@ -355,28 +352,32 @@ public class CasesAwaitingJudgmentReportTest {
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 1")
                 .withSingleCaseType()
-                .withHearing("2021-07-10T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-10T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                    HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
         submitEvents.add(caseDataBuilder
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 2")
                 .withSingleCaseType()
-                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                    HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
         submitEvents.add(caseDataBuilder
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 3")
                 .withSingleCaseType()
-                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                    HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
         submitEvents.add(caseDataBuilder
                 .withPositionType(validPositionType)
                 .withEthosCaseReference("Case 4")
                 .withSingleCaseType()
-                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1",
+                    HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
         caseDataBuilder = new CaseDataBuilder();
 
@@ -384,7 +385,7 @@ public class CasesAwaitingJudgmentReportTest {
         assertCommonValues(reportData);
         assertEquals(4, reportData.getReportDetails().size());
 
-        assertEquals("Case 4", reportData.getReportDetails().get(0).getCaseNumber());
+        assertEquals("Case 4", reportData.getReportDetails().getFirst().getCaseNumber());
         assertEquals("Case 2", reportData.getReportDetails().get(1).getCaseNumber());
         assertEquals("Case 3", reportData.getReportDetails().get(2).getCaseNumber());
         assertEquals("Case 1", reportData.getReportDetails().get(3).getCaseNumber());

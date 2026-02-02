@@ -49,8 +49,8 @@ public class FixCaseApiServiceTest {
         caseDetails.setCaseId(String.valueOf(ccdReference));
 
         List<SubmitMultipleEvent> submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
-        submitMultipleEvents.get(0).getCaseData().setMultipleReference(multipleReference);
-        submitMultipleEvents.get(0).setCaseId(ccdReference);
+        submitMultipleEvents.getFirst().getCaseData().setMultipleReference(multipleReference);
+        submitMultipleEvents.getFirst().setCaseId(ccdReference);
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 MANCHESTER_BULK_CASE_TYPE_ID,

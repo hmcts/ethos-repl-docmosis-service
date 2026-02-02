@@ -23,10 +23,6 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder withHearing(String listedDate, String hearingStatus) {
-        return withHearing(listedDate, hearingStatus, null, null, null);
-    }
-
     public CaseDataBuilder withSingleCaseType() {
         caseData.setEcmCaseType(SINGLE_CASE_TYPE);
         return this;
@@ -53,7 +49,12 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder withHearing(String listedDate, String hearingStatus, String hearingNumber, String hearingType, String judge) {
+    public CaseDataBuilder withHearing(String listedDate, String hearingStatus) {
+        return withHearing(listedDate, hearingStatus, null, null, null);
+    }
+
+    public CaseDataBuilder withHearing(String listedDate, String hearingStatus, String hearingNumber,
+                                       String hearingType, String judge) {
         var dateListedType = new DateListedType();
         dateListedType.setListedDate(listedDate);
         dateListedType.setHearingStatus(hearingStatus);

@@ -33,7 +33,7 @@ public class ClaimsByHearingVenueCaseDataBuilder {
 
     public ClaimsByHearingVenueCaseDataBuilder withRespondentCollection(
         List<RespondentSumTypeItem> respondentCollection) {
-        if(respondentCollection != null) {
+        if (respondentCollection != null) {
             caseData.setRespondentCollection(respondentCollection);
         }
         return this;

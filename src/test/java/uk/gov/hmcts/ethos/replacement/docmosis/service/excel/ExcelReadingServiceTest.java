@@ -98,7 +98,7 @@ public class ExcelReadingServiceTest {
         List<String> listSub1 = (List<String>) multipleObjects.get("Sub1");
         assertEquals(1, listSub1.size());
 
-        assertEquals("1820004/2019", listSub.get(0));
+        assertEquals("1820004/2019", listSub.getFirst());
         assertEquals("1820005/2019", listSub.get(1));
         assertEquals(0, errors.size());
     }

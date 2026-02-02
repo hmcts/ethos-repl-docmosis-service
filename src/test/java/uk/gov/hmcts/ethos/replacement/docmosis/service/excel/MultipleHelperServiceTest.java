@@ -89,30 +89,30 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getLeadCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEventList.get(0));
+                .thenReturn(submitEventList.getFirst());
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "");
-        assertEquals("<a target=\"_blank\" href=\""+ gatewayURL + "/cases/case-details/1232121232\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\"" + gatewayURL + "/cases/case-details/1232121232\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 
     @Test
     public void addLeadMarkUpWithCaseId() {
-        submitEventList.get(0).setCaseId(12345L);
+        submitEventList.getFirst().setCaseId(12345L);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getLeadCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEventList.get(0));
+                .thenReturn(submitEventList.getFirst());
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "12345");
-        assertEquals("<a target=\"_blank\" href=\""+ gatewayURL + "/cases/case-details/12345\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\"" + gatewayURL + "/cases/case-details/12345\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 
@@ -175,7 +175,7 @@ public class MultipleHelperServiceTest {
                 subMultipleName,
                 errors);
 
-        assertEquals("Sub multiple SubMultiple3 does not exist in 246001", errors.get(0));
+        assertEquals("Sub multiple SubMultiple3 does not exist in 246001", errors.getFirst());
 
     }
 
@@ -192,7 +192,7 @@ public class MultipleHelperServiceTest {
                 multipleReference)
         ).thenReturn(submitMultipleEvents);
 
-        submitMultipleEvents.get(0).getCaseData().setSubMultipleCollection(null);
+        submitMultipleEvents.getFirst().getCaseData().setSubMultipleCollection(null);
 
         multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -200,7 +200,7 @@ public class MultipleHelperServiceTest {
                 subMultipleName,
                 errors);
 
-        assertEquals("Sub multiple SubMultiple3 does not exist in 246001", errors.get(0));
+        assertEquals("Sub multiple SubMultiple3 does not exist in 246001", errors.getFirst());
 
     }
 
@@ -223,7 +223,7 @@ public class MultipleHelperServiceTest {
                 subMultipleName,
                 errors);
 
-        assertEquals("Multiple 246002 does not exist", errors.get(0));
+        assertEquals("Multiple 246002 does not exist", errors.getFirst());
 
     }
 
@@ -235,7 +235,7 @@ public class MultipleHelperServiceTest {
         String multipleReference = "246001";
         String subMultipleName = "SubMultiple";
 
-        submitMultipleEvents.get(0).setState(TRANSFERRED_STATE);
+        submitMultipleEvents.getFirst().setState(TRANSFERRED_STATE);
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleReference)
@@ -249,7 +249,7 @@ public class MultipleHelperServiceTest {
 
         assertEquals(1, errors.size());
         assertEquals("Multiple 246001 has been transferred. "
-                + "The case cannot be moved to this multiple", errors.get(0));
+                + "The case cannot be moved to this multiple", errors.getFirst());
 
     }
 
@@ -391,13 +391,14 @@ public class MultipleHelperServiceTest {
 
         RepresentedTypeC representedTypeC = new RepresentedTypeC();
         representedTypeC.setNameOfRepresentative("Rep");
-        submitEventList.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
+        submitEventList.getFirst().getCaseData().setRepresentativeClaimantType(representedTypeC);
 
         JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
         JurCodesType jurCodesType = new JurCodesType();
         jurCodesType.setJuridictionCodesList("AA");
         jurCodesTypeItem.setValue(jurCodesType);
-        submitEventList.get(0).getCaseData().setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+        submitEventList.getFirst().getCaseData().setJurCodesCollection(
+            new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
 
         JudgementTypeItem judgementTypeItem = new JudgementTypeItem();
         JudgementType judgementType = new JudgementType();
@@ -405,7 +406,8 @@ public class MultipleHelperServiceTest {
         judgementType.setDateJudgmentMade("25/01/2021");
         judgementTypeItem.setValue(judgementType);
         judgementTypeItem.setId("JD");
-        submitEventList.get(0).getCaseData().setJudgementCollection(new ArrayList<>(Collections.singletonList(judgementTypeItem)));
+        submitEventList.getFirst().getCaseData().setJudgementCollection(
+            new ArrayList<>(Collections.singletonList(judgementTypeItem)));
 
         multipleDetails.getCaseData().setBatchUpdateClaimantRep(MultipleUtil.generateDynamicList("Rep"));
         multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList("AA"));
@@ -418,7 +420,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails,
                 new ArrayList<>(),
                 multipleObjects,
-                submitEventList.get(0).getCaseData()
+                submitEventList.getFirst().getCaseData()
         );
 
         verify(userService).getUserDetails(userToken);
@@ -529,7 +531,7 @@ public class MultipleHelperServiceTest {
                 multipleObjects,
                 new ArrayList<>(Arrays.asList("245008/2020", "245009/2020")));
 
-        assertEquals("<a target=\"_blank\" href=\""+ gatewayURL + "/cases/case-details/10561843\">245000/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\"" + gatewayURL + "/cases/case-details/10561843\">245000/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
 
     }

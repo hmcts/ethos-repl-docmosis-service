@@ -79,7 +79,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
 
         multipleBatchUpdate3Service.batchUpdate3Logic(userToken,
                 multipleDetails,
@@ -90,7 +90,7 @@ public class MultipleBatchUpdate3ServiceTest {
 
         verify(multipleHelperService, times(1))
                 .sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>(),
-                        multipleObjectsFlags, submitEvents.get(0).getCaseData());
+                        multipleObjectsFlags, submitEvents.getFirst().getCaseData());
         verifyNoMoreInteractions(multipleHelperService);
 
     }
@@ -111,16 +111,16 @@ public class MultipleBatchUpdate3ServiceTest {
         RepresentedTypeC representedTypeC = new RepresentedTypeC();
         representedTypeC.setNameOfRepresentative("ABC");
         representedTypeC.setNameOfOrganisation("FDS");
-        submitEvents.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
+        submitEvents.getFirst().getCaseData().setRepresentativeClaimantType(representedTypeC);
         assertEquals(3, multipleObjectsFlags.size());
 
         CCDRequest ccdRequest = new CCDRequest();
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        caseDetails.setCaseData(submitEvents.getFirst().getCaseData());
         ccdRequest.setCaseDetails(caseDetails);
         doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
                 anyString());
-        doReturn(submitEvents.get(0)).when(singleCasesReadingService).retrieveSingleCase(userToken,
+        doReturn(submitEvents.getFirst()).when(singleCasesReadingService).retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource());
@@ -130,10 +130,10 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertEquals(submitEvents.get(0).getCaseData().getRepresentativeClaimantType(), new RepresentedTypeC());
+        assertEquals(submitEvents.getFirst().getCaseData().getRepresentativeClaimantType(), new RepresentedTypeC());
         verify(multipleHelperService, times(1))
                 .sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>(),
-                        multipleObjectsFlags, submitEvents.get(0).getCaseData());
+                        multipleObjectsFlags, submitEvents.getFirst().getCaseData());
         verifyNoMoreInteractions(multipleHelperService);
 
     }
@@ -157,18 +157,18 @@ public class MultipleBatchUpdate3ServiceTest {
         var representedTypeRItem = new RepresentedTypeRItem();
         representedTypeRItem.setId("Respondent Rep");
         representedTypeRItem.setValue(representedTypeR);
-        submitEvents.get(0).getCaseData().setRepCollection
-                (new ArrayList<>(Collections.singletonList(representedTypeRItem)));
+        submitEvents.getFirst().getCaseData().setRepCollection(
+            new ArrayList<>(Collections.singletonList(representedTypeRItem)));
         assertEquals(3, multipleObjectsFlags.size());
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
         CCDRequest ccdRequest = new CCDRequest();
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(submitEvents.get(0).getCaseData());
+        caseDetails.setCaseData(submitEvents.getFirst().getCaseData());
         ccdRequest.setCaseDetails(caseDetails);
         doReturn(ccdRequest).when(ccdClient).startEventForCase(anyString(), anyString(), anyString(),
                 anyString());
@@ -178,7 +178,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertNull( submitEvents.get(0).getCaseData().getRepCollection().get(0).getValue());
+        assertNull(submitEvents.getFirst().getCaseData().getRepCollection().getFirst().getValue());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
-                .thenReturn(submitEvents.get(0));
+                .thenReturn(submitEvents.getFirst());
 
         multipleBatchUpdate3Service.batchUpdate3Logic(userToken,
                 multipleDetails,

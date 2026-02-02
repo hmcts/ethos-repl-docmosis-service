@@ -46,7 +46,7 @@ public class BulkAddSinglesValidatorTest {
         var errors = bulkAddSinglesValidator.validate(multipleDetails, authToken);
 
         assertEquals(1, errors.size());
-        assertEquals("No cases found", errors.get(0));
+        assertEquals("No cases found", errors.getFirst());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class BulkAddSinglesValidatorTest {
         var errors = bulkAddSinglesValidator.validate(multipleDetails, authToken);
 
         assertEquals(1, errors.size());
-        assertEquals("case1: Case not found", errors.get(0));
+        assertEquals("case1: Case not found", errors.getFirst());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class BulkAddSinglesValidatorTest {
         var errors = bulkAddSinglesValidator.validate(multipleDetails, authToken);
 
         assertEquals(1, errors.size());
-        assertEquals("Unexpected error when importing single cases", errors.get(0));
+        assertEquals("Unexpected error when importing single cases", errors.getFirst());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class BulkAddSinglesValidatorTest {
         var errors = bulkAddSinglesValidator.validate(multipleDetails, authToken);
 
         assertEquals(1, errors.size());
-        assertEquals("Unexpected error when validating single cases", errors.get(0));
+        assertEquals("Unexpected error when validating single cases", errors.getFirst());
     }
 
     private MultipleDetails createMultipleDetails() {

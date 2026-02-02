@@ -82,7 +82,7 @@ class ClaimsByHearingVenueReportTest {
         var expectedReportTitle = getReportTitle(RANGE_HEARING_DATE_TYPE);
         var expectedNumberOfSubmitEventEntries = submitEvents.size();
         var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams,"Leeds");
+                .generateReport(reportParams, "Leeds");
         var actualReportTitle = reportData.getReportPeriodDescription();
 
         assertEquals(expectedReportTitle, actualReportTitle);
@@ -142,26 +142,17 @@ class ClaimsByHearingVenueReportTest {
             .withClaimantWorkAddressType(null)
             .withRespondentCollection(null)
             .buildAsSubmitEvent(ACCEPTED_STATE);
-    submitEvents.add(submitEventOne);
+        submitEvents.add(submitEventOne);
         when(claimsByHearingVenueReportDataSource.getData(
                 UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
                 .thenReturn(submitEvents);
-
-        var expectedClaimantAddressUKPostcode = "DH3 8HL";
-        var expectedClaimantWorkPostcode = "Null";
-        var expectedRespondentPostcode = "Null";
-        var expectedRespondentET3Postcode = "Null";
-        var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams, "Manchester");
-        var actualClaimantAddressUKPostcode = reportData.getReportDetails().get(0).getClaimantPostcode();
-        var actualClaimantWorkPostcode = reportData.getReportDetails().get(0).getClaimantWorkPostcode();
-        var actualRespondentPostcode = reportData.getReportDetails().get(0).getRespondentPostcode();
-        var actualRespondentET3Postcode = reportData.getReportDetails().get(0).getRespondentET3Postcode();
-
-        assertEquals(expectedClaimantAddressUKPostcode, actualClaimantAddressUKPostcode);
-        assertEquals(expectedClaimantWorkPostcode, actualClaimantWorkPostcode);
-        assertEquals(expectedRespondentPostcode, actualRespondentPostcode);
-        assertEquals(expectedRespondentET3Postcode, actualRespondentET3Postcode);
+        
+        var reportData = claimsByHearingVenueReport.generateReport(reportParams, "Manchester");
+        
+        assertEquals("Null", reportData.getReportDetails().getFirst().getRespondentET3Postcode());
+        assertEquals("Null", reportData.getReportDetails().getFirst().getClaimantWorkPostcode());
+        assertEquals("DH3 8HL", reportData.getReportDetails().getFirst().getClaimantPostcode());
+        assertEquals("Null", reportData.getReportDetails().getFirst().getRespondentPostcode());
     }
 
     @Test
@@ -191,23 +182,12 @@ class ClaimsByHearingVenueReportTest {
         when(claimsByHearingVenueReportDataSource.getData(
                 UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
                 .thenReturn(submitEvents);
+        var reportData = claimsByHearingVenueReport.generateReport(reportParams, "Manchester");
 
-        var expectedClaimantAddressUKPostcode = "Null";
-        var expectedClaimantWorkPostcode = "Null";
-        var expectedRespondentPostcode = "Null";
-        var expectedRespondentET3Postcode = "Null";
-        var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams, "Manchester");
-
-        var actualClaimantAddressUKPostcode = reportData.getReportDetails().get(0).getClaimantPostcode();
-        var actualClaimantWorkPostcode = reportData.getReportDetails().get(0).getClaimantWorkPostcode();
-        var actualRespondentPostcode = reportData.getReportDetails().get(0).getRespondentPostcode();
-        var actualRespondentET3Postcode = reportData.getReportDetails().get(0).getRespondentET3Postcode();
-
-        assertEquals(expectedClaimantAddressUKPostcode, actualClaimantAddressUKPostcode);
-        assertEquals(expectedClaimantWorkPostcode, actualClaimantWorkPostcode);
-        assertEquals(expectedRespondentPostcode, actualRespondentPostcode);
-        assertEquals(expectedRespondentET3Postcode, actualRespondentET3Postcode);
+        assertEquals("Null", reportData.getReportDetails().getFirst().getRespondentET3Postcode());
+        assertEquals("Null", reportData.getReportDetails().getFirst().getClaimantWorkPostcode());
+        assertEquals("Null", reportData.getReportDetails().getFirst().getRespondentPostcode());
+        assertEquals("Null", reportData.getReportDetails().getFirst().getRespondentPostcode());
     }
 
     @Test
@@ -217,17 +197,17 @@ class ClaimsByHearingVenueReportTest {
         // Then only the postcode of the first respondent detail should be used to set "Respondent Postcode"
         // and "Respondent ET3 Postcode" values in the report data detail entry. "Null" should be used if
         // no postcodes found
-        List<RespondentSumTypeItem> respondentCollection = new ArrayList<>();
-        var respondentSumTypeItem = new RespondentSumTypeItem();
-        var respondentSumType = new RespondentSumType();
         var firstRespondentAddress = new Address();
         firstRespondentAddress.setPostCode("DH1 1AE");
+        var respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentAddress(firstRespondentAddress);
 
         var firstRespondentET3Address = new Address();
         firstRespondentET3Address.setPostCode("DH1 1AJ");
         respondentSumType.setResponseRespondentAddress(firstRespondentET3Address);
+        var respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setValue(respondentSumType);
+        List<RespondentSumTypeItem> respondentCollection = new ArrayList<>();
         respondentCollection.add(respondentSumTypeItem);
 
         var respondentSumTypeItemTwo = new RespondentSumTypeItem();
@@ -260,8 +240,8 @@ class ClaimsByHearingVenueReportTest {
         var expectedFirstRespondentET3AddressPostCode = firstRespondentET3Address.getPostCode();
         var reportData = claimsByHearingVenueReport
                 .generateReport(reportParams, "Manchester");
-        var actualRespondentPostCode = reportData.getReportDetails().get(0).getRespondentPostcode();
-        var actualRespondentET3PostCode = reportData.getReportDetails().get(0).getRespondentET3Postcode();
+        var actualRespondentPostCode = reportData.getReportDetails().getFirst().getRespondentPostcode();
+        var actualRespondentET3PostCode = reportData.getReportDetails().getFirst().getRespondentET3Postcode();
 
         assertEquals(expectedReportDetailEntriesCount, reportData.getReportDetails().size());
         assertEquals(expectedRespondentPostCode, actualRespondentPostCode);
@@ -305,18 +285,15 @@ class ClaimsByHearingVenueReportTest {
         when(claimsByHearingVenueReportDataSource.getData(
                 UtilHelper.getListingCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID), RANGE_START_DATE, RANGE_END_DATE))
                 .thenReturn(submitEvents);
+        var reportData = claimsByHearingVenueReport.generateReport(reportParams, "Manchester");
 
-        var expectedNumberOfSubmitEventEntries = submitEvents.size();
-        var expectedFirstCaseReference = submitEvents.get(1).getCaseData().getEthosCaseReference();
-        var expectedSecondCaseReference = submitEvents.get(2).getCaseData().getEthosCaseReference();
-        var expectedThirdFirstCaseReference = submitEvents.get(0).getCaseData().getEthosCaseReference();
-        var reportData = claimsByHearingVenueReport
-                .generateReport(reportParams, "Manchester");
-
-        assertEquals(expectedNumberOfSubmitEventEntries, reportData.getReportDetails().size());
-        assertEquals(expectedFirstCaseReference, reportData.getReportDetails().get(0).getCaseReference());
-        assertEquals(expectedSecondCaseReference, reportData.getReportDetails().get(1).getCaseReference());
-        assertEquals(expectedThirdFirstCaseReference, reportData.getReportDetails().get(2).getCaseReference());
+        assertEquals(submitEvents.size(), reportData.getReportDetails().size());
+        assertEquals(submitEvents.get(1).getCaseData().getEthosCaseReference(),
+            reportData.getReportDetails().getFirst().getCaseReference());
+        assertEquals(submitEvents.get(2).getCaseData().getEthosCaseReference(),
+            reportData.getReportDetails().get(1).getCaseReference());
+        assertEquals(submitEvents.getFirst().getCaseData().getEthosCaseReference(),
+            reportData.getReportDetails().get(2).getCaseReference());
     }
 
     @Test

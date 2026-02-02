@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -81,8 +82,8 @@ public class DocumentGenerationControllerTest {
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
-        requestContent = objectMapper.readTree(new File(getClass()
-                .getResource("/exampleV1.json").toURI()));
+        requestContent = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
+            .getResource("/exampleV1.json")).toURI()));
     }
 
     @Before
@@ -119,7 +120,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midAddressLabelsError500() throws Exception {
-        when(documentGenerationService.midAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(documentGenerationService.midAddressLabels(isA(CaseData.class)))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -130,7 +132,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midAddressLabelsForbidden() throws Exception {
-        when(documentGenerationService.midAddressLabels(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
+        when(documentGenerationService.midAddressLabels(isA(CaseData.class)))
+            .thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(MID_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -141,7 +144,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midSelectedAddressLabelsOk() throws Exception {
-        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
+        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class)))
+            .thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_SELECTED_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -164,7 +168,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midSelectedAddressLabelsError500() throws Exception {
-        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class)))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_SELECTED_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -175,7 +180,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midSelectedAddressLabelsForbidden() throws Exception {
-        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
+        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class)))
+            .thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(MID_SELECTED_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -186,7 +192,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midValidateAddressLabelsOk() throws Exception {
-        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("")));
+        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class)))
+            .thenReturn(new ArrayList<>(Collections.singletonList("")));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -200,7 +207,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midValidateAddressLabelsErrors() throws Exception {
-        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("Errors")));
+        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class)))
+            .thenReturn(new ArrayList<>(Collections.singletonList("Errors")));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -223,7 +231,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midValidateAddressLabelsError500() throws Exception {
-        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class)))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -234,7 +243,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midValidateAddressLabelsForbidden() throws Exception {
-        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("Error")));
+        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class)))
+            .thenReturn(new ArrayList<>(Collections.singletonList("Error")));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -245,7 +255,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentOk() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN)))
+            .thenReturn(documentInfo);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
@@ -283,7 +294,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentError500() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN)))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
@@ -294,7 +306,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentOkForbidden() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN)))
+            .thenReturn(documentInfo);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())

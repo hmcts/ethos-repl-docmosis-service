@@ -117,7 +117,7 @@ public class MultipleCloseEventValidationServiceTest {
                 multipleDetails);
 
         assertEquals(2, errors.size());
-        assertEquals("245004/2020 - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        assertEquals("245004/2020 - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.getFirst());
         assertEquals("245004/2020 - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(1));
     }
 

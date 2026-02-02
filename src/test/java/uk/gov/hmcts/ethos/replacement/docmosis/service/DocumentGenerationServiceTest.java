@@ -103,7 +103,8 @@ public class DocumentGenerationServiceTest {
         CaseData caseData = caseDetails12.getCaseData();
         documentGenerationService.midAddressLabels(caseData);
         assertEquals("Individual", caseData.getClaimantTypeOfClaimant());
-        assertEquals("CLAIMANT : Mr A J Rodriguez", caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
+        assertEquals("CLAIMANT : Mr A J Rodriguez",
+            caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
         assertEquals(6, caseData.getAddressLabelCollection().size());
     }
 
@@ -112,7 +113,8 @@ public class DocumentGenerationServiceTest {
         CaseData caseData = caseDetails13.getCaseData();
         documentGenerationService.midAddressLabels(caseData);
         assertEquals("Company", caseData.getClaimantTypeOfClaimant());
-        assertEquals("CLAIMANT : Orlando LTD", caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
+        assertEquals("CLAIMANT : Orlando LTD",
+            caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
         assertEquals(1, caseData.getAddressLabelCollection().size());
     }
 
@@ -123,8 +125,10 @@ public class DocumentGenerationServiceTest {
         documentGenerationService.updateBfActions(documentInfo, caseDetails13.getCaseData());
         assertEquals(1, caseDetails13.getCaseData().getBfActions().size());
         assertEquals(YES, caseDetails13.getCaseData().getBfActions().getFirst().getValue().getLetters());
-        assertEquals(LocalDate.now().toString(), caseDetails13.getCaseData().getBfActions().getFirst().getValue().getDateEntered());
-        assertEquals(LocalDate.now().plusDays(29).toString(), caseDetails13.getCaseData().getBfActions().getFirst().getValue().getBfDate());
+        assertEquals(LocalDate.now().toString(),
+            caseDetails13.getCaseData().getBfActions().getFirst().getValue().getDateEntered());
+        assertEquals(LocalDate.now().plusDays(29).toString(),
+            caseDetails13.getCaseData().getBfActions().getFirst().getValue().getBfDate());
         assertEquals("Claim served", caseDetails13.getCaseData().getBfActions().getFirst().getValue().getAllActions());
         assertEquals("Other action", caseDetails13.getCaseData().getBfActions().getFirst().getValue().getCwActions());
 
@@ -143,8 +147,10 @@ public class DocumentGenerationServiceTest {
         documentGenerationService.updateBfActions(documentInfo, caseDetails13.getCaseData());
         assertEquals(1, caseDetails13.getCaseData().getBfActions().size());
         assertEquals(YES, caseDetails13.getCaseData().getBfActions().getFirst().getValue().getLetters());
-        assertEquals(LocalDate.now().toString(), caseDetails13.getCaseData().getBfActions().getFirst().getValue().getDateEntered());
-        assertEquals(LocalDate.now().plusDays(29).toString(), caseDetails13.getCaseData().getBfActions().getFirst().getValue().getBfDate());
+        assertEquals(LocalDate.now().toString(),
+            caseDetails13.getCaseData().getBfActions().getFirst().getValue().getDateEntered());
+        assertEquals(LocalDate.now().plusDays(29).toString(),
+            caseDetails13.getCaseData().getBfActions().getFirst().getValue().getBfDate());
         assertEquals("Other action", caseDetails13.getCaseData().getBfActions().getFirst().getValue().getCwActions());
         assertEquals("Claim served", caseDetails13.getCaseData().getBfActions().getFirst().getValue().getAllActions());
         caseDetails13.getCaseData().setCorrespondenceScotType(null);
@@ -157,7 +163,8 @@ public class DocumentGenerationServiceTest {
         CaseData caseData = caseDetails14.getCaseData();
         documentGenerationService.midAddressLabels(caseData);
         assertEquals("Individual", caseData.getClaimantTypeOfClaimant());
-        assertEquals("CLAIMANT : Mr A J Rodriguez", caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
+        assertEquals("CLAIMANT : Mr A J Rodriguez",
+            caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
         assertEquals(6, caseData.getAddressLabelCollection().size());
     }
 
@@ -166,7 +173,8 @@ public class DocumentGenerationServiceTest {
         CaseData caseData = caseDetails15.getCaseData();
         documentGenerationService.midAddressLabels(caseData);
         assertEquals("Individual", caseData.getClaimantTypeOfClaimant());
-        assertEquals("CLAIMANT : Mr A J Rodriguez", caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
+        assertEquals("CLAIMANT : Mr A J Rodriguez",
+            caseData.getAddressLabelCollection().getFirst().getValue().getFullName());
         assertEquals(6, caseData.getAddressLabelCollection().size());
     }
 
@@ -315,14 +323,16 @@ public class DocumentGenerationServiceTest {
 
     @Test
     public void processDocumentRequest() throws IOException {
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenReturn(documentInfo);
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
+            .thenReturn(documentInfo);
         DocumentInfo documentInfo1 = documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
         assertEquals(documentInfo, documentInfo1);
     }
 
     @Test(expected = Exception.class)
     public void processDocumentRequestException() throws IOException {
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
+            .thenThrow(new InternalException(ERROR_MESSAGE));
         documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
     }
 

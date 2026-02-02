@@ -2,9 +2,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentpositio
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
@@ -42,7 +43,6 @@ class NoPositionChangeReportDataTests {
         reportSummary.setTotalCases("0");
         reportSummary.setTotalSingleCases("2");
         reportSummary.setTotalMultipleCases("1");
-        var reportData = new NoPositionChangeReportData(reportSummary, "2021-06-07");
 
         var reportDetailSingle1 = new NoPositionChangeReportDetailSingle();
         reportDetailSingle1.setCaseReference("caseRef1");
@@ -50,6 +50,7 @@ class NoPositionChangeReportDataTests {
         reportDetailSingle1.setCurrentPosition("Test position1");
         reportDetailSingle1.setYear("2021");
         reportDetailSingle1.setRespondent("R1");
+        var reportData = new NoPositionChangeReportData(reportSummary, "2021-06-07");
         reportData.addReportDetailsSingle(reportDetailSingle1);
 
         var reportDetailSingle2 = new NoPositionChangeReportDetailSingle();
@@ -79,8 +80,8 @@ class NoPositionChangeReportDataTests {
 
         sb.append("\"" + REPORT_DETAILS_SINGLE + "\":[\n");
         if (CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())
-                && reportData.getReportDetailsSingle().get(0) != null) {
-            var rdSingle1 = reportData.getReportDetailsSingle().get(0);
+                && reportData.getReportDetailsSingle().getFirst() != null) {
+            var rdSingle1 = reportData.getReportDetailsSingle().getFirst();
             sb.append(buildDetailSingleJsonString(
                     rdSingle1.getCaseReference(), rdSingle1.getYear(), rdSingle1.getCurrentPosition(),
                     rdSingle1.getDateToPosition(), rdSingle1.getRespondent()));
@@ -99,7 +100,7 @@ class NoPositionChangeReportDataTests {
 
         sb.append("\"" + REPORT_DETAILS_MULTIPLE + "\":[\n");
         if (CollectionUtils.isNotEmpty(reportData.getReportDetailsSingle())) {
-            var rdMultiple = reportData.getReportDetailsMultiple().get(0);
+            var rdMultiple = reportData.getReportDetailsMultiple().getFirst();
             sb.append(buildDetailMultipleJsonString(
                     rdMultiple.getCaseReference(), rdMultiple.getYear(), rdMultiple.getCurrentPosition(),
                     rdMultiple.getDateToPosition(), rdMultiple.getMultipleName()
@@ -113,11 +114,11 @@ class NoPositionChangeReportDataTests {
     private StringBuilder buildSummaryJsonString(String office, String reportDate, String totalCases,
                                                   String totalSingle, String totalMultiple) {
         var sb = new StringBuilder();
-        sb.append(REPORT_OFFICE).append(StringUtils.defaultString(office, "")).append(NEW_LINE);
+        sb.append(REPORT_OFFICE).append(Objects.toString(office, "")).append(NEW_LINE);
         sb.append(REPORT_DATE).append(UtilHelper.listingFormatLocalDate(reportDate)).append(NEW_LINE);
-        sb.append(TOTAL_CASES).append(StringUtils.defaultString(totalCases, "0")).append(NEW_LINE);
-        sb.append(TOTAL_SINGLE).append(StringUtils.defaultString(totalSingle, "0")).append(NEW_LINE);
-        sb.append(TOTAL_MULTIPLE).append(StringUtils.defaultString(totalMultiple, "0")).append(NEW_LINE);
+        sb.append(TOTAL_CASES).append(Objects.toString(totalCases, "0")).append(NEW_LINE);
+        sb.append(TOTAL_SINGLE).append(Objects.toString(totalSingle, "0")).append(NEW_LINE);
+        sb.append(TOTAL_MULTIPLE).append(Objects.toString(totalMultiple, "0")).append(NEW_LINE);
         return sb;
     }
 

@@ -10,7 +10,6 @@ import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.reference.ReferenceData;
-import uk.gov.hmcts.ecm.common.model.reference.ReferenceDetails;
 import uk.gov.hmcts.ecm.common.model.reference.ReferenceSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reference.types.ClerkType;
 import uk.gov.hmcts.ecm.common.model.reference.types.JudgeType;
@@ -37,7 +36,6 @@ public class ReferenceServiceTest {
     private ReferenceService referenceService;
 
     private CaseDetails caseDetails;
-    private ReferenceDetails referenceDetails;
 
     private List<ReferenceSubmitEvent> referenceSubmitEvents;
     private List<ReferenceSubmitEvent> referenceSubmitEventsNoVenues;
@@ -120,9 +118,6 @@ public class ReferenceServiceTest {
         referenceSubmitEventsNoJudges.add(referenceSubmitEvent4);
         referenceSubmitEventsNoJudges.add(referenceSubmitEvent5);
 
-        referenceDetails = new ReferenceDetails();
-        referenceDetails.setCaseData(referenceData6);
-        referenceDetails.setJurisdiction("EMPLOYMENT");
     }
 
     @Test
@@ -172,8 +167,8 @@ public class ReferenceServiceTest {
             transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, \
             digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, \
             piiDocumentCollection=null, \
-            appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
+            appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, \
+            reformCaseLink=null, caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEvents);
         CaseData caseDataResult = referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
@@ -219,12 +214,12 @@ public class ReferenceServiceTest {
             attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, \
             hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null, \
             companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, \
-            positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, transferredCaseLinkSourceCaseId=null,\
-             transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null,\
-             digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null,\
-             piiDocumentCollection=null,\
-             appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
+            positionTypeCT=null, linkedCaseCT=null, transferredCaseLink=null, transferredCaseLinkSourceCaseId=null, \
+            transferredCaseLinkSourceCaseTypeId=null, stateAPI=null, bundleConfiguration=null, caseBundles=null, \
+            digitalCaseFile=null, uploadOrRemoveDcf=null, acasCertificate=null, adrDocumentCollection=null, \
+            piiDocumentCollection=null, \
+            appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, \
+            reformCaseLink=null, caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEventsNoVenues);
         CaseData caseDataResult = referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
@@ -277,8 +272,8 @@ public class ReferenceServiceTest {
             transferredCaseLinkSourceCaseId=null, transferredCaseLinkSourceCaseTypeId=null, \
             stateAPI=null, bundleConfiguration=null, caseBundles=null, digitalCaseFile=null, uploadOrRemoveDcf=null, \
             acasCertificate=null, adrDocumentCollection=null, piiDocumentCollection=null, \
-            appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, reformCaseLink=null\
-            , caseNotesCollection=null, addCaseNote=null, ttl=null)""";
+            appealDocumentCollection=null, addDocumentCollection=null, claimantHearingPreference=null, \
+            reformCaseLink=null, caseNotesCollection=null, addCaseNote=null, ttl=null)""";
         referenceSubmitEvents.clear();
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString()))
                 .thenReturn(referenceSubmitEvents);

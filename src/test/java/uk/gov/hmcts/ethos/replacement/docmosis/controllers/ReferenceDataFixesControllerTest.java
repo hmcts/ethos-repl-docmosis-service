@@ -14,15 +14,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.controllers.refdatafixes.ReferenceDataFixesController;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.File;
@@ -59,7 +57,6 @@ public class ReferenceDataFixesControllerTest {
 
     private MockMvc mvc;
     private JsonNode requestContent;
-    private SubmitEvent submitEvent;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -71,8 +68,6 @@ public class ReferenceDataFixesControllerTest {
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
-        submitEvent = new SubmitEvent();
-        submitEvent.setCaseData(new CaseData());
     }
 
     @Test
@@ -131,9 +126,9 @@ public class ReferenceDataFixesControllerTest {
                 .thenReturn(new AdminData());
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(INSERT_CLAIM_SERVED_DATA));
-   }
+    }
 
-   @Test
+    @Test
     public void initAdminDataTest() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(INIT_ADMIN_DATA)
@@ -151,7 +146,7 @@ public class ReferenceDataFixesControllerTest {
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-   }
+    }
    
     @Test
     public void initAdminDataTestError400() throws Exception {
@@ -184,7 +179,7 @@ public class ReferenceDataFixesControllerTest {
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
-     }
+    }
 
     @Test
     public void initAdminDataTestForbidden() throws Exception {

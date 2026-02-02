@@ -2517,7 +2517,7 @@ class DocumentHelperTest {
 
         Assertions.assertEquals(2, caseData.getDocumentCollection().size());
         Assertions.assertEquals(DOC_FILE_NAME_1,
-                caseData.getDocumentCollection().get(0).getValue().getUploadedDocument().getDocumentFilename());
+                caseData.getDocumentCollection().getFirst().getValue().getUploadedDocument().getDocumentFilename());
         Assertions.assertEquals(DOC_FILE_NAME_2,
                 caseData.getDocumentCollection().get(1).getValue().getUploadedDocument().getDocumentFilename());
     }
@@ -2574,7 +2574,7 @@ class DocumentHelperTest {
 
         Assertions.assertEquals(3, caseData.getDocumentCollection().size());
         Assertions.assertEquals(DOC_FILE_NAME_1,
-                caseData.getDocumentCollection().get(0).getValue().getUploadedDocument().getDocumentFilename());
+                caseData.getDocumentCollection().getFirst().getValue().getUploadedDocument().getDocumentFilename());
         Assertions.assertEquals(DOC_FILE_NAME_3,
                 caseData.getDocumentCollection().get(1).getValue().getUploadedDocument().getDocumentFilename());
         Assertions.assertEquals(DOC_FILE_NAME_2,

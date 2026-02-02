@@ -138,7 +138,7 @@ class SessionDaysReportTest {
     }
 
     private void assertReportSummary2Values(SessionDaysReportData reportData) {
-        var reportSummary2 = reportData.getReportSummary2List().get(0);
+        var reportSummary2 = reportData.getReportSummary2List().getFirst();
         assertEquals("1", reportSummary2.getFtSessionDays());
         assertEquals("1", reportSummary2.getPtSessionDays());
         assertEquals("2", reportSummary2.getOtherSessionDays());
@@ -171,8 +171,9 @@ class SessionDaysReportTest {
         // Create 4 hearings with the first hearing having 2 judges
         caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingSitAlone(TWO_JUDGES);
-        submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue()
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue()
+            .setHearingSitAlone(TWO_JUDGES);
+        submitEvents.getFirst().getCaseData().getHearingCollection().getFirst().getValue()
              .setAdditionalJudge("ptcJudge");
 
         SessionDaysReportData reportData = sessionDaysReport.generateReport(

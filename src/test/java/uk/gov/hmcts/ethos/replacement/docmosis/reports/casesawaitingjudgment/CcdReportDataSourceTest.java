@@ -29,7 +29,7 @@ public class CcdReportDataSourceTest {
 
         var results = ccdReportDataSource.getData(caseTypeId);
         assertEquals(1, results.size());
-        assertEquals(submitEvent, results.get(0));
+        assertEquals(submitEvent, results.getFirst());
     }
 
     @Test(expected = ReportException.class)

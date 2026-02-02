@@ -34,7 +34,7 @@ public class NoPositionChangeCcdDataSourceTests {
         var results = ccdReportDataSource.getData(caseTypeId, reportDate);
 
         assertEquals(1, results.size());
-        assertEquals(searchResult.getCases().get(0), results.get(0));
+        assertEquals(searchResult.getCases().getFirst(), results.getFirst());
     }
 
     @Test

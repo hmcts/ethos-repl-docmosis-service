@@ -78,7 +78,7 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Case belongs to a multiple. It cannot be moved to single", errors.get(0));
+        assertEquals("Case belongs to a multiple. It cannot be moved to single", errors.getFirst());
 
     }
 
