@@ -31,7 +31,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -122,7 +124,7 @@ public class CaseManagementForCaseWorkerService {
 
     private void respondentDefaults(CaseData caseData) {
         if (isNotEmpty(caseData.getRespondentCollection())) {
-            var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            var respondentSumType = caseData.getRespondentCollection().getFirst().getValue();
             caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
                 if (respondentSumTypeItem.getValue().getResponseReceived() == null) {
@@ -260,8 +262,8 @@ public class CaseManagementForCaseWorkerService {
         LocalDate fromLocalDate = LocalDate.parse(from, OLD_DATE_TIME_PATTERN2);
         LocalDate toLocalDate = LocalDate.parse(to, OLD_DATE_TIME_PATTERN2);
 
-        return (listedLocalDate.compareTo(fromLocalDate) >= 0)
-                && (listedLocalDate.compareTo(toLocalDate) <= 0);
+        return (!listedLocalDate.isBefore(fromLocalDate))
+                && (!listedLocalDate.isAfter(toLocalDate));
     }
 
     private void addFilteredHearingDates(CaseData caseData, HearingTypeItem hearingTypeItem,
@@ -515,19 +517,46 @@ public class CaseManagementForCaseWorkerService {
         if (isEmpty(caseData.getHearingCollection())) {
             return;
         }
-        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-            var hearingType =  hearingTypeItem.getValue();
-            if (isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                for (DateListedTypeItem dateListedTypeItem
-                        : hearingTypeItem.getValue().getHearingDateCollection()) {
-                    var dateListedType = dateListedTypeItem.getValue();
-                    if (dateListedType.getHearingStatus() == null) {
-                        dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
-                        dateListedType.setHearingTimingStart(dateListedType.getListedDate());
-                        dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
-                    }
-                    populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
-                }
+        caseData.getHearingCollection().forEach(hearingTypeItem -> {
+            HearingType hearingType = hearingTypeItem.getValue();
+            if (isNotEmpty(hearingType.getHearingDateCollection())) {
+                hearingType.getHearingDateCollection().stream()
+                    .map(DateListedTypeItem::getValue)
+                    .filter(Objects::nonNull)
+                    .forEach(dateListedType -> {
+                        if (isNullOrEmpty(dateListedType.getHearingStatus())) {
+                            dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+                            dateListedType.setHearingTimingStart(dateListedType.getListedDate());
+                            dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
+                        }
+                        populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
+                    })
+                    ;
+
+                // Create a mutable list from the hearing date collection
+                List<DateListedTypeItem> list = new ArrayList<>(hearingType.getHearingDateCollection());
+                list.sort(Comparator.comparing(
+                    d -> parseListedDate(d.getValue().getListedDate(), caseData.getEthosCaseReference()),
+                    Comparator.nullsLast(Comparator.naturalOrder())
+                ));
+                hearingType.setHearingDateCollection(list);
+            }
+        });
+    }
+
+    private LocalDateTime parseListedDate(String listedDate, String ethosCaseReference) {
+        if (isNullOrEmpty(listedDate)) {
+            return null;
+        }
+        try {
+            return LocalDateTime.parse(listedDate, OLD_DATE_TIME_PATTERN);
+        } catch (Exception e) {
+            try {
+                return LocalDateTime.parse(listedDate);
+            } catch (Exception ex) {
+                log.error("Error parsing hearing listed date {} for ethos case reference {}.",
+                    listedDate, ethosCaseReference);
+                return null;
             }
         }
     }
@@ -642,7 +671,7 @@ public class CaseManagementForCaseWorkerService {
         var currentCaseData = caseDetails.getCaseData();
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (isNotEmpty(submitEvents)) {
-            var submitEvent = submitEvents.get(0);
+            var submitEvent = submitEvents.getFirst();
             if (validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
                     case MID_EVENT_CALLBACK -> Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
