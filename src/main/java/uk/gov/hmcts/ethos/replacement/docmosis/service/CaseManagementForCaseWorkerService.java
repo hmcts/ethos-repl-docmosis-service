@@ -521,6 +521,7 @@ public class CaseManagementForCaseWorkerService {
             if (isNotEmpty(hearingType.getHearingDateCollection())) {
                 hearingType.getHearingDateCollection().stream()
                     .map(DateListedTypeItem::getValue)
+                    .filter(Objects::nonNull)
                     .forEach(dateListedType -> {
                         if (isNullOrEmpty(dateListedType.getHearingStatus())) {
                             dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
