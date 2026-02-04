@@ -271,7 +271,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine3("51 Clarendon Road")
                 .tribunalCorrespondenceTown("Watford")
                 .tribunalCorrespondencePostCode("WD17 1HP")
-                .tribunalCorrespondenceTelephone("0192 328 1750")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("01264 887 302")
                 .tribunalCorrespondenceDX("DX 155650 Watford 3")
                 .tribunalCorrespondenceEmail("watfordet@justice.gov.uk")
