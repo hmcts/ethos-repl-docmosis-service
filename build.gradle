@@ -337,7 +337,7 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     implementation 'org.springframework.retry:spring-retry'
-    implementation group: 'org.webjars.npm', name: 'minimatch', version: '10.0.1'
+    implementation group: 'org.webjars.npm', name: 'minimatch', version: '10.0.3'
     implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.59'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '3.0.4'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
