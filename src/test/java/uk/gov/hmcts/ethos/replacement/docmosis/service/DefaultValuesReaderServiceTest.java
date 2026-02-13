@@ -157,7 +157,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine2("2 Redcliff Street")
                 .tribunalCorrespondenceTown("Bristol")
                 .tribunalCorrespondencePostCode("BS1 6GR")
-                .tribunalCorrespondenceTelephone("0117 929 8261")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("0870 739 4009")
                 .tribunalCorrespondenceDX("DX 95903 Bristol 3")
                 .tribunalCorrespondenceEmail("bristolet@justice.gov.uk")
