@@ -238,7 +238,7 @@ repositories {
 }
 
 ext {
-    junitJupiterVersion = '5.11.4'
+    junitJupiterVersion = '5.14.3'
     log4JVersion = '2.25.3'
     serenity = '3.9.8'
     tomcatEmbedVersion = '10.1.49'
@@ -372,7 +372,7 @@ dependencies {
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    contractTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.11.4'
+    contractTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.14.3'
     // Let BOM manage OpenFeign version for contract tests as well
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     contractTestImplementation sourceSets.main.runtimeClasspath
