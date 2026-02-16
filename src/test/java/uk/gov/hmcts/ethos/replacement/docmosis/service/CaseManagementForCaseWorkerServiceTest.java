@@ -1360,7 +1360,7 @@ class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = new CaseData();
         caseData.setHearingCollection(List.of(hearing));
 
-        caseManagementForCaseWorkerService.amendHearing(caseData, "ET_EnglandWales");
+        caseManagementForCaseWorkerService.amendHearing(caseData, "Manchester");
 
         HearingType actual = caseData.getHearingCollection().getFirst().getValue();
         assertThat(actual.getAdditionalJudge()).isNull();
