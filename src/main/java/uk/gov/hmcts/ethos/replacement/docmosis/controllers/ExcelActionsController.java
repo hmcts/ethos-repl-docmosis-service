@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -37,13 +37,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUpdateServi
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleUpdateService;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getListingCallbackRespEntity;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getMultipleCallbackRespEntity;
 

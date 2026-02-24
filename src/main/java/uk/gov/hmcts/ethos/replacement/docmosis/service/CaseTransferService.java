@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -15,15 +14,14 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor

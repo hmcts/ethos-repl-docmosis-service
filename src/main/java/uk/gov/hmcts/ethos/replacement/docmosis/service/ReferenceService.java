@@ -3,14 +3,13 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseRetrievalException;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.reference.ReferenceSubmitEvent;
-
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
+import uk.gov.hmcts.ecm.compat.common.model.reference.ReferenceSubmitEvent;
 import java.util.ArrayList;
 import java.util.List;
 

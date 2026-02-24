@@ -22,8 +22,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest({CaseNotesController.class, JsonMapper.class})

@@ -1,25 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import org.apache.commons.collections4.CollectionUtils;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 
 public class HearingsHelper {
     private HearingsHelper() {

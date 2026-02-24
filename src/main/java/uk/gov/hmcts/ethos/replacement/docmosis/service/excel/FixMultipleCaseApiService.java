@@ -10,7 +10,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import java.util.List;
 import java.util.SortedMap;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
 
 @Slf4j
 @Service("fixMultipleCaseApi")

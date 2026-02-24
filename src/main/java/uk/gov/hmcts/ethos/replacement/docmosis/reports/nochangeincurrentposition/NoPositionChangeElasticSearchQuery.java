@@ -5,7 +5,7 @@ import org.elasticsearch.index.query.TermsQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MAX_ES_SIZE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MAX_ES_SIZE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReport.VALID_CASE_STATES;
 
 class NoPositionChangeElasticSearchQuery {

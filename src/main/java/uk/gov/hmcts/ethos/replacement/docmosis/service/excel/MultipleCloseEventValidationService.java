@@ -9,7 +9,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.REJECTED_STATE;
 
 @Slf4j
 @Service("multipleCloseEventValidationService")

@@ -21,8 +21,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DELETE_ACTION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.AMEND_ACTION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DELETE_ACTION;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SubMultipleUpdateServiceTest {

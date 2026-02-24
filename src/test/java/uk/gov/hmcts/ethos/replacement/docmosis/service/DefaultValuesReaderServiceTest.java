@@ -28,27 +28,27 @@ import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_SOUTH_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_EAST_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_WEST_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_DEV_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ABERDEEN_OFFICE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DUNDEE_OFFICE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.EDINBURGH_OFFICE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LONDON_SOUTH_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MANCHESTER_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MIDLANDS_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MIDLANDS_WEST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SCOTLAND_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.WALES_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {

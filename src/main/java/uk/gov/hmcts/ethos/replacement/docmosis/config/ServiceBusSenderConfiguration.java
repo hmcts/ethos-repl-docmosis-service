@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.ecm.common.servicebus.ServiceBusSender;
+import uk.gov.hmcts.ecm.compat.common.servicebus.ServiceBusSender;
 
 @AutoConfigureAfter(QueueClientConfiguration.class)
 @Configuration

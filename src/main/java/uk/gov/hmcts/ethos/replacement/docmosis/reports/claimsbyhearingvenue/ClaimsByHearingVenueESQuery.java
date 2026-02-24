@@ -3,7 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MAX_ES_SIZE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MAX_ES_SIZE;
 
 public class ClaimsByHearingVenueESQuery {
     private ClaimsByHearingVenueESQuery() {

@@ -4,33 +4,31 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.helper.CaseEventDetail;
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
+import uk.gov.hmcts.ecm.compat.common.model.helper.CaseEventDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminData;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.AdminDetails;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_SOUTH_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_EAST_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_WEST_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LONDON_SOUTH_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MIDLANDS_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MIDLANDS_WEST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -237,5 +235,3 @@ public class ReferenceDataFixesService {
 
     }
 }
-
-

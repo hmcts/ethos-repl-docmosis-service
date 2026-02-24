@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
@@ -15,19 +14,18 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j

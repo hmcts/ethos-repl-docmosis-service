@@ -10,7 +10,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
-import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.DataModelParent;
+import uk.gov.hmcts.ecm.compat.common.model.servicebus.datamodel.DataModelParent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.SortedMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.TRANSFERRED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 @Slf4j
 @RequiredArgsConstructor

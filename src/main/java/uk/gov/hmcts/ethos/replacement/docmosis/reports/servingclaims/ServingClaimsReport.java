@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
@@ -13,15 +12,14 @@ import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedTypeItem;
-
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.WEEKEND_DAYS_LIST;
 
 @Service

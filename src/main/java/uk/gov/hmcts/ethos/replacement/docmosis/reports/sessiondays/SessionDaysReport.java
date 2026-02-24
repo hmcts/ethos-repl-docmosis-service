@@ -4,19 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import org.jetbrains.annotations.NotNull;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.compat.common.model.reports.sessiondays.SessionDaysCaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,11 +23,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Math.round;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.TWO_JUDGES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingDurationInMinutes;
 

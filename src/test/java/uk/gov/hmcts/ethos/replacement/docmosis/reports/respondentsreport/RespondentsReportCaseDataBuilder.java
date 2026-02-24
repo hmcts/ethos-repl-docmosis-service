@@ -4,8 +4,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.model.reports.respondentsreport.RespondentsReportCaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 
 import java.util.Arrays;
 import java.util.Collections;

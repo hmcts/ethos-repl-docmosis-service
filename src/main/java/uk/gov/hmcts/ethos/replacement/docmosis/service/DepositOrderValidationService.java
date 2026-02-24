@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CLAIMANT_TITLE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.RESPONDENT_TITLE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 
 @Service("depositOrderValidationService")
 public class DepositOrderValidationService {

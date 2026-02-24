@@ -15,7 +15,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.tribunaloffice.ContactDeta
 import java.util.Optional;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("defaultValuesReaderService")

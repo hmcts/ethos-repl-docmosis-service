@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.refdatafixeshelper;
 
 import org.junit.Test;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.RefDataFixesException;
 import java.io.IOException;

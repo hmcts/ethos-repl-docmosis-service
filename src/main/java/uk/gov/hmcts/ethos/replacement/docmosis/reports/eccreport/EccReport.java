@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport;
 
 import org.apache.commons.collections4.CollectionUtils;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
-import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.compat.common.model.reports.eccreport.EccReportSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import java.util.ArrayList;
 import java.util.Comparator;

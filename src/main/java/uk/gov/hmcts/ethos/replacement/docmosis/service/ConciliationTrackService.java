@@ -8,10 +8,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import java.util.Arrays;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 
 @Service("conciliationTrackService")
 public class ConciliationTrackService {

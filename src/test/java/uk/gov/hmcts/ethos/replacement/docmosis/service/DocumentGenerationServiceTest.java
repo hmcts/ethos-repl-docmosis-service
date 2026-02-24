@@ -7,30 +7,28 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CLAIMANT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)

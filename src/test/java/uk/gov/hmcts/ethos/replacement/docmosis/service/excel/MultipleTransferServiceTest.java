@@ -38,12 +38,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.UPDATING_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService.BF_ACTIONS_ERROR_MSG;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService.HEARINGS_ERROR_MSG;
 

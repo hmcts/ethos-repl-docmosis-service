@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.stream.Stream;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEAD_CASE_AMENDMENT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LEAD_CASE_AMENDMENT;
 
 @Slf4j
 @Service("multipleAmendService")

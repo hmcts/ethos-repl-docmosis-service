@@ -22,8 +22,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEAD_CASE_AMENDMENT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.LEAD_CASE_AMENDMENT;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleAmendServiceTest {

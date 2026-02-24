@@ -1,20 +1,18 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
-
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ACAS;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.BF_ACTION_ACAS;
 
 @Slf4j
 public class BFHelper {

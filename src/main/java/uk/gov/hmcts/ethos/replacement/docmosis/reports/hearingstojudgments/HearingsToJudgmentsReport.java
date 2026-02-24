@@ -2,34 +2,32 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
-import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.compat.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NOT_ALLOCATED;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportCommonMethods.getHearingJudgeName;
 
 @Slf4j

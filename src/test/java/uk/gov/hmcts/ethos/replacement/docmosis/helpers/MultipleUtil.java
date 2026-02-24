@@ -31,8 +31,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
-import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
-import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -42,11 +40,12 @@ import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MultipleObjectType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleActionType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
-import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
-import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
-import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
-
+import uk.gov.hmcts.ecm.compat.common.model.labels.LabelPayloadES;
+import uk.gov.hmcts.ecm.compat.common.model.labels.LabelPayloadEvent;
+import uk.gov.hmcts.ecm.compat.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.compat.common.model.schedule.SchedulePayloadEvent;
+import uk.gov.hmcts.ecm.compat.common.model.schedule.types.ScheduleClaimantIndType;
+import uk.gov.hmcts.ecm.compat.common.model.schedule.types.ScheduleClaimantType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,18 +54,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_1;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CREATE_ACTION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.BATCH_UPDATE_TYPE_1;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CREATE_ACTION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 @SuppressWarnings("HideUtilityClassConstructor")
 public class MultipleUtil {

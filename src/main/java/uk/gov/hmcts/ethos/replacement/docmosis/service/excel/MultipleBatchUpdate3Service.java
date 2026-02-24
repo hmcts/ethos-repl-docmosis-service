@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -15,17 +14,16 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.UpdateDataModelBuilder;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.stream.Collectors;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SELECT_NONE_VALUE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate3Service")

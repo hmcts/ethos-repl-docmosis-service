@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DELETE_ACTION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.AMEND_ACTION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DELETE_ACTION;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SubMultipleMidEventValidationServiceTest {

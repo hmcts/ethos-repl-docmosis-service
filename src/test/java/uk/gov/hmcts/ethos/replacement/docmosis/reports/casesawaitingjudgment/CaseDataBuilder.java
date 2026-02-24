@@ -6,13 +6,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
-import uk.gov.hmcts.ecm.common.model.reports.casesawaitingjudgment.CaseData;
-import uk.gov.hmcts.ecm.common.model.reports.casesawaitingjudgment.CasesAwaitingJudgmentSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.model.reports.casesawaitingjudgment.CaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.casesawaitingjudgment.CasesAwaitingJudgmentSubmitEvent;
 
 import java.util.ArrayList;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 public class CaseDataBuilder {
 
