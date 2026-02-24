@@ -181,7 +181,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceTown("London")
                 .tribunalCorrespondencePostCode("EC1A 1AZ")
                 .tribunalCorrespondenceTelephone("0300 323 0196")
-                .tribunalCorrespondenceDX("DX 141420 Bloomsbury")
+                .tribunalCorrespondenceDX("DX 449001 Old Bailey 7")
                 .tribunalCorrespondenceEmail("londoncentralet@justice.gov.uk")
                 .build();
         postDefaultValuesLondonEast = DefaultValues.builder()
