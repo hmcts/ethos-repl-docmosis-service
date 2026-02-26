@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.UUID;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.UPDATING_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 @Slf4j
 @RequiredArgsConstructor

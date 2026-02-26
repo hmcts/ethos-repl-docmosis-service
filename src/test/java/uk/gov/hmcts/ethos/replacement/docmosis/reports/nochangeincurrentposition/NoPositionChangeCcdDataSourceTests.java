@@ -1,14 +1,12 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition;
 
 import org.junit.Test;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCaseSearchResult;
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;

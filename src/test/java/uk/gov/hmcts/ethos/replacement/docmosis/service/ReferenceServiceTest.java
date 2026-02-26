@@ -6,21 +6,19 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.reference.ReferenceData;
-import uk.gov.hmcts.ecm.common.model.reference.ReferenceSubmitEvent;
-import uk.gov.hmcts.ecm.common.model.reference.types.ClerkType;
-import uk.gov.hmcts.ecm.common.model.reference.types.JudgeType;
-import uk.gov.hmcts.ecm.common.model.reference.types.VenueType;
+import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
+import uk.gov.hmcts.ecm.compat.common.model.reference.ReferenceData;
+import uk.gov.hmcts.ecm.compat.common.model.reference.ReferenceSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.model.reference.types.ClerkType;
+import uk.gov.hmcts.ecm.compat.common.model.reference.types.JudgeType;
+import uk.gov.hmcts.ecm.compat.common.model.reference.types.VenueType;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;

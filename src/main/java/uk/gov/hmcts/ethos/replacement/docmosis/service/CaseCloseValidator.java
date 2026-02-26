@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CASE_CLOSED_POSITION;
 
 @Slf4j
 @Service("caseCloseValidator")

@@ -12,7 +12,7 @@ import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 public class InvalidCharacterCheck {
 

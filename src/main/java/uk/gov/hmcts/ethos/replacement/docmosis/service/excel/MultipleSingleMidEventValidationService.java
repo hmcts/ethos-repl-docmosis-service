@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SELECT_NONE_VALUE;
 
 @Slf4j
 @Service("multipleSingleMidEventValidationService")

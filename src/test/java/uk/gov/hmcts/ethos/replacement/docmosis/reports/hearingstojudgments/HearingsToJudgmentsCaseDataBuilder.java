@@ -6,8 +6,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
-import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 
 import java.util.ArrayList;
 
