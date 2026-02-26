@@ -179,7 +179,7 @@ public class DefaultValuesReaderServiceTest {
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("7 Newgate Street")
                 .tribunalCorrespondenceTown("London")
-                .tribunalCorrespondencePostCode("EC1A 1AZ")
+                .tribunalCorrespondencePostCode("EC1A 7AZ")
                 .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceDX("DX 449001 Old Bailey 7")
                 .tribunalCorrespondenceEmail("londoncentralet@justice.gov.uk")
