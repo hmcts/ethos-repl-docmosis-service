@@ -23,6 +23,12 @@ psql postgresql://localhost:5050/ethos -U ethos -f ./tbls_ethosMultipleCaseRefGe
 echo "Running tbls_ethosSubMultipleCaseRefGen.sql"
 psql postgresql://localhost:5050/ethos -U ethos -f ./tbls_ethosSubMultipleCaseRefGen.sql
 
+echo "Running tbls_createUpdatesQueue.sql"
+psql postgresql://localhost:5050/ethos -U ethos -f ./tbls_createUpdatesQueue.sql
+
+echo "Running tbls_updateCaseQueue.sql"
+psql postgresql://localhost:5050/ethos -U ethos -f ./tbls_updateCaseQueue.sql
+
 echo "Running fn_ethosCaseRefGen.sql"
 psql postgresql://localhost:5050/ethos -U ethos -f ./fn_ethosCaseRefGen.sql
 
