@@ -98,6 +98,36 @@ To stop the service
     docker-compose -f docker/app.yml down
 ```
 
+## Helm deployment modes
+
+The chart supports both runtime modes:
+
+- `java` (default): runs as a Spring Boot web service.
+- `job` (optional): runs the same image via the HMCTS `job` chart (for `CronJob`/`Job` execution).
+
+Default chart behaviour remains web service:
+
+```yaml
+java:
+  enabled: true
+job:
+  enabled: false
+```
+
+To switch a Flux release to cron mode, use value overrides similar to:
+
+```yaml
+values:
+  java:
+    enabled: false
+  job:
+    enabled: true
+    schedule: "0 22 * * *"
+    suspend: false
+  global:
+    jobKind: CronJob
+```
+
 
 ## Developing
 
