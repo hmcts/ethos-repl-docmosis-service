@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 /**
  * Service for handling the 'Allocate Hearing' functionality.

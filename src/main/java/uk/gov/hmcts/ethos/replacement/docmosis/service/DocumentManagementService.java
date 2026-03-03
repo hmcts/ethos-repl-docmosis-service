@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.util.Collections.singletonList;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OUTPUT_FILE_NAME;
 
 @Service
 @Slf4j

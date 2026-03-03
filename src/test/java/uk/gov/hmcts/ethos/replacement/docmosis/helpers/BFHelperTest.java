@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ACAS;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.BF_ACTION_ACAS;
 
 public class BFHelperTest {
 

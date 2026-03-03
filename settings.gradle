@@ -1,7 +1,1 @@
 rootProject.name = 'ethos-repl-docmosis-service'
-
-sourceControl {
-    gitRepository("https://github.com/hmcts/ecm-data-model.git") {
-        producesModule("uk.gov.hmcts.reform:ecm-data-model")
-    }
-}

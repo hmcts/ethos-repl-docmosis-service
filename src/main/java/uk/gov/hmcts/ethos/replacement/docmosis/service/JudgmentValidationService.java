@@ -9,7 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements.NO_HEARINGS;
 
 @Service("judgmentValidationService")

@@ -8,21 +8,21 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DIGITAL_FILE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_REPORTING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RESERVED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_SENSITIVE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_WITH_OUTSTATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_DIGITAL_FILE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_ECC;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_LIVE_APPEAL;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_REPORTING;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_RESERVED;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_SENSITIVE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_WITH_OUTSTATION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ONE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ZERO;
 
 @Slf4j
 public class FlagsImageHelper {

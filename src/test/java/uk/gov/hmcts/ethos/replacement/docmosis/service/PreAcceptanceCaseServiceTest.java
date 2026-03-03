@@ -7,8 +7,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 class PreAcceptanceCaseServiceTest {
     private final PreAcceptanceCaseService preAcceptanceCaseService = new PreAcceptanceCaseService();

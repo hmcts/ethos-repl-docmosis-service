@@ -21,7 +21,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SELECT_NONE_VALUE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleSingleMidEventValidationServiceTest {

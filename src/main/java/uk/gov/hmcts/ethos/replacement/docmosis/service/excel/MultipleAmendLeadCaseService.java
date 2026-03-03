@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_IS_NOT_IN_MULTIPLE_ERROR;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CASE_IS_NOT_IN_MULTIPLE_ERROR;
 
 @Slf4j
 @Service("multipleAmendLeadCaseService")

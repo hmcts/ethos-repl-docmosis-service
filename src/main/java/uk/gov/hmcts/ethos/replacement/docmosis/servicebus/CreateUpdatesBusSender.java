@@ -3,11 +3,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.servicebus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ecm.common.helpers.CreateUpdatesHelper;
-import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
-import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesMsg;
-import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.DataModelParent;
-import uk.gov.hmcts.ecm.common.servicebus.ServiceBusSender;
+import uk.gov.hmcts.ecm.compat.common.helpers.CreateUpdatesHelper;
+import uk.gov.hmcts.ecm.compat.common.model.servicebus.CreateUpdatesDto;
+import uk.gov.hmcts.ecm.compat.common.model.servicebus.CreateUpdatesMsg;
+import uk.gov.hmcts.ecm.compat.common.model.servicebus.datamodel.DataModelParent;
+import uk.gov.hmcts.ecm.compat.common.servicebus.ServiceBusSender;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.claimsbyhearingvenue;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantWorkAddressType;
-import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueCaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.claimsbyhearingvenue.ClaimsByHearingVenueSubmitEvent;
 import java.util.List;
 
 public class ClaimsByHearingVenueCaseDataBuilder {
