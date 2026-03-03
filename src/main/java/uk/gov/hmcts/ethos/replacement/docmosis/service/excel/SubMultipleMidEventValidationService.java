@@ -7,8 +7,8 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CREATE_ACTION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.AMEND_ACTION;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CREATE_ACTION;
 
 @Slf4j
 @Service("subMultipleMidEventValidationService")

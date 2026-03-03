@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
 
 @Service
 @Slf4j

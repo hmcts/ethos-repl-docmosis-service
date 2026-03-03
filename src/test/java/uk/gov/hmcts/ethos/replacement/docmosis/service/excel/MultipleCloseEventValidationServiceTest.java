@@ -26,9 +26,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleCloseEventValidationServiceTest {

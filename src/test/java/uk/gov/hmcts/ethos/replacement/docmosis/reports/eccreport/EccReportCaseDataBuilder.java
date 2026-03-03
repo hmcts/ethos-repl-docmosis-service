@@ -4,8 +4,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.model.reports.eccreport.EccReportCaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.eccreport.EccReportSubmitEvent;
 
 import java.util.Arrays;
 import java.util.UUID;

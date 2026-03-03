@@ -4,15 +4,15 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
+import uk.gov.hmcts.ecm.compat.common.model.reports.sessiondays.SessionDaysCaseData;
+import uk.gov.hmcts.ecm.compat.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
 
 public class SessionDaysCaseDataBuilder {
     private final SessionDaysCaseData caseData = new SessionDaysCaseData();

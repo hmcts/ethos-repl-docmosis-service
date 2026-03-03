@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-
+import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import java.util.ArrayList;
 import java.util.List;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper.addJsonCollection;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_DATE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_DETAILS_MULTIPLE;

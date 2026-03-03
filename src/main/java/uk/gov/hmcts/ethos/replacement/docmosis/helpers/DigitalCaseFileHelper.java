@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NEW_DATE_TIME_PATTERN;
 
 @Slf4j
 public class DigitalCaseFileHelper {

@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 
 class DepositOrderValidationServiceTest {
 

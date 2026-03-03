@@ -12,8 +12,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_BULK_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SCOTLAND_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 
 public class DynamicLetters {
     private DynamicLetters() {
