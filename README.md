@@ -51,6 +51,33 @@ You can run the application by executing following command:
 
 The application will start locally on `http://localhost:8081`
 
+### Database migrations (Flyway)
+
+Flyway migrations are stored in `src/main/resources/db/migration`.
+
+If you already have an existing ethos schema (prod-like, no Flyway history yet), run migration first:
+
+```bash
+FLYWAY_URL=jdbc:postgresql://localhost:5050/ethos \
+FLYWAY_USER=ethos \
+FLYWAY_PASSWORD=ethos \
+./gradlew migratePostgresDatabase
+```
+
+Then start the app without startup migration:
+
+```bash
+RUN_DB_MIGRATION_ON_STARTUP=false ./gradlew bootRun
+```
+
+If your database is fresh/empty (but database/user already exist), you can start directly:
+
+```bash
+./gradlew bootRun
+```
+
+`bootRun` (default `RUN_DB_MIGRATION_ON_STARTUP=true`) will apply Flyway migrations on startup for empty databases.
+
 ### API documentation
 
 API documentation is provided with Swagger:

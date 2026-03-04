@@ -6,6 +6,7 @@ java:
   devcpuLimits: 1024m
   devmemoryLimits: 3Gi
   environment:
+    RUN_DB_MIGRATION_ON_STARTUP: true
     ETHOS_REPL_DB_HOST: "{{ .Release.Name }}-postgresql"
     ETHOS_REPL_DB_NAME: "{{ .Values.postgresql.auth.database}}"
     ETHOS_REPL_DB_USER_NAME: "{{ .Values.postgresql.auth.username}}"

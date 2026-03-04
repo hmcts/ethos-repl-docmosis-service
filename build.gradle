@@ -1,3 +1,9 @@
+buildscript {
+    dependencies {
+        classpath("org.flywaydb:flyway-database-postgresql:11.20.3")
+    }
+}
+
 plugins {
     id 'application'
     id 'java'
@@ -10,6 +16,7 @@ plugins {
     id 'org.sonarqube' version '6.2.0.5505'
     id 'au.com.dius.pact' version '4.3.15'
     id 'io.freefair.lombok' version '8.14.2'
+    id 'org.flywaydb.flyway' version '11.20.3'
 }
 
 group = 'uk.gov.hmcts.ethos.replacement'
@@ -37,6 +44,22 @@ jacocoTestCoverageVerification {
                 minimum = 0.0
             }
         }
+    }
+}
+
+flyway {
+    url = System.getenv('FLYWAY_URL') ?: 'jdbc:postgresql://localhost:5050/ethos'
+    user = System.getenv('FLYWAY_USER') ?: 'ethos'
+    password = System.getenv('FLYWAY_PASSWORD') ?: 'ethos'
+    baselineOnMigrate = true
+    baselineVersion = '000'
+}
+
+task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    baselineOnMigrate = true
+    baselineVersion = '000'
+    if (project.hasProperty('dburl')) {
+        url = "jdbc:postgresql://${dburl}"
     }
 }
 
@@ -339,6 +362,8 @@ dependencies {
             strictly '7.17.3'
         }
     }
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '11.20.3'
+    implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: '11.20.3'
     implementation 'org.postgresql:postgresql:42.7.8'
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.17'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
