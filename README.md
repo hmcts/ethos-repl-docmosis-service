@@ -55,28 +55,21 @@ The application will start locally on `http://localhost:8081`
 
 Flyway migrations are stored in `src/main/resources/db/migration`.
 
-If you already have an existing ethos schema (prod-like, no Flyway history yet), run migration first:
+Flyway migrations are applied by Spring Boot on application startup.
 
-```bash
-FLYWAY_URL=jdbc:postgresql://localhost:5050/ethos \
-FLYWAY_USER=ethos \
-FLYWAY_PASSWORD=ethos \
-./gradlew migratePostgresDatabase
-```
-
-Then start the app without startup migration:
-
-```bash
-RUN_DB_MIGRATION_ON_STARTUP=false ./gradlew bootRun
-```
-
-If your database is fresh/empty (but database/user already exist), you can start directly:
+For both fresh and existing databases, start the app as normal:
 
 ```bash
 ./gradlew bootRun
 ```
 
-`bootRun` (default `RUN_DB_MIGRATION_ON_STARTUP=true`) will apply Flyway migrations on startup for empty databases.
+Existing databases without Flyway history are baselined automatically (`baseline-on-migrate=true`, version `000`) before later migrations are applied.
+
+To start without running Flyway (for troubleshooting only):
+
+```bash
+ENABLE_DB_MIGRATE=false ./gradlew bootRun
+```
 
 ### API documentation
 
