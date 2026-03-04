@@ -339,6 +339,8 @@ dependencies {
             strictly '7.17.3'
         }
     }
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'org.postgresql:postgresql:42.7.8'
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.17'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
