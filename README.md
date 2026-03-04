@@ -51,6 +51,19 @@ You can run the application by executing following command:
 
 The application will start locally on `http://localhost:8081`
 
+### Database migrations (Flyway)
+
+Flyway migrations are stored in `src/main/resources/db/migration`.
+
+To run migrations locally against a local Postgres instance:
+
+```bash
+FLYWAY_URL=jdbc:postgresql://localhost:5050/ethos \
+FLYWAY_USER=ethos \
+FLYWAY_PASSWORD=ethos \
+./gradlew migratePostgresDatabase
+```
+
 ### API documentation
 
 API documentation is provided with Swagger:
