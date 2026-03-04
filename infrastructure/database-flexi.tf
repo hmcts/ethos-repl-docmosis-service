@@ -43,3 +43,35 @@ resource "azurerm_key_vault_secret" "ethos_postgres_port_v15" {
   value        = "5432"
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
 }
+
+# Jenkins lib requires db credetials stored with these names in order to run the migration step
+
+resource "azurerm_key_vault_secret" "ethos_postgres_user_jenkins" {
+  name         = "ethos-POSTGRES-USER"
+  value        = module.postgres.username
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_password_jenkins" {
+  name         = "ethos-POSTGRES-PASS"
+  value        = module.postgres.password
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_host_jenkins" {
+  name         = "ethos-POSTGRES-HOST"
+  value        = module.postgres.fqdn
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_port_jenkins" {
+  name         = "ethos-POSTGRES-PORT"
+  value        = "5432"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_database_jenkins" {
+  name         = "ethos-POSTGRES-DATABASE"
+  value        = "ethos"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
