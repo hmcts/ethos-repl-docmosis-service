@@ -79,9 +79,17 @@ def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/helpers/MigrateToReformHelper.java'
 ]
 
+def duplicateCodeExclusionList = [
+        '**/uk/gov/hmcts/ethos/replacement/docmosis/domain/messagequeue/CreateUpdatesQueueMessage.java',
+        '**/uk/gov/hmcts/ethos/replacement/docmosis/domain/messagequeue/UpdateCaseQueueMessage.java',
+        '**/uk/gov/hmcts/ethos/replacement/docmosis/domain/repository/messagequeue/CreateUpdatesQueueRepository.java',
+        '**/uk/gov/hmcts/ethos/replacement/docmosis/domain/repository/messagequeue/UpdateCaseQueueRepository.java'
+]
+
 sonarqube {
     properties {
         property "sonar.exclusions", sonarExclusions.join(', ')
+        property "sonar.cpd.exclusions", duplicateCodeExclusionList.join(", ")
         property "sonar.projectKey", "ethos-repl-docmosis-service"
         property "sonar.dynamicAnalysis", "reuseReports"
         property "sonar.dependencyCheck.reportPath", "${project.buildDir}/reports/dependency-check-report.xml"
