@@ -15,8 +15,8 @@ module "postgres" {
       name : "ethos"
     }
   ]
-  pgsql_version        = "15"
-  admin_user_object_id = var.jenkins_AAD_objectId
+  pgsql_version                  = "15"
+  admin_user_object_id           = var.jenkins_AAD_objectId
   force_user_permissions_trigger = "1"
 }
 
@@ -42,4 +42,87 @@ resource "azurerm_key_vault_secret" "ethos_postgres_port_v15" {
   name         = "ethos-postgres-port-v15"
   value        = "5432"
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+# Existing manually created KV secrets to import into Terraform state.
+data "azurerm_key_vault_secret" "ethos_postgres_user_jenkins_existing" {
+  name         = "${var.component}-POSTGRES-USER"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "ethos_postgres_password_jenkins_existing" {
+  name         = "${var.component}-POSTGRES-PASS"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "ethos_postgres_host_jenkins_existing" {
+  name         = "${var.component}-POSTGRES-HOST"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "ethos_postgres_port_jenkins_existing" {
+  name         = "${var.component}-POSTGRES-PORT"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "ethos_postgres_database_jenkins_existing" {
+  name         = "${var.component}-POSTGRES-DATABASE"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+# Jenkins lib requires DB credentials stored with these names in order to run the migration step.
+
+resource "azurerm_key_vault_secret" "ethos_postgres_user_jenkins" {
+  name         = "${var.component}-POSTGRES-USER"
+  value        = module.postgres.username
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_password_jenkins" {
+  name         = "${var.component}-POSTGRES-PASS"
+  value        = module.postgres.password
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_host_jenkins" {
+  name         = "${var.component}-POSTGRES-HOST"
+  value        = module.postgres.fqdn
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_port_jenkins" {
+  name         = "${var.component}-POSTGRES-PORT"
+  value        = "5432"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos_postgres_database_jenkins" {
+  name         = "${var.component}-POSTGRES-DATABASE"
+  value        = "ethos"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+import {
+  id = data.azurerm_key_vault_secret.ethos_postgres_user_jenkins_existing.id
+  to = azurerm_key_vault_secret.ethos_postgres_user_jenkins
+}
+
+import {
+  id = data.azurerm_key_vault_secret.ethos_postgres_password_jenkins_existing.id
+  to = azurerm_key_vault_secret.ethos_postgres_password_jenkins
+}
+
+import {
+  id = data.azurerm_key_vault_secret.ethos_postgres_host_jenkins_existing.id
+  to = azurerm_key_vault_secret.ethos_postgres_host_jenkins
+}
+
+import {
+  id = data.azurerm_key_vault_secret.ethos_postgres_port_jenkins_existing.id
+  to = azurerm_key_vault_secret.ethos_postgres_port_jenkins
+}
+
+import {
+  id = data.azurerm_key_vault_secret.ethos_postgres_database_jenkins_existing.id
+  to = azurerm_key_vault_secret.ethos_postgres_database_jenkins
 }

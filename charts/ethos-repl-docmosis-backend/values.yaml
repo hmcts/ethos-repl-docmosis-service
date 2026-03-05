@@ -26,6 +26,7 @@ java:
           alias: ETHOS_REPL_DB_PORT
   aadIdentityName: ethos
   environment:
+    RUN_DB_MIGRATION_ON_STARTUP: false
     SERVER_PORT: 8081
     REFORM_TEAM: ethos
     REFORM_SERVICE_NAME: ethos-repl-docmosis-backend
