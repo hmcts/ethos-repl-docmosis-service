@@ -17,29 +17,37 @@ class FlywayNoOpStrategyTest {
     private final FlywayNoOpStrategy strategy = new FlywayNoOpStrategy();
 
     @Test
-    void shouldThrowWhenThereArePendingMigrations() {
+    void shouldNotThrowWhenOnlyBaselineMigrationIsPending() {
         Flyway flyway = mock(Flyway.class);
         MigrationInfoService infoService = mock(MigrationInfoService.class);
-        MigrationInfo pendingMigration = mock(MigrationInfo.class);
+        MigrationInfo baselinePendingMigration = mock(MigrationInfo.class);
 
         when(flyway.info()).thenReturn(infoService);
-        when(infoService.all()).thenReturn(new MigrationInfo[]{pendingMigration});
-        when(pendingMigration.getState()).thenReturn(MigrationState.PENDING);
-        when(pendingMigration.getScript()).thenReturn("V1__CreateEcmQueueTables.sql");
+        when(infoService.all()).thenReturn(new MigrationInfo[]{baselinePendingMigration});
+        when(baselinePendingMigration.getState()).thenReturn(MigrationState.PENDING);
+        when(baselinePendingMigration.getScript()).thenReturn("V000__EthosBaselineSchema.sql");
 
-        assertThrows(PendingMigrationScriptException.class, () -> strategy.migrate(flyway));
+        assertDoesNotThrow(() -> strategy.migrate(flyway));
     }
 
     @Test
-    void shouldNotThrowWhenAllMigrationsAreApplied() {
+    void shouldThrowWhenNonBaselineMigrationIsPending() {
         Flyway flyway = mock(Flyway.class);
         MigrationInfoService infoService = mock(MigrationInfoService.class);
-        MigrationInfo appliedMigration = mock(MigrationInfo.class);
+        MigrationInfo baselinePendingMigration = mock(MigrationInfo.class);
+        MigrationInfo nonBaselinePendingMigration = mock(MigrationInfo.class);
 
         when(flyway.info()).thenReturn(infoService);
-        when(infoService.all()).thenReturn(new MigrationInfo[]{appliedMigration});
-        when(appliedMigration.getState()).thenReturn(MigrationState.SUCCESS);
+        when(infoService.all()).thenReturn(
+            new MigrationInfo[]{baselinePendingMigration, nonBaselinePendingMigration}
+        );
 
-        assertDoesNotThrow(() -> strategy.migrate(flyway));
+        when(baselinePendingMigration.getState()).thenReturn(MigrationState.PENDING);
+        when(baselinePendingMigration.getScript()).thenReturn("V000__EthosBaselineSchema.sql");
+
+        when(nonBaselinePendingMigration.getState()).thenReturn(MigrationState.PENDING);
+        when(nonBaselinePendingMigration.getScript()).thenReturn("V1__CreateEcmQueueTables.sql");
+
+        assertThrows(PendingMigrationScriptException.class, () -> strategy.migrate(flyway));
     }
 }
