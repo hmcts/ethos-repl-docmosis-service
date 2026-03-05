@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doThrow;
@@ -68,10 +69,14 @@ public class CreateUpdatesBusSenderTest {
 
     @Test
     public void shouldHandleServiceBusException() {
+        List<String> errors = new ArrayList<>();
         doThrow(new InternalException(ERROR_MESSAGE))
                 .when(serviceBusSender).sendMessage(any());
-        serviceBusCreateUpdatesBusSender.sendUpdatesToQueue(createUpdatesDto, creationDataModel, new ArrayList<>(),
+        serviceBusCreateUpdatesBusSender.sendUpdatesToQueue(createUpdatesDto, creationDataModel, errors,
             String.valueOf(ethosCaseRefCollection.size()));
+        verify(serviceBusSender, atLeastOnce()).sendMessage(any());
+        assertEquals(1, errors.size());
+        assertEquals("Failed to send the message to the queue", errors.getFirst());
     }
 
     @Test
