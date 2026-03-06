@@ -93,7 +93,7 @@ public class SingleUpdateService {
         List<SubmitMultipleEvent> submitMultipleEvents = retrieveMultipleCase(accessToken, updateCaseMsg);
         log.info("size of submitMultipleEvent is:{}",
                  CollectionUtils.isEmpty(submitMultipleEvents) ? 0 : submitMultipleEvents.size());
-        if (!submitMultipleEvents.isEmpty()) {
+        if (!CollectionUtils.isEmpty(submitMultipleEvents)) {
             submitEvent.getCaseData().setMultipleReferenceLinkMarkUp(
                 generateMarkUp(ccdGatewayBaseUrl,
                                String.valueOf(submitMultipleEvents.get(0).getCaseId()),
