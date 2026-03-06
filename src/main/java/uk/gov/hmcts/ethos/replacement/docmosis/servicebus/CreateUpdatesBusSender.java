@@ -1,15 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.servicebus;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ecm.compat.common.helpers.CreateUpdatesHelper;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.CreateUpdatesDto;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.CreateUpdatesMsg;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.datamodel.DataModelParent;
 import uk.gov.hmcts.ecm.compat.common.servicebus.ServiceBusSender;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.CreateUpdatesQueueMessage;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.QueueMessageStatus;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.messagequeue.CreateUpdatesQueueRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -21,15 +29,26 @@ public class CreateUpdatesBusSender {
 
     private static final String ERROR_MESSAGE = "Failed to send the message to the queue";
     private final ServiceBusSender serviceBusSender;
+    private final CreateUpdatesQueueRepository createUpdatesQueueRepository;
+    private final ObjectMapper objectMapper;
+    private final boolean queueEnabled;
 
     public CreateUpdatesBusSender(
-            @Qualifier("create-updates-send-helper") ServiceBusSender serviceBusSender) {
-        this.serviceBusSender = serviceBusSender;
+        ObjectProvider<ServiceBusSender> serviceBusSenderProvider,
+        CreateUpdatesQueueRepository createUpdatesQueueRepository,
+        ObjectMapper objectMapper,
+        @Value("${queue.enabled:false}") boolean queueEnabled
+    ) {
+        this.serviceBusSender = serviceBusSenderProvider.getIfAvailable();
+        this.createUpdatesQueueRepository = createUpdatesQueueRepository;
+        this.objectMapper = objectMapper;
+        this.queueEnabled = queueEnabled;
     }
 
+    @Transactional
     public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, DataModelParent dataModelParent,
                                    List<String> errors, String updateSize) {
-        log.info("Started sending messages to create-updates queue");
+        log.info("Started sending messages to create-updates queue. queue.enabled={}", queueEnabled);
 
         var successCount = new AtomicInteger(0);
 
@@ -43,8 +62,12 @@ public class CreateUpdatesBusSender {
         createUpdatesMsgList
                 .forEach(msg -> {
                     try {
-                        serviceBusSender.sendMessage(msg);
-                        log.info("SENT -----> " + msg.toString());
+                        if (queueEnabled) {
+                            queueMessage(msg);
+                        } else {
+                            sendToServiceBus(msg);
+                        }
+                        log.info("SENT -----> {}", msg);
                         successCount.incrementAndGet();
                     } catch (Exception e) {
                         log.error("Error sending messages to create-updates queue", e);
@@ -59,4 +82,22 @@ public class CreateUpdatesBusSender {
         );
     }
 
+    private void queueMessage(CreateUpdatesMsg msg) throws Exception {
+        String messageBody = objectMapper.writeValueAsString(msg);
+        CreateUpdatesQueueMessage queueMessage = CreateUpdatesQueueMessage.builder()
+            .messageId(UUID.randomUUID().toString())
+            .messageBody(messageBody)
+            .status(QueueMessageStatus.PENDING)
+            .createdAt(LocalDateTime.now())
+            .retryCount(0)
+            .build();
+        createUpdatesQueueRepository.save(queueMessage);
+    }
+
+    private void sendToServiceBus(CreateUpdatesMsg msg) {
+        if (serviceBusSender == null) {
+            throw new IllegalStateException("Service bus sender is not configured");
+        }
+        serviceBusSender.sendMessage(msg);
+    }
 }
