@@ -34,7 +34,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 public class MigrateToReformController {
     private final MigrateToReformService migrateToReformService;
     private final VerifyTokenService verifyTokenService;
-    private static final String INVALID_TOKEN = "Invalid Token {}";
 
     @PostMapping(path = "/aboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @Operation(description = "Migrates case from ECM to Reform")
@@ -51,7 +50,6 @@ public class MigrateToReformController {
                                                          String userToken) throws IOException {
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -76,7 +74,6 @@ public class MigrateToReformController {
             @RequestBody CCDRequest ccdRequest, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String userToken) {
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
