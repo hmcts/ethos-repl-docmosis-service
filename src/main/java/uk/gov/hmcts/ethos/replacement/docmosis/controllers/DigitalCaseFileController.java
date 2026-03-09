@@ -34,8 +34,6 @@ public class DigitalCaseFileController {
     private final DigitalCaseFileService digitalCaseFileService;
     private final VerifyTokenService verifyTokenService;
 
-    private static final String INVALID_TOKEN = "Invalid Token {}";
-
     @PostMapping(path = "/asyncAboutToSubmit", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @Operation(description = "Submit DCF asynchronously")
     @ApiResponses(value = {
@@ -51,7 +49,6 @@ public class DigitalCaseFileController {
                                                              String userToken) {
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -74,7 +71,6 @@ public class DigitalCaseFileController {
                                                                   @RequestHeader(value = HttpHeaders.AUTHORIZATION)
                                                                   String userToken) {
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 

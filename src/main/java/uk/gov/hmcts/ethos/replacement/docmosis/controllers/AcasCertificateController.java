@@ -31,7 +31,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 public class AcasCertificateController {
     private static final String LOG_MESSAGE = "{} received notification request for case reference : {}";
 
-    private static final String INVALID_TOKEN = "Invalid Token {}";
     private static final String GENERATED_DOCUMENT_URL = "Please download the ACAS Certificate from : ";
     private final VerifyTokenService verifyTokenService;
     private final AcasService acasService;
@@ -56,7 +55,6 @@ public class AcasCertificateController {
             @RequestHeader("Authorization") String userToken) throws JsonProcessingException {
         log.info(LOG_MESSAGE, "RETRIEVE ACAS CERTIFICATES FROM ACAS ---> ", ccdRequest.getCaseDetails().getCaseId());
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -81,7 +79,6 @@ public class AcasCertificateController {
             @RequestHeader("Authorization") String userToken) {
         log.info(LOG_MESSAGE, "SHOW CERTIFICATE CONFIRMATION ---> ", ccdRequest.getCaseDetails().getCaseId());
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
