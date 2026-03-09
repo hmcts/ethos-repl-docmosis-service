@@ -17,7 +17,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AllocateHearingService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
@@ -26,7 +28,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 @RequiredArgsConstructor
 @Slf4j
 public class AllocateHearingController {
-
+    private final VerifyTokenService verifyTokenService;
     private final AllocateHearingService allocateHearingService;
 
     @PostMapping(value = "/initialiseHearings", consumes = APPLICATION_JSON_VALUE)
@@ -42,6 +44,10 @@ public class AllocateHearingController {
     public ResponseEntity<CCDCallbackResponse> initialiseHearings(
         @RequestBody CCDRequest ccdRequest,
         @RequestHeader("Authorization") String userToken) {
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         allocateHearingService.initialiseAllocateHearing(caseData);
@@ -61,6 +67,10 @@ public class AllocateHearingController {
     public ResponseEntity<CCDCallbackResponse> populateHearingDetails(
         @RequestBody CCDRequest ccdRequest,
         @RequestHeader("Authorization") String userToken) {
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         allocateHearingService.populateHearingDetails(caseData);
