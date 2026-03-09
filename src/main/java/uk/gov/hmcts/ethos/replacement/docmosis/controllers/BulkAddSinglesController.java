@@ -27,7 +27,6 @@ public class BulkAddSinglesController {
     private final BulkAddSinglesValidator bulkAddSinglesValidator;
     private final BulkAddSinglesService bulkAddSinglesService;
     private final VerifyTokenService verifyTokenService;
-    private static final String INVALID_TOKEN = "Invalid Token {}";
 
     public BulkAddSinglesController(BulkAddSinglesValidator bulkAddSinglesValidator,
                                     BulkAddSinglesService bulkAddSinglesService,
@@ -52,7 +51,6 @@ public class BulkAddSinglesController {
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -77,7 +75,6 @@ public class BulkAddSinglesController {
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
