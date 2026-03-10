@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
@@ -201,7 +203,7 @@ public class HearingsHelper {
                     return;
                 }
                 List<String> hearingDates = dateListedTypeItems.stream()
-                .filter(Objects::nonNull)
+                    .filter(Objects::nonNull)
                     .map(DateListedTypeItem::getValue)
                     .filter(dateListedType ->
                         HEARING_STATUS_LISTED.equals(dateListedType.getHearingStatus())
