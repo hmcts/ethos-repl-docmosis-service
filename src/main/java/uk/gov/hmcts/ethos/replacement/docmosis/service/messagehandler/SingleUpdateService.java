@@ -96,7 +96,8 @@ public class SingleUpdateService {
             return;
         }
 
-        if (SINGLE_CASE_TYPE.equals(updateCaseMsg.getMultipleRef())) {
+        if (!StringUtils.hasText(updateCaseMsg.getMultipleRef())
+            || SINGLE_CASE_TYPE.equals(updateCaseMsg.getMultipleRef())) {
             return;
         }
 

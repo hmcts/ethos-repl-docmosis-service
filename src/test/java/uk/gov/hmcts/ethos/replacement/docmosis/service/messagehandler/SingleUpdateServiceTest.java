@@ -150,6 +150,21 @@ public class SingleUpdateServiceTest {
         verify(ccdClient, never()).retrieveMultipleCasesElasticSearchWithRetries(anyString(), anyString(), anyString());
     }
 
+    @Test
+    public void shouldSkipMultipleLookupWhenMultipleRefMissing() throws IOException {
+        updateCaseMsg.setMultipleReferenceLinkMarkUp(null);
+        updateCaseMsg.setMultipleRef(null);
+        submitEvent.getCaseData().setMultipleReferenceLinkMarkUp(null);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString()))
+            .thenReturn(submitEvent);
+        when(ccdClient.startEventForCaseAPIRole(anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(getCcdRequest());
+
+        singleUpdateService.sendUpdate(submitEvent, userToken, updateCaseMsg);
+
+        verify(ccdClient, never()).retrieveMultipleCasesElasticSearchWithRetries(anyString(), anyString(), anyString());
+    }
+
     private CCDRequest getCcdRequest() {
         CCDRequest ccdRequest = new CCDRequest();
         CaseDetails caseDetails = new CaseDetails();
