@@ -40,8 +40,8 @@ public class UpdateCaseQueueSender {
                 .build();
 
             updateCaseQueueRepository.save(queueMessage);
-            log.info("Sent UpdateCaseMsg to database queue: ethosCaseRef={}, multipleRef={}",
-                     updateCaseMsg.getEthosCaseReference(), updateCaseMsg.getMultipleRef());
+            log.debug("Sent UpdateCaseMsg to database queue: ethosCaseRef={}, multipleRef={}",
+                      updateCaseMsg.getEthosCaseReference(), updateCaseMsg.getMultipleRef());
         } catch (JsonProcessingException | DataAccessException e) {
             log.error("Failed to send UpdateCaseMsg to queue", e);
             throw new IllegalStateException("Failed to queue update case message", e);

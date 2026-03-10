@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -21,6 +22,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.ConciliationTrackService;
 import java.io.IOException;
 import java.util.List;
 
+import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -89,6 +91,15 @@ public class SingleUpdateService {
 
     private void updateMultipleReferenceLinkMarkUp(SubmitEvent submitEvent, String accessToken,
                                                    UpdateCaseMsg updateCaseMsg) throws IOException {
+        if (StringUtils.hasText(updateCaseMsg.getMultipleReferenceLinkMarkUp())) {
+            submitEvent.getCaseData().setMultipleReferenceLinkMarkUp(updateCaseMsg.getMultipleReferenceLinkMarkUp());
+            return;
+        }
+
+        if (!StringUtils.hasText(updateCaseMsg.getMultipleRef())
+            || SINGLE_CASE_TYPE.equals(updateCaseMsg.getMultipleRef())) {
+            return;
+        }
 
         List<SubmitMultipleEvent> submitMultipleEvents = retrieveMultipleCase(accessToken, updateCaseMsg);
         log.info("size of submitMultipleEvent is:{}",

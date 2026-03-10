@@ -117,8 +117,6 @@ public class UpdateCaseQueueProcessor {
             log.error("Unrecoverable error occurred when handling 'Update Case' message with ID {}",
                       queueMessage.getMessageId(), e);
             selfProvider.getObject().handleUnrecoverableError(queueMessage, updateCaseMsg, e);
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
         } catch (Exception exception) {
             log.error("Potentially recoverable error occurred when handling 'Update Case' message with ID {}",
                       queueMessage.getMessageId(), exception);
@@ -185,9 +183,6 @@ public class UpdateCaseQueueProcessor {
 
             log.info("Checking if finished");
             updateManagementService.checkIfFinish(updateCaseMsg);
-        } catch (InterruptedException interruptedException) {
-            log.error("Thread interrupted while checking if finished", interruptedException);
-            Thread.currentThread().interrupt();
         } catch (Exception exception) {
             log.error("Error in checkIfFinishWhenError", exception);
         }

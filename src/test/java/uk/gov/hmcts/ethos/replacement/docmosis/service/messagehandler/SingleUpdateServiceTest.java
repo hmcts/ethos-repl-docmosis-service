@@ -27,6 +27,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ACCEPTED_STATE;
@@ -133,6 +134,35 @@ public class SingleUpdateServiceTest {
 
         verify(ccdClient).retrieveMultipleCasesElasticSearchWithRetries(eq(userToken),
             eq(updateCaseMsg.getCaseTypeId()), any());
+    }
+
+    @Test
+    public void shouldUseMessageMarkupAndSkipMultipleLookup() throws IOException {
+        updateCaseMsg.setMultipleReferenceLinkMarkUp("<a href=\"http://example\">4150002</a>");
+        submitEvent.getCaseData().setMultipleReferenceLinkMarkUp(null);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString()))
+            .thenReturn(submitEvent);
+        when(ccdClient.startEventForCaseAPIRole(anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(getCcdRequest());
+
+        singleUpdateService.sendUpdate(submitEvent, userToken, updateCaseMsg);
+
+        verify(ccdClient, never()).retrieveMultipleCasesElasticSearchWithRetries(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    public void shouldSkipMultipleLookupWhenMultipleRefMissing() throws IOException {
+        updateCaseMsg.setMultipleReferenceLinkMarkUp(null);
+        updateCaseMsg.setMultipleRef(null);
+        submitEvent.getCaseData().setMultipleReferenceLinkMarkUp(null);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString()))
+            .thenReturn(submitEvent);
+        when(ccdClient.startEventForCaseAPIRole(anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(getCcdRequest());
+
+        singleUpdateService.sendUpdate(submitEvent, userToken, updateCaseMsg);
+
+        verify(ccdClient, never()).retrieveMultipleCasesElasticSearchWithRetries(anyString(), anyString(), anyString());
     }
 
     private CCDRequest getCcdRequest() {
