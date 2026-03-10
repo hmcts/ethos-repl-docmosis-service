@@ -16,7 +16,7 @@ java:
           alias: TORNADO_ACCESS_KEY
         - name: ethos-repl-service-s2s-secret
           alias: ETHOS_REPL_SERVICE_S2S_SECRET
-        - name: ecm-idam-client-secret
+        - name: idam-client-secret
           alias: IDAM_CLIENT_SECRET
         - name: caseworker-user-name
           alias: CASEWORKER_USER_NAME
