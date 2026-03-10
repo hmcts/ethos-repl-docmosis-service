@@ -12,7 +12,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.MultipleCounter
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.MultipleErrorsRepository;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.List;
 
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SINGLE_CASE_TYPE;
@@ -25,7 +24,6 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 public class UpdateManagementService {
 
     private static final String UNPROCESSABLE_MESSAGE = "Unprocessable message";
-    private static final SecureRandom RANDOM = new SecureRandom();
 
     private final MultipleCounterRepository multipleCounterRepository;
     private final MultipleErrorsRepository multipleErrorsRepository;
@@ -33,7 +31,7 @@ public class UpdateManagementService {
     private final MultipleUpdateService multipleUpdateService;
     private final SingleReadingService singleReadingService;
 
-    public void updateLogic(UpdateCaseMsg updateCaseMsg) throws IOException, InterruptedException {
+    public void updateLogic(UpdateCaseMsg updateCaseMsg) throws IOException {
 
         if (updateCaseMsg.getDataModelParent() instanceof ResetStateDataModel) {
             log.info("Resetting state of multiple to Open State");
@@ -47,9 +45,9 @@ public class UpdateManagementService {
         }
     }
 
-    public void checkIfFinish(UpdateCaseMsg updateCaseMsg) throws IOException, InterruptedException {
+    public void checkIfFinish(UpdateCaseMsg updateCaseMsg) throws IOException {
 
-        int counter = getNextCounterNumberWithDelay(updateCaseMsg.getMultipleRef());
+        int counter = getNextCounterNumber(updateCaseMsg.getMultipleRef());
 
         log.info("COUNTER: {} TOTAL CASES: {}", counter, updateCaseMsg.getTotalCases());
 
@@ -67,9 +65,7 @@ public class UpdateManagementService {
         }
     }
 
-    private int getNextCounterNumberWithDelay(String multipleRef) throws InterruptedException {
-        long delay = RANDOM.nextInt(1000);
-        Thread.sleep(delay);
+    private int getNextCounterNumber(String multipleRef) {
         return multipleCounterRepository.persistentQGetNextMultipleCountVal(multipleRef);
     }
 

@@ -67,7 +67,7 @@ public class CreateUpdatesBusSender {
                         } else {
                             sendToServiceBus(msg);
                         }
-                        log.info("SENT -----> {}", msg);
+                        log.debug("SENT -----> {}", msg);
                         successCount.incrementAndGet();
                     } catch (Exception e) {
                         log.error("Error sending messages to create-updates queue", e);
