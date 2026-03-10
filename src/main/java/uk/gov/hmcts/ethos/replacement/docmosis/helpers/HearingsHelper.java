@@ -201,6 +201,7 @@ public class HearingsHelper {
                     return;
                 }
                 List<String> hearingDates = dateListedTypeItems.stream()
+                .filter(Objects::nonNull)
                     .map(DateListedTypeItem::getValue)
                     .filter(dateListedType ->
                         HEARING_STATUS_LISTED.equals(dateListedType.getHearingStatus())
