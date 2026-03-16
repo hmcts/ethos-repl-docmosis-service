@@ -31,7 +31,7 @@ public class AdminUserService {
     }
 
     @CacheEvict(value = "adminUserToken", allEntries = true)
-    @Scheduled(fixedRateString = "${caching.adminUserService:1500000}")
+    @Scheduled(fixedRateString = "${caching.adminUserService}")
     public void emptyAdminUserToken() {
         log.info("Emptying adminUserToken cache");
     }
