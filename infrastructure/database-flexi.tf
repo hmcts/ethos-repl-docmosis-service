@@ -48,25 +48,25 @@ resource "azurerm_key_vault_secret" "ethos_postgres_port_v15" {
 
 resource "azurerm_key_vault_secret" "ethos_postgres_user_jenkins" {
   name         = "${var.component}-POSTGRES-USER"
-  value        = module.postgres.username
+  value        = data.azurerm_key_vault_secret.ethos_postgres_user_v15.value
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
 }
 
 resource "azurerm_key_vault_secret" "ethos_postgres_password_jenkins" {
   name         = "${var.component}-POSTGRES-PASS"
-  value        = module.postgres.password
+  value        = data.azurerm_key_vault_secret.ethos_postgres_password_v15.value
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
 }
 
 resource "azurerm_key_vault_secret" "ethos_postgres_host_jenkins" {
   name         = "${var.component}-POSTGRES-HOST"
-  value        = module.postgres.fqdn
+  value        = data.azurerm_key_vault_secret.ethos_postgres_host_v15.value
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
 }
 
 resource "azurerm_key_vault_secret" "ethos_postgres_port_jenkins" {
   name         = "${var.component}-POSTGRES-PORT"
-  value        = "5432"
+  value        = data.azurerm_key_vault_secret.ethos_postgres_port_v15.value
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
 }
 

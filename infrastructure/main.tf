@@ -65,6 +65,28 @@ data "azurerm_key_vault_secret" "create_updates_queue_send_conn_str" {
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
 }
 
+# Existing canonical DB secrets used by the running service.
+# Component-prefixed secrets are copied from these values to support preview/Jenkins consumers.
+data "azurerm_key_vault_secret" "ethos_postgres_user_v15" {
+  name         = "ethos-postgres-user-v15"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "ethos_postgres_password_v15" {
+  name         = "ethos-postgres-password-v15"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "ethos_postgres_host_v15" {
+  name         = "ethos-postgres-host-v15"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "ethos_postgres_port_v15" {
+  name         = "ethos-postgres-port-v15"
+  key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
 # S2S KEY VAULT DATA
 data "azurerm_key_vault" "s2s_key_vault" {
   name                = "s2s-${local.localEnv}"
