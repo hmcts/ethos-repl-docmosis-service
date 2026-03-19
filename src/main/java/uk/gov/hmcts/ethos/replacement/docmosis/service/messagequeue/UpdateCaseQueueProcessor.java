@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.UpdateCaseMsg;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.QueueMessageStatus;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.UpdateCaseQueueMessage;
@@ -129,18 +130,21 @@ public class UpdateCaseQueueProcessor {
         log.error("Error processing update-case message {}: {}",
                   queueMessage.getMessageId(), exception.getMessage(), exception);
 
-        int newRetryCount = queueMessage.getRetryCount() + 1;
-        boolean isLastRetry = newRetryCount >= MAX_RETRIES;
+        if (isUnprocessableEntity(exception)) {
+            updateCaseQueueRepository.markAsFailedNoRetry(
+                queueMessage.getMessageId(),
+                exception.getMessage(),
+                LocalDateTime.now()
+            );
+            return;
+        }
 
-        QueueMessageStatus newStatus = isLastRetry
-            ? QueueMessageStatus.FAILED
-            : QueueMessageStatus.PENDING;
+        boolean isLastRetry = (queueMessage.getRetryCount() + 1) >= MAX_RETRIES;
 
-        updateCaseQueueRepository.markAsFailed(
+        updateCaseQueueRepository.incrementRetryAndMarkFailureIfMax(
             queueMessage.getMessageId(),
             exception.getMessage(),
-            newRetryCount,
-            newStatus,
+            MAX_RETRIES,
             LocalDateTime.now()
         );
 
@@ -157,6 +161,11 @@ public class UpdateCaseQueueProcessor {
                 log.error("Error checking if finished after max retries", ex);
             }
         }
+    }
+
+    private boolean isUnprocessableEntity(Exception ex) {
+        return ex instanceof HttpClientErrorException httpException
+                && httpException.getStatusCode().value() == 422;
     }
 
     @Transactional
