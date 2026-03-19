@@ -9,6 +9,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.UpdateCaseMsg;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.QueueMessageStatus;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.UpdateCaseQueueMessage;
@@ -17,9 +20,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.TestMessageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.messagehandler.UpdateManagementService;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -84,10 +89,28 @@ public class UpdateCaseQueueProcessorTest {
 
         updateCaseQueueProcessor.handleError(queueMessage, new RuntimeException("bad"));
 
-        verify(updateCaseQueueRepository).markAsFailed(eq(queueMessage.getMessageId()), eq("bad"),
-            eq(3), eq(QueueMessageStatus.FAILED), any());
+        verify(updateCaseQueueRepository).incrementRetryAndMarkFailureIfMax(
+            eq(queueMessage.getMessageId()), eq("bad"), eq(3), any());
         verify(updateManagementService).addUnrecoverableErrorToDatabase(updateCaseMsg);
         verify(updateManagementService).checkIfFinish(updateCaseMsg);
+    }
+
+    @Test
+    public void shouldHandleUnprocessableEntityWithNoRetry() {
+        HttpClientErrorException exception = HttpClientErrorException.create(
+            HttpStatus.UNPROCESSABLE_ENTITY,
+            "Unprocessable Entity",
+            HttpHeaders.EMPTY,
+            "{\"message\":\"Case data validation failed\"}".getBytes(StandardCharsets.UTF_8),
+            StandardCharsets.UTF_8
+        );
+
+        updateCaseQueueProcessor.handleError(queueMessage, exception);
+
+        verify(updateCaseQueueRepository).markAsFailedNoRetry(
+            eq(queueMessage.getMessageId()), anyString(), any());
+        verify(updateCaseQueueRepository, never()).incrementRetryAndMarkFailureIfMax(
+            anyString(), anyString(), any(Integer.class), any());
     }
 
     @Test
