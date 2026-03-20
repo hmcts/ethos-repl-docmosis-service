@@ -450,13 +450,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codeceptjs/detox-helper@npm:1.1.12":
-  version: 1.1.12
-  resolution: "@codeceptjs/detox-helper@npm:1.1.12"
+"@codeceptjs/detox-helper@npm:1.1.14":
+  version: 1.1.14
+  resolution: "@codeceptjs/detox-helper@npm:1.1.14"
   dependencies:
-    detox: 20.41.1
+    detox: 20.42.0
     react-native: ^0.81.1
-  checksum: cbcc45578e8d3474780c937118f426fc7a9c0fcaf3bf0a48e23c7cadcb58bb59fad3e875a3d563383fc1d499f8793b49979ff70240a78167af2bc8e7e5946139
+  checksum: f93f3d8686a490019bb96baaf2f6553f044db229fd26412bbbfe5dd69112f3018140ebcd17c9a37d53ec942404ca2d6e7fda920e3002af4faff77101de66194f
   languageName: node
   linkType: hard
 
@@ -476,31 +476,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber-expressions@npm:18":
-  version: 18.0.1
-  resolution: "@cucumber/cucumber-expressions@npm:18.0.1"
+"@cucumber/cucumber-expressions@npm:19":
+  version: 19.0.0
+  resolution: "@cucumber/cucumber-expressions@npm:19.0.0"
   dependencies:
-    regexp-match-indices: "npm:1.0.2"
-  checksum: 3c0c39deebaf111194c41a62d257e1c091a11dbaf98c2f0b83a41bb5f68b73c814c5b7e8e8783ecabe073ba67c8b2e3663d106d63110e63bb781a2a499cca528
+    regexp-match-indices: 1.0.2
+  checksum: d90b2ef7b2c990f5ee46f92d2babaff86c8d411d04f91be0a9b8e261b2ac46a7f68ed68f90acf0757fb951863a74f709b5aeb16d210e10a04b8296c33fa25385
   languageName: node
   linkType: hard
 
-"@cucumber/gherkin@npm:35.1.0":
-  version: 35.1.0
-  resolution: "@cucumber/gherkin@npm:35.1.0"
+"@cucumber/gherkin@npm:39.0.0":
+  version: 39.0.0
+  resolution: "@cucumber/gherkin@npm:39.0.0"
   dependencies:
-    "@cucumber/messages": ">=19.1.4 <30"
-  checksum: 82d278e6bc3ba8bd3318f8ea96ff8d306430d0048b27e067bee86b1eaa82e85939f5fa7342b4f86e44a20da1cc485ce8cb73a815f671a32f419ea5b35bc906d0
+    "@cucumber/messages": ">=31.0.0 <33"
+  checksum: cc65b64c1d61877a9523fe7251d6361d145b548243da1cf1ce0c088ae2e1d2f9fee6760acaf483ce8c005ad19c1664ff68b10a3340bd337580545ab92b23e35d
   languageName: node
   linkType: hard
 
-"@cucumber/messages@npm:29.0.1, @cucumber/messages@npm:>=19.1.4 <30":
-  version: 29.0.1
-  resolution: "@cucumber/messages@npm:29.0.1"
+"@cucumber/messages@npm:32.2.0, @cucumber/messages@npm:>=31.0.0 <33":
+  version: 32.2.0
+  resolution: "@cucumber/messages@npm:32.2.0"
   dependencies:
     class-transformer: 0.5.1
     reflect-metadata: 0.2.2
-  checksum: 728e3e97e3137750c48161dd31a381f4a6b0db160f8fbbca8bc8a3e0e576492cba9dba3d84adfe8c897f1e515187e0b4f9ee8782af70f59d697d9cd462fcb03d
+  checksum: a054d04e50f1a48185bb8281f8da3a882e5d400d950ea6a21ab80b2b543193c2c774a0a6f311fc70f53c261c15fcffb2010a420d86fd8d4829987260a085869c
   languageName: node
   linkType: hard
 
@@ -1549,7 +1549,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wix-pilot/core@npm:^3.4.1":
+"@wix-pilot/core@npm:^3.4.2":
   version: 3.4.2
   resolution: "@wix-pilot/core@npm:3.4.2"
   dependencies:
@@ -1650,12 +1650,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:8.15.0, acorn@npm:^8.15.0":
-  version: 8.15.0
-  resolution: "acorn@npm:8.15.0"
+"acorn@npm:8.16.0":
+  version: 8.16.0
+  resolution: "acorn@npm:8.16.0"
   bin:
     acorn: bin/acorn
-  checksum: 309c6b49aedf1a2e34aaf266de06de04aab6eb097c02375c66fdeb0f64556a6a823540409914fb364d9a11bc30d79d485a2eba29af47992d3490e9886c4391c3
+  checksum: bbfa466cd0dbd18b4460a85e9d0fc2f35db999380892403c573261beda91f23836db2aa71fd3ae65e94424ad14ff8e2b7bd37c7a2624278fd89137cd6e448c41
   languageName: node
   linkType: hard
 
@@ -1665,6 +1665,15 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 8755074ba55fff94e84e81c72f1013c2d9c78e973c31231c8ae505a5f966859baf654bddd75046bffd73ce816b149298977fff5077a3033dedba0ae2aad152d4
+  languageName: node
+  linkType: hard
+
+"acorn@npm:^8.15.0":
+  version: 8.15.0
+  resolution: "acorn@npm:8.15.0"
+  bin:
+    acorn: bin/acorn
+  checksum: 309c6b49aedf1a2e34aaf266de06de04aab6eb097c02375c66fdeb0f64556a6a823540409914fb364d9a11bc30d79d485a2eba29af47992d3490e9886c4391c3
   languageName: node
   linkType: hard
 
@@ -2749,19 +2758,19 @@ __metadata:
   linkType: hard
 
 "codeceptjs@npm:^3.6.5":
-  version: 3.7.5
-  resolution: "codeceptjs@npm:3.7.5"
+  version: 3.7.7
+  resolution: "codeceptjs@npm:3.7.7"
   dependencies:
     "@codeceptjs/configure": 1.0.6
-    "@codeceptjs/detox-helper": 1.1.12
+    "@codeceptjs/detox-helper": 1.1.14
     "@codeceptjs/helper": 2.0.4
-    "@cucumber/cucumber-expressions": 18
-    "@cucumber/gherkin": 35.1.0
-    "@cucumber/messages": 29.0.1
+    "@cucumber/cucumber-expressions": 19
+    "@cucumber/gherkin": 39.0.0
+    "@cucumber/messages": 32.2.0
     "@xmldom/xmldom": 0.9.8
-    acorn: 8.15.0
+    acorn: 8.16.0
     arrify: 3.0.0
-    axios: 1.12.2
+    axios: 1.13.6
     chalk: 4.1.2
     cheerio: ^1.0.0
     chokidar: ^4.0.3
@@ -2769,23 +2778,22 @@ __metadata:
     cross-spawn: 7.0.6
     css-to-xpath: 0.1.0
     csstoxpath: 1.6.0
-    envinfo: 7.14.0
+    envinfo: 7.21.0
     escape-string-regexp: 4.0.0
     figures: 3.2.0
     fn-args: 4.0.0
-    fs-extra: 11.3.2
+    fs-extra: 11.3.4
     fuse.js: ^7.0.0
     glob: ">=9.0.0 <12"
     html-minifier-terser: 7.2.0
     inquirer: ^8.2.7
     invisi-data: ^1.0.0
-    joi: 18.0.1
+    joi: 18.0.2
     js-beautify: 1.15.4
     lodash.clonedeep: 4.5.0
     lodash.merge: 4.6.2
-    lodash.shuffle: 4.2.0
     mkdirp: 3.0.1
-    mocha: 11.7.2
+    mocha: 11.7.5
     monocart-coverage-reports: 2.12.9
     ms: 2.1.3
     multer: ^2.0.2
@@ -2801,7 +2809,7 @@ __metadata:
       optional: true
   bin:
     codeceptjs: bin/codecept.js
-  checksum: 716848313df3dcfc911aa033faeeb577ccb5aff83fcae21a0225aa11da7da2f3d7239f40acce00063c7114f04dbf58622c0e3b99ce3c30aa5a3cb4fb46925351
+  checksum: 74830c96352c0de5933f913d964265bd3f4bea184db0dc5c62fadbd61e82f7f9ec905aaac79975a896821db459f0b7c8b4ce52bf49d689e607d392319824520e
   languageName: node
   linkType: hard
 
@@ -3429,11 +3437,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox@npm:20.41.1":
-  version: 20.41.1
-  resolution: "detox@npm:20.41.1"
+"detox@npm:20.42.0":
+  version: 20.42.0
+  resolution: "detox@npm:20.42.0"
   dependencies:
-    "@wix-pilot/core": ^3.4.1
+    "@wix-pilot/core": ^3.4.2
     "@wix-pilot/detox": ^1.0.13
     ajv: ^8.6.3
     bunyan: ^1.8.12
@@ -3477,7 +3485,7 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: d039e70844067c1f9d3d7ffb69c86750ffee8161b0a4dc6db336f53d3f29b91f982ecd4c281dad74e9db549b9a8dd57d88a04a41fdd75aeaa670b6ef39382ff7
+  checksum: 9f76a028610b04a62f7f212579494294a1a5bafe5a17014a275e1c8f4eaa172b66f9877d3888546a4c73a02692327cf4c27e3742cdb7806ba0201eacb29f3863
   languageName: node
   linkType: hard
 
@@ -3824,7 +3832,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"envinfo@npm:7.14.0, envinfo@npm:~7.14.0":
+"envinfo@npm:7.21.0":
+  version: 7.21.0
+  resolution: "envinfo@npm:7.21.0"
+  bin:
+    envinfo: dist/cli.js
+  checksum: c9526266810a328396c387c0580d6fc10f6ce8464074ae6eaef6798e2a05b5800b480b2eaf739cf523e3bfb407baba2ef23ff8edebb76c2b8fa7fbac995b3b9b
+  languageName: node
+  linkType: hard
+
+"envinfo@npm:~7.14.0":
   version: 7.14.0
   resolution: "envinfo@npm:7.14.0"
   bin:
@@ -4580,14 +4597,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:11.3.2":
-  version: 11.3.2
-  resolution: "fs-extra@npm:11.3.2"
+"fs-extra@npm:11.3.4":
+  version: 11.3.4
+  resolution: "fs-extra@npm:11.3.4"
   dependencies:
     graceful-fs: ^4.2.0
     jsonfile: ^6.0.1
     universalify: ^2.0.0
-  checksum: 24a7a6e09668add7f74bf6884086b860ce39c7883d94f564623d4ca5c904ff9e5e33fa6333bd3efbf3528333cdedf974e49fa0723e9debf952f0882e6553d81e
+  checksum: 3d1453db564b20ad58adf7c9583d0821546bd05e158865407fa2767af774ad8353418118655005f48c5bd0dbda19ea4bd053f8a5dcef2ce2e97580f7a039a221
   languageName: node
   linkType: hard
 
@@ -5776,9 +5793,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"joi@npm:18.0.1":
-  version: 18.0.1
-  resolution: "joi@npm:18.0.1"
+"joi@npm:18.0.2":
+  version: 18.0.2
+  resolution: "joi@npm:18.0.2"
   dependencies:
     "@hapi/address": ^5.1.1
     "@hapi/formula": ^3.0.2
@@ -5787,7 +5804,7 @@ __metadata:
     "@hapi/tlds": ^1.1.1
     "@hapi/topo": ^6.0.2
     "@standard-schema/spec": ^1.0.0
-  checksum: dbf511036b4ad89e962e51e2fb393ec20a863b023b5a4fe32d0c7a8c28456f4ad05ea4a3b30f8ea37560cb4444a0d3e20ede8ee170e2edf7841ac247d3faf91e
+  checksum: 39d9e3584505817d7c80ab11c0b6eccf353715d0e83c33f039caa5d917fa9ef700966b0b87dfebaaec8693f9850cb0745812afb620ba9633ba9e895ada3210f7
   languageName: node
   linkType: hard
 
@@ -6187,13 +6204,6 @@ __metadata:
   version: 4.1.1
   resolution: "lodash.once@npm:4.1.1"
   checksum: d768fa9f9b4e1dc6453be99b753906f58990e0c45e7b2ca5a3b40a33111e5d17f6edf2f768786e2716af90a8e78f8f91431ab8435f761fef00f9b0c256f6d245
-  languageName: node
-  linkType: hard
-
-"lodash.shuffle@npm:4.2.0":
-  version: 4.2.0
-  resolution: "lodash.shuffle@npm:4.2.0"
-  checksum: 3d451e16c18cd7e7c4c265199c87f0a1fff2976b8bf14d94de20a445e76f61a5c39b62181e5660e8f3a1602518b15a3d7d54732067cdef9d446e47d1e8f48938
   languageName: node
   linkType: hard
 
@@ -6931,37 +6941,6 @@ __metadata:
   peerDependencies:
     mocha: ">=2.2.0 <7 || >=9"
   checksum: 1718fccd9178ac38fad0fc63de436b3ece9e688818a1fe3a44bdea9ac26b4a3f6e731e35f19857fd6c769b01bb57b30f4f095902189031a372f1a556a96a1cbc
-  languageName: node
-  linkType: hard
-
-"mocha@npm:11.7.2":
-  version: 11.7.2
-  resolution: "mocha@npm:11.7.2"
-  dependencies:
-    browser-stdout: ^1.3.1
-    chokidar: ^4.0.1
-    debug: ^4.3.5
-    diff: ^7.0.0
-    escape-string-regexp: ^4.0.0
-    find-up: ^5.0.0
-    glob: ^10.4.5
-    he: ^1.2.0
-    js-yaml: ^4.1.0
-    log-symbols: ^4.1.0
-    minimatch: ^9.0.5
-    ms: ^2.1.3
-    picocolors: ^1.1.1
-    serialize-javascript: ^6.0.2
-    strip-json-comments: ^3.1.1
-    supports-color: ^8.1.1
-    workerpool: ^9.2.0
-    yargs: ^17.7.2
-    yargs-parser: ^21.1.1
-    yargs-unparser: ^2.0.0
-  bin:
-    _mocha: bin/_mocha
-    mocha: bin/mocha.js
-  checksum: f3078cfbf016c73c4de9411a7bf573c8f0b84f6e9cb89b56c58543bda84d72a8e3496968888ab0b45fc5e77d914f29c3ffa1efbf2e7a03798dfb0f09ac097c91
   languageName: node
   linkType: hard
 
