@@ -303,9 +303,10 @@ public class CaseManagementForCaseWorkerService {
                 HearingType sourceHearingType = updatedHearing.getValue();
                 HearingType targetHearingType = hearingTypeItem.getValue();
 
-                // update fields shared at hearing level like Sit Alone or Full Panel
+                // update fields shared at hearing level like Sit Alone or Full Panel & Two Judges
                 targetHearingType.setHearingSitAlone(sourceHearingType.getHearingSitAlone());
                 targetHearingType.setJudge(sourceHearingType.getJudge());
+                targetHearingType.setAdditionalJudge(sourceHearingType.getAdditionalJudge());
                 targetHearingType.setHearingNotesDocument(isNotEmpty(sourceHearingType.getRemoveHearingNotesDocument())
                         ? null
                         : sourceHearingType.getHearingNotesDocument());
