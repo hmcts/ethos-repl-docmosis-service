@@ -1,5 +1,5 @@
 java:
-  image: 'hmctspublic.azurecr.io/ethos/repl-docmosis-backend:latest'
+  image: 'hmctsprod.azurecr.io/ethos/repl-docmosis-backend:latest'
   applicationPort: 8081
   ingressHost: ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
@@ -16,6 +16,12 @@ java:
           alias: TORNADO_ACCESS_KEY
         - name: ethos-repl-service-s2s-secret
           alias: ETHOS_REPL_SERVICE_S2S_SECRET
+        - name: idam-client-secret
+          alias: IDAM_CLIENT_SECRET
+        - name: caseworker-user-name
+          alias: CASEWORKER_USER_NAME
+        - name: caseworker-password
+          alias: CASEWORKER_PASSWORD
         - name: ethos-postgres-user-v15
           alias: ETHOS_REPL_DB_USER_NAME
         - name: ethos-postgres-password-v15
@@ -26,6 +32,8 @@ java:
           alias: ETHOS_REPL_DB_PORT
   aadIdentityName: ethos
   environment:
+    DB_QUEUE_ENABLED: false
+    RUN_DB_MIGRATION_ON_STARTUP: false
     SERVER_PORT: 8081
     REFORM_TEAM: ethos
     REFORM_SERVICE_NAME: ethos-repl-docmosis-backend
@@ -37,6 +45,8 @@ java:
     TORNADO_URL: "https://docmosis.{{ .Values.global.environment }}.platform.hmcts.net/rs/render"
     IDAM_API_URL: "https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net"
     IDAM_API_JWK_URL: "https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net/jwks"
+    IDAM_API_OIDC_URL: "https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net/o/token"
+    IDAM_CLIENT_REDIRECT_URL: "https://ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/oauth2redirect"
     CCD_DATA_STORE_API_URL: "http://ccd-data-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     DOCUMENT_MANAGEMENT_URL: "http://dm-store-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     SERVICE_AUTH_PROVIDER_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
@@ -48,3 +58,9 @@ java:
     SECURE_DOC_STORE_FEATURE: false
     ACAS_BASE_URL: "https://api-dev-acas-01.azure-api.net/ECCLUAT"
     EM_CCD_ORCHESTRATOR_URL: http://em-ccd-orchestrator-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+    CREATE_UPDATES_POLL_INTERVAL: 1000
+    CREATE_UPDATES_BATCH_SIZE: 10
+    CREATE_UPDATES_THREADS: 15
+    UPDATE_CASE_POLL_INTERVAL: 1000
+    UPDATE_CASE_BATCH_SIZE: 10
+    UPDATE_CASE_THREADS: 15

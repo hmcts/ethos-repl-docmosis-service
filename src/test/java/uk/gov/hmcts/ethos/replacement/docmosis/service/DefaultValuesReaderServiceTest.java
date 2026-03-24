@@ -255,7 +255,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine3("Fitzalan Place")
                 .tribunalCorrespondenceTown("Cardiff")
                 .tribunalCorrespondencePostCode("CF24 0RZ")
-                .tribunalCorrespondenceTelephone("0292 067 8100")
+                .tribunalCorrespondenceTelephone("0300 323 0196")
                 .tribunalCorrespondenceFax("0870 761 7635")
                 .tribunalCorrespondenceDX("317501 Caerdydd/Cardiff 45")
                 .tribunalCorrespondenceEmail("waleset@justice.gov.uk")
