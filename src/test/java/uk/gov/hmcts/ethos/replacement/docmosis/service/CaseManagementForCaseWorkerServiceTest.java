@@ -569,6 +569,22 @@ class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    void updateSelectedHearingCopiesAdditionalJudge() {
+        CaseDetails caseDetails = ccdRequest16.getCaseDetails();
+        DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType("1");
+        caseDetails.getCaseData().setSelectedHearingNumberForUpdate(updateFilterTypeFL);
+        caseDetails.getCaseData().setHearingUpdateFilterType("Hearing number");
+        HearingTypeItem updatedHearing = caseDetails.getCaseData().getHearingCollection().getFirst();
+        updatedHearing.getValue().setAdditionalJudge("Judge Smith");
+        caseDetails.getCaseData().getHearingsCollectionForUpdate().add(updatedHearing);
+
+        caseManagementForCaseWorkerService.updateSelectedHearing(caseDetails.getCaseData());
+
+        assertEquals("Judge Smith",
+                caseDetails.getCaseData().getHearingCollection().getFirst().getValue().getAdditionalJudge());
+    }
+
+    @Test
     void removeHearingNotesDocument() {
         CaseDetails caseDetails = ccdRequest16.getCaseDetails();
         DynamicFixedListType updateFilterTypeFL = getDynamicFixedListType(String.valueOf(1));

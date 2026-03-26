@@ -100,7 +100,7 @@ Login to Azure CLI
 Login to ACR
 
 ```bash
-    az acr login --name hmctspublic
+    az acr login --name hmctsprod
 ```
 
 ### Docker image

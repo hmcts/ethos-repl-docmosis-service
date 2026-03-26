@@ -272,7 +272,7 @@ ext {
     junitJupiterVersion = '5.11.4'
     log4JVersion = '2.25.3'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '10.1.49'
+    tomcatEmbedVersion = '10.1.52'
     springCloudVersion = '2023.0.6'
 }
 
@@ -341,6 +341,7 @@ configurations.configureEach {
 dependencies {
 
     implementation group: 'com.github.hmcts', name: 'et-shared', version: '1.0.43'
+
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
 
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
@@ -384,7 +385,7 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     implementation 'org.springframework.retry:spring-retry'
-    implementation group: 'org.webjars.npm', name: 'minimatch', version: '10.0.1'
+    implementation group: 'org.webjars.npm', name: 'minimatch', version: '10.2.4'
     implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.59'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '3.0.4'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
@@ -395,7 +396,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    testImplementation group: 'com.auth0', name: 'java-jwt', version: '4.5.0'
+    testImplementation group: 'com.auth0', name: 'java-jwt', version: '4.5.1'
     testImplementation 'com.github.hmcts:fortify-client:1.4.10:all'
     testImplementation group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
     testImplementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'

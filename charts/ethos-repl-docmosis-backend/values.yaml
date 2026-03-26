@@ -1,5 +1,5 @@
 java:
-  image: 'hmctspublic.azurecr.io/ethos/repl-docmosis-backend:latest'
+  image: 'hmctsprod.azurecr.io/ethos/repl-docmosis-backend:latest'
   applicationPort: 8081
   ingressHost: ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
@@ -58,7 +58,6 @@ java:
     SECURE_DOC_STORE_FEATURE: false
     ACAS_BASE_URL: "https://api-dev-acas-01.azure-api.net/ECCLUAT"
     EM_CCD_ORCHESTRATOR_URL: http://em-ccd-orchestrator-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-    ADMIN_USER_TOKEN_CACHE_EVICTION_MILLIS: 1500000
     CREATE_UPDATES_POLL_INTERVAL: 1000
     CREATE_UPDATES_BATCH_SIZE: 10
     CREATE_UPDATES_THREADS: 15
