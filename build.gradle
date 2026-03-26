@@ -372,7 +372,7 @@ dependencies {
     }
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '11.20.3'
     implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: '11.20.3'
-    implementation 'org.postgresql:postgresql:42.7.8'
+    implementation 'org.postgresql:postgresql:42.7.10'
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.17'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
