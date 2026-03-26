@@ -482,6 +482,7 @@ public class CaseActionsForCaseWorkerController {
         FlagsImageHelper.buildFlagsImageFileName(caseDetails.getCaseData(), caseDetails.getCaseTypeId());
         caseManagementForCaseWorkerService.setNextListedDate(caseDetails.getCaseData());
         caseManagementForCaseWorkerService.updateSelectedHearing(caseDetails.getCaseData());
+        HearingsHelper.setHearingDaysAndDates(caseDetails.getCaseData());
         return getCallbackRespEntityNoErrors(caseDetails.getCaseData());
     }
 
@@ -677,6 +678,7 @@ public class CaseActionsForCaseWorkerController {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.amendHearing(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
         caseManagementForCaseWorkerService.setNextListedDate(caseData);
+        HearingsHelper.setHearingDaysAndDates(caseData);
         return getCallbackRespEntityNoErrors(caseData);
     }
 

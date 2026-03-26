@@ -14,6 +14,18 @@
     <suppress>
        <cve>CVE-2025-15104</cve>
     </suppress>
+        <suppress>
+       <cve>CVE-2026-23907</cve>
+    </suppress>
+    <suppress>
+       <cve>CVE-2025-66614</cve>
+    </suppress>
+    <suppress>
+       <cve>CVE-2026-24734</cve>
+    </suppress>
+    <suppress>
+       <cve>CVE-2026-24733</cve>
+    </suppress>
     <!-- Suppressing as PDF Box needs to be sorted in et-shared-->
     <suppress>
         <cve>CVE-2026-23907</cve>
