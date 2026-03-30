@@ -114,6 +114,24 @@ public class UpdateCaseQueueProcessorTest {
     }
 
     @Test
+    public void shouldHandleBadRequestWithNoRetry() {
+        HttpClientErrorException exception = HttpClientErrorException.create(
+            HttpStatus.BAD_REQUEST,
+            "Bad Request",
+            HttpHeaders.EMPTY,
+            "{\"message\":\"No value specified for terms query\"}".getBytes(StandardCharsets.UTF_8),
+            StandardCharsets.UTF_8
+        );
+
+        updateCaseQueueProcessor.handleError(queueMessage, exception);
+
+        verify(updateCaseQueueRepository).markAsFailedNoRetry(
+            eq(queueMessage.getMessageId()), anyString(), any());
+        verify(updateCaseQueueRepository, never()).incrementRetryAndMarkFailureIfMax(
+            anyString(), anyString(), any(Integer.class), any());
+    }
+
+    @Test
     public void shouldHandleUnrecoverableError() throws Exception {
         updateCaseQueueProcessor.handleUnrecoverableError(queueMessage, updateCaseMsg, new IOException("failed"));
 
