@@ -130,7 +130,7 @@ public class UpdateCaseQueueProcessor {
         log.error("Error processing update-case message {}: {}",
                   queueMessage.getMessageId(), exception.getMessage(), exception);
 
-        if (isUnprocessableEntity(exception)) {
+        if (isNonRetryableClientError(exception)) {
             updateCaseQueueRepository.markAsFailedNoRetry(
                 queueMessage.getMessageId(),
                 exception.getMessage(),
@@ -163,9 +163,10 @@ public class UpdateCaseQueueProcessor {
         }
     }
 
-    private boolean isUnprocessableEntity(Exception ex) {
+    private boolean isNonRetryableClientError(Exception ex) {
         return ex instanceof HttpClientErrorException httpException
-                && httpException.getStatusCode().value() == 422;
+                && (httpException.getStatusCode().value() == 422
+                    || httpException.getStatusCode().value() == 400);
     }
 
     @Transactional
