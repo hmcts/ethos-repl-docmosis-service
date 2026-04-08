@@ -284,7 +284,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '33.4.8-jre') {
             entry 'guava'
         }
-        dependencySet(group: 'io.netty', version: '4.2.9.Final') {
+        dependencySet(group: 'io.netty', version: '4.2.12.Final') {
             entry 'netty-all'
             entry 'netty-buffer'
             entry 'netty-codec'
@@ -340,7 +340,7 @@ configurations.configureEach {
 
 dependencies {
 
-    implementation group: 'com.github.hmcts', name: 'et-shared', version: '1.0.43'
+    implementation group: 'com.github.hmcts', name: 'et-shared', version: '1.0.58'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
 
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
