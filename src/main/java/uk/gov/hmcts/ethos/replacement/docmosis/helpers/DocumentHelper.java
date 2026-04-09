@@ -26,11 +26,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
+import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.compat.common.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants;
+
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,11 +43,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
-import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.EDINBURGH_OFFICE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FILE_EXTENSION;
@@ -246,47 +248,28 @@ public class DocumentHelper {
             sb.append("\"claimant_reference\":\"").append(nullCheck(representedTypeC.getRepresentativeReference()))
                     .append(NEW_LINE);
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
-            if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
-                    .equals(COMPANY_TYPE_CLAIMANT)) {
-                log.info("Claimant is a company for case reference: {}", caseData.getEthosCaseReference());
-                sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
+            if (claimantTypeOfClaimant.isPresent()) {
+                sb.append("\"claimant_full_name\":\"").append(nullCheck(extractClaimantFullName(caseData)))
                         .append(NEW_LINE);
-                sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
-            } else if (claimantIndType.isPresent()) {
-                sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
-                        .append(NEW_LINE);
-                sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
-                        .append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(nullCheck(extractClaimantFullName(caseData))).append(NEW_LINE);
             } else {
                 sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(NEW_LINE);
             }
         } else {
             log.info("Claimant is not represented for case: " + caseData.getEthosCaseReference());
-            Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
-            if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
-                    .equals(COMPANY_TYPE_CLAIMANT)) {
-                log.info("Claimant Company");
-                sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
+            if (claimantIndType.isPresent()) {
+                sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(extractClaimantFullName(caseData)))
                         .append(NEW_LINE);
-                sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
+                sb.append("\"claimant_full_name\":\"").append(nullCheck(extractClaimantFullName(caseData)))
                         .append(NEW_LINE);
-                sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(nullCheck(extractClaimantFullName(caseData)))
+                        .append(NEW_LINE);
             } else {
-                log.info("Claimant data");
-                if (claimantIndType.isPresent()) {
-                    sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(claimantIndType.get()
-                            .claimantFullName())).append(NEW_LINE);
-                    sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
-                            .append(NEW_LINE);
-                    sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
-                            .append(NEW_LINE);
-                } else {
-                    sb.append("\"claimant_or_rep_full_name\":\"").append(NEW_LINE);
-                    sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
-                    sb.append("\"Claimant\":\"").append(NEW_LINE);
-                    sb.append("\"claimant_rep_organisation\":\"").append(NEW_LINE);
-                }
+                sb.append("\"claimant_or_rep_full_name\":\"").append(NEW_LINE);
+                sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(NEW_LINE);
+                sb.append("\"claimant_rep_organisation\":\"").append(NEW_LINE);
             }
             Optional<ClaimantType> claimantType = Optional.ofNullable(caseData.getClaimantType());
             if (claimantType.isPresent()) {
@@ -1365,5 +1348,14 @@ public class DocumentHelper {
         }
         documentType.setDateOfCorrespondence(LocalDate.parse(documentType.getDateOfCorrespondence())
                 .toString());
+    }
+
+    private static String extractClaimantFullName(CaseData caseData) {
+        return Optional.ofNullable(caseData.getClaimantTypeOfClaimant())
+            .filter(Constants.COMPANY_TYPE_CLAIMANT::equals)
+            .map(type -> caseData.getClaimantCompany())
+            .orElseGet(() -> Optional.ofNullable(caseData.getClaimantIndType())
+                .map(ind -> ind.getClaimantFirstNames() + " " + ind.getClaimantLastName())
+                .orElse(""));
     }
 }
