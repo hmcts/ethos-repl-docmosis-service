@@ -63,6 +63,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper.createECCLogic;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper.validCaseForECC;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper.buildFlagsImageFileName;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.TWO_JUDGES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -518,6 +519,13 @@ public class CaseManagementForCaseWorkerService {
         }
         caseData.getHearingCollection().forEach(hearingTypeItem -> {
             HearingType hearingType = hearingTypeItem.getValue();
+            if (!TWO_JUDGES.equals(hearingType.getHearingSitAlone())) {
+                hearingType.setAdditionalJudge(null);
+            }
+            if (!FULL_PANEL.equals(hearingType.getHearingSitAlone())) {
+                hearingType.setHearingERMember(null);
+                hearingType.setHearingEEMember(null);
+            }
             if (isNotEmpty(hearingType.getHearingDateCollection())) {
                 hearingType.getHearingDateCollection().stream()
                     .map(DateListedTypeItem::getValue)

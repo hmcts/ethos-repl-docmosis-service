@@ -1362,6 +1362,26 @@ class CaseManagementForCaseWorkerServiceTest {
         assertThat(sorted.get(1).getValue().getListedDate()).isEqualTo("2025-03-01T09:00:00.123");
     }
 
+    @Test
+    void amendHearing_sitAlone() {
+        HearingType hearingType = new HearingType();
+        hearingType.setHearingSitAlone("Sit Alone");
+        hearingType.setAdditionalJudge("A Judge");
+        hearingType.setHearingERMember("ER Member");
+        hearingType.setHearingEEMember("EE Member");
+        HearingTypeItem hearing = new HearingTypeItem();
+        hearing.setValue(hearingType);
+        CaseData caseData = new CaseData();
+        caseData.setHearingCollection(List.of(hearing));
+
+        caseManagementForCaseWorkerService.amendHearing(caseData, "Manchester");
+
+        HearingType actual = caseData.getHearingCollection().getFirst().getValue();
+        assertThat(actual.getAdditionalJudge()).isNull();
+        assertThat(actual.getHearingERMember()).isNull();
+        assertThat(actual.getHearingEEMember()).isNull();
+    }
+
     private static DateListedTypeItem listing(String listedDate) {
         DateListedType dateListedType = new DateListedType();
         dateListedType.setListedDate(listedDate);
