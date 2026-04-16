@@ -715,7 +715,8 @@ class CaseManagementForCaseWorkerServiceTest {
         "' 1 ', false",
         "'-1', true",
         "'0', true",
-        "'Test', true"
+        "'Test', true",
+        "'2.5', false"
     })
     void amendMidEventHearingEstLengthNum(String input, boolean expectError) {
         CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
