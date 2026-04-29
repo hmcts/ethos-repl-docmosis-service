@@ -8,8 +8,6 @@ java:
       secrets:
         - name: Ocp-Apim-Subscription-Key
           alias: ACAS_KEY
-        - name: create-updates-queue-send-connection-string
-          alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
         - name: app-insights-connection-string
           alias: app-insights-connection-string
         - name: tornado-access-key
@@ -32,7 +30,6 @@ java:
           alias: ETHOS_REPL_DB_PORT
   aadIdentityName: ethos
   environment:
-    DB_QUEUE_ENABLED: false
     RUN_DB_MIGRATION_ON_STARTUP: false
     SERVER_PORT: 8081
     REFORM_TEAM: ethos

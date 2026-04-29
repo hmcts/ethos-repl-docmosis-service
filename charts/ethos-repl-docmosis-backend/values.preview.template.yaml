@@ -6,7 +6,6 @@ java:
   devcpuLimits: 1024m
   devmemoryLimits: 3Gi
   environment:
-    DB_QUEUE_ENABLED: false
     RUN_DB_MIGRATION_ON_STARTUP: true
     ETHOS_REPL_DB_HOST: "{{ .Release.Name }}-postgresql"
     ETHOS_REPL_DB_NAME: "{{ .Values.postgresql.auth.database}}"
@@ -19,8 +18,6 @@ java:
       secrets:
         - name: Ocp-Apim-Subscription-Key
           alias: ACAS_KEY
-        - name: create-updates-queue-send-connection-string
-          alias: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
         - name: tornado-access-key
           alias: TORNADO_ACCESS_KEY
         - name: ethos-repl-service-s2s-secret
