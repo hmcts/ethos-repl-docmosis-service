@@ -14,7 +14,7 @@
     <suppress>
        <cve>CVE-2025-15104</cve>
     </suppress>
-        <suppress>
+    <suppress>
        <cve>CVE-2026-23907</cve>
     </suppress>
     <suppress>
@@ -26,9 +26,11 @@
     <suppress>
        <cve>CVE-2026-24733</cve>
     </suppress>
-    <!-- Suppressing as PDF Box needs to be sorted in et-shared-->
+    <!-- Apache rates these against the ExtractEmbeddedFiles example rather than the runtime APIs used here. -->
     <suppress>
         <cve>CVE-2026-23907</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2026-33929</cve>
+    </suppress>
 </suppressions>
-
