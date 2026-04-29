@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.messagehandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -23,7 +22,6 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CLOSED_STATE
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@ConditionalOnProperty(prefix = "queue", name = "enabled", havingValue = "true")
 public class SingleCreationService {
 
     private final CcdClient ccdClient;

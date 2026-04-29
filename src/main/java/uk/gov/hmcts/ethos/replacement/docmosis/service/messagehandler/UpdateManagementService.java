@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.messagehandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.UpdateCaseMsg;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.datamodel.ResetStateDataModel;
@@ -20,7 +19,6 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@ConditionalOnProperty(prefix = "queue", name = "enabled", havingValue = "true")
 public class UpdateManagementService {
 
     private static final String UNPROCESSABLE_MESSAGE = "Unprocessable message";

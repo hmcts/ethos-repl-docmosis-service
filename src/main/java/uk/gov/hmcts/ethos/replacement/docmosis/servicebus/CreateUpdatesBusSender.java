@@ -2,15 +2,12 @@ package uk.gov.hmcts.ethos.replacement.docmosis.servicebus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ecm.compat.common.helpers.CreateUpdatesHelper;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.CreateUpdatesDto;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.CreateUpdatesMsg;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.datamodel.DataModelParent;
-import uk.gov.hmcts.ecm.compat.common.servicebus.ServiceBusSender;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.CreateUpdatesQueueMessage;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.messagequeue.QueueMessageStatus;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.messagequeue.CreateUpdatesQueueRepository;
@@ -28,27 +25,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CreateUpdatesBusSender {
 
     private static final String ERROR_MESSAGE = "Failed to send the message to the queue";
-    private final ServiceBusSender serviceBusSender;
     private final CreateUpdatesQueueRepository createUpdatesQueueRepository;
     private final ObjectMapper objectMapper;
-    private final boolean queueEnabled;
 
     public CreateUpdatesBusSender(
-        ObjectProvider<ServiceBusSender> serviceBusSenderProvider,
         CreateUpdatesQueueRepository createUpdatesQueueRepository,
-        ObjectMapper objectMapper,
-        @Value("${queue.enabled:false}") boolean queueEnabled
+        ObjectMapper objectMapper
     ) {
-        this.serviceBusSender = serviceBusSenderProvider.getIfAvailable();
         this.createUpdatesQueueRepository = createUpdatesQueueRepository;
         this.objectMapper = objectMapper;
-        this.queueEnabled = queueEnabled;
     }
 
     @Transactional
     public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, DataModelParent dataModelParent,
                                    List<String> errors, String updateSize) {
-        log.info("Started sending messages to create-updates queue. queue.enabled={}", queueEnabled);
+        log.info("Started sending messages to create-updates queue");
 
         var successCount = new AtomicInteger(0);
 
@@ -62,11 +53,7 @@ public class CreateUpdatesBusSender {
         createUpdatesMsgList
                 .forEach(msg -> {
                     try {
-                        if (queueEnabled) {
-                            queueMessage(msg);
-                        } else {
-                            sendToServiceBus(msg);
-                        }
+                        queueMessage(msg);
                         log.debug("SENT -----> {}", msg);
                         successCount.incrementAndGet();
                     } catch (Exception e) {
@@ -92,12 +79,5 @@ public class CreateUpdatesBusSender {
             .retryCount(0)
             .build();
         createUpdatesQueueRepository.save(queueMessage);
-    }
-
-    private void sendToServiceBus(CreateUpdatesMsg msg) {
-        if (serviceBusSender == null) {
-            throw new IllegalStateException("Service bus sender is not configured");
-        }
-        serviceBusSender.sendMessage(msg);
     }
 }

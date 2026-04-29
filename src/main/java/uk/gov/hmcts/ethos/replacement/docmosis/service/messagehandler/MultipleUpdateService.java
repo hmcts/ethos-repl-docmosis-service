@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.messagehandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
@@ -26,7 +25,6 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.TRANSFERRED_
 
 @Slf4j
 @Service("messageHandlerMultipleUpdateService")
-@ConditionalOnProperty(prefix = "queue", name = "enabled", havingValue = "true")
 public class MultipleUpdateService {
 
     @Value("${ccd_gateway_base_url}")
