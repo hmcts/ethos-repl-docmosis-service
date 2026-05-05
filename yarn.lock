@@ -3696,7 +3696,7 @@ __metadata:
     mocha-junit-reporter: 2.2.1
     mocha-multi: 1.1.7
     mochawesome: 7.1.4
-    nock: 14.0.12
+    nock: 14.0.14
     node-fetch: 3.3.2
     nodemon: 3.1.14
     otp: 1.1.2
@@ -7239,14 +7239,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.12":
-  version: 14.0.12
-  resolution: "nock@npm:14.0.12"
+"nock@npm:14.0.14":
+  version: 14.0.14
+  resolution: "nock@npm:14.0.14"
   dependencies:
     "@mswjs/interceptors": ^0.41.0
     json-stringify-safe: ^5.0.1
     propagate: ^2.0.0
-  checksum: f1194d75dae72f69f98f69575e1c5b77dc362d34bf24a79ff1b090b183b64978a522d10462d738db84b8c6b8633a9f6d7e471c9953da19e59d2e7eb30ed011ac
+  checksum: acc7b51cadd6399267db27e7dd692a7793577039dd30fb83aeff192d40f3e150749f9eb337af9e6dca71f8506a3a1bf2591569f23024a7b8ab09e92dad5408cf
   languageName: node
   linkType: hard
 
