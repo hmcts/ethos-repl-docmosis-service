@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -124,57 +124,57 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Autowired
     private WebApplicationContext applicationContext;
 
-    @MockBean
+    @MockitoBean
     private CaseCloseValidator caseCloseValidator;
 
-    @MockBean
+    @MockitoBean
     private CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
 
-    @MockBean
+    @MockitoBean
     private CaseTransferService caseTransferService;
 
-    @MockBean
+    @MockitoBean
     private CaseTransferToReformECM caseTransferToReformECM;
 
-    @MockBean
+    @MockitoBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
 
-    @MockBean
+    @MockitoBean
     private CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
 
-    @MockBean
+    @MockitoBean
     private DefaultValuesReaderService defaultValuesReaderService;
 
-    @MockBean
+    @MockitoBean
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
 
-    @MockBean
+    @MockitoBean
     private SingleReferenceService singleReferenceService;
 
-    @MockBean
+    @MockitoBean
     private VerifyTokenService verifyTokenService;
 
-    @MockBean
+    @MockitoBean
     private EventValidationService eventValidationService;
 
-    @MockBean
+    @MockitoBean
     private DepositOrderValidationService depositOrderValidationService;
 
-    @MockBean
+    @MockitoBean
     private JudgmentValidationService judgmentValidationService;
 
-    @MockBean
+    @MockitoBean
     private ConciliationTrackService conciliationTrackService;
 
-    @MockBean
+    @MockitoBean
     private SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;
 
-    @MockBean
+    @MockitoBean
     private AddSingleCaseToMultipleService addSingleCaseToMultipleService;
 
-    @MockBean
+    @MockitoBean
     private FixCaseApiService fixCaseApiService;
-    @MockBean
+    @MockitoBean
     private DocumentManagementService documentManagementService;
 
     private MockMvc mvc;

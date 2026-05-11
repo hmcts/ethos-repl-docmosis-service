@@ -11,9 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -35,9 +35,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class AcasServiceTest {
 
-    @MockBean
+    @MockitoBean
     private DocumentManagementService documentManagementService;
-    @MockBean
+    @MockitoBean
     private TornadoService tornadoService;
     private AcasService acasService;
     private CaseData caseData;

@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -87,55 +87,55 @@ public class ExcelActionsControllerTest {
     @Autowired
     private WebApplicationContext applicationContext;
 
-    @MockBean
+    @MockitoBean
     private MultipleCreationService multipleCreationService;
 
-    @MockBean
+    @MockitoBean
     private MultiplePreAcceptService multiplePreAcceptService;
 
-    @MockBean
+    @MockitoBean
     private MultipleUpdateService multipleUpdateService;
 
-    @MockBean
+    @MockitoBean
     private SubMultipleUpdateService subMultipleUpdateService;
 
-    @MockBean
+    @MockitoBean
     private MultipleAmendService multipleAmendService;
 
-    @MockBean
+    @MockitoBean
     private MultipleUploadService multipleUploadService;
 
-    @MockBean
+    @MockitoBean
     private VerifyTokenService verifyTokenService;
 
-    @MockBean
+    @MockitoBean
     private MultipleDynamicListFlagsService multipleDynamicListFlagsService;
 
-    @MockBean
+    @MockitoBean
     private MultipleMidEventValidationService multipleMidEventValidationService;
 
-    @MockBean
+    @MockitoBean
     private SubMultipleMidEventValidationService subMultipleMidEventValidationService;
 
-    @MockBean
+    @MockitoBean
     private MultipleCreationMidEventValidationService multipleCreationMidEventValidationService;
 
-    @MockBean
+    @MockitoBean
     private MultipleSingleMidEventValidationService multipleSingleMidEventValidationService;
 
-    @MockBean
+    @MockitoBean
     private EventValidationService eventValidationService;
 
-    @MockBean
+    @MockitoBean
     private MultipleHelperService multipleHelperService;
 
-    @MockBean
+    @MockitoBean
     private MultipleTransferService multipleTransferService;
 
-    @MockBean
+    @MockitoBean
     private MultipleCloseEventValidationService multipleCloseEventValidationService;
 
-    @MockBean
+    @MockitoBean
     private FixMultipleCaseApiService fixMultipleCaseApiService;
 
     private MockMvc mvc;

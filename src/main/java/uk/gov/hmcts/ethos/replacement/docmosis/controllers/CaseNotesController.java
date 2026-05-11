@@ -18,7 +18,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseNotesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
+import java.util.List;
+
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
@@ -53,6 +56,69 @@ public class CaseNotesController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseNotesService.addCaseNote(caseData, userToken);
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(value = "/manageCaseNote/aboutToStart", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "manageCaseNoteAboutToStart")
+    @ApiResponse(responseCode = "200", description = "Accessed successfully",
+        content = {
+            @Content(mediaType = "application/json",
+                schema = @Schema(implementation = CCDCallbackResponse.class))
+        })
+    @ApiResponse(responseCode = "400", description = "Bad Request")
+    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    public ResponseEntity<CCDCallbackResponse> manageCaseNoteAboutToStart(
+        @RequestBody CCDRequest ccdRequest,
+        @RequestHeader("Authorization") String userToken) {
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            return ResponseEntity.status(401).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = caseNotesService.populateCaseNoteList(caseData);
+        return getCallbackRespEntityErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/manageCaseNote/midEvent", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "manageCaseNoteMidEvent")
+    @ApiResponse(responseCode = "200", description = "Accessed successfully",
+        content = {
+            @Content(mediaType = "application/json",
+                schema = @Schema(implementation = CCDCallbackResponse.class))
+        })
+    @ApiResponse(responseCode = "400", description = "Bad Request")
+    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    public ResponseEntity<CCDCallbackResponse> manageCaseNoteMidEvent(
+        @RequestBody CCDRequest ccdRequest,
+        @RequestHeader("Authorization") String userToken) {
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            return ResponseEntity.status(401).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseNotesService.populateEditCaseNote(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(value = "/manageCaseNote/aboutToSubmit", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "manageCaseNoteAboutToSubmit")
+    @ApiResponse(responseCode = "200", description = "Accessed successfully",
+        content = {
+            @Content(mediaType = "application/json",
+                schema = @Schema(implementation = CCDCallbackResponse.class))
+        })
+    @ApiResponse(responseCode = "400", description = "Bad Request")
+    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    public ResponseEntity<CCDCallbackResponse> manageCaseNoteAboutToSubmit(
+        @RequestBody CCDRequest ccdRequest,
+        @RequestHeader("Authorization") String userToken) {
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            return ResponseEntity.status(401).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseNotesService.submitCaseNoteUpdate(caseData);
         return getCallbackRespEntityNoErrors(caseData);
     }
 }
