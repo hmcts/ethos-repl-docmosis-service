@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
@@ -43,9 +43,9 @@ class AllocateHearingControllerTest {
     private static final String INITIALISE_HEARINGS_URL = "/allocateHearing/initialiseHearings";
     private static final String POPULATE_HEARING_DETAILS_URL = "/allocateHearing/populateHearingDetails";
 
-    @MockBean
+    @MockitoBean
     private AllocateHearingService allocateHearingService;
-    @MockBean
+    @MockitoBean
     private VerifyTokenService verifyTokenService;
     @Autowired
     private JsonMapper jsonMapper;

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
@@ -31,9 +31,9 @@ class MigrateToReformControllerTest {
     private static final String ABOUT_TO_SUBMIT_URL = "/migrateToReform/aboutToSubmit";
     private static final String ROLLBACK_ABOUT_TO_SUBMIT_URL = "/migrateToReform/rollback/aboutToSubmit";
 
-    @MockBean
+    @MockitoBean
     private MigrateToReformService migrateToReformService;
-    @MockBean
+    @MockitoBean
     private VerifyTokenService verifyTokenService;
     @Autowired
     private MockMvc mockMvc;

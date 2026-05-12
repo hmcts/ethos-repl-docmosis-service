@@ -10,8 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.util.Pair;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
@@ -38,6 +38,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.compat.common.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -48,6 +49,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -97,9 +99,9 @@ class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
 
-    @MockBean
+    @MockitoBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
-    @MockBean
+    @MockitoBean
     private CcdClient ccdClient;
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
