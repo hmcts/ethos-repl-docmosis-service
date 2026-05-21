@@ -184,6 +184,7 @@ public class SingleCreationService {
         newCaseData.setCcdID(oldCaseData.getCcdID());
         newCaseData.setFlagsImageAltText(oldCaseData.getFlagsImageAltText());
         newCaseData.setCompanyPremises(oldCaseData.getCompanyPremises());
+        newCaseData.setClaimServedDate(oldCaseData.getClaimServedDate());
 
         if (state != null && !state.equals(CLOSED_STATE)) {
             newCaseData.setPositionType(positionTypeCT);
