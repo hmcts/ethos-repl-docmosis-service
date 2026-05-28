@@ -8,8 +8,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
@@ -79,5 +81,20 @@ public class PreAcceptanceCaseService {
         }
 
         return errors;
+    }
+
+    /**
+     * Clears the rejected date if the case is accepted and clears the accepted date if the case is rejected.
+     * @param caseData the case data to update
+     */
+    public void clearPreAcceptanceDates(CaseData caseData) {
+        if (Objects.nonNull(caseData) && Objects.nonNull(caseData.getPreAcceptCase())) {
+            String caseAccepted = defaultIfEmpty(caseData.getPreAcceptCase().getCaseAccepted(), "");
+            if (YES.equals(caseAccepted)) {
+                caseData.getPreAcceptCase().setDateRejected(null);
+            } else if (NO.equals(caseAccepted)) {
+                caseData.getPreAcceptCase().setDateAccepted(null);
+            }
+        }
     }
 }

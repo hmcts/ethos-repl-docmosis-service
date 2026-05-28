@@ -63,6 +63,7 @@ public class PreAcceptanceCaseController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
+        preAcceptanceCaseService.clearPreAcceptanceDates(caseData);
         return getCallbackRespEntityErrors(errors, caseData);
     }
 }

@@ -7,6 +7,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
@@ -103,6 +104,42 @@ class PreAcceptanceCaseServiceTest {
         CaseData caseData = buildCaseData("2024-01-20", NO, null, "2024-13-25");
         List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
         assertThat(errors).containsExactly("Rejected date is missing or invalid");
+    }
+
+    @Test
+    void clearPreAcceptanceDatesRemovesDateRejectedWhenAccepted() {
+        CaseData caseData = buildCaseData("2024-01-20", YES, "2024-01-25", "2024-01-30");
+        preAcceptanceCaseService.clearPreAcceptanceDates(caseData);
+        assertThat(caseData.getPreAcceptCase().getDateRejected()).isNull();
+        assertThat(caseData.getPreAcceptCase().getDateAccepted()).isEqualTo("2024-01-25");
+    }
+
+    @Test
+    void clearPreAcceptanceDatesRemovesDateAcceptedWhenRejected() {
+        CaseData caseData = buildCaseData("2024-01-20", NO, "2024-01-25", "2024-01-30");
+        preAcceptanceCaseService.clearPreAcceptanceDates(caseData);
+        assertThat(caseData.getPreAcceptCase().getDateAccepted()).isNull();
+        assertThat(caseData.getPreAcceptCase().getDateRejected()).isEqualTo("2024-01-30");
+    }
+
+    @Test
+    void clearPreAcceptanceDatesDoesNothingWhenCaseAcceptedIsNull() {
+        CaseData caseData = buildCaseData("2024-01-20", null, "2024-01-25", "2024-01-30");
+        preAcceptanceCaseService.clearPreAcceptanceDates(caseData);
+        assertThat(caseData.getPreAcceptCase().getDateAccepted()).isEqualTo("2024-01-25");
+        assertThat(caseData.getPreAcceptCase().getDateRejected()).isEqualTo("2024-01-30");
+    }
+
+    @Test
+    void clearPreAcceptanceDatesDoesNothingWhenPreAcceptCaseIsNull() {
+        CaseData caseData = new CaseData();
+        caseData.setPreAcceptCase(null);
+        assertDoesNotThrow(() -> preAcceptanceCaseService.clearPreAcceptanceDates(caseData));
+    }
+
+    @Test
+    void clearPreAcceptanceDatesDoesNothingWhenCaseDataIsNull() {
+        assertDoesNotThrow(() -> preAcceptanceCaseService.clearPreAcceptanceDates(null));
     }
 
     private CaseData buildCaseData(String receiptDate, String acceptedFlag, String dateAccepted, String dateRejected) {
