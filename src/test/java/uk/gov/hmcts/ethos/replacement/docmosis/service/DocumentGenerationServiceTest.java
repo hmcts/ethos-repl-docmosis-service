@@ -334,6 +334,28 @@ public class DocumentGenerationServiceTest {
         documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
     }
 
+    @Test
+    public void setBfActionsLeavesClaimServedDateUnsetWhenItWasNull() {
+        documentInfo.setDescription("TemplateName_2.6");
+        CaseData caseData = caseDetails13.getCaseData();
+        caseData.setClaimServedDate(null);
+
+        documentGenerationService.updateBfActions(documentInfo, caseData);
+
+        assertEquals(LocalDate.now().toString(), caseData.getClaimServedDate());
+    }
+
+    @Test
+    public void setBfActionsKeepsExistingClaimServedDateWhenAlreadyPresent() {
+        documentInfo.setDescription("TemplateName_2.6");
+        CaseData caseData = caseDetails13.getCaseData();
+        caseData.setClaimServedDate("2024-01-01");
+
+        documentGenerationService.updateBfActions(documentInfo, caseData);
+
+        assertEquals("2024-01-01", caseData.getClaimServedDate());
+    }
+
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource(jsonFileName)).toURI())));
