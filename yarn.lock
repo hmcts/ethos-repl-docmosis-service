@@ -3690,7 +3690,7 @@ __metadata:
     chai-http: 5.1.2
     codeceptjs: ^3.6.5
     cross-env: 10.1.0
-    eslint-plugin-mocha: 11.1.0
+    eslint-plugin-mocha: 11.3.0
     html_codesniffer: 2.5.1
     mocha: 11.7.6
     mocha-jenkins-reporter: 0.4.8
@@ -3995,15 +3995,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-mocha@npm:11.1.0":
-  version: 11.1.0
-  resolution: "eslint-plugin-mocha@npm:11.1.0"
+"eslint-plugin-mocha@npm:11.3.0":
+  version: 11.3.0
+  resolution: "eslint-plugin-mocha@npm:11.3.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.4.1
     globals: ^15.14.0
   peerDependencies:
     eslint: ">=9.0.0"
-  checksum: 35e478365e83f831264e460d13d65c3e464ec27ae6a99f4202eaabb993c37df43f6905db78cd35dab546fabf6c9a6baee3200181f664329a2d1311537740b202
+  checksum: e7d1c93b587aa8c16f8840cf3994cfe7af44a4e9ebb3cfd780f0586e63491ae6baa9df0e83b8a7b777657a888d1dfecc6c015f37d851c217ed395488f38a93ea
   languageName: node
   linkType: hard
 
