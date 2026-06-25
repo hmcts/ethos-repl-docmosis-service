@@ -276,6 +276,7 @@ ext {
 }
 
 ext["rest-assured.version"] = '5.1.0'
+ext['spring-framework.version'] = '6.2.19'
 
 dependencyManagement {
     dependencies {
