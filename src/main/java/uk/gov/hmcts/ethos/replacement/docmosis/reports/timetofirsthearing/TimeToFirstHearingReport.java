@@ -16,6 +16,7 @@ import uk.gov.hmcts.ecm.compat.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.compat.common.model.helper.Constants;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -127,8 +128,8 @@ public class TimeToFirstHearingReport {
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
-            var duration = Duration.between(firstHearingDate.atStartOfDay(),
-                    LocalDate.parse(caseData.getReceiptDate()).atStartOfDay()).abs();
+            Duration duration = Duration.between(firstHearingDate.atStartOfDay(ZoneId.systemDefault()),
+                LocalDate.parse(caseData.getReceiptDate()).atStartOfDay(ZoneId.systemDefault())).abs();
             adhocReportType.setDelayedDaysForFirstHearing(String.valueOf(duration.toDays()));
             adhocReportType.setReceiptDate(caseData.getReceiptDate());
         }

@@ -4,6 +4,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -30,7 +31,8 @@ public class ReportCommonMethods {
                 && !isNullOrEmpty(hearingTimingResume)) {
             var hearingBreak = convertHearingTime(hearingTimingBreak);
             var hearingResume = convertHearingTime(hearingTimingResume);
-            breakDuration = ChronoUnit.MINUTES.between(hearingBreak, hearingResume);
+            breakDuration = ChronoUnit.MINUTES.between(hearingBreak.atZone(ZoneId.systemDefault()),
+                hearingResume.atZone(ZoneId.systemDefault()));
         }
 
         var hearingTimingStart = dateListedType.getHearingTimingStart();
@@ -39,7 +41,8 @@ public class ReportCommonMethods {
                 && !isNullOrEmpty(hearingTimingFinish)) {
             var hearingStartTime = convertHearingTime(hearingTimingStart);
             var hearingEndTime = convertHearingTime(hearingTimingFinish);
-            long startToEndDiffInMinutes = ChronoUnit.MINUTES.between(hearingStartTime, hearingEndTime);
+            long startToEndDiffInMinutes = ChronoUnit.MINUTES.between(hearingStartTime.atZone(ZoneId.systemDefault()),
+                hearingEndTime.atZone(ZoneId.systemDefault()));
             duration = startToEndDiffInMinutes - breakDuration;
         }
 
