@@ -87,6 +87,75 @@ UI to interact with the API resources
     http://localhost:8081/swagger-ui.html
 ```
 
+## Local development — CFTLib decentralised mode
+
+### Background
+
+When running locally with `bootWithCCD` in [decentralised CCD mode](https://github.com/hmcts/rse-cft-lib), the CCD SDK
+Gradle plugin sets `CCD_SDK_DECENTRALISED=true` as an environment variable. Spring Boot maps this to the property
+`ccd.sdk.decentralised=true`, which disables the CFTLib built-in `ESIndexer` bean (it only activates when the property
+is `false`). As a result, new cases are never indexed into Elasticsearch and search returns no results.
+
+### CFTLib ES Indexer script
+
+`bin/cftlib-es-indexer.sh` is a shell script replacement for the built-in indexer. It:
+
+- Polls the CCD `datastore` PostgreSQL database every second for cases where `marked_by_logstash = false`
+- Atomically marks them as indexed and returns their data
+- Bulk-indexes them into Elasticsearch, including a trimmed entry in the `global_search` index for cases with a `SearchCriteria` field
+
+#### Prerequisites
+
+- `psql` — PostgreSQL client
+- `jq` — JSON processor (`brew install jq`)
+- `curl`
+- `bootWithCCD` must already be running (provides the DB and Elasticsearch)
+
+#### Usage
+
+Run in the foreground:
+
+```bash
+./bin/cftlib-es-indexer.sh
+```
+
+Run in the background for the current shell session:
+
+```bash
+./bin/cftlib-es-indexer.sh &
+```
+
+Run persistently (survives terminal close):
+
+```bash
+nohup ./bin/cftlib-es-indexer.sh > /tmp/es-indexer.log 2>&1 &
+```
+
+Stop a background instance:
+
+```bash
+kill $(pgrep -f cftlib-es-indexer)
+```
+
+#### Configuration
+
+All connection details can be overridden via environment variables:
+
+| Variable  | Default               | Description              |
+|-----------|-----------------------|--------------------------|
+| `DB_HOST` | `localhost`           | PostgreSQL host          |
+| `DB_PORT` | `6432`                | PostgreSQL port          |
+| `DB_NAME` | `datastore`           | Database name            |
+| `DB_USER` | `postgres`            | Database user            |
+| `DB_PASS` | `postgres`            | Database password        |
+| `ES_URL`  | `http://localhost:9200` | Elasticsearch base URL |
+
+#### Notes
+
+- The script is safe to restart at any time — rows with `marked_by_logstash = true` are skipped.
+- If Elasticsearch returns errors they are logged, but the script continues running.
+- The database password is passed via `PGPASSWORD` and is never echoed to the terminal.
+
 ## Docker container
 
 ### Authenticating to ACR
