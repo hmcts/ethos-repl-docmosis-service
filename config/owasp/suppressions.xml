@@ -66,4 +66,13 @@
     <suppress>
         <cve>CVE-2026-53914</cve>
     </suppress>
+    <!-- False positive: CVE-2026-54399 / CVE-2026-54428 affect HttpComponents Core 5.x
+         (org.apache.httpcomponents.core5:httpcore5), which is upgraded to 5.4.3. dependency-check
+         mis-matches them onto the unrelated legacy 4.x httpcore via the shared CPE. Scoped to the
+         4.x artifact only so the real 5.x issue is still reported if it ever regresses. -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.httpcomponents/httpcore@.*$</packageUrl>
+        <cve>CVE-2026-54399</cve>
+        <cve>CVE-2026-54428</cve>
+    </suppress>
 </suppressions>
