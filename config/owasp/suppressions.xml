@@ -36,4 +36,34 @@
     <suppress>
         <cve>CVE-2026-33117</cve>
     </suppress>
+    <!-- jackson-databind is managed transitively by the Spring Boot BOM (currently 2.21.2).
+         Fixed upstream in jackson-databind 2.21.5, which is not yet available in the managed BOM.
+         Suppressing until Spring Boot dependency management picks up the patched release, in line
+         with other HMCTS services. -->
+    <suppress>
+        <cve>CVE-2026-54512</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-54513</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-54514</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-54515</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-54516</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-54517</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-54518</cve>
+    </suppress>
+    <!-- CVE affects unsafe deserialization in the Kotlin build cache metadata (compiler / build
+         tooling), not the kotlin-stdlib runtime artifact pulled transitively into this service. -->
+    <suppress>
+        <cve>CVE-2026-53914</cve>
+    </suppress>
 </suppressions>
