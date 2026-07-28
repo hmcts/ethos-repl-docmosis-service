@@ -22,6 +22,10 @@ public class PreAcceptanceCaseService {
             "Accepted date should not be earlier than the case received date";
     private static final String REJECTED_DATE_SHOULD_NOT_BE_EARLIER_THAN_THE_CASE_RECEIVED_DATE =
             "Rejected date should not be earlier than the case received date";
+    private static final String ACCEPTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE =
+            "Accepted date should not be in the future";
+    private static final String REJECTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE =
+            "Rejected date should not be in the future";
     private static final String CASE_DATA_MISSING = "Case data is missing";
     private static final String PRE_ACCEPT_CASE_MISSING = "Pre-acceptance case data is missing";
     private static final String RECEIPT_DATE_MISSING_OR_INVALID = "Receipt date is missing or invalid";
@@ -67,6 +71,9 @@ public class PreAcceptanceCaseService {
             if (dateAccepted.isBefore(receiptDate)) {
                 errors.add(ACCEPTED_DATE_SHOULD_NOT_BE_EARLIER_THAN_THE_CASE_RECEIVED_DATE);
             }
+            if (dateAccepted.isAfter(LocalDate.now())) {
+                errors.add(ACCEPTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE);
+            }
         } else if (NO.equals(preAcceptCase.getCaseAccepted())) {
             LocalDate dateRejected;
             try {
@@ -77,6 +84,9 @@ public class PreAcceptanceCaseService {
             }
             if (dateRejected.isBefore(receiptDate)) {
                 errors.add(REJECTED_DATE_SHOULD_NOT_BE_EARLIER_THAN_THE_CASE_RECEIVED_DATE);
+            }
+            if (dateRejected.isAfter(LocalDate.now())) {
+                errors.add(REJECTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE);
             }
         }
 
