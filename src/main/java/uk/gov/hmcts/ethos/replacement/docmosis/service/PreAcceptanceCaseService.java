@@ -6,6 +6,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,36 +62,43 @@ public class PreAcceptanceCaseService {
         }
 
         if (YES.equals(preAcceptCase.getCaseAccepted())) {
-            LocalDate dateAccepted;
-            try {
-                dateAccepted = LocalDate.parse(preAcceptCase.getDateAccepted());
-            } catch (Exception e) {
-                errors.add(ACCEPTED_DATE_MISSING_OR_INVALID);
-                return errors;
-            }
-            if (dateAccepted.isBefore(receiptDate)) {
-                errors.add(ACCEPTED_DATE_SHOULD_NOT_BE_EARLIER_THAN_THE_CASE_RECEIVED_DATE);
-            }
-            if (dateAccepted.isAfter(LocalDate.now())) {
-                errors.add(ACCEPTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE);
-            }
+            validateDecisionDate(
+                    preAcceptCase.getDateAccepted(),
+                    receiptDate,
+                    ACCEPTED_DATE_MISSING_OR_INVALID,
+                    ACCEPTED_DATE_SHOULD_NOT_BE_EARLIER_THAN_THE_CASE_RECEIVED_DATE,
+                    ACCEPTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE,
+                    errors
+            );
         } else if (NO.equals(preAcceptCase.getCaseAccepted())) {
-            LocalDate dateRejected;
-            try {
-                dateRejected = LocalDate.parse(preAcceptCase.getDateRejected());
-            } catch (Exception e) {
-                errors.add(REJECTED_DATE_MISSING_OR_INVALID);
-                return errors;
-            }
-            if (dateRejected.isBefore(receiptDate)) {
-                errors.add(REJECTED_DATE_SHOULD_NOT_BE_EARLIER_THAN_THE_CASE_RECEIVED_DATE);
-            }
-            if (dateRejected.isAfter(LocalDate.now())) {
-                errors.add(REJECTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE);
-            }
+            validateDecisionDate(
+                    preAcceptCase.getDateRejected(),
+                    receiptDate,
+                    REJECTED_DATE_MISSING_OR_INVALID,
+                    REJECTED_DATE_SHOULD_NOT_BE_EARLIER_THAN_THE_CASE_RECEIVED_DATE,
+                    REJECTED_DATE_SHOULD_NOT_BE_IN_THE_FUTURE,
+                    errors
+            );
         }
 
         return errors;
+    }
+
+    private void validateDecisionDate(String dateStr, LocalDate receiptDate, String invalidErr,
+                                      String earlierThanReceiptErr, String futureErr, List<String> errors) {
+        LocalDate decisionDate;
+        try {
+            decisionDate = LocalDate.parse(dateStr);
+        } catch (Exception e) {
+            errors.add(invalidErr);
+            return;
+        }
+        if (decisionDate.isBefore(receiptDate)) {
+            errors.add(earlierThanReceiptErr);
+        }
+        if (decisionDate.isAfter(LocalDate.now(ZoneId.systemDefault()))) {
+            errors.add(futureErr);
+        }
     }
 
     /**
