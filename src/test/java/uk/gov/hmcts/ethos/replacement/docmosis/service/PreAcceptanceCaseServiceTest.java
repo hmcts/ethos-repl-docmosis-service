@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +30,22 @@ class PreAcceptanceCaseServiceTest {
     }
 
     @Test
+    void shouldReturnErrorWhenDateAcceptedInFuture() {
+        String futureDate = LocalDate.now().plusDays(1).toString();
+        CaseData caseData = buildCaseData("2024-01-20", YES, futureDate, null);
+        List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
+        assertThat(errors).containsExactly("Accepted date should not be in the future");
+    }
+
+    @Test
+    void shouldNotReturnErrorWhenDateAcceptedIsToday() {
+        String today = LocalDate.now().toString();
+        CaseData caseData = buildCaseData("2024-01-20", YES, today, null);
+        List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
     void shouldReturnErrorWhenDateRejectedBeforeReceiptDate() {
         CaseData caseData = buildCaseData("2024-01-20", NO, null, "2024-01-15");
         List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
@@ -38,6 +55,22 @@ class PreAcceptanceCaseServiceTest {
     @Test
     void shouldNotReturnErrorWhenDateRejectedAfterReceiptDate() {
         CaseData caseData = buildCaseData("2024-01-20", NO, null, "2024-01-25");
+        List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
+    void shouldReturnErrorWhenDateRejectedInFuture() {
+        String futureDate = LocalDate.now().plusDays(1).toString();
+        CaseData caseData = buildCaseData("2024-01-20", NO, null, futureDate);
+        List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
+        assertThat(errors).containsExactly("Rejected date should not be in the future");
+    }
+
+    @Test
+    void shouldNotReturnErrorWhenDateRejectedIsToday() {
+        String today = LocalDate.now().toString();
+        CaseData caseData = buildCaseData("2024-01-20", NO, null, today);
         List<String> errors = preAcceptanceCaseService.validateAcceptanceDate(caseData);
         assertThat(errors).isEmpty();
     }
