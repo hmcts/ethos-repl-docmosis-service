@@ -165,7 +165,8 @@ public class UpdateCaseQueueProcessor {
 
     private boolean isNonRetryableClientError(Exception ex) {
         return ex instanceof HttpClientErrorException httpException
-                && (httpException.getStatusCode().value() == 422
+                && (httpException.getStatusCode().value() == 404
+                    || httpException.getStatusCode().value() == 422
                     || httpException.getStatusCode().value() == 400);
     }
 

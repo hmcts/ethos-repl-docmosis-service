@@ -132,6 +132,24 @@ public class UpdateCaseQueueProcessorTest {
     }
 
     @Test
+    public void shouldHandleNotFoundWithNoRetry() {
+        HttpClientErrorException exception = HttpClientErrorException.create(
+            HttpStatus.NOT_FOUND,
+            "Not Found",
+            HttpHeaders.EMPTY,
+            "{\"message\":\"Case not found\"}".getBytes(StandardCharsets.UTF_8),
+            StandardCharsets.UTF_8
+        );
+
+        updateCaseQueueProcessor.handleError(queueMessage, exception);
+
+        verify(updateCaseQueueRepository).markAsFailedNoRetry(
+            eq(queueMessage.getMessageId()), anyString(), any());
+        verify(updateCaseQueueRepository, never()).incrementRetryAndMarkFailureIfMax(
+            anyString(), anyString(), any(Integer.class), any());
+    }
+
+    @Test
     public void shouldHandleUnrecoverableError() throws Exception {
         updateCaseQueueProcessor.handleUnrecoverableError(queueMessage, updateCaseMsg, new IOException("failed"));
 
