@@ -113,10 +113,12 @@ public class UpdateCaseQueueProcessor {
             updateCaseQueueRepository.markAsCompleted(queueMessage.getMessageId(), LocalDateTime.now());
             log.info("COMPLETED RECEIVED 'Update Case' ----> message with ID {}", queueMessage.getMessageId());
         } catch (IOException e) {
+            // Unrecoverable error - mark as failed immediately
             log.error("Unrecoverable error occurred when handling 'Update Case' message with ID {}",
                       queueMessage.getMessageId(), e);
             selfProvider.getObject().handleUnrecoverableError(queueMessage, updateCaseMsg, e);
         } catch (Exception exception) {
+            // Potentially recoverable error - allow retries
             log.error("Potentially recoverable error occurred when handling 'Update Case' message with ID {}",
                       queueMessage.getMessageId(), exception);
             throw exception;
