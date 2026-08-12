@@ -70,6 +70,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.convertLegacyDocsToNewDocNaming;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setDocumentTypeForDocumentCollection;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -255,6 +256,7 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails());
 
         if (errors.isEmpty()) {
+            setEraFlagByReceiptDate(caseData);
             defaultValuesReaderService.setSubmissionReference(ccdRequest.getCaseDetails());
             var defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
@@ -306,7 +308,8 @@ public class CaseActionsForCaseWorkerController {
 
         if (errors.isEmpty()) {
             var defaultValues = getPostDefaultValues(caseDetails);
-            log.info("Post Default values loaded: " + defaultValues);
+            log.info("Post Default values loaded: {}", defaultValues);
+            setEraFlagByReceiptDate(caseData);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
             caseManagementForCaseWorkerService.setNextListedDate(caseData);
@@ -1164,7 +1167,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        Helper.populateDynamicListOffices(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
+        populateDynamicListOffices(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -1243,7 +1246,7 @@ public class CaseActionsForCaseWorkerController {
                 ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE), false, errors);
 
         if (errors.isEmpty()) {
-            Helper.updatePositionTypeToClosed(caseData);
+            updatePositionTypeToClosed(caseData);
             return getCallbackRespEntityNoErrors(caseData);
         }
 

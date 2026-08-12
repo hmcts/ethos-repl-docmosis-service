@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
@@ -9,10 +10,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AdditionalCaseInfoType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.compat.common.model.labels.LabelPayloadES;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +61,7 @@ public class Helper {
             + "be added from the List Hearing menu item";
     public static final String HEARING_CREATION_DAY_ERROR = "A new day for a hearing can "
             + "only be added from the List Hearing menu item";
+    private static final LocalDate ERA_START_DATE = LocalDate.of(2026, Month.OCTOBER, 1);
 
     private Helper() {
     }
@@ -156,7 +161,7 @@ public class Helper {
     public static String getDocumentName(CorrespondenceType correspondenceType,
                                          CorrespondenceScotType correspondenceScotType) {
         String ewSection = DocumentHelper.getEWSectionName(correspondenceType);
-        String sectionName = ewSection.equals("")
+        String sectionName = ewSection.isEmpty()
                 ? DocumentHelper.getScotSectionName(correspondenceScotType) : ewSection;
         return DocumentHelper.getTemplateName(correspondenceType, correspondenceScotType) + "_" + sectionName;
     }
@@ -272,4 +277,26 @@ public class Helper {
                 : new ArrayList<>();
     }
 
+    /**
+     * Sets the era flag on AdditionalCaseInfoType to No if receiptDate is before 1st October 2026.
+     *
+     * @param caseData the case data
+     */
+    public static void setEraFlagByReceiptDate(CaseData caseData) {
+        if (ObjectUtils.isEmpty(caseData) || ObjectUtils.isEmpty(caseData.getReceiptDate())) {
+            return;
+        }
+
+        try {
+            LocalDate receiptDate = LocalDate.parse(caseData.getReceiptDate());
+            if (receiptDate.isBefore(ERA_START_DATE)) {
+                if (ObjectUtils.isEmpty(caseData.getAdditionalCaseInfoType())) {
+                    caseData.setAdditionalCaseInfoType(new AdditionalCaseInfoType());
+                }
+                caseData.getAdditionalCaseInfoType().setEra(NO);
+            }
+        } catch (Exception e) {
+            log.error("Error parsing receiptDate: {}", caseData.getReceiptDate(), e);
+        }
+    }
 }
