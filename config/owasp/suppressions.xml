@@ -96,4 +96,13 @@
     <suppress>
         <cve>CVE-2026-59084</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2026-66299</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-71290</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-64607</cve>
+    </suppress>
 </suppressions>

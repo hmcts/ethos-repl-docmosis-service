@@ -13,12 +13,14 @@ import uk.gov.hmcts.et.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.DepositTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.EccCounterClaimTypeItem;
+import uk.gov.hmcts.et.common.model.ccd.items.GenericTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.et.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.et.common.model.ccd.types.AdditionalCaseInfoType;
+import uk.gov.hmcts.et.common.model.ccd.types.CaseNote;
 import uk.gov.hmcts.et.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.et.common.model.ccd.types.ClaimantHearingPreference;
 import uk.gov.hmcts.et.common.model.ccd.types.ClaimantIndType;
@@ -122,10 +124,10 @@ public class MigrateToReformHelper {
                 (CasePreAcceptType) objectMapper(caseData.getPreAcceptCase(), CasePreAcceptType.class));
         reformCaseData.setClerkResponsible(createDynamicListFromFixedList(caseData.getClerkResponsible()));
         reformCaseData.setDocumentCollection(convertCaseDataDocumentCollection(caseData.getDocumentCollection()));
-        reformCaseData.setAdrDocumentCollection(convertCaseDataDocumentCollection(caseData.getAdrDocumentCollection()));
-        reformCaseData.setPiiDocumentCollection(convertCaseDataDocumentCollection(caseData.getPiiDocumentCollection()));
+        reformCaseData.setAdrDocumentCollection(convertSpecialDocumentCollection(caseData.getAdrDocumentCollection()));
+        reformCaseData.setPiiDocumentCollection(convertSpecialDocumentCollection(caseData.getPiiDocumentCollection()));
         reformCaseData.setAppealDocumentCollection(
-                convertCaseDataDocumentCollection(caseData.getAppealDocumentCollection()));
+                convertSpecialDocumentCollection(caseData.getAppealDocumentCollection()));
         reformCaseData.setAdditionalCaseInfoType((AdditionalCaseInfoType)
                 objectMapper(caseData.getAdditionalCaseInfoType(), AdditionalCaseInfoType.class));
         reformCaseData.setClaimantTypeOfClaimant(caseData.getClaimantTypeOfClaimant());
@@ -182,7 +184,24 @@ public class MigrateToReformHelper {
                 objectMapper(caseData.getDigitalCaseFile(), DigitalCaseFileType.class));
         reformCaseData.setClaimantHearingPreference((ClaimantHearingPreference)
                 objectMapper(caseData.getClaimantHearingPreference(), ClaimantHearingPreference.class));
+        reformCaseData.setCaseNotesCollection(setCaseNotes(caseData.getCaseNotesCollection()));
         return reformCaseData;
+    }
+
+    private static List<GenericTypeItem<CaseNote>> setCaseNotes(
+        List<uk.gov.hmcts.ecm.common.model.ccd.items.GenericTypeItem<uk.gov.hmcts.ecm.common.model.ccd.types.CaseNote>>
+            caseNotesCollection) {
+        if (isEmpty(caseNotesCollection)) {
+            return List.of();
+        }
+        List<GenericTypeItem<CaseNote>> reformCaseNotesCollection = new ArrayList<>();
+        for (var caseNoteItem : caseNotesCollection) {
+            GenericTypeItem<CaseNote> reformCaseNoteItem = new GenericTypeItem<>();
+            reformCaseNoteItem.setId(caseNoteItem.getId());
+            reformCaseNoteItem.setValue((CaseNote) objectMapper(caseNoteItem.getValue(), CaseNote.class));
+            reformCaseNotesCollection.add(reformCaseNoteItem);
+        }
+        return reformCaseNotesCollection;
     }
 
     private static String getPositionType(String positionType) {
@@ -516,6 +535,27 @@ public class MigrateToReformHelper {
                 }
                 list.add(documentTypeItem);
             });
+        return list;
+    }
+
+    private static List<DocumentTypeItem> convertSpecialDocumentCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem> documentCollection) {
+
+        List<DocumentTypeItem> list = new ArrayList<>();
+        emptyIfNull(documentCollection).forEach(document -> {
+            var sourceDocument = document.getValue();
+            var reformDocument = new uk.gov.hmcts.et.common.model.ccd.types.DocumentType();
+            reformDocument.setUploadedDocument((uk.gov.hmcts.et.common.model.ccd.types.UploadedDocumentType)
+                    objectMapper(sourceDocument.getUploadedDocument(),
+                            uk.gov.hmcts.et.common.model.ccd.types.UploadedDocumentType.class));
+            reformDocument.setShortDescription(sourceDocument.getShortDescription());
+            reformDocument.setCreationDate(sourceDocument.getCreationDate());
+
+            DocumentTypeItem reformDocumentItem = new DocumentTypeItem();
+            reformDocumentItem.setId(document.getId());
+            reformDocumentItem.setValue(reformDocument);
+            list.add(reformDocumentItem);
+        });
         return list;
     }
 
