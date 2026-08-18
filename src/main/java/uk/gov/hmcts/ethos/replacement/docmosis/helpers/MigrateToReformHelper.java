@@ -124,10 +124,10 @@ public class MigrateToReformHelper {
                 (CasePreAcceptType) objectMapper(caseData.getPreAcceptCase(), CasePreAcceptType.class));
         reformCaseData.setClerkResponsible(createDynamicListFromFixedList(caseData.getClerkResponsible()));
         reformCaseData.setDocumentCollection(convertCaseDataDocumentCollection(caseData.getDocumentCollection()));
-        reformCaseData.setAdrDocumentCollection(convertCaseDataDocumentCollection(caseData.getAdrDocumentCollection()));
-        reformCaseData.setPiiDocumentCollection(convertCaseDataDocumentCollection(caseData.getPiiDocumentCollection()));
+        reformCaseData.setAdrDocumentCollection(convertSpecialDocumentCollection(caseData.getAdrDocumentCollection()));
+        reformCaseData.setPiiDocumentCollection(convertSpecialDocumentCollection(caseData.getPiiDocumentCollection()));
         reformCaseData.setAppealDocumentCollection(
-                convertCaseDataDocumentCollection(caseData.getAppealDocumentCollection()));
+                convertSpecialDocumentCollection(caseData.getAppealDocumentCollection()));
         reformCaseData.setAdditionalCaseInfoType((AdditionalCaseInfoType)
                 objectMapper(caseData.getAdditionalCaseInfoType(), AdditionalCaseInfoType.class));
         reformCaseData.setClaimantTypeOfClaimant(caseData.getClaimantTypeOfClaimant());
@@ -535,6 +535,27 @@ public class MigrateToReformHelper {
                 }
                 list.add(documentTypeItem);
             });
+        return list;
+    }
+
+    private static List<DocumentTypeItem> convertSpecialDocumentCollection(
+            List<uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem> documentCollection) {
+
+        List<DocumentTypeItem> list = new ArrayList<>();
+        emptyIfNull(documentCollection).forEach(document -> {
+            var sourceDocument = document.getValue();
+            var reformDocument = new uk.gov.hmcts.et.common.model.ccd.types.DocumentType();
+            reformDocument.setUploadedDocument((uk.gov.hmcts.et.common.model.ccd.types.UploadedDocumentType)
+                    objectMapper(sourceDocument.getUploadedDocument(),
+                            uk.gov.hmcts.et.common.model.ccd.types.UploadedDocumentType.class));
+            reformDocument.setShortDescription(sourceDocument.getShortDescription());
+            reformDocument.setCreationDate(sourceDocument.getCreationDate());
+
+            DocumentTypeItem reformDocumentItem = new DocumentTypeItem();
+            reformDocumentItem.setId(document.getId());
+            reformDocumentItem.setValue(reformDocument);
+            list.add(reformDocumentItem);
+        });
         return list;
     }
 

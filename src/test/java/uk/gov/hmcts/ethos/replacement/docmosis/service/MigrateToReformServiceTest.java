@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.text.RandomStringGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +21,9 @@ import uk.gov.hmcts.et.common.model.ccd.CaseData;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,7 +52,7 @@ class MigrateToReformServiceTest {
     void setUp() throws Exception {
         String ccdGatewayBaseUrl = "https://manage-case.test.platform.hmcts.net";
         ReflectionTestUtils.setField(migrateToReformService, "ccdGatewayBaseUrl", ccdGatewayBaseUrl);
-        ecmCaseDetails = generateCaseDetails("migrateEcmToReformLeeds-ECM.json");
+        ecmCaseDetails = generateCaseDetails();
 
         var ecmSubmitEvent = new SubmitEvent();
         ecmSubmitEvent.setCaseData(ecmCaseDetails.getCaseData());
@@ -60,15 +63,14 @@ class MigrateToReformServiceTest {
 
         var reformCCDRequest = new CCDRequest();
         reformCCDRequest.setToken(new RandomStringGenerator.Builder()
-                .withinRange('0', 'z')
-                .filteredBy(Character::isLetterOrDigit)
-                .build().generate(100));
+            .withinRange('0', 'z')
+            .filteredBy(Character::isLetterOrDigit).get().generate(100));
 
         when(ccdClient.startCaseMigrationToReform(AUTH_TOKEN, EMPLOYMENT, ecmCaseDetails.getCaseTypeId()))
                 .thenReturn(reformCCDRequest);
 
         var reformSubmitEvent = new uk.gov.hmcts.et.common.model.ccd.SubmitEvent();
-        var reformCaseDetails = generateReformCaseDetails("migrateEcmToReformLeeds-RET.json");
+        var reformCaseDetails = generateReformCaseDetails();
         reformSubmitEvent.setCaseData(reformCaseDetails.getCaseData());
         reformSubmitEvent.setCaseId(Long.parseLong(reformCaseDetails.getCaseId()));
         reformSubmitEvent.setState(reformCaseDetails.getState());
@@ -101,6 +103,23 @@ class MigrateToReformServiceTest {
     }
 
     @Test
+    void onlyMapsCcdFieldsForSpecialistDocumentCollections() throws IOException {
+        assertDoesNotThrow(() -> migrateToReformService.migrateToReform(AUTH_TOKEN, ecmCaseDetails));
+        verify(ccdClient, times(1)).submitCaseCaseReform(eq(AUTH_TOKEN),
+                caseDetailsArgumentCaptor.capture(), any());
+
+        CaseData reformCaseData = caseDetailsArgumentCaptor.getValue().getCaseData();
+        Set<String> expectedFields = Set.of("uploadedDocument", "shortDescription", "creationDate");
+
+        assertEquals(expectedFields, populatedFieldNames(
+            reformCaseData.getAdrDocumentCollection().getFirst().getValue()));
+        assertEquals(expectedFields,
+            populatedFieldNames(reformCaseData.getPiiDocumentCollection().getFirst().getValue()));
+        assertEquals(expectedFields,
+                populatedFieldNames(reformCaseData.getAppealDocumentCollection().getFirst().getValue()));
+    }
+
+    @Test
     void unknownCaseType() throws IOException {
         ecmCaseDetails.setCaseTypeId("should throw error");
         assertThrows(IllegalArgumentException.class, () ->
@@ -111,19 +130,26 @@ class MigrateToReformServiceTest {
                 .startCaseMigrationToReform(AUTH_TOKEN, EMPLOYMENT, "ET_EnglandWales");
     }
 
-    private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
+    private CaseDetails generateCaseDetails() throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource(jsonFileName)).toURI())));
+                .getResource("migrateEcmToReformLeeds-ECM.json")).toURI())));
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, CaseDetails.class);
     }
 
-    private uk.gov.hmcts.et.common.model.ccd.CaseDetails generateReformCaseDetails(String jsonFileName)
+    private uk.gov.hmcts.et.common.model.ccd.CaseDetails generateReformCaseDetails()
             throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource(jsonFileName)).toURI())));
+                .getResource("migrateEcmToReformLeeds-RET.json")).toURI())));
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, uk.gov.hmcts.et.common.model.ccd.CaseDetails.class);
+    }
+
+    private Set<String> populatedFieldNames(Object document) throws IOException {
+        ObjectMapper mapper = new ObjectMapper().setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+        Set<String> fieldNames = new HashSet<>();
+        mapper.readTree(mapper.writeValueAsString(document)).fieldNames().forEachRemaining(fieldNames::add);
+        return fieldNames;
     }
 
 }
