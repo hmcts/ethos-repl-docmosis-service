@@ -58,7 +58,7 @@
     "cross-spawn": "^7.0.5",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
-    "mem": "^10.0.0",
+    "memoize": "^10.0.0",
     "merge": "^2.1.1",
     "minimist": "^1.2.6",
     "moment": "^2.29.2",
