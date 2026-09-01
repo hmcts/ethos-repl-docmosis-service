@@ -271,7 +271,7 @@ repositories {
 ext {
     log4JVersion = '2.25.4'
     serenity = '3.9.8'
-    tomcatEmbedVersion = '10.1.57'
+    tomcatEmbedVersion = '10.1.59'
     springCloudVersion = '2025.0.2'
 }
 
@@ -280,7 +280,7 @@ ext['spring-framework.version'] = '6.2.19'
 // CVE-2026-50229, CVE-2026-53404, CVE-2026-53434, CVE-2026-55276, CVE-2026-55955, CVE-2026-55956
 // Override the Spring Boot managed Tomcat version so all tomcat-embed-* artifacts (e.g. tomcat-embed-el)
 // are upgraded to the patched release, not just the ones declared explicitly below.
-ext['tomcat.version'] = '10.1.56'
+ext['tomcat.version'] = '10.1.59'
 
 dependencyManagement {
     dependencies {
@@ -290,7 +290,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '33.6.0-jre') {
             entry 'guava'
         }
-        dependencySet(group: 'io.netty', version: '4.2.16.Final') {
+        dependencySet(group: 'io.netty', version: '4.2.17.Final') {
             entry 'netty-all'
             entry 'netty-buffer'
             entry 'netty-codec'
@@ -346,7 +346,7 @@ configurations.configureEach {
 
 dependencies {
 
-    implementation group: 'com.github.hmcts', name: 'et-shared', version: '1.0.310'
+    implementation group: 'com.github.hmcts', name: 'et-shared', version: '1.0.318'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
 
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
@@ -397,7 +397,7 @@ dependencies {
     implementation 'com.google.guava:guava'
     implementation group: 'joda-time', name: 'joda-time', version: '2.12.7'
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.5.11'
-    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.2.1'
+    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.2.2'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.18.1'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

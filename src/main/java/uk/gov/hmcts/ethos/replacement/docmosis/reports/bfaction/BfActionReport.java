@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
@@ -33,11 +33,11 @@ public class BfActionReport {
         ListingData caseData = listingDetails.getCaseData();
         bfActionReportData.setHearingDateType(caseData.getHearingDateType());
 
-        if (!CollectionUtils.isEmpty(submitEvents)) {
+        if (CollectionUtils.isNotEmpty(submitEvents)) {
             List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
-            for (SubmitEvent submitEvent : submitEvents) {
-                addBfDateTypeItems(submitEvent, caseData, bfDateTypeItems);
-            }
+            submitEvents.stream()
+                .filter(submitEvent -> !"Migrated".equalsIgnoreCase(submitEvent.getState()))
+                .forEach(submitEvent -> addBfDateTypeItems(submitEvent, caseData, bfDateTypeItems));
             bfDateTypeItems.sort(new BFDateTypeItemComparator());
             bfActionReportData.setBfDateCollection(bfDateTypeItems);
         }
@@ -69,7 +69,7 @@ public class BfActionReport {
 
     private void addBfDateTypeItems(SubmitEvent submitEvent, ListingData listingData,
                                     List<BFDateTypeItem> bfDateTypeItems) {
-        if (!CollectionUtils.isEmpty(submitEvent.getCaseData().getBfActions())) {
+        if (CollectionUtils.isNotEmpty(submitEvent.getCaseData().getBfActions())) {
             for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
                 BFDateTypeItem bfDateTypeItem = getBFDateTypeItem(bfActionTypeItem, listingData,
                         submitEvent.getCaseData());
