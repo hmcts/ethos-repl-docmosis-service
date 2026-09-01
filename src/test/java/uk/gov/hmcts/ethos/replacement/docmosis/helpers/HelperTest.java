@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.AdditionalCaseInfoType;
 import uk.gov.hmcts.ecm.compat.common.idam.models.UserDetails;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
 public class HelperTest {
+    private static final LocalDate ERA_START_DATE = LocalDate.of(2026, 10, 1);
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails4;
@@ -97,7 +99,7 @@ public class HelperTest {
         CaseData caseData = new CaseData();
         caseData.setReceiptDate("2026-09-30");
 
-        Helper.setEraFlagByReceiptDate(caseData);
+        Helper.setEraFlagByReceiptDate(caseData, ERA_START_DATE);
 
         assertEquals(NO, caseData.getAdditionalCaseInfoType().getEra());
     }
@@ -110,24 +112,24 @@ public class HelperTest {
         caseData.setAdditionalCaseInfoType(additionalCaseInfoType);
 
         caseData.setReceiptDate("2026-10-01");
-        Helper.setEraFlagByReceiptDate(caseData);
+        Helper.setEraFlagByReceiptDate(caseData, ERA_START_DATE);
         assertEquals(YES, caseData.getAdditionalCaseInfoType().getEra());
 
         caseData.setReceiptDate("2026-10-02");
-        Helper.setEraFlagByReceiptDate(caseData);
+        Helper.setEraFlagByReceiptDate(caseData, ERA_START_DATE);
         assertEquals(YES, caseData.getAdditionalCaseInfoType().getEra());
     }
 
     @Test
     public void setEraFlagByReceiptDateIgnoresNullAndBlankInputs() {
-        Helper.setEraFlagByReceiptDate(null);
+        Helper.setEraFlagByReceiptDate(null, ERA_START_DATE);
 
         CaseData caseData = new CaseData();
-        Helper.setEraFlagByReceiptDate(caseData);
+        Helper.setEraFlagByReceiptDate(caseData, ERA_START_DATE);
         assertNull(caseData.getAdditionalCaseInfoType());
 
         caseData.setReceiptDate("");
-        Helper.setEraFlagByReceiptDate(caseData);
+        Helper.setEraFlagByReceiptDate(caseData, ERA_START_DATE);
         assertNull(caseData.getAdditionalCaseInfoType());
     }
 
@@ -139,8 +141,18 @@ public class HelperTest {
         caseData.setAdditionalCaseInfoType(additionalCaseInfoType);
         caseData.setReceiptDate("01-10-2026");
 
-        Helper.setEraFlagByReceiptDate(caseData);
+        Helper.setEraFlagByReceiptDate(caseData, ERA_START_DATE);
 
         assertEquals(YES, caseData.getAdditionalCaseInfoType().getEra());
     }
+    @Test
+    public void setEraFlagByReceiptDateUsesConfiguredStartDate() {
+        CaseData caseData = new CaseData();
+        caseData.setReceiptDate("2026-09-30");
+
+        Helper.setEraFlagByReceiptDate(caseData, LocalDate.of(2026, 9, 1));
+
+        assertNull(caseData.getAdditionalCaseInfoType());
+    }
+
 }

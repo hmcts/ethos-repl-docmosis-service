@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +51,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,6 +101,10 @@ public class CaseActionsForCaseWorkerController {
     private final JudgmentValidationService judgmentValidationService;
     private final CaseTransferToReformECM caseTransferToReformECM;
     private final DocumentManagementService documentManagementService;
+    @Value("${era.enabled:false}")
+    private boolean eraEnabled;
+    @Value("${era.start-date}")
+    private String eraStartDate;
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "create a case for a caseWorker.")
@@ -258,7 +264,9 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails());
 
         if (errors.isEmpty()) {
-            setEraFlagByReceiptDate(caseData);
+            if (eraEnabled) {
+                setEraFlagByReceiptDate(caseData, LocalDate.parse(eraStartDate));
+            }
             defaultValuesReaderService.setSubmissionReference(ccdRequest.getCaseDetails());
             var defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
@@ -311,7 +319,9 @@ public class CaseActionsForCaseWorkerController {
         if (errors.isEmpty()) {
             var defaultValues = getPostDefaultValues(caseDetails);
             log.info("Post Default values loaded: {}", defaultValues);
-            setEraFlagByReceiptDate(caseData);
+            if (eraEnabled) {
+                setEraFlagByReceiptDate(caseData, LocalDate.parse(eraStartDate));
+            }
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
             caseManagementForCaseWorkerService.setNextListedDate(caseData);

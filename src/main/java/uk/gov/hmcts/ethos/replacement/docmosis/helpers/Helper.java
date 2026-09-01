@@ -16,7 +16,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.compat.common.model.labels.LabelPayloadES;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +60,6 @@ public class Helper {
             + "be added from the List Hearing menu item";
     public static final String HEARING_CREATION_DAY_ERROR = "A new day for a hearing can "
             + "only be added from the List Hearing menu item";
-    private static final LocalDate ERA_START_DATE = LocalDate.of(2026, Month.OCTOBER, 1);
 
     private Helper() {
     }
@@ -278,18 +276,19 @@ public class Helper {
     }
 
     /**
-     * Sets the era flag on AdditionalCaseInfoType to No if receiptDate is before 1st October 2026.
+     * Sets the era flag on AdditionalCaseInfoType to No if receiptDate is before the ERA start date.
      *
      * @param caseData the case data
+     * @param eraStartDate the ERA start date
      */
-    public static void setEraFlagByReceiptDate(CaseData caseData) {
+    public static void setEraFlagByReceiptDate(CaseData caseData, LocalDate eraStartDate) {
         if (ObjectUtils.isEmpty(caseData) || ObjectUtils.isEmpty(caseData.getReceiptDate())) {
             return;
         }
 
         try {
             LocalDate receiptDate = LocalDate.parse(caseData.getReceiptDate());
-            if (receiptDate.isBefore(ERA_START_DATE)) {
+            if (receiptDate.isBefore(eraStartDate)) {
                 if (ObjectUtils.isEmpty(caseData.getAdditionalCaseInfoType())) {
                     caseData.setAdditionalCaseInfoType(new AdditionalCaseInfoType());
                 }
