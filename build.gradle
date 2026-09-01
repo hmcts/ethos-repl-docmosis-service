@@ -280,7 +280,7 @@ ext['spring-framework.version'] = '6.2.19'
 // CVE-2026-50229, CVE-2026-53404, CVE-2026-53434, CVE-2026-55276, CVE-2026-55955, CVE-2026-55956
 // Override the Spring Boot managed Tomcat version so all tomcat-embed-* artifacts (e.g. tomcat-embed-el)
 // are upgraded to the patched release, not just the ones declared explicitly below.
-ext['tomcat.version'] = '10.1.56'
+ext['tomcat.version'] = '10.1.59'
 
 dependencyManagement {
     dependencies {
@@ -290,7 +290,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '33.6.0-jre') {
             entry 'guava'
         }
-        dependencySet(group: 'io.netty', version: '4.2.16.Final') {
+        dependencySet(group: 'io.netty', version: '4.2.17.Final') {
             entry 'netty-all'
             entry 'netty-buffer'
             entry 'netty-codec'

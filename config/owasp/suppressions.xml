@@ -105,4 +105,10 @@
     <suppress>
         <cve>CVE-2026-64607</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2026-59313</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-59314</cve>
+    </suppress>
 </suppressions>
