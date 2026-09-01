@@ -145,6 +145,7 @@ public class HelperTest {
 
         assertEquals(YES, caseData.getAdditionalCaseInfoType().getEra());
     }
+
     @Test
     public void setEraFlagByReceiptDateUsesConfiguredStartDate() {
         CaseData caseData = new CaseData();
