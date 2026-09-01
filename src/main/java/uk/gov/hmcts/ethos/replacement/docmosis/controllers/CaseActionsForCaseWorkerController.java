@@ -70,7 +70,9 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.convertLegacyDocsToNewDocNaming;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.setDocumentTypeForDocumentCollection;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.populateDynamicListOffices;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.setEraFlagByReceiptDate;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.updatePositionTypeToClosed;
 
 @Slf4j
 @RequiredArgsConstructor
