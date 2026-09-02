@@ -2,12 +2,13 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_DIGITAL_FILE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.FLAG_ECC;
@@ -43,8 +44,9 @@ public class FlagsImageHelper {
     private static final String SPEAK_TO_VP = "SPEAK TO VP";
     private static final String SPEAK_TO_REJ = "SPEAK TO REJ";
     private static final String RESERVED_TO_JUDGE = "RESERVED TO JUDGE";
+    private static final String ERA = "ERA";
 
-    private static final List<String> FLAGS = List.of(FLAG_WITH_OUTSTATION,
+    private static final List<String> FLAGS = List.of(ERA, FLAG_WITH_OUTSTATION,
             FLAG_DO_NOT_POSTPONE, FLAG_LIVE_APPEAL, FLAG_RULE_493B, FLAG_REPORTING, FLAG_SENSITIVE, FLAG_RESERVED,
             FLAG_ECC, FLAG_DIGITAL_FILE, FLAG_REASONABLE_ADJUSTMENT, SPEAK_TO_VP, SPEAK_TO_REJ, RESERVED_TO_JUDGE);
 
@@ -109,7 +111,7 @@ public class FlagsImageHelper {
             }
             case SPEAK_TO_VP -> {
                 flagRequired = speakToVp(caseTypeId, caseData);
-                yield  "#1D70B8";
+                yield "#1D70B8";
             }
             case SPEAK_TO_REJ -> {
                 flagRequired = speakToRej(caseTypeId, caseData);
@@ -117,7 +119,12 @@ public class FlagsImageHelper {
             }
             case RESERVED_TO_JUDGE -> {
                 flagRequired = reservedToJudge(caseData);
-                yield  "#85994b";
+                yield "#85994b";
+            }
+            case ERA -> {
+                flagRequired = YES.equals(defaultIfEmpty(caseData.getAdditionalCaseInfoType() != null
+                    ? caseData.getAdditionalCaseInfoType().getEra() : "", ""));
+                yield "#54319F";
             }
             default -> {
                 flagRequired = false;
@@ -181,23 +188,10 @@ public class FlagsImageHelper {
     }
 
     private static boolean reservedJudgement(CaseData caseData) {
-        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null
-                        && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
-                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue()
-                            .getHearingDateCollection()) {
-                        String hearingReservedJudgement = dateListedTypeItem.getValue().getHearingReservedJudgement();
-                        if (!isNullOrEmpty(hearingReservedJudgement) && hearingReservedJudgement.equals(YES))  {
-                            return true;
-                        }
-                    }
-                }
-            }
-        } else {
-            return false;
-        }
-        return false;
+        return emptyIfNull(caseData.getHearingCollection()).stream()
+            .filter(hearingTypeItem -> isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection()))
+            .flatMap(hearingTypeItem -> hearingTypeItem.getValue().getHearingDateCollection().stream())
+            .anyMatch(dateListedTypeItem -> YES.equals(dateListedTypeItem.getValue().getHearingReservedJudgement()));
     }
 
     private static boolean counterClaimMade(CaseData caseData) {

@@ -46,7 +46,7 @@ class FlagsImageHelperTest {
         caseData.setAdditionalCaseInfoType(null);
         FlagsImageHelper.buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -55,7 +55,7 @@ class FlagsImageHelperTest {
         caseData.setAdditionalCaseInfoType(new AdditionalCaseInfoType());
         FlagsImageHelper.buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -80,7 +80,7 @@ class FlagsImageHelperTest {
                           + "<font size='5'> - </font>"
                           + "<font color='DarkSlateBlue' size='5'> REASONABLE ADJUSTMENT </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0111111111000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00111111111000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -89,7 +89,7 @@ class FlagsImageHelperTest {
         FlagsImageHelper.buildFlagsImageFileName(caseData, SCOTLAND_CASE_TYPE_ID);
         String expected = "<font color='DeepPink' size='5'> WITH OUTSTATION </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-1000000000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-01000000000000.jpg", caseData.getFlagsImageFileName());
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -107,11 +107,11 @@ class FlagsImageHelperTest {
         caseData.setAdditionalCaseInfoType(additionalCaseInfoType);
 
         buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
-        assertEquals("EMP-TRIB-0000000000010.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000000010.jpg", caseData.getFlagsImageFileName());
         assertTrue(caseData.getFlagsImageAltText().contains("SPEAK TO REJ"));
 
         buildFlagsImageFileName(caseData, SCOTLAND_CASE_TYPE_ID);
-        assertEquals("EMP-TRIB-0000000000100.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000000100.jpg", caseData.getFlagsImageFileName());
         assertTrue(caseData.getFlagsImageAltText().contains("SPEAK TO VP"));
     }
 
@@ -131,6 +131,29 @@ class FlagsImageHelperTest {
                 Arguments.of("Yes", "<font color='#85994b' size='5'> RESERVED TO JUDGE </font>"),
                 Arguments.of("No", ""),
                 Arguments.of(null, "")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("eraFlagsProvider")
+    void eraFlag(String flag, String expectedAltText, String expectedFileName) {
+        AdditionalCaseInfoType additionalCaseInfoType = new AdditionalCaseInfoType();
+        additionalCaseInfoType.setEra(flag);
+        CaseData caseData = new CaseData();
+        caseData.setAdditionalCaseInfoType(additionalCaseInfoType);
+
+        buildFlagsImageFileName(caseData, MANCHESTER_CASE_TYPE_ID);
+
+        assertEquals(expectedAltText, caseData.getFlagsImageAltText());
+        assertEquals(expectedFileName, caseData.getFlagsImageFileName());
+    }
+
+    private static Stream<Arguments> eraFlagsProvider() {
+        return Stream.of(
+                Arguments.of("Yes", "<font color='#54319F' size='5'> ERA </font>",
+                        "EMP-TRIB-10000000000000.jpg"),
+                Arguments.of("No", "", "EMP-TRIB-00000000000000.jpg"),
+                Arguments.of(null, "", "EMP-TRIB-00000000000000.jpg")
         );
     }
 }
