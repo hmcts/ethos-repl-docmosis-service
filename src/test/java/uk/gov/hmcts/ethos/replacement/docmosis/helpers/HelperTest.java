@@ -156,4 +156,14 @@ public class HelperTest {
         assertNull(caseData.getAdditionalCaseInfoType());
     }
 
+    @Test
+    public void setEraFlagByReceiptDateAcceptsIsoTimestampStartDate() {
+        CaseData caseData = new CaseData();
+        caseData.setReceiptDate("2026-08-31");
+
+        Helper.setEraFlagByReceiptDate(caseData, "2026-09-01T00:00:00Z");
+
+        assertEquals(NO, caseData.getAdditionalCaseInfoType().getEra());
+    }
+
 }

@@ -51,7 +51,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,7 +264,7 @@ public class CaseActionsForCaseWorkerController {
 
         if (errors.isEmpty()) {
             if (eraEnabled) {
-                setEraFlagByReceiptDate(caseData, LocalDate.parse(eraStartDate));
+                setEraFlagByReceiptDate(caseData, eraStartDate);
             }
             defaultValuesReaderService.setSubmissionReference(ccdRequest.getCaseDetails());
             var defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
@@ -320,7 +319,7 @@ public class CaseActionsForCaseWorkerController {
             var defaultValues = getPostDefaultValues(caseDetails);
             log.info("Post Default values loaded: {}", defaultValues);
             if (eraEnabled) {
-                setEraFlagByReceiptDate(caseData, LocalDate.parse(eraStartDate));
+                setEraFlagByReceiptDate(caseData, eraStartDate);
             }
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);

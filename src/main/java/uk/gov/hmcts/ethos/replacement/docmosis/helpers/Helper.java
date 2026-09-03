@@ -16,6 +16,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.compat.common.model.labels.LabelPayloadES;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -279,6 +281,16 @@ public class Helper {
      * Sets the era flag on AdditionalCaseInfoType to No if receiptDate is before the ERA start date.
      *
      * @param caseData the case data
+     * @param eraStartDate the ERA start date, as an ISO date or ISO timestamp
+     */
+    public static void setEraFlagByReceiptDate(CaseData caseData, String eraStartDate) {
+        setEraFlagByReceiptDate(caseData, parseEraStartDate(eraStartDate));
+    }
+
+    /**
+     * Sets the era flag on AdditionalCaseInfoType to No if receiptDate is before the ERA start date.
+     *
+     * @param caseData the case data
      * @param eraStartDate the ERA start date
      */
     public static void setEraFlagByReceiptDate(CaseData caseData, LocalDate eraStartDate) {
@@ -296,6 +308,14 @@ public class Helper {
             }
         } catch (Exception e) {
             log.error("Error parsing receiptDate: {}", caseData.getReceiptDate(), e);
+        }
+    }
+
+    private static LocalDate parseEraStartDate(String eraStartDate) {
+        try {
+            return LocalDate.parse(eraStartDate);
+        } catch (DateTimeParseException ignored) {
+            return OffsetDateTime.parse(eraStartDate).toLocalDate();
         }
     }
 }
