@@ -147,7 +147,6 @@
    Spring Framework CPE findings on the Spring Boot 3.5.16 managed version. The vulnerable usage
    patterns are not present in this service; fixed 6.2.x artifacts are not currently available OSS.
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-(aop|beans|context|core|expression|jcl|webmvc)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47890</cve>
         <cve>CVE-2026-47891</cve>
         <cve>CVE-2026-59281</cve>
