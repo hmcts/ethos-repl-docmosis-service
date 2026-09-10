@@ -129,4 +129,40 @@
     <suppress>
         <cve>CVE-2026-59270</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2026-47834</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2026-41710</cve>
+    </suppress>
+    <!-- Spring Framework 6.2.19 is managed by Spring Boot 3.5.16. The fixes are only available
+     in the commercial 6.2.20 release at the time of writing. ET does not use the affected
+     SSE view-fragment, Aalto Jaxb2Decoder, escaped Errors accessor, or self-populating
+     data-binding patterns. Remove when a patched OSS Spring Boot 3.5 release is available. -->
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-aop-6.2.19.jar, spring-beans-6.2.19.jar, spring-context-6.2.19.jar,
+   spring-core-6.2.19.jar, spring-expression-6.2.19.jar, spring-jcl-6.2.19.jar,
+   spring-webmvc-6.2.19.jar
+   Spring Framework CPE findings on the Spring Boot 3.5.16 managed version. The vulnerable usage
+   patterns are not present in this service; fixed 6.2.x artifacts are not currently available OSS.
+   ]]></notes>
+        <cve>CVE-2026-47890</cve>
+        <cve>CVE-2026-47891</cve>
+        <cve>CVE-2026-59281</cve>
+        <cve>CVE-2026-59282</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-crypto-6.5.11.jar
+   CVE-2026-59276: timing-attack-sensitive components not used.
+   CVE-2026-47841: WebAuthn not used (CPE match on spring_security).
+   CVE-2026-47842: AesBytesEncryptor / Encryptors APIs not used.
+   Remove when a patched OSS Spring Security 6.5.x (or Boot-managed) version is available.
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@6\.5\.11$</packageUrl>
+        <cve>CVE-2026-59276</cve>
+        <cve>CVE-2026-47841</cve>
+        <cve>CVE-2026-47842</cve>
+    </suppress>
 </suppressions>

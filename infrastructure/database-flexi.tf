@@ -1,6 +1,6 @@
 # ET COS FlexiDB
 module "postgres" {
-  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=DTSPO-30107-additional-postgres-admins"
   env    = var.env
   providers = {
     azurerm.postgres_network = azurerm.private_endpoint
