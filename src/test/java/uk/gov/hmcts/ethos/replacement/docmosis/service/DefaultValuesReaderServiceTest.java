@@ -318,7 +318,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddressLine1("54-56 Melville Street")
                 .tribunalCorrespondenceTown("Edinburgh")
                 .tribunalCorrespondencePostCode("EH3 7HF")
-                .tribunalCorrespondenceTelephone("0131 226 5584")
+                .tribunalCorrespondenceTelephone("0300 790 6234")
                 .tribunalCorrespondenceFax("0131 220 6847")
                 .tribunalCorrespondenceDX("DX ED147")
                 .tribunalCorrespondenceEmail("edinburghet@justice.gov.uk")
