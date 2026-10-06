@@ -286,7 +286,7 @@ dependencyManagement {
     dependencies {
         // CVE-2026-54399 (httpcore5) and CVE-2026-54428 (httpcore5-h2) fixed in 5.4.3
         dependency 'org.apache.httpcomponents.core5:httpcore5:5.4.4'
-        dependency 'org.apache.httpcomponents.core5:httpcore5-h2:5.4.3'
+        dependency 'org.apache.httpcomponents.core5:httpcore5-h2:5.4.4'
         dependencySet(group: 'com.google.guava', version: '33.6.0-jre') {
             entry 'guava'
         }
