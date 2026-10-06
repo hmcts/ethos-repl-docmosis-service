@@ -285,7 +285,7 @@ ext['tomcat.version'] = '10.1.59'
 dependencyManagement {
     dependencies {
         // CVE-2026-54399 (httpcore5) and CVE-2026-54428 (httpcore5-h2) fixed in 5.4.3
-        dependency 'org.apache.httpcomponents.core5:httpcore5:5.4.3'
+        dependency 'org.apache.httpcomponents.core5:httpcore5:5.4.4'
         dependency 'org.apache.httpcomponents.core5:httpcore5-h2:5.4.3'
         dependencySet(group: 'com.google.guava', version: '33.6.0-jre') {
             entry 'guava'
@@ -357,7 +357,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0'
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5.1'
-    implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.3'
+    implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.4'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '3.0.8'
