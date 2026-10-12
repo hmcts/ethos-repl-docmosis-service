@@ -813,7 +813,7 @@ public class DocumentHelper {
         return sb;
     }
 
-    private static String addressLine3(DefaultValues address) {
+    public static String correspondenceAddressLine3(DefaultValues address) {
         String line3 = address.getTribunalCorrespondenceAddressLine3();
         String line4 = address.getTribunalCorrespondenceAddressLine4();
         if (isNullOrEmpty(line4)) {
@@ -833,7 +833,8 @@ public class DocumentHelper {
                     .getTribunalCorrespondenceAddressLine1())).append(NEW_LINE);
             sb.append("\"Court_addressLine2\":\"").append(nullCheck(allocatedCourtAddress
                     .getTribunalCorrespondenceAddressLine2())).append(NEW_LINE);
-            sb.append("\"Court_addressLine3\":\"").append(nullCheck(addressLine3(allocatedCourtAddress)))
+            sb.append("\"Court_addressLine3\":\"")
+                    .append(nullCheck(correspondenceAddressLine3(allocatedCourtAddress)))
                     .append(NEW_LINE);
             sb.append("\"Court_town\":\"").append(nullCheck(allocatedCourtAddress
                     .getTribunalCorrespondenceTown())).append(NEW_LINE);

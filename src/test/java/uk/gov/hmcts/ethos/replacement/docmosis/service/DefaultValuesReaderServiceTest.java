@@ -432,6 +432,35 @@ public class DefaultValuesReaderServiceTest {
     }
 
     @Test
+    public void addressLine4IsJoinedOntoTheSavedAddressLine3() {
+        DefaultValues withStreet = DefaultValues.builder()
+                .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
+                .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
+                .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
+                .build();
+        CaseData caseData = new CaseData();
+
+        defaultValuesReaderService.getCaseData(caseData, withStreet);
+
+        assertEquals("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street",
+                caseData.getTribunalCorrespondenceAddress().getAddressLine3());
+
+        DefaultValues streetOnly = DefaultValues.builder()
+                .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
+                .tribunalCorrespondenceAddressLine3("")
+                .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
+                .build();
+        CaseData streetOnlyCase = new CaseData();
+
+        defaultValuesReaderService.getCaseData(streetOnlyCase, streetOnly);
+
+        assertEquals("3 Atlantic Quay, 20 York Street",
+                streetOnlyCase.getTribunalCorrespondenceAddress().getAddressLine3());
+    }
+
+    @Test
     public void getCaseDataWithPositionTypeAndCaseSource() {
         caseData.setPositionType(MANUALLY_CREATED_POSITION);
         caseData.setCaseSource(ET1_ONLINE_CASE_SOURCE);
