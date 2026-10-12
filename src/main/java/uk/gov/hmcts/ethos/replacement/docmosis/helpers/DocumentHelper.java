@@ -813,6 +813,14 @@ public class DocumentHelper {
         return sb;
     }
 
+    private static void appendAddressLineIfPresent(StringBuilder sb, String fieldName, String value) {
+        if (!isNullOrEmpty(value)) {
+            sb.append('"').append(fieldName).append("\":\"")
+                    .append(nullCheck(value))
+                    .append(NEW_LINE);
+        }
+    }
+
     private static StringBuilder getCourtData(CaseData caseData, DefaultValues allocatedCourtAddress) {
         var sb = new StringBuilder();
         log.info("Court data");
@@ -823,6 +831,8 @@ public class DocumentHelper {
                     .getTribunalCorrespondenceAddressLine2())).append(NEW_LINE);
             sb.append("\"Court_addressLine3\":\"").append(nullCheck(allocatedCourtAddress
                     .getTribunalCorrespondenceAddressLine3())).append(NEW_LINE);
+            appendAddressLineIfPresent(sb, "Court_addressLine4",
+                    allocatedCourtAddress.getTribunalCorrespondenceAddressLine4());
             sb.append("\"Court_town\":\"").append(nullCheck(allocatedCourtAddress
                     .getTribunalCorrespondenceTown())).append(NEW_LINE);
             sb.append("\"Court_county\":\"").append(NEW_LINE);
