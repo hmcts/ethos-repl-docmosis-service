@@ -813,12 +813,16 @@ public class DocumentHelper {
         return sb;
     }
 
-    private static void appendAddressLineIfPresent(StringBuilder sb, String fieldName, String value) {
-        if (!isNullOrEmpty(value)) {
-            sb.append('"').append(fieldName).append("\":\"")
-                    .append(nullCheck(value))
-                    .append(NEW_LINE);
+    private static String addressLine3(DefaultValues address) {
+        String line3 = address.getTribunalCorrespondenceAddressLine3();
+        String line4 = address.getTribunalCorrespondenceAddressLine4();
+        if (isNullOrEmpty(line4)) {
+            return line3;
         }
+        if (isNullOrEmpty(line3)) {
+            return line4;
+        }
+        return line3 + "\\n" + line4;
     }
 
     private static StringBuilder getCourtData(CaseData caseData, DefaultValues allocatedCourtAddress) {
@@ -829,10 +833,8 @@ public class DocumentHelper {
                     .getTribunalCorrespondenceAddressLine1())).append(NEW_LINE);
             sb.append("\"Court_addressLine2\":\"").append(nullCheck(allocatedCourtAddress
                     .getTribunalCorrespondenceAddressLine2())).append(NEW_LINE);
-            sb.append("\"Court_addressLine3\":\"").append(nullCheck(allocatedCourtAddress
-                    .getTribunalCorrespondenceAddressLine3())).append(NEW_LINE);
-            appendAddressLineIfPresent(sb, "Court_addressLine4",
-                    allocatedCourtAddress.getTribunalCorrespondenceAddressLine4());
+            sb.append("\"Court_addressLine3\":\"").append(nullCheck(addressLine3(allocatedCourtAddress)))
+                    .append(NEW_LINE);
             sb.append("\"Court_town\":\"").append(nullCheck(allocatedCourtAddress
                     .getTribunalCorrespondenceTown())).append(NEW_LINE);
             sb.append("\"Court_county\":\"").append(NEW_LINE);
