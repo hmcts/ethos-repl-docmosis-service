@@ -114,13 +114,24 @@ public class DefaultValuesReaderService {
                 Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine1()).orElse(""));
         address.setAddressLine2(
                 Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine2()).orElse(""));
-        address.setAddressLine3(
-                Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine3()).orElse(""));
+        address.setAddressLine3(combinedAddressLine3(defaultValues));
         address.setPostTown(
                 Optional.ofNullable(defaultValues.getTribunalCorrespondenceTown()).orElse(""));
         address.setPostCode(
                 Optional.ofNullable(defaultValues.getTribunalCorrespondencePostCode()).orElse(""));
         return address;
+    }
+
+    private String combinedAddressLine3(DefaultValues defaultValues) {
+        String line3 = Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine3()).orElse("");
+        String line4 = defaultValues.getTribunalCorrespondenceAddressLine4();
+        if (isNullOrEmpty(line4)) {
+            return line3;
+        }
+        if (isNullOrEmpty(line3)) {
+            return line4;
+        }
+        return line3 + "\\n" + line4;
     }
 
     public void setSubmissionReference(CaseDetails caseDetails) {
