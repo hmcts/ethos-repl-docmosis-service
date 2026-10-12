@@ -13,7 +13,7 @@ tribunal-offices:
       telephone: 01224 593 137
       fax: 0870 761 7766
       dx: DX AB77
-      email: aberdeenet@justice.gov.uk
+      email: ScotlandET@justice.gov.uk
     bristol:
       address1: Bristol Civil and Family Justice Centre
       address2: 2 Redcliff Street
@@ -32,7 +32,7 @@ tribunal-offices:
       telephone: 01382 221 578
       fax: 01382 227 136
       dx: DX DD51
-      email: dundeeet@justice.gov.uk
+      email: ScotlandET@justice.gov.uk
     edinburgh:
       address1: 54-56 Melville Street
       town: Edinburgh
@@ -40,16 +40,18 @@ tribunal-offices:
       telephone: 0300 790 6234
       fax: 0131 220 6847
       dx: DX ED147
-      email: edinburghet@justice.gov.uk
+      email: ScotlandET@justice.gov.uk
     glasgow:
-      address1: Glasgow Tribunals Centre
+      address1: Employment Tribunals Scotland 
+                Central Office
+                Glasgow Tribunals Centre
       address2: 3 Atlantic Quay, 20 York Street
       town: Glasgow
       postcode: G2 8GT
       telephone: 0141 204 0730
       fax: 01264 785 177
       dx: DX 580003
-      email: glasgowet@justice.gov.uk
+      email: ScotlandET@justice.gov.uk
       managing-office: Glasgow
     leeds:
       address1: Westgate
