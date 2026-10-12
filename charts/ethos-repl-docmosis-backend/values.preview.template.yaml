@@ -34,3 +34,12 @@ java:
           alias: ETHOS_REPL_DB_PASSWORD
   postgresql:
     enabled: true
+    primary:
+      persistence:
+        enabled: false
+      extraVolumes:
+        - name: postgresql-run
+          emptyDir: {}
+      extraVolumeMounts:
+        - name: postgresql-run
+          mountPath: /var/run/postgresql
