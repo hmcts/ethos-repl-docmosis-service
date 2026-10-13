@@ -16,6 +16,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.TornadoDocumentFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -77,12 +78,12 @@ public class TornadoService {
             var os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             var allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
             var userDetails = userService.getUserDetails(authToken);
-            var addressLine4 = managingOfficeAddressLine4(caseData, caseTypeId, allocatedCourtAddress);
+            var managingOfficeAddress = managingOfficeAddress(caseData, caseTypeId, allocatedCourtAddress);
 
             var documentContent = DocumentHelper.buildDocumentContent(caseData,
                     tornadoConnection.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
-                    correspondenceScotType, multipleData, allocatedCourtAddress, addressLine4);
+                    correspondenceScotType, multipleData, allocatedCourtAddress, managingOfficeAddress);
 
             writeOutputStream(os, documentContent);
         }
@@ -92,22 +93,12 @@ public class TornadoService {
         return getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH);
     }
 
-    private String managingOfficeAddressLine4(CaseData caseData, String caseTypeId,
-                                              DefaultValues allocatedCourtAddress) {
-        if (allocatedCourtAddress != null || caseData.getTribunalCorrespondenceAddress() == null
-                || isNullOrEmpty(caseData.getManagingOffice())) {
+    private DefaultValues managingOfficeAddress(CaseData caseData, String caseTypeId,
+                                                DefaultValues allocatedCourtAddress) {
+        if (allocatedCourtAddress != null || isNullOrEmpty(caseData.getManagingOffice())) {
             return null;
         }
-        DefaultValues officeDefaults = defaultValuesReaderService.getDefaultValues(
-                caseData.getManagingOffice(), caseTypeId);
-        if (officeDefaults == null) {
-            return null;
-        }
-        String savedLine3 = caseData.getTribunalCorrespondenceAddress().getAddressLine3();
-        if (savedLine3 != null && savedLine3.equals(officeDefaults.getTribunalCorrespondenceAddressLine3())) {
-            return officeDefaults.getTribunalCorrespondenceAddressLine4();
-        }
-        return null;
+        return defaultValuesReaderService.getDefaultValues(caseData.getManagingOffice(), caseTypeId);
     }
 
     private DefaultValues getAllocatedCourtAddress(CaseData caseData, String caseTypeId, MultipleData multipleData) {
@@ -227,7 +218,7 @@ public class TornadoService {
     }
 
     private void writeOutputStream(OutputStreamWriter outputStreamWriter, StringBuilder sb) throws IOException {
-        outputStreamWriter.write(sb.toString());
+        outputStreamWriter.write(TornadoDocumentFilter.filterJson(sb.toString()));
         outputStreamWriter.flush();
     }
 }
