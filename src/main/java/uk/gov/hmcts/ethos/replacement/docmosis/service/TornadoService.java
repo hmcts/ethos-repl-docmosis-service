@@ -77,12 +77,12 @@ public class TornadoService {
             var os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             var allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
             var userDetails = userService.getUserDetails(authToken);
-            var managingOfficeAddress = managingOfficeAddress(caseData, caseTypeId, allocatedCourtAddress);
+            var addressLine4 = managingOfficeAddressLine4(caseData, caseTypeId, allocatedCourtAddress);
 
             var documentContent = DocumentHelper.buildDocumentContent(caseData,
                     tornadoConnection.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
-                    correspondenceScotType, multipleData, allocatedCourtAddress, managingOfficeAddress);
+                    correspondenceScotType, multipleData, allocatedCourtAddress, addressLine4);
 
             writeOutputStream(os, documentContent);
         }
@@ -92,12 +92,22 @@ public class TornadoService {
         return getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH);
     }
 
-    private DefaultValues managingOfficeAddress(CaseData caseData, String caseTypeId,
-                                                DefaultValues allocatedCourtAddress) {
-        if (allocatedCourtAddress != null || isNullOrEmpty(caseData.getManagingOffice())) {
+    private String managingOfficeAddressLine4(CaseData caseData, String caseTypeId,
+                                              DefaultValues allocatedCourtAddress) {
+        if (allocatedCourtAddress != null || caseData.getTribunalCorrespondenceAddress() == null
+                || isNullOrEmpty(caseData.getManagingOffice())) {
             return null;
         }
-        return defaultValuesReaderService.getDefaultValues(caseData.getManagingOffice(), caseTypeId);
+        DefaultValues officeDefaults = defaultValuesReaderService.getDefaultValues(
+                caseData.getManagingOffice(), caseTypeId);
+        if (officeDefaults == null) {
+            return null;
+        }
+        String savedLine3 = caseData.getTribunalCorrespondenceAddress().getAddressLine3();
+        if (savedLine3 != null && savedLine3.equals(officeDefaults.getTribunalCorrespondenceAddressLine3())) {
+            return officeDefaults.getTribunalCorrespondenceAddressLine4();
+        }
+        return null;
     }
 
     private DefaultValues getAllocatedCourtAddress(CaseData caseData, String caseTypeId, MultipleData multipleData) {

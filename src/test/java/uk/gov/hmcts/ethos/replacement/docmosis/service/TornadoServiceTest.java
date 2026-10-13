@@ -145,29 +145,29 @@ public class TornadoServiceTest {
         mockConnectionSuccess();
         ByteArrayOutputStream output = capturedOutput();
         when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID))
-                .thenReturn(DefaultValues.builder()
-                        .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
-                        .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
-                        .build());
+            .thenReturn(DefaultValues.builder()
+                .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
+                .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
+                .build());
         CaseData caseData = glasgowCase("Glasgow Tribunals Centre");
 
         tornadoService.documentGeneration(authToken, caseData, SCOTLAND_CASE_TYPE_ID,
-                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
+            caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
 
         assertTrue(output.toString(StandardCharsets.UTF_8)
-                .contains("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street"));
+            .contains("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street"));
         assertEquals("Glasgow Tribunals Centre",
-                caseData.getTribunalCorrespondenceAddress().getAddressLine3());
+            caseData.getTribunalCorrespondenceAddress().getAddressLine3());
     }
 
     @Test
     public void joinsTheAllocatedOfficeStreetOntoTheLetter() throws IOException {
         mockConnectionSuccess();
         when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID))
-                .thenReturn(DefaultValues.builder()
-                        .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
-                        .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
-                        .build());
+            .thenReturn(DefaultValues.builder()
+                .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
+                .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
+                .build());
         CaseData caseData = glasgowCase("Glasgow Tribunals Centre");
         caseData.setAllocatedOffice(GLASGOW_OFFICE);
         CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
@@ -177,10 +177,10 @@ public class TornadoServiceTest {
         ByteArrayOutputStream output = capturedOutput();
 
         tornadoService.documentGeneration(authToken, caseData, SCOTLAND_CASE_TYPE_ID,
-                null, correspondenceScotType, null);
+            null, correspondenceScotType, null);
 
         assertTrue(output.toString(StandardCharsets.UTF_8)
-                .contains("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street"));
+            .contains("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street"));
     }
 
     @Test
@@ -188,14 +188,14 @@ public class TornadoServiceTest {
         mockConnectionSuccess();
         ByteArrayOutputStream output = capturedOutput();
         when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID))
-                .thenReturn(DefaultValues.builder()
-                        .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
-                        .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
-                        .build());
+            .thenReturn(DefaultValues.builder()
+                .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
+                .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
+                .build());
         CaseData caseData = glasgowCase("Edited line");
 
         tornadoService.documentGeneration(authToken, caseData, SCOTLAND_CASE_TYPE_ID,
-                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
+            caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
 
         String payload = output.toString(StandardCharsets.UTF_8);
         assertTrue(payload.contains("Edited line"));
@@ -208,21 +208,21 @@ public class TornadoServiceTest {
         CaseData noOffice = new CaseData();
         noOffice.setTribunalCorrespondenceAddress(new Address());
         verifyDocumentInfo(tornadoService.documentGeneration(authToken, noOffice, SCOTLAND_CASE_TYPE_ID,
-                null, null, null));
+            null, null, null));
 
         when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID)).thenReturn(null);
         verifyDocumentInfo(tornadoService.documentGeneration(authToken, glasgowCase("Glasgow Tribunals Centre"),
-                SCOTLAND_CASE_TYPE_ID, null, null, null));
+            SCOTLAND_CASE_TYPE_ID, null, null, null));
 
         when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID))
-                .thenReturn(DefaultValues.builder()
-                        .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
-                        .build());
+            .thenReturn(DefaultValues.builder()
+                .tribunalCorrespondenceAddressLine3("Glasgow Tribunals Centre")
+                .build());
         CaseData noLine3 = new CaseData();
         noLine3.setManagingOffice(GLASGOW_OFFICE);
         noLine3.setTribunalCorrespondenceAddress(new Address());
         verifyDocumentInfo(tornadoService.documentGeneration(authToken, noLine3, SCOTLAND_CASE_TYPE_ID,
-                null, null, null));
+            null, null, null));
     }
 
     private CaseData glasgowCase(String addressLine3) {
