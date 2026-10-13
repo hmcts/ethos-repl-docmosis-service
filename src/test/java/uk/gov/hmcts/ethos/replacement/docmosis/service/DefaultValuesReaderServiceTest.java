@@ -22,6 +22,7 @@ import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.CaseDefaultValuesConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TribunalOfficesConfiguration;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -432,7 +433,7 @@ public class DefaultValuesReaderServiceTest {
     }
 
     @Test
-    public void addressLine4IsJoinedOntoTheSavedAddressLine3() {
+    public void addressLine4StaysOffTheSavedAddressAndJoinsOnTheLetter() {
         DefaultValues withStreet = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
@@ -443,21 +444,19 @@ public class DefaultValuesReaderServiceTest {
 
         defaultValuesReaderService.getCaseData(caseData, withStreet);
 
-        assertEquals("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street",
+        assertEquals("Glasgow Tribunals Centre",
                 caseData.getTribunalCorrespondenceAddress().getAddressLine3());
-
-        DefaultValues streetOnly = DefaultValues.builder()
-                .positionType(MANUALLY_CREATED_POSITION)
-                .caseType(SINGLE_CASE_TYPE)
-                .tribunalCorrespondenceAddressLine3("")
-                .tribunalCorrespondenceAddressLine4("3 Atlantic Quay, 20 York Street")
-                .build();
-        CaseData streetOnlyCase = new CaseData();
-
-        defaultValuesReaderService.getCaseData(streetOnlyCase, streetOnly);
-
+        assertEquals("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street",
+                DocumentHelper.letterAddressLine3(withStreet.getTribunalCorrespondenceAddressLine3(),
+                        withStreet.getTribunalCorrespondenceAddressLine4()));
+        assertEquals("Glasgow Tribunals Centre",
+                DocumentHelper.letterAddressLine3("Glasgow Tribunals Centre", ""));
         assertEquals("3 Atlantic Quay, 20 York Street",
-                streetOnlyCase.getTribunalCorrespondenceAddress().getAddressLine3());
+                DocumentHelper.letterAddressLine3(null, "3 Atlantic Quay, 20 York Street"));
+        assertEquals("Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street",
+                DocumentHelper.letterAddressLine3(
+                        "Glasgow Tribunals Centre\\n3 Atlantic Quay, 20 York Street",
+                        "3 Atlantic Quay, 20 York Street"));
     }
 
     @Test
