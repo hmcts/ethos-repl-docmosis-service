@@ -3705,7 +3705,7 @@ __metadata:
     pa11y: 9.0.0
     proxyquire: 2.1.3
     puppeteer: 24.17.0
-    randomstring: 1.3.1
+    randomstring: 1.3.2
     require-directory: 2.1.1
     rewire: 9.0.1
     selenium-standalone: 10.0.2
@@ -8367,14 +8367,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"randomstring@npm:1.3.1":
-  version: 1.3.1
-  resolution: "randomstring@npm:1.3.1"
+"randomstring@npm:1.3.2":
+  version: 1.3.2
+  resolution: "randomstring@npm:1.3.2"
   dependencies:
-    randombytes: "npm:2.1.0"
+    randombytes: 2.1.0
   bin:
     randomstring: bin/randomstring
-  checksum: 06e78195fa8e0ce8b59e17659a9dbf63c7b3ccbb2d056fe8fc7892e1132a60905175443c5a88acdc7b12fd628027a7b1659e485c917e9e01b7f2ab08aad6d646
+  checksum: ec3b608910c566c5802dbf90c590e3b5cb8b3bbab256c53fd4c41a8f77422739ae23c476afcdb4e5e8ed245d1cc5ce05839e3b001c7713f3a52ac02648416046
   languageName: node
   linkType: hard
 
