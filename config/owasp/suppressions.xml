@@ -1,41 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-    <!-- Suppressed as the library is no longer getting updates -->
+    <!--
+      False-positive CPE mappings and already-patched components.
+      Retain these suppressions only for the scoped package URLs shown below.
+    -->
+
+    <!-- CVE-2021-42306 is a Microsoft Azure service issue, not a Maven application dependency.
+         Dependency-Check's Azure CPE association is a false positive. -->
     <suppress>
         <cve>CVE-2021-42306</cve>
     </suppress>
-    <!-- False positive: CVE affects nu.validator:validator, not Hibernate Validator. -->
+
+    <!-- CVE-2025-15104 affects nu.validator:validator, not Hibernate Validator. -->
     <suppress>
         <packageUrl regex="true">^pkg:maven/org\.hibernate\.validator/hibernate\-validator@.*$</packageUrl>
         <cve>CVE-2025-15104</cve>
     </suppress>
-    <!-- False positive: CVE affects Angus SMTP, not the unrelated activation artifact. -->
+
+    <!-- CVE-2025-7962 affects Angus SMTP, not the unrelated angus-activation artifact. -->
     <suppress>
         <packageUrl regex="true">^pkg:maven/org\.eclipse\.angus/angus\-activation@2\.0\.3$</packageUrl>
         <cve>CVE-2025-7962</cve>
     </suppress>
-    <!-- CVE affects unsafe deserialization in the Kotlin build cache metadata (compiler / build
-         tooling), not the kotlin-stdlib runtime artifact pulled transitively into this service. -->
+
+    <!-- CVE-2026-53914 affects Kotlin Gradle build-cache metadata. This service only resolves
+         kotlin-stdlib at runtime and does not apply the Kotlin Gradle plugin. -->
     <suppress>
         <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib.*@.*$</packageUrl>
         <cve>CVE-2026-53914</cve>
     </suppress>
-    <!-- False positive: CVE-2026-54399 / CVE-2026-54428 affect HttpComponents Core 5.x
-         (org.apache.httpcomponents.core5:httpcore5), which is upgraded to 5.4.3. dependency-check
-         mis-matches them onto the unrelated legacy 4.x httpcore via the shared CPE. Scoped to the
-         4.x artifact only so the real 5.x issue is still reported if it ever regresses. -->
+
+    <!-- CVE-2026-54399 and CVE-2026-54428 affect HttpComponents Core 5 through 5.4.2.
+         Core 5 resolves to 5.4.4. Dependency-Check maps the CVEs to legacy httpcore 4.x
+         via a shared CPE, although Core 4 has no HTTP/2 implementation. -->
     <suppress>
         <packageUrl regex="true">^pkg:maven/org\.apache\.httpcomponents/httpcore@.*$</packageUrl>
         <cve>CVE-2026-54399</cve>
         <cve>CVE-2026-54428</cve>
     </suppress>
-    <!-- False positive: DPoP handling is in spring-security-oauth2-jose, which is not present. -->
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@6\.5\.11$</packageUrl>
-        <cve>CVE-2026-41707</cve>
-    </suppress>
-    <!-- Dependency-Check maps these CPEs to every Spring Framework 6.2.19 artifact.
-         Their affected modules and non-reachable usage patterns are documented below. -->
+
+    <!--
+      Spring Framework 6.2.19, managed by Spring Boot 3.5.16.
+      The relevant 6.2.20 fixes are commercial-only and are not available from the configured
+      Maven repositories. Remove these rules when an OSS Boot 3.5 dependency-management update
+      provides patched artifacts, or as part of a tested Spring Boot 4 / Spring Framework 7 migration.
+    -->
+
+    <!-- Dependency-Check applies these CPE findings to every 6.2.19 Spring artifact.
+         CVE-2026-59313: Spring MVC SSE view-fragment rendering; this service has no SSE rendering.
+         CVE-2026-59314: Spring Web Content-Disposition handling; this service does not construct it.
+         CVE-2026-47892: WebFlux header predicates; this service has no functional-endpoint configuration.
+         CVE-2026-59283: Spring Expression compilation; this service has no untrusted SpEL evaluation.
+         CVE-2026-47893: WebFlux WebSocket diagnostics; this service has no WebSocket support.
+         CVE-2026-59280: Spring MVC FreeMarker integration; FreeMarker is not packaged. -->
     <suppress>
         <cve>CVE-2026-59313</cve>
         <cve>CVE-2026-59314</cve>
@@ -44,37 +61,30 @@
         <cve>CVE-2026-47893</cve>
         <cve>CVE-2026-59280</cve>
     </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.cloud/spring\-cloud\-.*@4\.3\.2$</packageUrl>
-        <cve>CVE-2026-59284</cve>
-    </suppress>
-    <!-- False positive: CVE affects spring-security-ldap, which is not present. -->
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@6\.5\.11$</packageUrl>
-        <cve>CVE-2026-59270</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.data/spring\-data\-jpa@3\.5\.13$</packageUrl>
-        <cve>CVE-2026-47834</cve>
-    </suppress>
-    <!-- Spring Framework 6.2.19 is managed by Spring Boot 3.5.16. The fixes are only available
-     in the commercial 6.2.20 release at the time of writing. ET does not use the affected
-     SSE view-fragment, Aalto Jaxb2Decoder, escaped Errors accessor, or self-populating
-     data-binding patterns. Remove when a patched OSS Spring Boot 3.5 release is available. -->
+
+    <!-- CVE-2026-47890: Spring MVC/WebFlux SSE fragments are not used.
+         CVE-2026-47891: the affected Aalto Jaxb2Decoder path is not used or packaged.
+         CVE-2026-59281: the escaped Errors accessor usage pattern is absent.
+         CVE-2026-59282: self-populating collection data binding is absent. -->
     <suppress>
         <notes><![CDATA[
-   file name: spring-aop-6.2.19.jar, spring-beans-6.2.19.jar, spring-context-6.2.19.jar,
-   spring-core-6.2.19.jar, spring-expression-6.2.19.jar, spring-jcl-6.2.19.jar,
-   spring-webmvc-6.2.19.jar
-   Spring Framework CPE findings on the Spring Boot 3.5.16 managed version. The vulnerable usage
-   patterns are not present in this service; fixed 6.2.x artifacts are not currently available OSS.
-   ]]></notes>
+file name: spring-aop-6.2.19.jar, spring-beans-6.2.19.jar, spring-context-6.2.19.jar,
+spring-core-6.2.19.jar, spring-expression-6.2.19.jar, spring-jcl-6.2.19.jar,
+spring-webmvc-6.2.19.jar
+]]></notes>
         <cve>CVE-2026-47890</cve>
         <cve>CVE-2026-47891</cve>
         <cve>CVE-2026-59281</cve>
         <cve>CVE-2026-59282</cve>
     </suppress>
-    <!-- Scope these Spring Framework CPE findings to the Boot-managed 6.2.19 artifacts. -->
+
+    <!-- CVE-2026-47883: UrlHandlerFilter is not used.
+         CVE-2026-47884: XsltView and broad view rendering are not used.
+         CVE-2026-47885: PartEventHttpMessageReader is not used.
+         CVE-2026-47886: no untrusted SpEL evaluation is present.
+         CVE-2026-47887: UrlFileNameViewController is not used.
+         CVE-2026-47888: Spring Messaging/RSocket is not packaged.
+         CVE-2026-47889: the service uses Tomcat, not the reactive Jetty adapter. -->
     <suppress>
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring-.*@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47883</cve>
@@ -85,14 +95,54 @@
         <cve>CVE-2026-47888</cve>
         <cve>CVE-2026-47889</cve>
     </suppress>
+
+    <!--
+      Spring Cloud and Spring Data.
+      The fixed 4.3.4 and 3.5.14 releases are commercial-only and unavailable from the configured
+      Maven repositories. Remove these suppressions when an OSS-compatible patched line is adopted.
+    -->
+
+    <!-- CVE-2026-59284 affects Spring Cloud environment updates. POST to /actuator/env is not enabled. -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.cloud/spring\-cloud\-.*@4\.3\.2$</packageUrl>
+        <cve>CVE-2026-59284</cve>
+    </suppress>
+
+    <!-- CVE-2026-47834 requires native JPA queries combined with untrusted Sort/Pageable input;
+         this pattern is not present. -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.data/spring\-data\-jpa@3\.5\.13$</packageUrl>
+        <cve>CVE-2026-47834</cve>
+    </suppress>
+
+    <!--
+      Spring Security 6.5.11, managed by Spring Boot 3.5.16.
+      The 6.5.12 fixes are commercial-only and unavailable from the configured Maven repositories.
+      Remove these rules when a patched OSS Security version is managed by Boot, or after a tested
+      Spring Security 7 migration.
+    -->
+
+    <!-- CVE-2026-41707 affects DPoP handling in spring-security-oauth2-jose, which is not packaged.
+         Dependency-Check maps it to the unrelated spring-security-crypto artifact. -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@6\.5\.11$</packageUrl>
+        <cve>CVE-2026-41707</cve>
+    </suppress>
+
+    <!-- CVE-2026-59270 affects spring-security-ldap, which is not packaged.
+         Dependency-Check maps it to the unrelated spring-security-crypto artifact. -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@6\.5\.11$</packageUrl>
+        <cve>CVE-2026-59270</cve>
+    </suppress>
+
+    <!-- CVE-2026-59276: affected timing-sensitive components are not used.
+         CVE-2026-47841: WebAuthn is not packaged or used.
+         CVE-2026-47842: AesBytesEncryptor and Encryptors APIs are not used. -->
     <suppress>
         <notes><![CDATA[
-   file name: spring-security-crypto-6.5.11.jar
-   CVE-2026-59276: timing-attack-sensitive components not used.
-   CVE-2026-47841: WebAuthn not used (CPE match on spring_security).
-   CVE-2026-47842: AesBytesEncryptor / Encryptors APIs not used.
-   Remove when a patched OSS Spring Security 6.5.x (or Boot-managed) version is available.
-   ]]></notes>
+file name: spring-security-crypto-6.5.11.jar
+]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@6\.5\.11$</packageUrl>
         <cve>CVE-2026-59276</cve>
         <cve>CVE-2026-47841</cve>
