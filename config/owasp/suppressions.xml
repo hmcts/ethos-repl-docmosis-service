@@ -9,6 +9,11 @@
         <packageUrl regex="true">^pkg:maven/org\.hibernate\.validator/hibernate\-validator@.*$</packageUrl>
         <cve>CVE-2025-15104</cve>
     </suppress>
+    <!-- False positive: CVE affects Angus SMTP, not the unrelated activation artifact. -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.angus/angus\-activation@2\.0\.3$</packageUrl>
+        <cve>CVE-2025-7962</cve>
+    </suppress>
     <!-- CVE affects unsafe deserialization in the Kotlin build cache metadata (compiler / build
          tooling), not the kotlin-stdlib runtime artifact pulled transitively into this service. -->
     <suppress>
@@ -29,32 +34,18 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@6\.5\.11$</packageUrl>
         <cve>CVE-2026-41707</cve>
     </suppress>
+    <!-- Dependency-Check maps these CPEs to every Spring Framework 6.2.19 artifact.
+         Their affected modules and non-reachable usage patterns are documented below. -->
     <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-webmvc@6\.2\.19$</packageUrl>
         <cve>CVE-2026-59313</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-web@6\.2\.19$</packageUrl>
         <cve>CVE-2026-59314</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-webflux@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47892</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-expression@6\.2\.19$</packageUrl>
         <cve>CVE-2026-59283</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-webflux@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47893</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-webmvc@6\.2\.19$</packageUrl>
         <cve>CVE-2026-59280</cve>
     </suppress>
     <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.cloud/spring\-cloud\-commons@4\.3\.2$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.cloud/spring\-cloud\-.*@4\.3\.2$</packageUrl>
         <cve>CVE-2026-59284</cve>
     </suppress>
     <!-- False positive: CVE affects spring-security-ldap, which is not present. -->
