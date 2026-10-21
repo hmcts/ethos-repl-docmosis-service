@@ -395,7 +395,7 @@ dependencies {
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '3.0.14'
     implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
     implementation 'com.google.guava:guava'
-    implementation group: 'joda-time', name: 'joda-time', version: '2.12.7'
+    implementation group: 'joda-time', name: 'joda-time', version: '2.15.0'
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.5.11'
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '7.3.0'
     implementation group: 'com.squareup.okio', name: 'okio', version: '3.18.2'
