@@ -386,7 +386,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.1.0'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     implementation 'org.springframework.retry:spring-retry:2.0.13'
