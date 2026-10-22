@@ -85,7 +85,7 @@ public class LabelsHelper {
         var addressLabelType = new AddressLabelType();
 
         addressLabelType.setPrintLabel(printClaimantLabel);
-
+        log.info("Address label for ethos case {}", ethosCaseReference);
         if (claimantTypeOfClaimant != null && claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {
             if (claimantIndType != null) {
                 addressLabelType.setFullName(CLAIMANT + nullCheck(claimantIndType.claimantFullName()));
