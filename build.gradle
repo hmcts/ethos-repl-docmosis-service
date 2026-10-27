@@ -393,7 +393,7 @@ dependencies {
     implementation group: 'org.webjars.npm', name: 'minimatch', version: '10.2.6'
     implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.59'
     implementation group: 'org.asynchttpclient', name: 'async-http-client', version: '3.0.14'
-    implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.12.4'
+    implementation group: 'org.asynchttpclient', name: 'async-http-client-netty-utils', version: '2.16.1'
     implementation 'com.google.guava:guava'
     implementation group: 'joda-time', name: 'joda-time', version: '2.15.0'
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.5.11'
