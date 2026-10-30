@@ -2509,18 +2509,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai-http@npm:5.1.2":
-  version: 5.1.2
-  resolution: "chai-http@npm:5.1.2"
+"chai-http@npm:5.2.1":
+  version: 5.2.1
+  resolution: "chai-http@npm:5.2.1"
   dependencies:
     "@types/superagent": ^8.1.7
     charset: ^1.0.1
     cookiejar: ^2.1.4
     is-ip: ^5.0.1
     methods: ^1.1.2
-    qs: ^6.12.1
+    picoquery: ^2.0.0
     superagent: ^10.0.0
-  checksum: bb768c77d23defe58872a658adc6817c46e1d54689fe67ae1bbde56f175b01fa4250861e2717d4d049d61f5f59a499dfd4fc2753ae98c8a266121da82bc3b6bb
+  checksum: 8723bd186d960d0da66a427bdf8feb3b7a6061bacff65784279537aba7804957d43eeff0d522de12a0cc04ab30dfb38f0dc21f88506ebb9bd9cb07909a169af9
   languageName: node
   linkType: hard
 
@@ -3694,7 +3694,7 @@ __metadata:
     async: ^3.2.3
     chai: 5.3.3
     chai-as-promised: 8.0.2
-    chai-http: 5.1.2
+    chai-http: 5.2.1
     codeceptjs: ^3.6.5
     cross-env: 10.1.0
     eslint-plugin-mocha: 11.3.0
@@ -7931,6 +7931,13 @@ __metadata:
   version: 2.3.1
   resolution: "picomatch@npm:2.3.1"
   checksum: 050c865ce81119c4822c45d3c84f1ced46f93a0126febae20737bd05ca20589c564d6e9226977df859ed5e03dc73f02584a2b0faad36e896936238238b0446cf
+  languageName: node
+  linkType: hard
+
+"picoquery@npm:^2.0.0":
+  version: 2.5.0
+  resolution: "picoquery@npm:2.5.0"
+  checksum: aff00bf2d099af0fa57ac168cc6355e6b7c304b988c7628dbbfb1567d5b9ef3ab2b75a282012875a9df88b77e5d7e247c3f3b0a9aa8d2c64ff135e553d7b78fd
   languageName: node
   linkType: hard
 
