@@ -140,4 +140,50 @@ class ConciliationTrackServiceTest {
         Assertions.assertNull(caseData.getConciliationTrack());
     }
 
+    @Test
+    void populateConciliationTrack_Sxh_ReturnOp() {
+        CaseData caseData = baseCaseDetails.getCaseData();
+        caseData.setJurCodesCollection(getJurCodesTypeItems("SXH", "TUA", "TUD")); // OP ST ST
+        conciliationTrackService.populateConciliationTrackForJurisdiction(caseData);
+        Assertions.assertEquals(CONCILIATION_TRACK_OPEN_TRACK, caseData.getConciliationTrack());
+    }
+
+    @Test
+    void populateConciliationTrack_TuaTud_ReturnSt() {
+        CaseData caseData = baseCaseDetails.getCaseData();
+        caseData.setJurCodesCollection(getJurCodesTypeItems("TUA", "TUD", "BOC")); // ST ST SH
+        conciliationTrackService.populateConciliationTrackForJurisdiction(caseData);
+        Assertions.assertEquals(CONCILIATION_TRACK_STANDARD_TRACK, caseData.getConciliationTrack());
+    }
+
+    @Test
+    void populateConciliationTrack_IgnoresInputInErrorCodes() {
+        CaseData caseData = baseCaseDetails.getCaseData();
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("DAG", "FWS", "BOC"); // OP ST SH
+        jurCodesTypeItems.get(0).getValue().setJudgmentOutcome("Input in error");
+        jurCodesTypeItems.get(1).getValue().setJudgmentOutcome("Input in error");
+        caseData.setJurCodesCollection(jurCodesTypeItems);
+        conciliationTrackService.populateConciliationTrackForJurisdiction(caseData);
+        Assertions.assertEquals(CONCILIATION_TRACK_FAST_TRACK, caseData.getConciliationTrack());
+    }
+
+    @Test
+    void populateConciliationTrack_AllInputInError_ReturnNull() {
+        CaseData caseData = baseCaseDetails.getCaseData();
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("DAG", "FWS");
+        jurCodesTypeItems.forEach(item -> item.getValue().setJudgmentOutcome("Input in error"));
+        caseData.setJurCodesCollection(jurCodesTypeItems);
+        conciliationTrackService.populateConciliationTrackForJurisdiction(caseData);
+        Assertions.assertNull(caseData.getConciliationTrack());
+    }
+
+    @Test
+    void populateConciliationTrack_OtherOutcomeStillCounted() {
+        CaseData caseData = baseCaseDetails.getCaseData();
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("DAG", "BOC"); // OP SH
+        jurCodesTypeItems.get(0).getValue().setJudgmentOutcome("Withdrawn or private settlement");
+        caseData.setJurCodesCollection(jurCodesTypeItems);
+        conciliationTrackService.populateConciliationTrackForJurisdiction(caseData);
+        Assertions.assertEquals(CONCILIATION_TRACK_OPEN_TRACK, caseData.getConciliationTrack());
+    }
 }
