@@ -65,7 +65,7 @@ task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
 
 checkstyle {
     maxWarnings = 0
-    toolVersion = '11.1.0'
+    toolVersion = '14.4.0'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
