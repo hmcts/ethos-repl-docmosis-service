@@ -12,16 +12,17 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.JurisdictionHelper.JURISDICTION_OUTCOME_INPUT_IN_ERROR;
 
 @Service("conciliationTrackService")
 public class ConciliationTrackService {
 
     private static final List<String> JUR_CODE_CONCILIATION_TRACK_OP = Arrays.asList(
-            "DAG", "DDA", "DRB", "DSO", "EQP", "GRA", "MAT", "PID", "RRD", "SXD", "VIC");
+            "DAG", "DDA", "DRB", "DSO", "EQP", "GRA", "MAT", "PID", "RRD", "SXD", "SXH", "VIC");
     private static final List<String> JUR_CODE_CONCILIATION_TRACK_ST = Arrays.asList(
             "ADG", "APA", "AWR", "DOD", "FCT", "FLW", "FTE", "FT1", "FPI", "FWP", "FWS",
             "HSD", "HSR", "IRF", "MWD", "PAC", "PLD", "PTE", "RTR(ST)", "SUN",
-            "TPE", "TT", "TUE", "TUI", "TUM", "TUR", "TUS", "TXC(ST)", "UDC", "UDL", "UIA", "WTR");
+            "TPE", "TT", "TUA", "TUD", "TUE", "TUI", "TUM", "TUR", "TUS", "TXC(ST)", "UDC", "UDL", "UIA", "WTR");
     private static final List<String> JUR_CODE_CONCILIATION_TRACK_SH = Arrays.asList(
             "BOC", "FML", "FPA", "FTC", "FTO", "FTP", "FTR", "FTS", "FTU", "PAY", "RPT", "TIP", "WA", "WTR(AL)");
     private static final List<String> JUR_CODE_CONCILIATION_TRACK_NO = Arrays.asList(
@@ -57,6 +58,9 @@ public class ConciliationTrackService {
         boolean isConTrackNo = false;
 
         for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
+            if (JURISDICTION_OUTCOME_INPUT_IN_ERROR.equals(jurCodesTypeItem.getValue().getJudgmentOutcome())) {
+                continue;
+            }
             if (JUR_CODE_CONCILIATION_TRACK_OP.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
                 return "OP";
             } else if (JUR_CODE_CONCILIATION_TRACK_ST.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
