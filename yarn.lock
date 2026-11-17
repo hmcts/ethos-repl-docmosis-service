@@ -5102,12 +5102,12 @@ __metadata:
   linkType: hard
 
 "minimatch@npm:^11.0.0":
-  version: 11.0.5
-  resolution: "minimatch@npm:11.0.5"
+  version: 11.0.9
+  resolution: "minimatch@npm:11.0.9"
   dependencies:
     "@isaacs/nonrecursive-glob-match": ^1.1.0
     brace-expansion: ^5.0.12
-  checksum: 47370b5e193710f9b95d4c7fdbd5ed878213725df9eb2dec134d3b9f238b26c370057a14167f25c58127ef43fba2fe2df7567c47a57fc62bdd16f1aaeaeda9cf
+  checksum: 740254a7cd0ae37f4fb736d58f980791656d82a39528ac82ee0033d16e5df801c62b96b6d0a74aadc8a635fadfac6ff257779e6f36d0207fe9da0bc3c7f8521f
   languageName: node
   linkType: hard
 
