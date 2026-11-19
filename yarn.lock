@@ -1789,8 +1789,8 @@ __metadata:
   linkType: hard
 
 "codeceptjs@npm:^4.0.0":
-  version: 4.2.4
-  resolution: "codeceptjs@npm:4.2.4"
+  version: 4.2.5
+  resolution: "codeceptjs@npm:4.2.5"
   dependencies:
     "@codeceptjs/configure": ^4.0.0-beta.4
     "@codeceptjs/helper": 2.0.4
@@ -1848,7 +1848,7 @@ __metadata:
     codeceptjs: bin/codecept.js
     codeceptjs-mcp: bin/mcp-server.js
     codeceptq: bin/codeceptq.js
-  checksum: de2ead234744d7b6f9068e96be41ccb539ca0f7b609e744599ca389dffc65638ba6a3d2a5cb921ae5d3ec566c26f9318e294b92c4eea2de08820fbc25b54eba7
+  checksum: 184bbde79f3dc4b98c23656633140f0563f7985494ebe3c6b568e4bb2c2f9d4d96fd17067d21e4327601db7f33baf278a143e1d99c95d2142d451f296dd5deec
   languageName: node
   linkType: hard
 
