@@ -51,7 +51,7 @@
   "resolutions": {
     "async": "^3.2.4",
     "ansi-regex": "^6.0.0",
-    "axios": "1.19.0",
+    "axios": "1.20.0",
     "@babel/runtime": "8.1.2",
     "@babel/helpers": "^8.0.0",
     "braces": "^3.0.2",
