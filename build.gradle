@@ -339,6 +339,10 @@ configurations.configureEach {
             && !details.requested.name.startsWith("netty-tcnative")) {
             details.useVersion("4.2.20.Final")
         }
+        // Upgrade Tomcat 11 embed artifacts beyond Boot 4.0.8's 11.0.24 to patch Tomcat CVEs
+        if (details.requested.group == "org.apache.tomcat.embed") {
+            details.useVersion("11.0.29")
+        }
     }
     resolutionStrategy.force(
         // CVE-2020-29582 - Fixed in Kotlin 2.1.0+
