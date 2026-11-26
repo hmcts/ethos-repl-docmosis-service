@@ -2,7 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.data.migration;
 
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
+import org.springframework.boot.flyway.autoconfigure.FlywayMigrationStrategy;
 import uk.gov.hmcts.ethos.replacement.docmosis.data.exception.PendingMigrationScriptException;
 
 import java.util.stream.Stream;

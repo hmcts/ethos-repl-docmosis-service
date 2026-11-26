@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SubMultipleReferenceService;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.AMEND_ACTION;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DELETE_ACTION;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SubMultipleUpdateServiceTest {
 
     @Mock

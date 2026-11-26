@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.AMEND_ACTION;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.DELETE_ACTION;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SubMultipleMidEventValidationServiceTest {
 
     @InjectMocks

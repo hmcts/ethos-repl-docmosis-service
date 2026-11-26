@@ -4,8 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.BundleApiClient;
@@ -28,14 +27,13 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1;
 import static uk.gov.hmcts.ethos.replacement.docmosis.util.DocumentConstants.ET1_ATTACHMENT;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class DigitalCaseFileServiceTest {
 
-    @MockitoBean
+    @Mock
     private BundleApiClient bundleApiClient;
     @Mock
     private AuthTokenGenerator authTokenGenerator;
-    @MockitoBean
     private DigitalCaseFileService digitalCaseFileService;
     private CaseData caseData;
     private CaseDetails caseDetails;

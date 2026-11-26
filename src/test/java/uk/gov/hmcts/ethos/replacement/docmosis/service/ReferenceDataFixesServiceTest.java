@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -40,7 +40,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.RANGE_HEARIN
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.refdatafixes.ReferenceDataFixesService.GENERATE_CORRESPONDENCE;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ReferenceDataFixesServiceTest {
     @Mock
     private CcdClient ccdClient;

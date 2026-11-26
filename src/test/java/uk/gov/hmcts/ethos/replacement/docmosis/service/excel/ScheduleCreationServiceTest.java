@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.compat.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
@@ -19,7 +19,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MULTIPLE_SCH
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ScheduleCreationServiceTest {
 
     @InjectMocks

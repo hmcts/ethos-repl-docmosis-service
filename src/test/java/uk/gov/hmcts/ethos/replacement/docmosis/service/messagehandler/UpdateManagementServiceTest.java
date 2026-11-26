@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.UpdateCaseMsg;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.datamodel.ResetStateDataModel;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.MultipleErrors;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class UpdateManagementServiceTest {
 
     @InjectMocks
