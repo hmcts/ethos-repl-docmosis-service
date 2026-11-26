@@ -330,6 +330,15 @@ configurations.configureEach {
             && details.requested.name.startsWith("kotlin-stdlib")) {
             details.useVersion("2.1.0")
         }
+        // CVE-2026-54512..CVE-2026-54518 - Upgrade Jackson 3.x
+        if (details.requested.group == "tools.jackson.core") {
+            details.useVersion("3.2.0")
+        }
+        // Ensure all Netty 4.2 modules (including http3 / quic) align on patched 4.2.20.Final
+        if (details.requested.group == "io.netty"
+            && !details.requested.name.startsWith("netty-tcnative")) {
+            details.useVersion("4.2.20.Final")
+        }
     }
     resolutionStrategy.force(
         // CVE-2020-29582 - Fixed in Kotlin 2.1.0+
@@ -341,6 +350,7 @@ configurations.configureEach {
 
 dependencies {
 
+    implementation platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
     implementation group: 'com.github.hmcts', name: 'et-shared', version: '1.0.397'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.60.1'
 
