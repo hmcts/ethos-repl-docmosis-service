@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.MultipleRefBristolRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.MultipleRefLeedsRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.MultipleRefLondonCentralRepository;
@@ -57,7 +57,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.WATFORD_BULK
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.WATFORD_OFFICE_NUMBER;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MultipleReferenceServiceTest {
 
     @InjectMocks

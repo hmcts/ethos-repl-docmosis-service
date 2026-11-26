@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -28,7 +28,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MANUALLY_CRE
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SUBMITTED_STATE;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MultipleCreationMidEventValidationServiceTest {
 
     @Mock

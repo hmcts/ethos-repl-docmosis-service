@@ -64,7 +64,7 @@ public class AccessTokenServiceTest {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(getTokenRequestMap(), headers);
 
-        ResponseEntity<TokenResponse> responseEntity = new ResponseEntity<>(null, HttpStatus.OK);
+        ResponseEntity<TokenResponse> responseEntity = ResponseEntity.ok().build();
 
         when(restTemplate.postForEntity(eq(url), eq(httpEntity), eq(TokenResponse.class))).thenReturn(responseEntity);
 

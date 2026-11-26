@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.compat.common.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
@@ -30,7 +30,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.ge
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.generateScheduleDocumentName;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.APPLICATION_EXCEL_VALUE;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ExcelDocManagementServiceTest {
 
     @Mock

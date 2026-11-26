@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
@@ -30,7 +30,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.CLOSED_STATE
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MultipleCloseEventValidationServiceTest {
 
     @Mock

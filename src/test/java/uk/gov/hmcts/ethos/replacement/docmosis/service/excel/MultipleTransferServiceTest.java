@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
@@ -48,7 +48,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferServic
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService.HEARINGS_ERROR_MSG;
 
 @RequiredArgsConstructor
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MultipleTransferServiceTest {
 
     private String ccdGatewayBaseUrl;

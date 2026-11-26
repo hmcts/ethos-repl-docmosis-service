@@ -25,11 +25,12 @@ public class HttpClientConfiguration {
 
     private static void accept(ClientCodecConfigurer clientCodecConfigurer) {
         clientCodecConfigurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024); // 10MB
+        Jackson2RestTemplates.useJackson2(clientCodecConfigurer);
     }
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = Jackson2RestTemplates.restTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(getHttpClient()));
         return restTemplate;
     }

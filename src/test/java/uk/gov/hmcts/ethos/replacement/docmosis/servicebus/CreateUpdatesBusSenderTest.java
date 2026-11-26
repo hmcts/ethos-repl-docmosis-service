@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.CreateUpdatesDto;
 import uk.gov.hmcts.ecm.compat.common.model.servicebus.datamodel.CreationDataModel;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.messagequeue.CreateUpdatesQueueRepository;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SCOTLAND_BULK_CASE_TYPE_ID;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CreateUpdatesBusSenderTest {
 
     private CreateUpdatesBusSender createUpdatesBusSender;

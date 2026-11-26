@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -32,7 +32,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.SELECT_NONE_VALUE;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MultipleBatchUpdate3ServiceTest {
 
     @Mock

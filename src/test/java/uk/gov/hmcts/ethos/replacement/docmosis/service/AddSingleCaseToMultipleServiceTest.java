@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -27,7 +27,7 @@ import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.MULTIPLE_CAS
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.compat.common.model.helper.Constants.YES;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AddSingleCaseToMultipleServiceTest {
 
     @Mock
